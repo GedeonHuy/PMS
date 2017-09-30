@@ -1,0 +1,10 @@
+/Users/koragg/Desktop/PMS/PMS/bin/Debug/netcoreapp2.0/PMS.deps.json
+/Users/koragg/Desktop/PMS/PMS/bin/Debug/netcoreapp2.0/PMS.runtimeconfig.json
+/Users/koragg/Desktop/PMS/PMS/bin/Debug/netcoreapp2.0/PMS.runtimeconfig.dev.json
+/Users/koragg/Desktop/PMS/PMS/bin/Debug/netcoreapp2.0/PMS.dll
+/Users/koragg/Desktop/PMS/PMS/bin/Debug/netcoreapp2.0/PMS.pdb
+/Users/koragg/Desktop/PMS/PMS/obj/Debug/netcoreapp2.0/PMS.csproj.CoreCompileInputs.cache
+/Users/koragg/Desktop/PMS/PMS/obj/Debug/netcoreapp2.0/PMS.AssemblyInfoInputs.cache
+/Users/koragg/Desktop/PMS/PMS/obj/Debug/netcoreapp2.0/PMS.AssemblyInfo.cs
+/Users/koragg/Desktop/PMS/PMS/obj/Debug/netcoreapp2.0/PMS.dll
+/Users/koragg/Desktop/PMS/PMS/obj/Debug/netcoreapp2.0/PMS.pdb
