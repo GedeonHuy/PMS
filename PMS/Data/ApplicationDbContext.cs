@@ -18,9 +18,24 @@ namespace PMS.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+            builder.Entity<Council>().ToTable("Council");
+            builder.Entity<CouncilEnrollment>().ToTable("CouncilErollment");
+            builder.Entity<Enrollment>().ToTable("Enrollment");
+            builder.Entity<Grade>().ToTable("Grade");
+            builder.Entity<Group>().ToTable("Group");
+            builder.Entity<Lecturer>().ToTable("Lecturer");
+            builder.Entity<Project>().ToTable("Project");
+            builder.Entity<Student>().ToTable("Student");
+            builder.Entity<UploadedFile>().ToTable("UploadedFile");
         }
+        public DbSet<Council> Councils { get; set; }
+        public DbSet<CouncilEnrollment> CouncilEnrollments { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Grade> Grades { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Lecturer> Lecturers { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<UploadedFile> UploadedFiles { get; set; }
     }
 }

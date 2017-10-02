@@ -1,28 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PMS.Models
 {
-    public class Student
+    public class Lecturer
     {
-        public int StudentId { get; set; }
-        public string StudentCode { get; set; }
+        public int LecturerId { get; set; }
         public string Name { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string Major { get; set; }
-        public string Year { get; set; }
         public bool IsDeleted { get; set; }
-        public ICollection<Enrollment> Enrollments { get; set; }
-        public Student()
-        {
-            Enrollments = new Collection<Enrollment>();
-        }
+        public int CouncilEnrollmentId { get; set; }
+        public IEnumerable<CouncilEnrollment> CouncilEnrollments { get; set; }
+        public int GroupId { get; set; }
+        public ICollection<Group> Groups { get; set; }
 
     }
 }

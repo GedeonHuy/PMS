@@ -1,12 +1,13 @@
-﻿using System;
+﻿using PMS.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PMS.Models
+namespace PMS.Resources
 {
-    public class Student
+    public class StudentResource
     {
         public int StudentId { get; set; }
         public string StudentCode { get; set; }
@@ -18,11 +19,10 @@ namespace PMS.Models
         public string Major { get; set; }
         public string Year { get; set; }
         public bool IsDeleted { get; set; }
-        public ICollection<Enrollment> Enrollments { get; set; }
-        public Student()
+        public ICollection<int> Enrollments { get; set; }
+        public StudentResource()
         {
-            Enrollments = new Collection<Enrollment>();
+            Enrollments = new Collection<int>();
         }
-
     }
 }
