@@ -6,7 +6,7 @@ export const MainRoutes: Routes = [
         //localhost:xxxx/main
         path: '', component: MainComponent, children: [
             //localhost:xxxx/main
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: '', redirectTo: 'main/home', pathMatch: 'full' },
             //localhost:xxxx/main/home
             { path: 'home', loadChildren: './home/home.module#HomeModule' },
             //localhost:xxxx/main/user
