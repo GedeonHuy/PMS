@@ -42,7 +42,7 @@ namespace PMS.Controllers
                 return Unauthorized();
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("helloworld67866876878768686686768678");
+            var key = Encoding.ASCII.GetBytes("0123456789ABCDEF");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] 

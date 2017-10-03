@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PMS.Controllers
-{
+{    
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
         // GET api/values
         [HttpGet]
-        [Authorize]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
