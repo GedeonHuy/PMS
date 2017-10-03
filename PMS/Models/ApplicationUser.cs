@@ -18,6 +18,8 @@ namespace PMS.Models
      
         public string FullName { get; set; }
 
+        public string Avatar { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public DateTime UpdatedOn { get; set; }

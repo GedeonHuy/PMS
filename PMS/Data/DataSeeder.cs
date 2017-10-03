@@ -18,13 +18,14 @@ namespace PMS.Data
 
         public async Task SeedAsync()
         {
-            _context.Database.EnsureCreated();
+            //_context.Database.EnsureCreated();
 
             if (!_context.Users.Any())
             {
 
                 var user = new ApplicationUser()
                 {
+                    FullName = "Admin",
                     Email = "a@a.com",
                     UserName = "a@a.com"
                 };

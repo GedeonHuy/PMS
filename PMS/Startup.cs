@@ -39,7 +39,16 @@ namespace PMS
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            // Enable Dual Authentication 
+            services.AddCors(options =>
+                {
+                    options.AddPolicy("AllowAll", builder => {
+                        builder.AllowAnyHeader()
+                            .AllowAnyOrigin()
+                            .AllowCredentials()
+                            .AllowAnyMethod();
+                    });
+                });
+            // Enable Jwt Authentication 
             services.AddAuthentication()
               .AddCookie(cfg => cfg.SlidingExpiration = true)
               .AddJwtBearer(cfg =>
@@ -63,7 +72,7 @@ namespace PMS
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSeeder seeder)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSeeder dataSeeder)
         {
             if (env.IsDevelopment())
             {
@@ -79,15 +88,14 @@ namespace PMS
             app.UseStaticFiles();
 
             app.UseAuthentication();
-
+            app.UseCors("AllowAll");		
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            seeder.SeedAsync().Wait();
+            dataSeeder.SeedAsync().Wait();
         }
     }
 }

@@ -473,7 +473,12 @@ namespace PMS.Controllers
               expires: DateTime.Now.AddDays(30),
               signingCredentials: creds);
 
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+            return Ok(
+                new {
+                  fullName = user.FullName,
+                  email = user.Email,
+                  access_token = new JwtSecurityTokenHandler().WriteToken(token) }
+              );
           }
         }
       }
