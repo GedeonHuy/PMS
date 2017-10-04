@@ -11,8 +11,8 @@ using System;
 namespace PMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171003063628_DbEIU")]
-    partial class DbEIU
+    [Migration("20171004154232_TestDb")]
+    partial class TestDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

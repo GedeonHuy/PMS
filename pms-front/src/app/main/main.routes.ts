@@ -10,7 +10,9 @@ export const MainRoutes: Routes = [
             //localhost:xxxx/main/home
             { path: 'home', loadChildren: './home/home.module#HomeModule' },
             //localhost:xxxx/main/user
-            { path: 'user', loadChildren: './user/user.module#UserModule' }
+            { path: 'user', loadChildren: './user/user.module#UserModule' },
+            //localhost:xxxx/main/role
+            { path: 'role', loadChildren: './role/role.module#RoleModule' }            
         ]
     }
 

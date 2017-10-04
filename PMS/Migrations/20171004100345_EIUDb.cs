@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace PMS.Migrations
 {
-    public partial class DbEIU : Migration
+    public partial class EIUDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,8 @@ namespace PMS.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Description = table.Column<string>(type:"nvarchar(256)", maxLength: 256, nullable: true)
                 },
                 constraints: table =>
                 {
