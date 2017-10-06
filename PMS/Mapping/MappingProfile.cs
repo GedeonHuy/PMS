@@ -13,12 +13,30 @@ namespace PMS.Mapping
         public MappingProfile()
         {
             //Domain to API Resource
+
             CreateMap<Student, StudentResource>()
-            .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => e.EnrollmentId)));
+            .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => new EnrollmentResource { EnrollmentId = e.EnrollmentId })));
 
             //API Resource to domain
-            CreateMap<StudentResource, Student>()
-            .ForMember(s => s.Enrollments, opt => opt.MapFrom(sr => sr.Enrollments.Select(id => new Enrollment { EnrollmentId = id })));
+            CreateMap<SaveStudentResource, Student>()
+            .ForMember(s => s.StudentId, opt => opt.Ignore())
+            .ForMember(s => s.Enrollments, opt => opt.Ignore())
+            .AfterMap((sr, s) =>
+            {
+                //remove unselected enrollments
+                var removedEnrollments = s.Enrollments.Where(e => !sr.Enrollments.Contains(e.EnrollmentId));
+                foreach (var e in removedEnrollments)
+                {
+                    s.Enrollments.Remove(e);
+                }
+
+                //add new enrollments
+                var addedEnrollments = sr.Enrollments.Where(id => !s.Enrollments.Any(e => e.EnrollmentId == id)).Select(id => new Enrollment { EnrollmentId = id });
+                foreach (var e in addedEnrollments)
+                {
+                    s.Enrollments.Add(e);
+                }
+            });
         }
     }
 }
