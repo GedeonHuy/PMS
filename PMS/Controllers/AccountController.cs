@@ -476,6 +476,7 @@ namespace PMS.Controllers
             return Ok(
                 new {
                   fullName = user.FullName,
+                  avatar = user.Avatar,
                   email = user.Email,
                   access_token = new JwtSecurityTokenHandler().WriteToken(token) }
               );

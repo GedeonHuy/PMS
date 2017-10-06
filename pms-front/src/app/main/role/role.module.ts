@@ -1,9 +1,11 @@
+import { FormsModule } from '@angular/forms';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RoleComponent } from './role.component';
 import { Routes, RouterModule } from '@angular/router';
+import {ModalModule } from 'ngx-bootstrap/modal';
 
 const RoleRoutes: Routes = [
   //localhost:xxxx/main/user
@@ -15,6 +17,9 @@ const RoleRoutes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
+    FormsModule,
+    ModalModule.forRoot(),
     RouterModule.forChild(RoleRoutes)
   ],
   declarations: [RoleComponent],

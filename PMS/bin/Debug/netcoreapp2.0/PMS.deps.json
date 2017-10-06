@@ -27,6 +27,7 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "3.0.1",
           "Microsoft.AspNetCore.All": "2.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "2.0.0",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "2.0.0",
           "Microsoft.EntityFrameworkCore.Design": "2.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "2.0.0",
           "Microsoft.EntityFrameworkCore.Tools": "2.0.0",

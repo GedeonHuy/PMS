@@ -38,7 +38,7 @@ namespace PMS
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
+            
             services.AddCors(options =>
                 {
                     options.AddPolicy("AllowAll", builder => {
