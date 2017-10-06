@@ -8,6 +8,8 @@ using PMS.Resources;
 using AutoMapper;
 using PMS.Data;
 using System.Collections.ObjectModel;
+using Microsoft.EntityFrameworkCore;
+using PMS.Persistence;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,23 +20,92 @@ namespace PMS.Controllers
     public class StudentsController : Controller
     {
         private IMapper mapper;
-        private ApplicationDbContext context;
+        private IStudentRepository repository;
+        private IUnitOfWork unitOfWork;
 
-        public StudentsController(IMapper mapper, ApplicationDbContext context)
+        public StudentsController(IMapper mapper, IStudentRepository repository, IUnitOfWork unitOfWork)
         {
             this.mapper = mapper;
-            this.context = context;
+            this.repository = repository;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStudent([FromBody]StudentResource studentResource)
+        public async Task<IActionResult> CreateStudent([FromBody]SaveStudentResource studentResource)
         {
-            var student = mapper.Map<StudentResource, Student>(studentResource);
-            context.Students.Add(student);
-            await context.SaveChangesAsync();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var student = mapper.Map<SaveStudentResource, Student>(studentResource);
+
+            repository.AddStudent(student);
+            await unitOfWork.Complete();
+
+            student = await repository.GetStudent(student.StudentId);
+
+            var result = mapper.Map<Student, StudentResource>(student);
+
+            return Ok(result);
+        }
+
+        [HttpPut("{id}")] /*/api/students/id*/
+        public async Task<IActionResult> UpdateStudent(int id, [FromBody]SaveStudentResource studentResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var student = await repository.GetStudent(id);
+
+            if (student == null)
+                return NotFound();
+
+            mapper.Map<SaveStudentResource, Student>(studentResource, student);
+            await unitOfWork.Complete();
 
             var result = mapper.Map<Student, StudentResource>(student);
             return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            var student = await repository.GetStudent(id, includeRelated: false);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            repository.RemoveStudent(student);
+            await unitOfWork.Complete();
+
+            return Ok(id);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetStudent(int id)
+        {
+            var student = await repository.GetStudent(id);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var studentResource = mapper.Map<Student, StudentResource>(student);
+
+            return Ok(studentResource);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudents()
+        {
+            var students = await repository.GetStudents();
+            return Ok(students);
         }
     }
 }
