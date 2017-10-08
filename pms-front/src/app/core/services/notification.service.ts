@@ -38,11 +38,11 @@ export class NotificationService {
             // language resources 
             glossary: {
                 // dialogs default title
-                title: 'Xác nhận',
+                title: 'Confirm',
                 // ok button text
-                ok: 'Đồng ý',
+                ok: 'Yes',
                 // cancel button text
-                cancel: 'Hủy'
+                cancel: 'Cancel'
             },
 
             // theme settings
@@ -60,7 +60,6 @@ export class NotificationService {
 
 
     printSuccessMessage(message: string) {
-
         this._notifier.success(message);
     }
 

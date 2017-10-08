@@ -17,6 +17,8 @@ namespace PMS.Mapping
             CreateMap<Student, StudentResource>()
             .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => new EnrollmentResource { EnrollmentId = e.EnrollmentId })));
 
+            CreateMap<ApplicationRole, RoleResource>();
+
             //API Resource to domain
             CreateMap<SaveStudentResource, Student>()
             .ForMember(s => s.StudentId, opt => opt.Ignore())
@@ -37,6 +39,10 @@ namespace PMS.Mapping
                     s.Enrollments.Add(e);
                 }
             });
+
+
+            CreateMap<RoleResource, ApplicationRole>()
+                .ForMember(r => r.Id, opt => opt.Ignore());
         }
     }
 }

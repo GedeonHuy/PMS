@@ -8,8 +8,8 @@
       <div class="input-group">
         <input type="text" class="form-control" placeholder="Input role...">
         <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Search!</button>
-                    </span>
+          <button class="btn btn-default" type="button">Search!</button>
+        </span>
       </div>
     </div>
   </div>
@@ -33,6 +33,7 @@
             <tr>
               <th>Id</th>
               <th>Name</th>
+              <th>Description</th>
               <th></th>
             </tr>
           </thead>
@@ -40,9 +41,14 @@
             <tr *ngFor="let role of roles">
               <td>{{role.id}}</td>
               <td>{{role.name}}</td>
+              <td>{{role.description}}</td>
               <td>
-                <button class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></button>
-                <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-primary" (click)="showEditModal(role.id)">
+                  <i class="fa fa-pencil-square-o"></i>
+                </button>
+                <button class="btn btn-danger" (click)="deleteRole(role.id)">
+                  <i class="fa fa-trash"></i>
+                </button>
 
               </td>
             </tr>
@@ -54,26 +60,36 @@
   </div>
 </div>
 
-<!--Large modal for add and edit-->
+<!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Add/Edit</h4>
+        <h4 class="modal-title pull-left">Add/Edit Role</h4>
         <button type="button" class="close pull-right" (click)="modalAddEdit.hide()" aria-label="Close">
-         <span aria-hidden="true">&times;</span>
-       </button>
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)" *ngIf="entity">
+        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)"
+          *ngIf="entity">
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <input type="hidden" [(ngModel)]="entity.Id" name="Id"/>
-              <input type="text" #name="ngModel" [(ngModel)]="entity.Name" required minlength="3" name="name" class="form-control" />
+              <input type="hidden" [(ngModel)]="entity.id" name="id" />
+              <input type="text" #name="ngModel" [(ngModel)]="entity.name" required minlength="3" name="name" class="form-control">
               <small [hidden]="name.valid || (name.pristine && !addEditForm.submitted)" class="text-danger">
-                  At least 3 characters
+                At least 3 characters
+              </small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Description</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <textarea class="form-control" #description="ngModel" required [(ngModel)]="entity.description" name="description" rows="3"></textarea>
+              <small [hidden]="description.valid || (description.pristine && !addEditForm.submitted)" class="text-danger">
+                Description is required
               </small>
             </div>
           </div>
@@ -81,7 +97,7 @@
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="modalAddEdit.hide()" class="btn btn-primary">Cancel</button>
-              <button type="submit" class="btn btn success" [disabled]="!addEditForm.form.valid">Add</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid">Save</button>
             </div>
           </div>
         </form>

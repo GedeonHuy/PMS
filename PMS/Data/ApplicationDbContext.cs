@@ -18,6 +18,8 @@ namespace PMS.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            
+            builder.Entity<ApplicationRole>().ToTable("ApplicationRole");
             builder.Entity<Council>().ToTable("Council");
             builder.Entity<CouncilEnrollment>().ToTable("CouncilErollment");
             builder.Entity<Enrollment>().ToTable("Enrollment");
@@ -28,6 +30,8 @@ namespace PMS.Data
             builder.Entity<Student>().ToTable("Student");
             builder.Entity<UploadedFile>().ToTable("UploadedFile");
         }
+
+        public DbSet<ApplicationRole> ApplicationRole { get; set; }
         public DbSet<Council> Councils { get; set; }
         public DbSet<CouncilEnrollment> CouncilEnrollments { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }

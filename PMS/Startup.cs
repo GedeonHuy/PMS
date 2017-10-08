@@ -15,6 +15,8 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using PMS.Persistence;
+using PMS.Persistence.IRepository;
+using PMS.Persistence.Repository;
 
 namespace PMS
 {
@@ -30,22 +32,24 @@ namespace PMS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IStudentRepository, StudentRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             services.AddAutoMapper();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<DataSeeder>();
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-            
+
+            //Handle Repository Patter & UnitOfWord
+            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+
             services.AddCors(options =>
                 {
-                    options.AddPolicy("AllowAll", builder => {
+                    options.AddPolicy("AllowAll", builder =>
+                    {
                         builder.AllowAnyHeader()
                             .AllowAnyOrigin()
                             .AllowCredentials()
@@ -71,12 +75,12 @@ namespace PMS
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
-
+            services.AddTransient<DataSeeder>();
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSeeder dataSeeder)
         {
             if (env.IsDevelopment())
             {
@@ -92,14 +96,14 @@ namespace PMS
             app.UseStaticFiles();
 
             app.UseAuthentication();
-            app.UseCors("AllowAll");		
+            app.UseCors("AllowAll");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            //dataSeeder.SeedAsync().Wait();
+            dataSeeder.SeedAsync().Wait();
         }
     }
 }

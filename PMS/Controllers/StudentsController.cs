@@ -19,9 +19,9 @@ namespace PMS.Controllers
     [Route("/api/students")]
     public class StudentsController : Controller
     {
-        private IMapper mapper;
-        private IStudentRepository repository;
-        private IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
+        private readonly IStudentRepository repository;
+        private readonly IUnitOfWork unitOfWork;
 
         public StudentsController(IMapper mapper, IStudentRepository repository, IUnitOfWork unitOfWork)
         {
