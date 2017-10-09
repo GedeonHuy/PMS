@@ -11,11 +11,11 @@ namespace PMS.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsDeleted { get; set; }
-        public int GradeId { get; set; }
+        //public int? GradeId { get; set; }
         public Grade Grade { get; set; }
-        //public int StudentId { get; set; }
-        //public Student Student { get; set; }
-        public int GroupId { get; set; }
+        //public int? StudentId { get; set; }
+        public Student Student { get; set; }
+        //public int? GroupId { get; set; }
         public Group Group { get; set; }
     }
 

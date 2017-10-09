@@ -1,0 +1,110 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using PMS.Persistence;
+using AutoMapper;
+using PMS.Resources;
+using PMS.Models;
+
+// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace PMS.Controllers
+{
+    [Route("/api/groups")]
+    public class GroupController : Controller
+    {
+        private IMapper mapper;
+        private IGroupRepository groupRepository;
+        private ILecturerRepository lecturerRepository;
+        private IUnitOfWork unitOfWork;
+
+        public GroupController(IMapper mapper, IUnitOfWork unitOfWork, IGroupRepository groupRepository, ILecturerRepository lecturerRepository)
+        {
+            this.mapper = mapper;
+            this.unitOfWork = unitOfWork;
+            this.groupRepository = groupRepository;
+            this.lecturerRepository = lecturerRepository;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateGroup([FromBody]GroupResource groupResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var group = mapper.Map<GroupResource, Group>(groupResource);
+            group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId);
+            groupRepository.AddGroup(group);
+            await unitOfWork.Complete();
+
+            group = await groupRepository.GetGroup(group.GroupId);
+
+            var result = mapper.Map<Group, GroupResource>(group);
+
+            return Ok(result);
+        }
+
+        [HttpPut("{id}")] /*/api/enrollments/id*/
+        public async Task<IActionResult> UpdateGroup(int id, [FromBody]GroupResource groupResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var group = await groupRepository.GetGroup(id);
+
+            if (group == null)
+                return NotFound();
+
+            mapper.Map<GroupResource, Group>(groupResource, group);
+            group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId);
+            await unitOfWork.Complete();
+
+            var result = mapper.Map<Group, GroupResource>(group);
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteGroup(int id)
+        {
+            var group = await groupRepository.GetGroup(id, includeRelated: false);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            groupRepository.RemoveGroup(group);
+            await unitOfWork.Complete();
+
+            return Ok(id);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetGroup(int id)
+        {
+            var group = await groupRepository.GetGroup(id);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var groupResource = mapper.Map<Group, GroupResource>(group);
+
+            return Ok(groupResource);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGroups()
+        {
+            var groups = await groupRepository.GetGroups();
+            return Ok(groups);
+        }
+    }
+}
