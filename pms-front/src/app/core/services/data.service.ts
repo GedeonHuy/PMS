@@ -19,22 +19,22 @@ export class DataService {
      }
 
   get(url: string) {
-    //this.headers.delete("Authorization");
-    //this.headers.append("Authorization", "Bearer " + this._authService.getLoggedInUser().access_token);
+    this.headers.delete("Authorization");
+    this.headers.append("Authorization", "Bearer " + this._authService.getLoggedInUser().access_token);
     return this._http.get(SystemConstants.BASE_URL + url, { headers: this.headers })
       .map(this.extractData);
   }
 
   post(url: string, data?: any) {
-    //this.headers.delete("Authorization");
-    //this.headers.append("Authorization", "Bearer " + this._authService.getLoggedInUser().access_token);
+    this.headers.delete("Authorization");
+    this.headers.append("Authorization", "Bearer " + this._authService.getLoggedInUser().access_token);
     return this._http.post(SystemConstants.BASE_URL + url, data, { headers: this.headers })
       .map(this.extractData);
   }
 
   put(url: string, data?: any) {
-    //this.headers.delete("Authorization");
-    //this.headers.append("Authorization", "Bearer " + this._authService.getLoggedInUser().access_token);
+    this.headers.delete("Authorization");
+    this.headers.append("Authorization", "Bearer " + this._authService.getLoggedInUser().access_token);
     return this._http.put(SystemConstants.BASE_URL + url, data, { headers: this.headers })
       .map(this.extractData);
   }

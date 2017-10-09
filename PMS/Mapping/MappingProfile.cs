@@ -21,7 +21,7 @@ namespace PMS.Mapping
 
             //API Resource to domain
             CreateMap<SaveStudentResource, Student>()
-            .ForMember(s => s.StudentId, opt => opt.Ignore())
+            .ForMember(s => s.Id, opt => opt.Ignore())
             .ForMember(s => s.Enrollments, opt => opt.Ignore())
             .AfterMap((sr, s) =>
             {

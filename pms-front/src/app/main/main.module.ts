@@ -8,6 +8,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserModule } from './user/user.module';
 import { HomeModule } from './home/home.module';
 import { RoleModule } from './role/role.module';
+import { StudentModule } from './student/student.module';
 import { UtilityService } from './../core/services/utility.service';
 import { AuthenService } from './../core/services/authen.service';
 
@@ -17,6 +18,7 @@ import { AuthenService } from './../core/services/authen.service';
     HomeModule,    
     UserModule,
     RoleModule,
+    StudentModule,
     RouterModule.forChild(MainRoutes)
   ],
   declarations: [MainComponent],

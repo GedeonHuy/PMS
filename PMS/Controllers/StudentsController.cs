@@ -23,7 +23,8 @@ namespace PMS.Controllers
         private readonly IStudentRepository repository;
         private readonly IUnitOfWork unitOfWork;
 
-        public StudentsController(IMapper mapper, IStudentRepository repository, IUnitOfWork unitOfWork)
+        public StudentsController(IMapper mapper, IStudentRepository repository,
+        IUnitOfWork unitOfWork)
         {
             this.mapper = mapper;
             this.repository = repository;
@@ -43,7 +44,7 @@ namespace PMS.Controllers
             repository.AddStudent(student);
             await unitOfWork.Complete();
 
-            student = await repository.GetStudent(student.StudentId);
+            student = await repository.GetStudent(student.Id);
 
             var result = mapper.Map<Student, StudentResource>(student);
 

@@ -3,15 +3,15 @@ import { NotificationService } from './../../core/services/notification.service'
 import { DataService } from './../../core/services/data.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RoleComponent } from './role.component';
 import { Routes, RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { StudentComponent } from './student.component';
 
-const RoleRoutes: Routes = [
+const StudentRoutes: Routes = [
   //localhost:xxxx/main/user
   { path: '', redirectTo: 'index', pathMatch: 'full' },
   //localhost:xxxx/main/user/index
-  { path: 'index', component: RoleComponent }
+  { path: 'index', component: StudentComponent }
 ]
 
 @NgModule({
@@ -19,9 +19,9 @@ const RoleRoutes: Routes = [
     CommonModule,
     FormsModule,
     ModalModule.forRoot(),
-    RouterModule.forChild(RoleRoutes)
+    RouterModule.forChild(StudentRoutes)
   ],
-  declarations: [RoleComponent],
+  declarations: [StudentComponent],
   providers: [DataService, NotificationService]
 })
-export class RoleModule { }
+export class StudentModule { }
