@@ -32,27 +32,31 @@ namespace PMS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+
+            services.AddAutoMapper();
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 6;
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            //Handle Repository Pattern & UnitOfWord
+            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ILecturerRepository, LecturerRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            services.AddAutoMapper();
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
-            //Handle Repository Patter & UnitOfWord
-            services.AddScoped<IStudentRepository, StudentRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-
             services.AddCors(options =>
                 {
                     options.AddPolicy("AllowAll", builder =>
@@ -83,11 +87,13 @@ namespace PMS
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<DataSeeder>();
+                                    services.AddTransient<RoleSeed>();
+
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSeeder dataSeeder)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSeeder dataSeeder, RoleSeed roleSeed)
         {
             if (env.IsDevelopment())
             {
@@ -110,7 +116,10 @@ namespace PMS
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+                                    roleSeed.SeedAsync().Wait();
+
             dataSeeder.SeedAsync().Wait();
+
         }
     }
 }

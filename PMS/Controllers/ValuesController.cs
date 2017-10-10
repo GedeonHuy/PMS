@@ -4,19 +4,28 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PMS.Data;
 
 namespace PMS.Controllers
-{    
-  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+{
+    //   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        private readonly ApplicationDbContext context;
+        public ValuesController(ApplicationDbContext context)
+        {
+            this.context = context;
+        }
+
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            var users = context.Users.ToList();
+            return Ok(users);
         }
 
         // GET api/values/5

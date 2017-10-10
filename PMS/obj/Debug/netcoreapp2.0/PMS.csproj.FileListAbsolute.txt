@@ -32,4 +32,3 @@ D:/PMS/trunk/PMS/obj/Debug/netcoreapp2.0/PMS.AssemblyInfo.cs
 D:/PMS/trunk/PMS/obj/Debug/netcoreapp2.0/PMS.dll
 D:/PMS/trunk/PMS/obj/Debug/netcoreapp2.0/PMS.pdb
 D:/PMS/trunk/PMS/obj/Debug/netcoreapp2.0/PMS.csprojResolveAssemblyReference.cache
-/Users/koragg/Desktop/PMS_Inter/PMS/bin/Debug/netcoreapp2.0/libe_sqlite3.dylib

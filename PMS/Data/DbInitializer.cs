@@ -82,20 +82,18 @@ namespace PMS.Data
             }
             context.SaveChanges();
 
+            // var roles = new ApplicationRole[] {
+            //     new ApplicationRole{Name="Admin", Description="Highest authority with few specifically restricted actions."},
+            //     new ApplicationRole{Name="Lecturer", Description="Can create Project and upload files."},
+            //     new ApplicationRole{Name="Student", Description="Can only create Enrollment."}
 
-            var roles = new ApplicationRole[] {
-                new ApplicationRole{Name="Admin", Description="Highest authority with few specifically restricted actions."},
-                new ApplicationRole{Name="Lecturer", Description="Can create Project and upload files."},
-                new ApplicationRole{Name="Student", Description="Can only create Enrollment."}
+            // };
 
-            };
-
-            foreach (ApplicationRole r in roles)
-            {
-                context.Roles.Add(r);
-            }
-            context.SaveChanges();
-
+            // foreach (ApplicationRole r in roles)
+            // {
+            //     context.ApplicationRole.Add(r);
+            // }
+            // context.SaveChanges();
 
             // var user = new ApplicationUser[] {
             //     new ApplicationUser{FullName = "Admin", Email="a@a,com"}

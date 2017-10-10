@@ -30,6 +30,7 @@ namespace PMS.Data
                 };
 
                 var result = await _userManager.CreateAsync(user, "P@ssw0rd!");
+                await _userManager.AddToRoleAsync(user, "Student");
                 if (result.Succeeded)
                 {
                     user.EmailConfirmed = true;

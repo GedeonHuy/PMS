@@ -32,21 +32,23 @@
           <thead>
             <tr>
               <th>Id</th>
+              <th>Student Code</th>
               <th>Name</th>
-              <th>Description</th>
+              <th>Email</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let role of roles">
-              <td>{{role.id}}</td>
-              <td>{{role.name}}</td>
-              <td>{{role.description}}</td>
+            <tr *ngFor="let student of students">
+              <td>{{student.id}}</td>
+              <td>{{student.studentCode}}</td>
+              <td>{{student.name}}</td>
+              <td>{{student.email}}</td>
               <td>
-                <button class="btn btn-primary" (click)="showEditModal(role.id)">
+                <button class="btn btn-primary" (click)="showEditModal(student.id)">
                   <i class="fa fa-pencil-square-o"></i>
                 </button>
-                <button class="btn btn-danger" (click)="deleteRole(role.id)">
+                <button class="btn btn-danger" (click)="deleteStudent(student.id)">
                   <i class="fa fa-trash"></i>
                 </button>
 
@@ -66,34 +68,44 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Add/Edit Role</h4>
+        <h4 class="modal-title pull-left">Add/Edit Student</h4>
         <button type="button" class="close pull-right" (click)="modalAddEdit.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)"
-          *ngIf="entity">
+          *ngIf="student">
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Code</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <input type="hidden" [(ngModel)]="entity.id" name="id" />
-              <input type="text" #name="ngModel" [(ngModel)]="entity.name" required minlength="3" name="name" class="form-control">
-              <small [hidden]="name.valid || (name.pristine && !addEditForm.submitted)" class="text-danger">
-                At least 3 characters
-              </small>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Description</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-              <textarea class="form-control" #description="ngModel" required [(ngModel)]="entity.description" name="description" rows="3"></textarea>
-              <small [hidden]="description.valid || (description.pristine && !addEditForm.submitted)" class="text-danger">
-                Description is required
+              <input type="text" #studentCode="ngModel" [(ngModel)]="student.studentCode" required name="studentCode" class="form-control">
+              <small [hidden]="studentCode.valid || (studentCode.pristine && !addEditForm.submitted)" class="text-danger">
+                Student Code is required
               </small>
             </div>
           </div>
           <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="hidden" [(ngModel)]="student.id" name="id" />
+              <input type="text" #name="ngModel" [(ngModel)]="student.name" required minlength="10" name="name" class="form-control">
+              <small [hidden]="name.valid || (name.pristine && !addEditForm.submitted)" class="text-danger">
+                At least 10 characters
+              </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Email</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #email="ngModel" [(ngModel)]="student.email" required name="email" class="form-control">
+              <small [hidden]="email.valid || (email.pristine && !addEditForm.submitted)" class="text-danger">
+                Email is required
+              </small>
+            </div>
+          </div>
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="modalAddEdit.hide()" class="btn btn-primary">Cancel</button>
