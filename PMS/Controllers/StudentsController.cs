@@ -9,7 +9,6 @@ using AutoMapper;
 using PMS.Data;
 using System.Collections.ObjectModel;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using PMS.Persistence;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -18,25 +17,21 @@ namespace PMS.Controllers
 {
 
     [Route("/api/students")]
-    public class StudentController : Controller
+    public class StudentsController : Controller
     {
-        private IMapper mapper;
-        private IStudentRepository repository;
-        private IUnitOfWork unitOfWork;
-        private readonly ApplicationDbContext context;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IMapper mapper;
+        private readonly IStudentRepository repository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public StudentController(ApplicationDbContext context, IMapper mapper, IStudentRepository repository, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        public StudentsController(IMapper mapper, IStudentRepository repository,
+        IUnitOfWork unitOfWork)
         {
-            this.userManager = userManager;
-            this.context = context;
             this.mapper = mapper;
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
 
         [HttpPost]
-        [Route("add")]
         public async Task<IActionResult> CreateStudent([FromBody]SaveStudentResource studentResource)
         {
             if (!ModelState.IsValid)
@@ -46,29 +41,7 @@ namespace PMS.Controllers
 
             var student = mapper.Map<SaveStudentResource, Student>(studentResource);
 
-<<<<<<< HEAD
-            var user = new ApplicationUser
-            {
-                FullName = student.Name,
-                Email = student.Email,
-                UserName = student.Email
-            };
-
-            if (RoleExists("Student"))
-            {
-                //Check Student Existence
-                if (!StudentExists(user.Email) && !StudentIdExists(student.StudentCode))
-                {
-                    var password = student.StudentCode.ToString(); // Password Default
-                    await userManager.CreateAsync(user, password);
-                    await userManager.AddToRoleAsync(user, "Student");
-                }
-            }
-
-            repository.AddStudent(student);
-=======
             repository.AddStudentAsync(student);
->>>>>>> 09a40a69d75b1bc3a95e6a379380fc0ef7e7bd0f
             await unitOfWork.Complete();
 
             student = await repository.GetStudent(student.Id);
@@ -78,8 +51,7 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpPut] /*/api/students/update/id*/
-        [Route("update/{id}")]
+        [HttpPut("{id}")] /*/api/students/id*/
         public async Task<IActionResult> UpdateStudent(int id, [FromBody]SaveStudentResource studentResource)
         {
             if (!ModelState.IsValid)
@@ -99,8 +71,7 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpDelete]
-        [Route("delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
             var student = await repository.GetStudent(id, includeRelated: false);
@@ -116,8 +87,7 @@ namespace PMS.Controllers
             return Ok(id);
         }
 
-        [HttpGet]
-        [Route("getstudent/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetStudent(int id)
         {
             var student = await repository.GetStudent(id);
@@ -133,26 +103,10 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
-        [Route("getall")]
         public async Task<IActionResult> GetStudents()
         {
             var students = await repository.GetStudents();
             return Ok(students);
-        }
-
-        private bool RoleExists(string roleName)
-        {
-            return context.ApplicationRole.Any(r => r.Name == roleName);
-        }
-
-        private bool StudentIdExists(string studentCode)
-        {
-            return context.Students.Any(r => r.StudentCode == studentCode);
-        }
-
-        private bool StudentExists(string email)
-        {
-            return context.Students.Any(e => e.Email == email);
         }
     }
 }
