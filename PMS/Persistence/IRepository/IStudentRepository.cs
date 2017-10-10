@@ -10,7 +10,7 @@ namespace PMS.Persistence
     {
         Task<Student> GetStudent(int id, bool includeRelated = true);
         Task<Student> GetStudentByEmail(string email);
-        Task AddStudentAsync(Student student)
+        void AddStudent(Student student);
         void RemoveStudent(Student student);
         Task<IEnumerable<Student>> GetStudents();
     }

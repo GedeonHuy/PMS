@@ -46,7 +46,6 @@ namespace PMS.Controllers
 
             var student = mapper.Map<SaveStudentResource, Student>(studentResource);
 
-<<<<<<< HEAD
             var user = new ApplicationUser
             {
                 FullName = student.Name,
@@ -66,9 +65,6 @@ namespace PMS.Controllers
             }
 
             repository.AddStudent(student);
-=======
-            repository.AddStudentAsync(student);
->>>>>>> 09a40a69d75b1bc3a95e6a379380fc0ef7e7bd0f
             await unitOfWork.Complete();
 
             student = await repository.GetStudent(student.Id);
