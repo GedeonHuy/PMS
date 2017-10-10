@@ -13,7 +13,9 @@ namespace PMS.Resources
         public bool IsDeleted { get; set; }
         public GradeResource Grade { get; set; }
         //public int StudentId { get; set; }
-        //public Student Student { get; set; }
+        public StudentResource Student { get; set; }
         public GroupResource Group { get; set; }
+
+        public string StudentEmail { get; set; }
     }
 }

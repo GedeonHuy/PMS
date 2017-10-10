@@ -35,7 +35,7 @@ namespace PMS.Controllers
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]UserResource userResource)
-        { 
+        {
             var user = _userService.Authenticate(userResource.Email, userResource.Password);
 
             if (user == null)
@@ -45,7 +45,7 @@ namespace PMS.Controllers
             var key = Encoding.ASCII.GetBytes("0123456789ABCDEF");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[] 
+                Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString())
                 }),
@@ -56,7 +56,8 @@ namespace PMS.Controllers
             var tokenString = tokenHandler.WriteToken(token);
 
             // return basic user info (without password) and token to store client side
-            return Ok(new {
+            return Ok(new
+            {
                 Id = user.Id,
                 Email = user.Email,
                 Token = tokenString
@@ -66,7 +67,7 @@ namespace PMS.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users =  _userService.GetAll();
+            var users = _userService.GetAll();
             var userResources = _mapper.Map<IList<UserResource>>(users);
             return Ok(userResources);
         }
@@ -74,7 +75,7 @@ namespace PMS.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var user =  _userService.GetById(id);
+            var user = _userService.GetById(id);
             var userResource = _mapper.Map<UserResource>(user);
             return Ok(userResource);
         }
@@ -84,13 +85,13 @@ namespace PMS.Controllers
         {
             // map dto to entity and set id
             var user = _mapper.Map<ApplicationUser>(userResource);
-            try 
+            try
             {
                 // save 
                 _userService.Update(user, userResource.Password);
                 return Ok();
-            } 
-            catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 // return error message if there was an exception
                 return BadRequest(ex.Message);

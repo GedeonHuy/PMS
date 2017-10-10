@@ -40,7 +40,7 @@ namespace PMS.Controllers
 
             var student = mapper.Map<SaveStudentResource, Student>(studentResource);
 
-            repository.AddStudent(student);
+            repository.AddStudentAsync(student);
             await unitOfWork.Complete();
 
             student = await repository.GetStudent(student.StudentId);

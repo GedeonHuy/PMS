@@ -7,6 +7,8 @@ using AutoMapper;
 using PMS.Persistence;
 using PMS.Models;
 using PMS.Resources;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,14 +18,19 @@ namespace PMS.Controllers
     public class EnrollmentController : Controller
     {
         private IMapper mapper;
-        private IEnrollmentRepository repository;
+        private IEnrollmentRepository enrollmenRrepository;
+        private IStudentRepository studentRepository;
+        private UserManager<ApplicationUser> userManager;
         private IUnitOfWork unitOfWork;
 
-        public EnrollmentController(IMapper mapper, IUnitOfWork unitOfWork, IEnrollmentRepository repository)
+        public EnrollmentController(IMapper mapper, IUnitOfWork unitOfWork, IEnrollmentRepository enrollmentRepository,
+            IStudentRepository studentRepository, UserManager<ApplicationUser> userManager)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.repository = repository;
+            this.enrollmenRrepository = enrollmentRepository;
+            this.studentRepository = studentRepository;
+            this.userManager = userManager;
         }
 
         [HttpPost]
@@ -35,15 +42,12 @@ namespace PMS.Controllers
             }
 
             var enrollment = mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource);
-            /////just for test/////
-            //enrollment.GradeId = null;
-            //enrollment.GroupId = null;
-            //////////////////////
+            enrollment.Student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
 
-            repository.AddEnrollment(enrollment);
+            enrollmenRrepository.AddEnrollment(enrollment);
             await unitOfWork.Complete();
 
-            enrollment = await repository.GetEnrollment(enrollment.EnrollmentId);
+            enrollment = await enrollmenRrepository.GetEnrollment(enrollment.EnrollmentId);
 
             var result = mapper.Map<Enrollment, EnrollmentResource>(enrollment);
 
@@ -58,7 +62,7 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var enrollment = await repository.GetEnrollment(id);
+            var enrollment = await enrollmenRrepository.GetEnrollment(id);
 
             if (enrollment == null)
                 return NotFound();
@@ -73,14 +77,14 @@ namespace PMS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var enrollment = await repository.GetEnrollment(id, includeRelated: false);
+            var enrollment = await enrollmenRrepository.GetEnrollment(id, includeRelated: false);
 
             if (enrollment == null)
             {
                 return NotFound();
             }
 
-            repository.RemoveEnrollment(enrollment);
+            enrollmenRrepository.RemoveEnrollment(enrollment);
             await unitOfWork.Complete();
 
             return Ok(id);
@@ -89,7 +93,7 @@ namespace PMS.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudent(int id)
         {
-            var enrollment = await repository.GetEnrollment(id);
+            var enrollment = await enrollmenRrepository.GetEnrollment(id);
 
             if (enrollment == null)
             {
@@ -104,8 +108,15 @@ namespace PMS.Controllers
         [HttpGet]
         public async Task<IActionResult> GetEnrollments()
         {
-            var enrollments = await repository.GetEnrollments();
+            var enrollments = await enrollmenRrepository.GetEnrollments();
             return Ok(enrollments);
         }
+
+        //private async Task<string> getCurrentUserEmailAsync()
+        //{
+        //    var userID = User.Identity.Name;
+        //    var currentUser = await userManager.GetUserAsync(HttpContext.User);
+        //    return currentUser.Email;
+        //}
     }
 }

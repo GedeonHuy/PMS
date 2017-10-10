@@ -17,7 +17,11 @@ namespace PMS.Mapping
             CreateMap<Student, StudentResource>()
             .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => new EnrollmentResource { EnrollmentId = e.EnrollmentId })));
 
+            CreateMap<Enrollment, EnrollmentResource>()
+            .ForMember(er => er.Student, opt => opt.MapFrom(e => e.Student));
+
             CreateMap<ApplicationRole, RoleResource>();
+
             CreateMap<Group, GroupResource>()
             .ForMember(gr => gr.Lecturer, opt => opt.MapFrom(g => new LecturerResource
             {

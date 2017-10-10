@@ -30,7 +30,14 @@ namespace PMS.Persistence
                 .SingleOrDefaultAsync(s => s.Id == id);
         }
 
-        public async void AddStudent(Student student)
+        public async Task<Student> GetStudentByEmail(string email)
+        {
+            return await context.Students
+                .Include(s => s.Enrollments)
+                .SingleOrDefaultAsync(s => s.Email == email);
+        }
+
+        public async Task AddStudentAsync(Student student)
         {
             var user = new ApplicationUser
             {
@@ -77,7 +84,7 @@ namespace PMS.Persistence
             return context.Students.Any(r => r.StudentCode == studentCode);
         }
 
-                private bool StudentExists(string email)
+        private bool StudentExists(string email)
         {
             return context.Students.Any(e => e.Email == email);
         }
