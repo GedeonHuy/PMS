@@ -478,6 +478,7 @@ namespace PMS.Controllers
                   fullName = user.FullName,
                   avatar = user.Avatar,
                   email = user.Email,
+                  role = _userManager.GetRolesAsync(user).Result[0],//get role user sign in
                   access_token = new JwtSecurityTokenHandler().WriteToken(token) }
               );
           }
