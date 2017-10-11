@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +14,10 @@ namespace PMS.Resources
         public string Type { get; set; }
         public string Desciption { get; set; }
         public bool IsDeleted { get; set; }
-        public ICollection<GroupResource> Group { get; set; }
+        public ICollection<GroupResource> Groups { get; set; }
+        public ProjectResource()
+        {
+            Groups = new Collection<GroupResource>();
+        }
     }
 }

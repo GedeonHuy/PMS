@@ -33,6 +33,15 @@ namespace PMS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ICouncilRepository, CouncilRepository>();
+            services.AddScoped<ICouncilEnrollmentRepository, CouncilEnrollmentRepository>();
+            services.AddScoped<IGradeRepository, GradeRepository>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<ILecturerRepository, LecturerRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
             services.AddAutoMapper();

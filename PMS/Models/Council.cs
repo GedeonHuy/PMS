@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +13,10 @@ namespace PMS.Models
         public string ResultScore { get; set; }
         public bool IsDeleted { get; set; }
         public IEnumerable<CouncilEnrollment> CouncilEnrollments { get; set; }
+        public Council()
+        {
+            CouncilEnrollments = new Collection<CouncilEnrollment>();
+        }
     }
 
 }

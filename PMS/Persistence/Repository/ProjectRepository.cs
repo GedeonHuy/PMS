@@ -23,7 +23,7 @@ namespace PMS.Persistence
                 return await context.Projects.FindAsync(id);
             }
             return await context.Projects
-                .Include(p => p.Group)
+                .Include(p => p.Groups)
                 .SingleOrDefaultAsync(s => s.ProjectId == id);
         }
 
@@ -40,7 +40,7 @@ namespace PMS.Persistence
         public async Task<IEnumerable<Project>> GetProjects()
         {
             return await context.Projects
-                .Include(p => p.Group)
+                .Include(p => p.Groups)
                 .ToListAsync();
         }
     }

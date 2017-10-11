@@ -10,7 +10,6 @@ namespace PMS.Models
         public int GradeId { get; set; }
         public string GradeType { get; set; }
         public string IsDeleted { get; set; }
-        public int EnrollmentId { get; set; }
         public Enrollment Enrollment { get; set; }
     }
 }
