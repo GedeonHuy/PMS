@@ -18,14 +18,16 @@ namespace PMS.Controllers
         private IMapper mapper;
         private IGroupRepository groupRepository;
         private ILecturerRepository lecturerRepository;
+        private IProjectRepository projectRepository;
         private IUnitOfWork unitOfWork;
 
-        public GroupController(IMapper mapper, IUnitOfWork unitOfWork, IGroupRepository groupRepository, ILecturerRepository lecturerRepository)
+        public GroupController(IMapper mapper, IUnitOfWork unitOfWork, IGroupRepository groupRepository, ILecturerRepository lecturerRepository, IProjectRepository projectRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
             this.groupRepository = groupRepository;
             this.lecturerRepository = lecturerRepository;
+            this.projectRepository = projectRepository;
         }
 
         [HttpPost]
@@ -38,6 +40,16 @@ namespace PMS.Controllers
 
             var group = mapper.Map<GroupResource, Group>(groupResource);
             group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId);
+            if (groupResource.ProjectId == null)
+            {
+                var otherProject = mapper.Map<ProjectResource, Project>(groupResource.OtherProject);
+                group.Project = otherProject;
+            }
+            else
+            {
+                group.Project = await projectRepository.GetProject(groupResource.ProjectId.Value);
+            }
+
             groupRepository.AddGroup(group);
             await unitOfWork.Complete();
 

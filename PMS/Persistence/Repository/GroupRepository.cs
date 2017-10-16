@@ -24,6 +24,7 @@ namespace PMS.Persistence
                 return await context.Groups.FindAsync(id);
             }
             return await context.Groups
+                .Include(p => p.Project)
                 .Include(p => p.Enrollments)
                 .Include(p => p.UploadedFiles)
                 .Include(p => p.Lecturer)

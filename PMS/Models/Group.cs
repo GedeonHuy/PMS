@@ -12,9 +12,10 @@ namespace PMS.Models
         public string GroupName { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
         public Project Project { get; set; }
-        public int LecturerId { get; set; }
         public Lecturer Lecturer { get; set; }
         public Council Council { get; set; }
+        public bool isDeleted { get; set; }
+        public bool isConfirm { get; set; }
         public ICollection<UploadedFile> UploadedFiles { get; set; }
         public Group()
         {

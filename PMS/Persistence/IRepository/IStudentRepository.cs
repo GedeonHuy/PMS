@@ -13,5 +13,6 @@ namespace PMS.Persistence
         void AddStudent(Student student);
         void RemoveStudent(Student student);
         Task<IEnumerable<Student>> GetStudents();
+        bool CheckStudentEnrollments(Student student, string Type);
     }
 }

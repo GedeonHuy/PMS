@@ -55,6 +55,18 @@ namespace PMS.Persistence
                 .ToListAsync();
         }
 
+        public bool CheckStudentEnrollments(Student student, string Type)
+        {
+            foreach (var enrollment in student.Enrollments)
+            {
+                if (enrollment.Type.Equals(Type))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private bool RoleExists(string roleName)
         {
             return context.ApplicationRole.Any(r => r.Name == roleName);

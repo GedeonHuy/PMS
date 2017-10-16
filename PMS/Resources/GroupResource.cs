@@ -10,7 +10,12 @@ namespace PMS.Resources
     {
         public int GroupId { get; set; }
         public string GroupName { get; set; }
+        public bool isDeleted { get; set; }
+        public bool isConfirm { get; set; }
+        /// <other project selection>
+        public ProjectResource OtherProject { get; set; }
         public ICollection<EnrollmentResource> Enrollments { get; set; }
+        public int? ProjectId { get; set; }
         public ProjectResource Project { get; set; }
         public int LecturerId { get; set; }
         public LecturerResource Lecturer { get; set; }

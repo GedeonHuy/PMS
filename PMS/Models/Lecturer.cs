@@ -17,10 +17,12 @@ namespace PMS.Models
         public bool IsDeleted { get; set; }
         public IEnumerable<CouncilEnrollment> CouncilEnrollments { get; set; }
         public ICollection<Group> Groups { get; set; }
+        public ICollection<Project> projectRepository { get; set; }
         public Lecturer()
         {
             CouncilEnrollments = new Collection<CouncilEnrollment>();
             Groups = new Collection<Group>();
+            projectRepository = new Collection<Project>();
         }
     }
 }

@@ -18,18 +18,20 @@ namespace PMS.Controllers
     public class EnrollmentController : Controller
     {
         private IMapper mapper;
-        private IEnrollmentRepository enrollmenRrepository;
+        private IEnrollmentRepository enrollmentRepository;
         private IStudentRepository studentRepository;
+        private IGroupRepository groupRepository;
         private UserManager<ApplicationUser> userManager;
         private IUnitOfWork unitOfWork;
 
         public EnrollmentController(IMapper mapper, IUnitOfWork unitOfWork, IEnrollmentRepository enrollmentRepository,
-            IStudentRepository studentRepository, UserManager<ApplicationUser> userManager)
+            IStudentRepository studentRepository, IGroupRepository groupRepository, UserManager<ApplicationUser> userManager)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.enrollmenRrepository = enrollmentRepository;
+            this.enrollmentRepository = enrollmentRepository;
             this.studentRepository = studentRepository;
+            this.groupRepository = groupRepository;
             this.userManager = userManager;
         }
 
@@ -42,12 +44,36 @@ namespace PMS.Controllers
             }
 
             var enrollment = mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource);
-            enrollment.Student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
+            var student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
 
-            enrollmenRrepository.AddEnrollment(enrollment);
+            var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
+
+            //case: enrollment's type and project's type is different
+            if (group.Project.Type != enrollmentResource.Type)
+            {
+                ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                enrollment.Group = await groupRepository.GetGroup(enrollmentResource.GroupId);
+            }
+
+            //case student registed another group with the same type
+            if (!studentRepository.CheckStudentEnrollments(student, enrollmentResource.Type))
+            {
+                ModelState.AddModelError("Error", "Student has an enrollment for this type of projectin another group");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                enrollment.Student = student;
+            }
+
+            enrollmentRepository.AddEnrollment(enrollment);
             await unitOfWork.Complete();
 
-            enrollment = await enrollmenRrepository.GetEnrollment(enrollment.EnrollmentId);
+            enrollment = await enrollmentRepository.GetEnrollment(enrollment.EnrollmentId);
 
             var result = mapper.Map<Enrollment, EnrollmentResource>(enrollment);
 
@@ -62,7 +88,7 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var enrollment = await enrollmenRrepository.GetEnrollment(id);
+            var enrollment = await enrollmentRepository.GetEnrollment(id);
 
             if (enrollment == null)
                 return NotFound();
@@ -77,14 +103,14 @@ namespace PMS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var enrollment = await enrollmenRrepository.GetEnrollment(id, includeRelated: false);
+            var enrollment = await enrollmentRepository.GetEnrollment(id, includeRelated: false);
 
             if (enrollment == null)
             {
                 return NotFound();
             }
 
-            enrollmenRrepository.RemoveEnrollment(enrollment);
+            enrollmentRepository.RemoveEnrollment(enrollment);
             await unitOfWork.Complete();
 
             return Ok(id);
@@ -93,7 +119,7 @@ namespace PMS.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudent(int id)
         {
-            var enrollment = await enrollmenRrepository.GetEnrollment(id);
+            var enrollment = await enrollmentRepository.GetEnrollment(id);
 
             if (enrollment == null)
             {
@@ -108,7 +134,7 @@ namespace PMS.Controllers
         [HttpGet]
         public async Task<IActionResult> GetEnrollments()
         {
-            var enrollments = await enrollmenRrepository.GetEnrollments();
+            var enrollments = await enrollmentRepository.GetEnrollments();
             return Ok(enrollments);
         }
 

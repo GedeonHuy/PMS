@@ -42,7 +42,14 @@ namespace PMS.Mapping
                 .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => new EnrollmentResource { EnrollmentId = e.EnrollmentId })));
 
             CreateMap<Enrollment, EnrollmentResource>()
-                .ForMember(er => er.Student, opt => opt.MapFrom(e => e.Student));
+                .ForMember(er => er.Student, opt => opt.MapFrom(e => e.Student))
+                .ForMember(er => er.Group, opt => opt.MapFrom(e => new GroupResource
+                {
+                    GroupId = e.Group.GroupId,
+                    GroupName = e.Group.GroupName,
+                    isDeleted = e.Group.isDeleted,
+                    isConfirm = e.Group.isConfirm
+                }));
 
             CreateMap<ApplicationRole, RoleResource>();
 
@@ -56,13 +63,20 @@ namespace PMS.Mapping
             CreateMap<Group, GroupResource>()
                 .ForMember(gr => gr.Lecturer, opt => opt.MapFrom(g => new LecturerResource
                 {
-                    LecturerId = g.LecturerId,
                     Name = g.Lecturer.Name,
                     Address = g.Lecturer.Address,
                     DateOfBirth = g.Lecturer.DateOfBirth,
                     Email = g.Lecturer.Email,
                     IsDeleted = g.Lecturer.IsDeleted,
                     PhoneNumber = g.Lecturer.PhoneNumber
+                }))
+                .ForMember(gr => gr.Project, opt => opt.MapFrom(g => new ProjectResource
+                {
+                    ProjectId = g.Project.ProjectId,
+                    Desciption = g.Project.Desciption,
+                    ProjectCode = g.Project.ProjectCode,
+                    Title = g.Project.Title,
+                    Type = g.Project.Type
                 }));
 
             //API Resource to domain
