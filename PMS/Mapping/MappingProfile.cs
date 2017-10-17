@@ -14,7 +14,13 @@ namespace PMS.Mapping
         {
             //Domain to API Resource
             CreateMap<Council, CouncilResource>()
-                .ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments));
+            .ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new CouncilEnrollment
+            {
+                CouncilEnrollmentId = cf.CouncilEnrollmentId,
+                IsDeleted = cf.IsDeleted,
+                Percentage = cf.Percentage
+
+            })));
 
             CreateMap<CouncilEnrollment, CouncilEnrollmentResource>()
             .ForMember(cr => cr.Lecturer, opt => opt.MapFrom(c => new LecturerResource

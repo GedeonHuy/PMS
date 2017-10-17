@@ -17,14 +17,16 @@ namespace PMS.Controllers
     public class CouncilController : Controller
     {
         private IMapper mapper;
-        private ICouncilRepository repository;
+        private ICouncilRepository councilRepository;
+        private IGroupRepository groupRepository;
         private IUnitOfWork unitOfWork;
 
-        public CouncilController(IMapper mapper, IUnitOfWork unitOfWork, ICouncilRepository repository)
+        public CouncilController(IMapper mapper, IUnitOfWork unitOfWork, ICouncilRepository councilRepository, IGroupRepository groupRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.repository = repository;
+            this.councilRepository = councilRepository;
+            this.groupRepository = groupRepository;
         }
 
         [HttpPost]
@@ -35,12 +37,41 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var council = mapper.Map<CouncilResource, Council>(councilResource);
+            //case: missing set point
+            var nullPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == null);
+            if (nullPercentCount != councilResource.LecturerInformations.Count)
+            {
+                ModelState.AddModelError("Error", "If you set percentage of score, u must set for all lecturer");
+                return BadRequest(ModelState);
+            }
 
-            repository.AddCouncil(council);
+            ////case: one percent of score is equal 0
+            var zeroPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == 0);
+            if (zeroPercentCount > 0)
+            {
+                ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0");
+                return BadRequest(ModelState);
+            }
+
+            //case: the total sum of score is not 100
+            var PercentSum = councilResource.LecturerInformations.Sum(l => l.ScorePercent);
+            if (PercentSum != 100.0 && PercentSum != 0)
+            {
+                ModelState.AddModelError("Error", "If total percentage of score is not equal 100%");
+                return BadRequest(ModelState);
+            }
+
+            var council = mapper.Map<CouncilResource, Council>(councilResource);
+            var group = await groupRepository.GetGroup(councilResource.GroupId);
+            council.Group = group;
+
+            councilRepository.AddCouncil(council);
             await unitOfWork.Complete();
 
-            council = await repository.GetCouncil(council.CouncilId);
+            council = await councilRepository.GetCouncil(council.CouncilId);
+
+            await councilRepository.AddLecturers(council, councilResource.LecturerInformations);
+            await unitOfWork.Complete();
 
             var result = mapper.Map<Council, CouncilResource>(council);
 
@@ -55,12 +86,43 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var council = await repository.GetCouncil(id);
+            //case: missing set point
+            var nullPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == null);
+            if (nullPercentCount != councilResource.LecturerInformations.Count)
+            {
+                ModelState.AddModelError("Error", "If you set percentage of score, u must set for all lecturer");
+                return BadRequest(ModelState);
+            }
+
+            //case: one percent of score is equal 0
+            var zeroPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == 0);
+            if (zeroPercentCount > 0)
+            {
+                ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0");
+                return BadRequest(ModelState);
+            }
+
+            //case: the total sum of score is not 100
+            var PercentSum = councilResource.LecturerInformations.Sum(l => l.ScorePercent);
+            if (PercentSum != 100.0 && PercentSum != 0)
+            {
+                ModelState.AddModelError("Error", "If total percentage of score is not equal 100%");
+                return BadRequest(ModelState);
+            }
+
+            var council = await councilRepository.GetCouncil(id);
 
             if (council == null)
                 return NotFound();
 
             mapper.Map<CouncilResource, Council>(councilResource, council);
+            await unitOfWork.Complete();
+
+            var group = await groupRepository.GetGroup(councilResource.GroupId);
+            council.Group = group;
+            await unitOfWork.Complete();
+
+            await councilRepository.AddLecturers(council, councilResource.LecturerInformations);
             await unitOfWork.Complete();
 
             var result = mapper.Map<Council, CouncilResource>(council);
@@ -70,14 +132,14 @@ namespace PMS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCouncil(int id)
         {
-            var council = await repository.GetCouncil(id, includeRelated: false);
+            var council = await councilRepository.GetCouncil(id, includeRelated: false);
 
             if (council == null)
             {
                 return NotFound();
             }
 
-            repository.RemoveCouncil(council);
+            councilRepository.RemoveCouncil(council);
             await unitOfWork.Complete();
 
             return Ok(id);
@@ -86,7 +148,7 @@ namespace PMS.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCouncil(int id)
         {
-            var council = await repository.GetCouncil(id);
+            var council = await councilRepository.GetCouncil(id);
 
             if (council == null)
             {
@@ -101,7 +163,7 @@ namespace PMS.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCouncils()
         {
-            var councils = await repository.GetCouncils();
+            var councils = await councilRepository.GetCouncils();
             return Ok(councils);
         }
     }

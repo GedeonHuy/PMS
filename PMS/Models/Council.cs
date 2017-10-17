@@ -12,7 +12,8 @@ namespace PMS.Models
         public string ResultGrade { get; set; }
         public string ResultScore { get; set; }
         public bool IsDeleted { get; set; }
-        public IEnumerable<CouncilEnrollment> CouncilEnrollments { get; set; }
+        public Group Group { get; set; }
+        public ICollection<CouncilEnrollment> CouncilEnrollments { get; set; }
         public Council()
         {
             CouncilEnrollments = new Collection<CouncilEnrollment>();

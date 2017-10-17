@@ -13,5 +13,6 @@ namespace PMS.Resources
         public LecturerResource Lecturer { get; set; }
         public int CouncilID { get; set; }
         public CouncilResource Council { get; set; }
+        public int Percentage { get; set; }
     }
 }

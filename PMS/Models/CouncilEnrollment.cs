@@ -11,5 +11,6 @@ namespace PMS.Models
         public bool IsDeleted { get; set; }
         public Lecturer Lecturer { get; set; }
         public Council Council { get; set; }
+        public double? Percentage { get; set; }
     }
 }

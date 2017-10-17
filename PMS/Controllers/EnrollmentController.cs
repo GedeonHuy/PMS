@@ -59,7 +59,7 @@ namespace PMS.Controllers
                 enrollment.Group = await groupRepository.GetGroup(enrollmentResource.GroupId);
             }
 
-            //case student registed another group with the same type
+            //case: student registed another group with the same type
             if (!studentRepository.CheckStudentEnrollments(student, enrollmentResource.Type))
             {
                 ModelState.AddModelError("Error", "Student has an enrollment for this type of projectin another group");
@@ -94,6 +94,31 @@ namespace PMS.Controllers
                 return NotFound();
 
             mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource, enrollment);
+            var student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
+
+            var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
+
+            //case: enrollment's type and project's type is different
+            if (group.Project.Type != enrollmentResource.Type)
+            {
+                ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                enrollment.Group = await groupRepository.GetGroup(enrollmentResource.GroupId);
+            }
+
+            //case student registed another group with the same type
+            if (!studentRepository.CheckStudentEnrollments(student, enrollmentResource.Type))
+            {
+                ModelState.AddModelError("Error", "Student has an enrollment for this type of projectin another group");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                enrollment.Student = student;
+            }
             await unitOfWork.Complete();
 
             var result = mapper.Map<Enrollment, EnrollmentResource>(enrollment);

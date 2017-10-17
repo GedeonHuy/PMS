@@ -75,6 +75,15 @@ namespace PMS.Controllers
 
             mapper.Map<GroupResource, Group>(groupResource, group);
             group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId);
+            if (groupResource.ProjectId == null)
+            {
+                var otherProject = mapper.Map<ProjectResource, Project>(groupResource.OtherProject);
+                group.Project = otherProject;
+            }
+            else
+            {
+                group.Project = await projectRepository.GetProject(groupResource.ProjectId.Value);
+            }
             await unitOfWork.Complete();
 
             var result = mapper.Map<Group, GroupResource>(group);

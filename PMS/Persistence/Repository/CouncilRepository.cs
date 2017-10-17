@@ -2,8 +2,10 @@
 using PMS.Data;
 using PMS.Models;
 using PMS.Persistence.IRepository;
+using PMS.Resources.SubResources;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -44,6 +46,35 @@ namespace PMS.Persistence.Repository
             return await context.Councils
                          .Include(c => c.CouncilEnrollments)
                          .ToListAsync();
+        }
+
+        public async Task AddLecturers(Council council, ICollection<LecturerInformationResource> lecturerInformations)
+        {
+            foreach (var lecturerInformation in lecturerInformations)
+            {
+                var lecturer = await context.Lecturers.FirstOrDefaultAsync(l => l.LecturerId == lecturerInformation.LecturerId);
+                if (lecturerInformation.ScorePercent == null)
+                {
+                    council.CouncilEnrollments.Add(new CouncilEnrollment
+                    {
+                        Council = council,
+                        Lecturer = lecturer,
+                        Percentage = (100.0 / lecturerInformations.Count),
+                        IsDeleted = false
+                    });
+                }
+                else
+                {
+                    council.CouncilEnrollments.Add(new CouncilEnrollment
+                    {
+                        Council = council,
+                        Lecturer = lecturer,
+                        Percentage = lecturerInformation.ScorePercent,
+                        IsDeleted = false
+                    });
+                }
+
+            }
         }
     }
 }
