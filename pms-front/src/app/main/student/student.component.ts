@@ -14,8 +14,10 @@ export class StudentComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   public students: any[];
   public student: any;
-
-  constructor(private _dataService: DataService, private _notificationService: NotificationService) { }
+  public isClicked : boolean;
+  constructor(private _dataService: DataService, private _notificationService: NotificationService) { 
+    this.isClicked = false;
+  }
 
   ngOnInit() {
     this.loadData();
@@ -50,12 +52,14 @@ export class StudentComponent implements OnInit {
   }
   saveChange(valid: boolean) {
     if (valid) {
+      this.isClicked = true;
       if (this.student.id == undefined) {
         this._dataService.post('/api/students/add', JSON.stringify(this.student))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Add Success");
+            this.isClicked = false;            
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -64,6 +68,7 @@ export class StudentComponent implements OnInit {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
+            this.isClicked = false;            
           }, error => this._dataService.handleError(error));
       }
     }

@@ -12614,11 +12614,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/koragg/Desktop/testblock/PMS/PMS/PMS.csproj",
+      "projectUniqueName": "/Users/koragg/Desktop/PMS/PMS/PMS.csproj",
       "projectName": "PMS",
-      "projectPath": "/Users/koragg/Desktop/testblock/PMS/PMS/PMS.csproj",
+      "projectPath": "/Users/koragg/Desktop/PMS/PMS/PMS.csproj",
       "packagesPath": "/Users/koragg/.nuget/packages/",
-      "outputPath": "/Users/koragg/Desktop/testblock/PMS/PMS/obj/",
+      "outputPath": "/Users/koragg/Desktop/PMS/PMS/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
