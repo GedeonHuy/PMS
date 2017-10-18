@@ -20,18 +20,18 @@ export class AuthenService {
     headers.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     headers.append("Access-Control-Allow-Methods", "X-Requested-With,content-type");
     headers.append("Access-Control-Allow-Credentials", "true");
-    
+
     let options = new RequestOptions({ headers: headers });
 
-    return this._http.post(SystemConstants.BASE_URL + '/account/generateToken', { email: email, password: password },options)
-        .map((response: Response) => {
-          let user: LoggedInUser = response.json();
-          if (user && user.access_token) {
-            localStorage.removeItem(SystemConstants.CURRENT_USER);
-            localStorage.setItem(SystemConstants.CURRENT_USER, JSON.stringify(user));
-          }
-        });
-}
+    return this._http.post(SystemConstants.BASE_URL + '/account/generateToken', { email: email, password: password }, options)
+      .map((response: Response) => {
+        let user: LoggedInUser = response.json();
+        if (user && user.access_token) {
+          localStorage.removeItem(SystemConstants.CURRENT_USER);
+          localStorage.setItem(SystemConstants.CURRENT_USER, JSON.stringify(user));
+        }
+      });
+  }
   logout() {
     localStorage.removeItem(SystemConstants.CURRENT_USER);
   }
@@ -49,11 +49,35 @@ export class AuthenService {
     let user: LoggedInUser;
     if (this.isUserAuthenticated()) {
       var userData = JSON.parse(localStorage.getItem(SystemConstants.CURRENT_USER));
-      user = new LoggedInUser(userData.access_token, userData.username, userData.fullName, userData.email, userData.avatar);
+      user = new LoggedInUser(
+        userData.access_token,
+        userData.avatar,
+        userData.email,
+        userData.fullName,
+        userData.role,
+        userData.userName);
     }
     else
       user = null;
     return user;
   }
 
+
+  checkAdmin(user : LoggedInUser) {
+    if(user.role === "Admin") {
+      return true;
+    }
+  }
+
+  checkStudent(user : LoggedInUser) {
+    if(user.role === "Student") {
+      return true;
+    }
+  }
+
+  checkLecturer(user : LoggedInUser) {
+    if(user.role === "Lecturer") {
+      return true;
+    }
+  }
 }

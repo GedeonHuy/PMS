@@ -3,7 +3,7 @@ import { NotificationService } from './../../core/services/notification.service'
 import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-
+import { AuthenService } from './../../core/services/authen.service';
 
 @Component({
   selector: 'app-lecturer',
@@ -15,12 +15,15 @@ export class LecturerComponent implements OnInit {
   public lecturers: any[];
   public lecturer: any;
   public isClicked: boolean;
-  constructor(private _dataService: DataService, private _notificationService: NotificationService) {
+  isAdmin : boolean;
+  constructor(private _authenService : AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
+    this.isAdmin = false;
   }
 
   ngOnInit() {
     this.loadData();
+    this.permissionAccess();
   }
 
   loadData() {
@@ -85,5 +88,13 @@ export class LecturerComponent implements OnInit {
         this._notificationService.printSuccessMessage("Delete Success");
         this.loadData();
       });
+  }
+
+  permissionAccess() {
+    var user = this._authenService.getLoggedInUser();
+    if(user.role === "Admin") {
+      this.isAdmin = true;
+      console.log(this.isAdmin);
+    }
   }
 }

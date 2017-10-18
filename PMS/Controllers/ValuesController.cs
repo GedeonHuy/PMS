@@ -10,7 +10,7 @@ using PMS.Data;
 
 namespace PMS.Controllers
 {
-    //   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {

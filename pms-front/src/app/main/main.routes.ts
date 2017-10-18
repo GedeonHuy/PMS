@@ -1,6 +1,6 @@
+import { AuthGuard } from './../core/guards/auth.guard';
 import { Routes } from '@angular/router';
 import { MainComponent } from './main.component';
-
 export const MainRoutes: Routes = [
     {
         //localhost:xxxx/main
@@ -14,9 +14,9 @@ export const MainRoutes: Routes = [
             //localhost:xxxx/main/role
             { path: 'role', loadChildren: './role/role.module#RoleModule' },   
             //localhost:xxxx/main/student
-            { path: 'student', loadChildren: './student/student.module#StudentModule' },
+            { path: 'student', loadChildren: './student/student.module#StudentModule'},
             //localhost:xxxx/main/student
-            { path: 'lecturer', loadChildren: './lecturer/lecturer.module#LecturerModule' },
+            { path: 'lecturer', loadChildren: './lecturer/lecturer.module#LecturerModule'},
             //localhost:xxxx/main/student
             { path: 'project', loadChildren: './project/project.module#ProjectModule' }                                    
         ]

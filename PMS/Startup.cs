@@ -18,6 +18,7 @@ using PMS.Persistence;
 using PMS.Persistence.IRepository;
 using PMS.Persistence.Repository;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace PMS
 {
@@ -78,7 +79,11 @@ namespace PMS
                     });
                 });
             // Enable Jwt Authentication 
-            services.AddAuthentication()
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
               .AddCookie(cfg => cfg.SlidingExpiration = true)
               .AddJwtBearer(cfg =>
               {
@@ -97,7 +102,7 @@ namespace PMS
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<DataSeeder>();
-                                    services.AddTransient<RoleSeed>();
+            services.AddTransient<RoleSeed>();
 
             services.AddMvc();
         }

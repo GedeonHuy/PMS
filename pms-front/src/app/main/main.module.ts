@@ -11,6 +11,10 @@ import { RoleModule } from './role/role.module';
 import { StudentModule } from './student/student.module';
 import { LecturerModule } from './lecturer/lecturer.module';
 import { ProjectModule } from './project/project.module';
+
+import { SidebarMenuComponent } from './../shared/sidebar-menu/sidebar-menu.component';
+import { TopMenuComponent } from './../shared/top-menu/top-menu.component';
+
 import { UtilityService } from './../core/services/utility.service';
 import { AuthenService } from './../core/services/authen.service';
 
@@ -25,7 +29,7 @@ import { AuthenService } from './../core/services/authen.service';
     ProjectModule,
     RouterModule.forChild(MainRoutes)
   ],
-  declarations: [MainComponent],
+  declarations: [MainComponent, SidebarMenuComponent, TopMenuComponent],
   providers: [UtilityService, AuthenService]
 })
 export class MainModule { }

@@ -20,7 +20,7 @@
     <div class="x_panel">
       <div class="x_title">
         <ul class="nav navbar-right panel_toolbox">
-          <li>
+          <li *ngIf="isAdmin" [hidden]="isAdmin" >
             <button class="btn btn-success" (click)="showAddModal()">Add</button>
           </li>
         </ul>
@@ -43,10 +43,10 @@
               <td>{{lecturer.name}}</td>
               <td>{{lecturer.email}}</td>
               <td>
-                <button class="btn btn-primary" (click)="showEditModal(lecturer.lecturerId)">
+                <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-primary" (click)="showEditModal(lecturer.lecturerId)">
                   <i class="fa fa-pencil-square-o"></i>
                 </button>
-                <button class="btn btn-danger" (click)="deletelecturer(lecturer.lecturerId)">
+                <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-danger" (click)="deletelecturer(lecturer.lecturerId)">
                   <i class="fa fa-trash"></i>
                 </button>
 
