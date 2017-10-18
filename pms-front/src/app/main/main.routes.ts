@@ -13,8 +13,12 @@ export const MainRoutes: Routes = [
             { path: 'user', loadChildren: './user/user.module#UserModule' },
             //localhost:xxxx/main/role
             { path: 'role', loadChildren: './role/role.module#RoleModule' },   
-            //localhost:xxxx/main/role
-            { path: 'student', loadChildren: './student/student.module#StudentModule' }                     
+            //localhost:xxxx/main/student
+            { path: 'student', loadChildren: './student/student.module#StudentModule' },
+            //localhost:xxxx/main/student
+            { path: 'lecturer', loadChildren: './lecturer/lecturer.module#LecturerModule' },
+            //localhost:xxxx/main/student
+            { path: 'project', loadChildren: './project/project.module#ProjectModule' }                                    
         ]
     }
 

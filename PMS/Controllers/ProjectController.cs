@@ -27,6 +27,7 @@ namespace PMS.Controllers
         }
 
         [HttpPost]
+        [Route("add")]
         public async Task<IActionResult> CreateProject([FromBody]ProjectResource projectResource)
         {
             if (!ModelState.IsValid)
@@ -46,7 +47,8 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}")] /*/api/enrollments/id*/
+        [HttpPut] /*/api/enrollments/id*/
+        [Route("update/{id}")]
         public async Task<IActionResult> UpdateProject(int id, [FromBody]ProjectResource projectResource)
         {
             if (!ModelState.IsValid)
@@ -82,7 +84,8 @@ namespace PMS.Controllers
             return Ok(id);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("getproject/{id}")]
         public async Task<IActionResult> GetProject(int id)
         {
             var project = await repository.GetProject(id);
@@ -98,6 +101,7 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
+        [Route("getall")]
         public async Task<IActionResult> GetProjects()
         {
             var projects = await repository.GetProjects();
