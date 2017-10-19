@@ -28,7 +28,6 @@ namespace PMS.Controllers
         }
 
         [HttpPost]
-        [Route("add")]
         public async Task<IActionResult> CreateGrade([FromBody]GradeResource gradeResource)
         {
             if (!ModelState.IsValid)
@@ -48,8 +47,7 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpPut]
-        [Route("update/{id}")]
+        [HttpPut("{id}")] /*/api/Grade/id*/
         public async Task<IActionResult> UpdateGrade(int id, [FromBody]GradeResource gradeResource)
         {
             if (!ModelState.IsValid)
@@ -69,8 +67,7 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpDelete]
-        [Route("delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGrade(int id)
         {
             var grade = await repository.GetGrade(id, includeRelated: false);
@@ -86,8 +83,7 @@ namespace PMS.Controllers
             return Ok(id);
         }
 
-        [HttpGet]
-        [Route("getgrade/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetGrade(int id)
         {
             var grade = await repository.GetGrade(id);
@@ -103,7 +99,6 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
-        [Route("getall")]
         public async Task<IActionResult> GetGrades()
         {
             var grades = await repository.GetGrades();

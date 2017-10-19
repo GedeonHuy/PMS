@@ -36,7 +36,6 @@ namespace PMS.Controllers
         }
 
         [HttpPost]
-        [Route("add")]
         public async Task<IActionResult> CreateEnrollment([FromBody]EnrollmentResource enrollmentResource)
         {
             if (!ModelState.IsValid)
@@ -45,6 +44,56 @@ namespace PMS.Controllers
             }
 
             var enrollment = mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource);
+            var student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
+
+            var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
+
+            //case: enrollment's type and project's type is different
+            if (group.Project.Type != enrollmentResource.Type)
+            {
+                ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                enrollment.Group = await groupRepository.GetGroup(enrollmentResource.GroupId);
+            }
+
+            //case: student registed another group with the same type
+            if (!studentRepository.CheckStudentEnrollments(student, enrollmentResource.Type))
+            {
+                ModelState.AddModelError("Error", "Student has an enrollment for this type of projectin another group");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                enrollment.Student = student;
+            }
+
+            enrollmentRepository.AddEnrollment(enrollment);
+            await unitOfWork.Complete();
+
+            enrollment = await enrollmentRepository.GetEnrollment(enrollment.EnrollmentId);
+
+            var result = mapper.Map<Enrollment, EnrollmentResource>(enrollment);
+
+            return Ok(result);
+        }
+
+        [HttpPut("{id}")] /*/api/enrollments/id*/
+        public async Task<IActionResult> UpdateEnrollment(int id, [FromBody]EnrollmentResource enrollmentResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var enrollment = await enrollmentRepository.GetEnrollment(id);
+
+            if (enrollment == null)
+                return NotFound();
+
+            mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource, enrollment);
             var student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
 
             var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
@@ -70,41 +119,14 @@ namespace PMS.Controllers
             {
                 enrollment.Student = student;
             }
-
-            enrollmentRepository.AddEnrollment(enrollment);
-            await unitOfWork.Complete();
-
-            enrollment = await enrollmentRepository.GetEnrollment(enrollment.EnrollmentId);
-
-            var result = mapper.Map<Enrollment, EnrollmentResource>(enrollment);
-
-            return Ok(result);
-        }
-
-        [HttpPut] /*/api/enrollments/id*/
-        [Route("update/{id}")]
-        public async Task<IActionResult> UpdateEnrollment(int id, [FromBody]EnrollmentResource enrollmentResource)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var enrollment = await enrollmentRepository.GetEnrollment(id);
-
-            if (enrollment == null)
-                return NotFound();
-
-            mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource, enrollment);
             await unitOfWork.Complete();
 
             var result = mapper.Map<Enrollment, EnrollmentResource>(enrollment);
             return Ok(result);
         }
 
-        [HttpDelete]
-        [Route("delete/{id}")]
-        public async Task<IActionResult> DeleteEnrollment(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudent(int id)
         {
             var enrollment = await enrollmentRepository.GetEnrollment(id, includeRelated: false);
 
@@ -119,8 +141,7 @@ namespace PMS.Controllers
             return Ok(id);
         }
 
-        [HttpGet]
-        [Route("getenrollment/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetStudent(int id)
         {
             var enrollment = await enrollmentRepository.GetEnrollment(id);
@@ -136,7 +157,6 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
-        [Route("getall")]
         public async Task<IActionResult> GetEnrollments()
         {
             var enrollments = await enrollmentRepository.GetEnrollments();

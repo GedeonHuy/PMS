@@ -31,7 +31,6 @@ namespace PMS.Controllers
         }
 
         [HttpPost]
-        [Route("add")]
         public async Task<IActionResult> CreateGroup([FromBody]GroupResource groupResource)
         {
             if (!ModelState.IsValid)
@@ -61,8 +60,7 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpPut]
-        [Route("update/{id}")]
+        [HttpPut("{id}")] /*/api/enrollments/id*/
         public async Task<IActionResult> UpdateGroup(int id, [FromBody]GroupResource groupResource)
         {
             if (!ModelState.IsValid)
@@ -77,14 +75,22 @@ namespace PMS.Controllers
 
             mapper.Map<GroupResource, Group>(groupResource, group);
             group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId);
+            if (groupResource.ProjectId == null)
+            {
+                var otherProject = mapper.Map<ProjectResource, Project>(groupResource.OtherProject);
+                group.Project = otherProject;
+            }
+            else
+            {
+                group.Project = await projectRepository.GetProject(groupResource.ProjectId.Value);
+            }
             await unitOfWork.Complete();
 
             var result = mapper.Map<Group, GroupResource>(group);
             return Ok(result);
         }
 
-        [HttpDelete]
-        [Route("delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
             var group = await groupRepository.GetGroup(id, includeRelated: false);
@@ -100,8 +106,7 @@ namespace PMS.Controllers
             return Ok(id);
         }
 
-        [HttpGet]
-        [Route("getgroup/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetGroup(int id)
         {
             var group = await groupRepository.GetGroup(id);
@@ -117,7 +122,6 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
-        [Route("getall")]
         public async Task<IActionResult> GetGroups()
         {
             var groups = await groupRepository.GetGroups();
