@@ -11,7 +11,7 @@ using PMS.Models;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PMS.Controllers
-{
+{   
     [Route("/api/projects")]
     public class ProjectController : Controller
     {
@@ -47,7 +47,7 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpPut] /*/api/enrollments/id*/
+        [HttpPut] /*/api/projects/update/id*/
         [Route("update/{id}")]
         public async Task<IActionResult> UpdateProject(int id, [FromBody]ProjectResource projectResource)
         {
@@ -68,7 +68,8 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("delete/{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {
             var project = await repository.GetProject(id, includeRelated: false);
