@@ -17,19 +17,18 @@ namespace PMS.Controllers
     public class CouncilController : Controller
     {
         private IMapper mapper;
-        private ICouncilRepository councilRepository;
-        private IGroupRepository groupRepository;
+        private ICouncilRepository repository;
         private IUnitOfWork unitOfWork;
 
-        public CouncilController(IMapper mapper, IUnitOfWork unitOfWork, ICouncilRepository councilRepository, IGroupRepository groupRepository)
+        public CouncilController(IMapper mapper, IUnitOfWork unitOfWork, ICouncilRepository repository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.councilRepository = councilRepository;
-            this.groupRepository = groupRepository;
+            this.repository = repository;
         }
 
         [HttpPost]
+        [Route("add")]
         public async Task<IActionResult> CreateCouncil([FromBody]CouncilResource councilResource)
         {
             if (!ModelState.IsValid)
@@ -37,48 +36,20 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            //case: missing set point
-            var nullPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == null);
-            if (nullPercentCount != councilResource.LecturerInformations.Count)
-            {
-                ModelState.AddModelError("Error", "If you set percentage of score, u must set for all lecturer");
-                return BadRequest(ModelState);
-            }
-
-            ////case: one percent of score is equal 0
-            var zeroPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == 0);
-            if (zeroPercentCount > 0)
-            {
-                ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0");
-                return BadRequest(ModelState);
-            }
-
-            //case: the total sum of score is not 100
-            var PercentSum = councilResource.LecturerInformations.Sum(l => l.ScorePercent);
-            if (PercentSum != 100.0 && PercentSum != 0)
-            {
-                ModelState.AddModelError("Error", "If total percentage of score is not equal 100%");
-                return BadRequest(ModelState);
-            }
-
             var council = mapper.Map<CouncilResource, Council>(councilResource);
-            var group = await groupRepository.GetGroup(councilResource.GroupId);
-            council.Group = group;
 
-            councilRepository.AddCouncil(council);
+            repository.AddCouncil(council);
             await unitOfWork.Complete();
 
-            council = await councilRepository.GetCouncil(council.CouncilId);
-
-            await councilRepository.AddLecturers(council, councilResource.LecturerInformations);
-            await unitOfWork.Complete();
+            council = await repository.GetCouncil(council.CouncilId);
 
             var result = mapper.Map<Council, CouncilResource>(council);
 
             return Ok(result);
         }
 
-        [HttpPut("{id}")] /*/api/council/id*/
+        [HttpPut]
+        [Route("update/{id}")]
         public async Task<IActionResult> UpdateCouncil(int id, [FromBody]CouncilResource councilResource)
         {
             if (!ModelState.IsValid)
@@ -86,31 +57,7 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            //case: missing set point
-            var nullPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == null);
-            if (nullPercentCount != councilResource.LecturerInformations.Count)
-            {
-                ModelState.AddModelError("Error", "If you set percentage of score, u must set for all lecturer");
-                return BadRequest(ModelState);
-            }
-
-            //case: one percent of score is equal 0
-            var zeroPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == 0);
-            if (zeroPercentCount > 0)
-            {
-                ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0");
-                return BadRequest(ModelState);
-            }
-
-            //case: the total sum of score is not 100
-            var PercentSum = councilResource.LecturerInformations.Sum(l => l.ScorePercent);
-            if (PercentSum != 100.0 && PercentSum != 0)
-            {
-                ModelState.AddModelError("Error", "If total percentage of score is not equal 100%");
-                return BadRequest(ModelState);
-            }
-
-            var council = await councilRepository.GetCouncil(id);
+            var council = await repository.GetCouncil(id);
 
             if (council == null)
                 return NotFound();
@@ -118,37 +65,32 @@ namespace PMS.Controllers
             mapper.Map<CouncilResource, Council>(councilResource, council);
             await unitOfWork.Complete();
 
-            var group = await groupRepository.GetGroup(councilResource.GroupId);
-            council.Group = group;
-            await unitOfWork.Complete();
-
-            await councilRepository.AddLecturers(council, councilResource.LecturerInformations);
-            await unitOfWork.Complete();
-
             var result = mapper.Map<Council, CouncilResource>(council);
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("delete/{id}")]
         public async Task<IActionResult> DeleteCouncil(int id)
         {
-            var council = await councilRepository.GetCouncil(id, includeRelated: false);
+            var council = await repository.GetCouncil(id, includeRelated: false);
 
             if (council == null)
             {
                 return NotFound();
             }
 
-            councilRepository.RemoveCouncil(council);
+            repository.RemoveCouncil(council);
             await unitOfWork.Complete();
 
             return Ok(id);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("getcouncil/{id}")]
         public async Task<IActionResult> GetCouncil(int id)
         {
-            var council = await councilRepository.GetCouncil(id);
+            var council = await repository.GetCouncil(id);
 
             if (council == null)
             {
@@ -161,9 +103,10 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
+        [Route("getall")]
         public async Task<IActionResult> GetCouncils()
         {
-            var councils = await councilRepository.GetCouncils();
+            var councils = await repository.GetCouncils();
             return Ok(councils);
         }
     }

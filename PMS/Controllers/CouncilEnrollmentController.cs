@@ -34,6 +34,7 @@ namespace PMS.Controllers
         }
 
         [HttpPost]
+        [Route("add")]
         public async Task<IActionResult> CreateCouncilEnrollment([FromBody]CouncilEnrollmentResource councilEnrollmentResource)
         {
             if (!ModelState.IsValid)
@@ -55,7 +56,8 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}")] /*/api/CouncilEnrollment/id*/
+        [HttpPut]
+        [Route("update/{id}")]
         public async Task<IActionResult> UpdateCouncilEnrollment(int id, [FromBody]CouncilEnrollmentResource councilEnrollmentResource)
         {
             if (!ModelState.IsValid)
@@ -77,7 +79,8 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("delete/{id}")]
         public async Task<IActionResult> DeleteCouncilEnrollment(int id)
         {
             var councilEnrollment = await councilEnrollmentRepository.GetCouncilEnrollment(id, includeRelated: false);
@@ -93,7 +96,8 @@ namespace PMS.Controllers
             return Ok(id);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("getcouncilenrollment/{id}")]
         public async Task<IActionResult> GetCouncilEnrollment(int id)
         {
             var councilEnrollment = await councilEnrollmentRepository.GetCouncilEnrollment(id);
@@ -109,6 +113,7 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
+        [Route("getall")]
         public async Task<IActionResult> GetCouncilEnrollments()
         {
             var CouncilEnrollments = await councilEnrollmentRepository.GetCouncilEnrollments();
