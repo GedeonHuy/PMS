@@ -2,16 +2,43 @@
   <div class="menu_section">
     <h3>General</h3>
     <ul class="nav side-menu">
-      <li><a><i class="fa fa-home"></i>Home</a>
+      <li>
+        <a routerLink="/main/home/index" routerLinkActive="active">
+          <i class="fa fa-home"></i>Home</a>
       </li>
-      <li><a><i class="fa fa-desktop"></i> System <span class="fa fa-chevron-down"></span></a>
+      <li *ngIf="isAdmin" [hidden]="isAdmin">
+        <a>
+          <i class="fa fa-desktop"></i> System
+          <span class="fa fa-chevron-down"></span>
+        </a>
         <ul class="nav child_menu">
-          <li><a routerLink="/main/role/index" routerLinkActive="active">Roles</a></li>
-          <li *ngIf="isStudent" [hidden]="isStudent"><a routerLink="/main/student/index" routerLinkActive="active">Students</a></li>
-          <li><a routerLink="/main/lecturer/index" routerLinkActive="active">Lecturers</a></li>                  
-          <li><a routerLink="/main/project/index" routerLinkActive="active">Projects</a></li>                                    
+          <li>
+            <a routerLink="/main/role/index" routerLinkActive="active">Roles</a>
+          </li>
+          <li>
+            <a routerLink="/main/student/index" routerLinkActive="active">Students</a>
+          </li>
+          <li>
+            <a routerLink="/main/lecturer/index" routerLinkActive="active">Lecturers</a>
+          </li>
+          <li>
+            <a routerLink="/main/project/index" routerLinkActive="active">Projects</a>
+          </li>
         </ul>
       </li>
+
+      <li *ngIf="!isAdmin" [hidden]="isAdmin">
+        <a routerLink="/main/project/index" routerLinkActive="active">
+          <i class="fa fa-book"></i> Projects
+        </a>
+      </li>
+
+      <li *ngIf="!isAdmin" [hidden]="isAdmin">
+        <a routerLink="/main/lecturer/index" routerLinkActive="active">
+          <i class="fa fa-user-circle-o"></i> Lecturers
+        </a>
+      </li>
+
     </ul>
   </div>
 </div>
