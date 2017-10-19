@@ -11,7 +11,7 @@ using PMS.Resources;
 
 namespace PMS.Controllers
 {
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     public class RolesController : Controller
     {

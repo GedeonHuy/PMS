@@ -1,19 +1,25 @@
+import { AuthGuard } from './auth.guard';
 import { UrlConstants } from './../common/url.constants';
 import { SystemConstants } from './../common/system.constants';
+import { AuthenService } from './../services/authen.service';
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 
+
 @Injectable()
-export class AuthGuard implements CanActivate {
-    constructor(protected router: Router) { }
+export class AdminAuthGuard extends AuthGuard {
+
+    constructor(router : Router) {
+        super(router);
+    }
 
     canActivate(activateRoute: ActivatedRouteSnapshot,
         routerState: RouterStateSnapshot) {
-
-        if (localStorage.getItem(SystemConstants.CURRENT_USER)) {
+        var user = JSON.parse(localStorage.getItem(SystemConstants.CURRENT_USER));
+        if (user.role === "Admin") {
             return true;
         } else {
-            this.router.navigate([UrlConstants.LOGIN], {
+            this.router.navigate([UrlConstants.HOME], {
                 queryParams: {
                     returnUrl: routerState.url
                 }

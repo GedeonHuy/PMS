@@ -17,6 +17,7 @@ import { TopMenuComponent } from './../shared/top-menu/top-menu.component';
 
 import { UtilityService } from './../core/services/utility.service';
 import { AuthenService } from './../core/services/authen.service';
+import { AdminAuthGuard } from './../core/guards/auth-admin.guard';
 
 @NgModule({
   imports: [
@@ -30,6 +31,6 @@ import { AuthenService } from './../core/services/authen.service';
     RouterModule.forChild(MainRoutes)
   ],
   declarations: [MainComponent, SidebarMenuComponent, TopMenuComponent],
-  providers: [UtilityService, AuthenService]
+  providers: [UtilityService, AuthenService, AdminAuthGuard]
 })
 export class MainModule { }

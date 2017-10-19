@@ -465,7 +465,7 @@ namespace PMS.Controllers
                           new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                           new Claim(_options.ClaimsIdentity.UserIdClaimType, user.Id.ToString()),
                           new Claim(_options.ClaimsIdentity.UserNameClaimType, user.UserName),
-                          new Claim(_options.ClaimsIdentity.RoleClaimType, _userManager.GetRolesAsync(user).Result[0])
+                          new Claim("role", _userManager.GetRolesAsync(user).Result[0])
                         };
 
                         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));

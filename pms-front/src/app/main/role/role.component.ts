@@ -25,7 +25,7 @@ export class RoleComponent implements OnInit {
     this._dataService.get("/api/roles/getall").subscribe((response: any) => {
       console.log(response);
       this.roles = response;
-    });
+    }, error => this._dataService.handleError(error));
   }
 
   //Create method

@@ -1,6 +1,7 @@
-import { AuthGuard } from './../core/guards/auth.guard';
 import { Routes } from '@angular/router';
 import { MainComponent } from './main.component';
+import { AdminAuthGuard } from './../core/guards/auth-admin.guard';
+
 export const MainRoutes: Routes = [
     {
         //localhost:xxxx/main
@@ -12,7 +13,7 @@ export const MainRoutes: Routes = [
             //localhost:xxxx/main/user
             { path: 'user', loadChildren: './user/user.module#UserModule' },
             //localhost:xxxx/main/role
-            { path: 'role', loadChildren: './role/role.module#RoleModule' },   
+            { path: 'role', loadChildren: './role/role.module#RoleModule' , canActivate:[AdminAuthGuard]},   
             //localhost:xxxx/main/student
             { path: 'student', loadChildren: './student/student.module#StudentModule'},
             //localhost:xxxx/main/student
