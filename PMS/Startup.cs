@@ -19,6 +19,7 @@ using PMS.Persistence.IRepository;
 using PMS.Persistence.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using PMS.Hubs;
 
 namespace PMS
 {
@@ -103,7 +104,7 @@ namespace PMS
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<DataSeeder>();
             services.AddTransient<RoleSeed>();
-
+            services.AddSignalR();
             services.AddMvc();
         }
 
@@ -122,7 +123,10 @@ namespace PMS
             }
 
             app.UseStaticFiles();
-
+            app.UseSignalR(routes =>  // <-- SignalR
+            {
+                routes.MapHub<PMSHub>("PMSHub");
+            });
             app.UseAuthentication();
             app.UseCors("AllowAll");
             app.UseMvc(routes =>
@@ -131,7 +135,7 @@ namespace PMS
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-                                    roleSeed.SeedAsync().Wait();
+            roleSeed.SeedAsync().Wait();
 
             dataSeeder.SeedAsync().Wait();
 
