@@ -165,7 +165,8 @@ namespace PMS.Controllers
         public async Task<IActionResult> GetEnrollments()
         {
             var enrollments = await enrollmentRepository.GetEnrollments();
-            return Ok(enrollments);
+            var enrollmentResource = mapper.Map<IEnumerable<Enrollment>, IEnumerable<EnrollmentResource>>(enrollments);
+            return Ok(enrollmentResource);
         }
 
         //private async Task<string> getCurrentUserEmailAsync()

@@ -116,8 +116,9 @@ namespace PMS.Controllers
         [Route("getall")]
         public async Task<IActionResult> GetCouncilEnrollments()
         {
-            var CouncilEnrollments = await councilEnrollmentRepository.GetCouncilEnrollments();
-            return Ok(CouncilEnrollments);
+            var councilEnrollments = await councilEnrollmentRepository.GetCouncilEnrollments();
+            var councilEnrollmentResource = mapper.Map<IEnumerable<CouncilEnrollment>, IEnumerable<CouncilEnrollmentResource>>(councilEnrollments);
+            return Ok(councilEnrollmentResource);
         }
     }
 }

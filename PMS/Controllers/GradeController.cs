@@ -107,7 +107,8 @@ namespace PMS.Controllers
         public async Task<IActionResult> GetGrades()
         {
             var grades = await repository.GetGrades();
-            return Ok(grades);
+            var gradeResource = mapper.Map<IEnumerable<Grade>, IEnumerable<GradeResource>>(grades);
+            return Ok(gradeResource);
         }
     }
 }

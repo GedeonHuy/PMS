@@ -130,7 +130,8 @@ namespace PMS.Controllers
         public async Task<IActionResult> GetGroups()
         {
             var groups = await groupRepository.GetGroups();
-            return Ok(groups);
+            var groupResource = mapper.Map<IEnumerable<Group>, IEnumerable<GroupResource>>(groups);
+            return Ok(groupResource);
         }
     }
 }

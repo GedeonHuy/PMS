@@ -133,7 +133,8 @@ namespace PMS.Controllers
         public async Task<IActionResult> GetStudents()
         {
             var students = await repository.GetStudents();
-            return Ok(students);
+            var studentResource = mapper.Map<IEnumerable<Student>, IEnumerable<StudentResource>>(students);
+            return Ok(studentResource);
         }
 
         private bool RoleExists(string roleName)

@@ -169,7 +169,8 @@ namespace PMS.Controllers
         public async Task<IActionResult> GetCouncils()
         {
             var councils = await councilRepository.GetCouncils();
-            return Ok(councils);
+            var councilResource = mapper.Map<IEnumerable<Council>, IEnumerable<CouncilResource>>(councils);
+            return Ok(councilResource);
         }
     }
 }

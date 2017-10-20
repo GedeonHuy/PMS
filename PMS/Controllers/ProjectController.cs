@@ -105,7 +105,8 @@ namespace PMS.Controllers
         public async Task<IActionResult> GetProjects()
         {
             var projects = await repository.GetProjects();
-            return Ok(projects);
+            var projectResource = mapper.Map<IEnumerable<Project>, IEnumerable<ProjectResource>>(projects);
+            return Ok(projectResource);
         }
     }
 }

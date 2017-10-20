@@ -44,6 +44,8 @@ namespace PMS.Persistence
         public async Task<IEnumerable<Group>> GetGroups()
         {
             return await context.Groups
+                .Include(p => p.Lecturer)
+                .Include(p => p.Project)
                 .Include(p => p.Enrollments)
                 .Include(p => p.UploadedFiles)
                 .ToListAsync();
