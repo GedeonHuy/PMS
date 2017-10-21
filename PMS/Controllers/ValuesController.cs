@@ -6,18 +6,22 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using PMS.Data;
+using PMS.Hubs;
 
 namespace PMS.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
         private readonly ApplicationDbContext context;
-        public ValuesController(ApplicationDbContext context)
+        private readonly IHubContext<PMSHub> hubContext;
+        public ValuesController(ApplicationDbContext context, IHubContext<PMSHub> hubContext)
         {
             this.context = context;
+            this.hubContext = hubContext;
         }
 
         // GET api/values
@@ -25,6 +29,7 @@ namespace PMS.Controllers
         public IActionResult Get()
         {
             var users = context.Users.ToList();
+            hubContext.Clients.All.InvokeAsync("Send", "Hello World");
             return Ok(users);
         }
 

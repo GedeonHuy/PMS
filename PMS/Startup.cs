@@ -123,12 +123,13 @@ namespace PMS
             }
 
             app.UseStaticFiles();
+            app.UseCors("AllowAll");
+
             app.UseSignalR(routes =>  // <-- SignalR
             {
-                routes.MapHub<PMSHub>("PMSHub");
+                routes.MapHub<PMSHub>("hub");
             });
             app.UseAuthentication();
-            app.UseCors("AllowAll");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
