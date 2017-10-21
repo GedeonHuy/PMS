@@ -20,7 +20,7 @@ namespace PMS.Persistence.Repository
             this.context = context;
         }
 
-        public async Task<Council> GetCouncil(int id, bool includeRelated = true)
+        public async Task<Council> GetCouncil(int? id, bool includeRelated = true)
         {
             if (!includeRelated)
             {

@@ -8,7 +8,7 @@ namespace PMS.Persistence
 {
     public interface IEnrollmentRepository
     {
-        Task<Enrollment> GetEnrollment(int id, bool includeRelated = true);
+        Task<Enrollment> GetEnrollment(int? id, bool includeRelated = true);
         void AddEnrollment(Enrollment enrollment);
         void RemoveEnrollment(Enrollment enrollment);
         Task<IEnumerable<Enrollment>> GetEnrollments();

@@ -8,7 +8,7 @@ namespace PMS.Persistence
 {
     public interface IGroupRepository
     {
-        Task<Group> GetGroup(int id, bool includeRelated = true);
+        Task<Group> GetGroup(int? id, bool includeRelated = true);
         void AddGroup(Group group);
         void RemoveGroup(Group group);
         Task<IEnumerable<Group>> GetGroups();

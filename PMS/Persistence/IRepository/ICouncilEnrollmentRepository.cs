@@ -8,7 +8,7 @@ namespace PMS.Persistence.IRepository
 {
     public interface ICouncilEnrollmentRepository
     {
-        Task<CouncilEnrollment> GetCouncilEnrollment(int id, bool includeRelated = true);
+        Task<CouncilEnrollment> GetCouncilEnrollment(int? id, bool includeRelated = true);
         void AddCouncilEnrollment(CouncilEnrollment CouncilEnrollment);
         void RemoveCouncilEnrollment(CouncilEnrollment CouncilEnrollment);
         Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollments();

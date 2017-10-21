@@ -8,7 +8,7 @@ namespace PMS.Persistence
 {
     public interface IProjectRepository
     {
-        Task<Project> GetProject(int id, bool includeRelated = true);
+        Task<Project> GetProject(int? id, bool includeRelated = true);
         void AddProject(Project project);
         void RemoveProject(Project project);
         Task<IEnumerable<Project>> GetProjects();

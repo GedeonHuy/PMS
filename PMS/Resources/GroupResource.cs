@@ -17,7 +17,7 @@ namespace PMS.Resources
         public ICollection<EnrollmentResource> Enrollments { get; set; }
         public int? ProjectId { get; set; }
         public ProjectResource Project { get; set; }
-        public int LecturerId { get; set; }
+        public int? LecturerId { get; set; }
         public LecturerResource Lecturer { get; set; }
         public CouncilResource Council { get; set; }
         public ICollection<UploadedFileResource> UploadedFiles { get; set; }

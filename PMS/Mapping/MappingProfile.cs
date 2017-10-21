@@ -14,6 +14,7 @@ namespace PMS.Mapping
         {
             //Domain to API Resource
             CreateMap<Council, CouncilResource>()
+            .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId))
             .ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new CouncilEnrollment
             {
                 CouncilEnrollmentId = cf.CouncilEnrollmentId,
@@ -23,6 +24,7 @@ namespace PMS.Mapping
             })));
 
             CreateMap<CouncilEnrollment, CouncilEnrollmentResource>()
+            .ForMember(cr => cr.LecturerID, opt => opt.MapFrom(c => c.Lecturer.LecturerId))
             .ForMember(cr => cr.Lecturer, opt => opt.MapFrom(c => new LecturerResource
             {
                 LecturerId = c.Lecturer.LecturerId,
@@ -33,6 +35,7 @@ namespace PMS.Mapping
                 IsDeleted = c.Lecturer.IsDeleted,
                 PhoneNumber = c.Lecturer.PhoneNumber
             }))
+            .ForMember(cr => cr.CouncilID, opt => opt.MapFrom(c => c.Council.CouncilId))
             .ForMember(cr => cr.Council, opt => opt.MapFrom(c => new CouncilResource
             {
                 CouncilId = c.Council.CouncilId,
@@ -67,6 +70,7 @@ namespace PMS.Mapping
                 .ForMember(lr => lr.CouncilEnrollments, opt => opt.MapFrom(l => l.CouncilEnrollments));
 
             CreateMap<Group, GroupResource>()
+                .ForMember(gr => gr.LecturerId, opt => opt.MapFrom(g => g.Lecturer.LecturerId))
                 .ForMember(gr => gr.Lecturer, opt => opt.MapFrom(g => new LecturerResource
                 {
                     Name = g.Lecturer.Name,
@@ -76,6 +80,7 @@ namespace PMS.Mapping
                     IsDeleted = g.Lecturer.IsDeleted,
                     PhoneNumber = g.Lecturer.PhoneNumber
                 }))
+                .ForMember(gr => gr.ProjectId, opt => opt.MapFrom(g => g.Project.ProjectId))
                 .ForMember(gr => gr.Project, opt => opt.MapFrom(g => new ProjectResource
                 {
                     ProjectId = g.Project.ProjectId,
