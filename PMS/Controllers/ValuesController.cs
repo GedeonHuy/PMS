@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using PMS.Data;
 using PMS.Hubs;
+using PMS.Models;
 
 namespace PMS.Controllers
 {
@@ -29,7 +30,7 @@ namespace PMS.Controllers
         public IActionResult Get()
         {
             var users = context.Users.ToList();
-            hubContext.Clients.All.InvokeAsync("Send", "Hello World");
+            hubContext.Clients.All.InvokeAsync("Send", "ABC");
             return Ok(users);
         }
 
@@ -42,8 +43,10 @@ namespace PMS.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<IActionResult> Post([FromBody]Student student)
         {
+             await           hubContext.Clients.All.InvokeAsync("Send", student);
+            return Ok();
         }
 
         // PUT api/values/5

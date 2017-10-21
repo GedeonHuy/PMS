@@ -129,7 +129,9 @@ namespace PMS
             {
                 routes.MapHub<PMSHub>("hub");
             });
+
             app.UseAuthentication();
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

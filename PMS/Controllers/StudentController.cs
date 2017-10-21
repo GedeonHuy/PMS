@@ -25,19 +25,18 @@ namespace PMS.Controllers
         private IMapper mapper;
         private IStudentRepository repository;
         private IUnitOfWork unitOfWork;
-        private IHubContext<PMSHub> hub { get; set; }
+        private IHubContext<PMSHub> hubContext { get; set; }
         private readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
 
-        //private readonly PMSHub hub;
-        public StudentController(ApplicationDbContext context, IMapper mapper, IStudentRepository repository, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        public StudentController(IHubContext<PMSHub> hubContext, ApplicationDbContext context, IMapper mapper, IStudentRepository repository, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
             this.context = context;
             this.mapper = mapper;
             this.repository = repository;
             this.unitOfWork = unitOfWork;
-            //this.hub = hub;
+            this.hubContext = hubContext;
         }
 
         [HttpPost]
@@ -73,11 +72,9 @@ namespace PMS.Controllers
             await unitOfWork.Complete();
 
             student = await repository.GetStudent(student.Id);
-
+            await hubContext.Clients.All.InvokeAsync("Send", student);
             var result = mapper.Map<Student, StudentResource>(student);
-            
-            //await hub.Clients.All.InvokeAsync("Send");
-            
+
             return Ok(result);
         }
 

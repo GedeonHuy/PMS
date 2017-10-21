@@ -1,9 +1,10 @@
+import { SystemConstants } from './../../core/common/system.constants';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-
+import { HubConnection } from '@aspnet/signalr-client';
 @Component({
   selector: 'app-student',
   templateUrl: './student.component.html',
@@ -14,13 +15,17 @@ export class StudentComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   public students: any[];
   public student: any;
-  public isClicked : boolean;
-  constructor(private _dataService: DataService, private _notificationService: NotificationService) { 
+  public isClicked: boolean;
+  hubConnection: HubConnection;
+  constructor(private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
   }
 
   ngOnInit() {
     this.loadData();
+
+    this.hubConnection = new HubConnection(SystemConstants.BASE_URL + "/hub");
+
   }
 
   loadData() {
@@ -58,8 +63,10 @@ export class StudentComponent implements OnInit {
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
+            //this.hubConnection.on("send", s => s = this.student);
+
             this._notificationService.printSuccessMessage("Add Success");
-            this.isClicked = false;            
+            this.isClicked = false;
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -68,19 +75,19 @@ export class StudentComponent implements OnInit {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
-            this.isClicked = false;            
+            this.isClicked = false;
           }, error => this._dataService.handleError(error));
       }
     }
   }
 
-  deleteStudent(id : any) {
+  deleteStudent(id: any) {
     this._notificationService.printConfirmationDialog("Delete confirm", () => this.deleteConfirm(id));
   }
 
-  deleteConfirm(id : any) {
+  deleteConfirm(id: any) {
     this._dataService.delete('/api/students/delete/' + id)
-      .subscribe((response : Response) => {
+      .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");
         this.loadData();
       });
