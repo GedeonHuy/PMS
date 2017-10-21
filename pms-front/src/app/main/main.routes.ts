@@ -18,8 +18,10 @@ export const MainRoutes: Routes = [
             { path: 'student', loadChildren: './student/student.module#StudentModule'},
             //localhost:xxxx/main/student
             { path: 'lecturer', loadChildren: './lecturer/lecturer.module#LecturerModule'},
-            //localhost:xxxx/main/student
-            { path: 'project', loadChildren: './project/project.module#ProjectModule' }                                    
+            //localhost:xxxx/main/project
+            { path: 'project', loadChildren: './project/project.module#ProjectModule' },
+            //localhost:xxxx/main/group
+            { path: 'group', loadChildren: './group/group.module#GroupModule' }     
         ]
     }
 

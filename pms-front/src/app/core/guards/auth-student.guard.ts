@@ -7,7 +7,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 
 
 @Injectable()
-export class AdminAuthGuard extends AuthGuard {
+export class StudentAuthGuard extends AuthGuard {
 
     constructor(router : Router) {
         super(router);

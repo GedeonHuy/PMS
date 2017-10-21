@@ -11,6 +11,8 @@ using System.Collections.ObjectModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using PMS.Persistence;
+using Microsoft.AspNetCore.SignalR;
+using PMS.Hubs;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,9 +25,11 @@ namespace PMS.Controllers
         private IMapper mapper;
         private IStudentRepository repository;
         private IUnitOfWork unitOfWork;
+        private IHubContext<PMSHub> hub { get; set; }
         private readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
 
+        //private readonly PMSHub hub;
         public StudentController(ApplicationDbContext context, IMapper mapper, IStudentRepository repository, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
@@ -33,6 +37,7 @@ namespace PMS.Controllers
             this.mapper = mapper;
             this.repository = repository;
             this.unitOfWork = unitOfWork;
+            //this.hub = hub;
         }
 
         [HttpPost]
@@ -70,7 +75,9 @@ namespace PMS.Controllers
             student = await repository.GetStudent(student.Id);
 
             var result = mapper.Map<Student, StudentResource>(student);
-
+            
+            //await hub.Clients.All.InvokeAsync("Send");
+            
             return Ok(result);
         }
 
