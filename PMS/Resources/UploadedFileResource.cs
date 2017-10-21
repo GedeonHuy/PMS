@@ -12,7 +12,7 @@ namespace PMS.Resources
         public string Description { get; set; }
         public string Url { get; set; }
         public bool IsDeleted { get; set; }
-        public int EnrollmentId { get; set; }
+        public int? EnrollmentId { get; set; }
         public EnrollmentResource Enrollment { get; set; }
     }
 }

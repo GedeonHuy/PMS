@@ -17,7 +17,7 @@ namespace PMS.Persistence
             this.context = context;
         }
 
-        public async Task<Lecturer> GetLecturer(int id, bool includeRelated = true)
+        public async Task<Lecturer> GetLecturer(int? id, bool includeRelated = true)
         {
             if (!includeRelated)
             {

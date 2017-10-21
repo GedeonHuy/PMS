@@ -16,7 +16,7 @@ namespace PMS.Persistence
         {
             this.context = context;
         }
-        public async Task<Project> GetProject(int id, bool includeRelated = true)
+        public async Task<Project> GetProject(int? id, bool includeRelated = true)
         {
             if (!includeRelated)
             {

@@ -8,7 +8,7 @@ namespace PMS.Persistence
 {
     public interface ILecturerRepository
     {
-        Task<Lecturer> GetLecturer(int id, bool includeRelated = true);
+        Task<Lecturer> GetLecturer(int? id, bool includeRelated = true);
         void AddLecturer(Lecturer lecturer);
         void RemoveLecturer(Lecturer lecturer);
         Task<IEnumerable<Lecturer>> GetLecturers();

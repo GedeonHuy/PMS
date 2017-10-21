@@ -15,7 +15,7 @@ namespace PMS.Resources
         public GradeResource Grade { get; set; }
         //public int StudentId { get; set; }
         public StudentResource Student { get; set; }
-        public int GroupId { get; set; }
+        public int? GroupId { get; set; }
         public GroupResource Group { get; set; }
 
         public string StudentEmail { get; set; }

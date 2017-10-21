@@ -8,7 +8,7 @@ namespace PMS.Persistence.IRepository
 {
     public interface IGradeRepository
     {
-        Task<Grade> GetGrade(int id, bool includeRelated = true);
+        Task<Grade> GetGrade(int? id, bool includeRelated = true);
         void AddGrade(Grade Grade);
         void RemoveGrade(Grade Grade);
         Task<IEnumerable<Grade>> GetGrades();

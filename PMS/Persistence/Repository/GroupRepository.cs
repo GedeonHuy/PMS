@@ -17,7 +17,7 @@ namespace PMS.Persistence
             this.context = context;
         }
 
-        public async Task<Group> GetGroup(int id, bool includeRelated = true)
+        public async Task<Group> GetGroup(int? id, bool includeRelated = true)
         {
             if (!includeRelated)
             {

@@ -19,7 +19,7 @@ namespace PMS.Persistence
             this.userManager = userManager;
             this.context = context;
         }
-        public async Task<Student> GetStudent(int id, bool includeRelated = true)
+        public async Task<Student> GetStudent(int? id, bool includeRelated = true)
         {
             if (!includeRelated)
             {

@@ -8,7 +8,7 @@ namespace PMS.Persistence
 {
     public interface IStudentRepository
     {
-        Task<Student> GetStudent(int id, bool includeRelated = true);
+        Task<Student> GetStudent(int? id, bool includeRelated = true);
         Task<Student> GetStudentByEmail(string email);
         void AddStudent(Student student);
         void RemoveStudent(Student student);

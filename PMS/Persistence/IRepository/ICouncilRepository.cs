@@ -10,7 +10,7 @@ namespace PMS.Persistence.IRepository
 {
     public interface ICouncilRepository
     {
-        Task<Council> GetCouncil(int id, bool includeRelated = true);
+        Task<Council> GetCouncil(int? id, bool includeRelated = true);
         void AddCouncil(Council council);
         void RemoveCouncil(Council council);
         Task<IEnumerable<Council>> GetCouncils();
