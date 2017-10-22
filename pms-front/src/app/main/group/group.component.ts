@@ -56,7 +56,7 @@ export class GroupComponent implements OnInit {
     this.modalAddEdit.show();
   }
 
-  //Get Role with Id
+  //Get Group with Id
   loadgroup(id: any) {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {

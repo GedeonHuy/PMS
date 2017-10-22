@@ -16,10 +16,10 @@ namespace PMS.Hubs
             return Clients.All.InvokeAsync("Send", name);
         }
 
-        /// <summary>
-        /// Connect user to hub
-        /// </summary>
-        /// <returns></returns>
+        // / <summary>
+        // / Connect user to hub
+        // / </summary>
+        // / <returns></returns>
         // public override Task OnConnectedAsync()
         // {
         //     IdentityOptions _options = new IdentityOptions();
