@@ -24,14 +24,59 @@ namespace PMS.Mapping
             })));
 
             CreateMap<Major, MajorResource>()
-                .ForMember(gr => gr.Lecturers, opt => opt.MapFrom(g => g.Lecturers))
-                .ForMember(gr => gr.Students, opt => opt.MapFrom(g => g.Students))
-                .ForMember(gr => gr.Groups, opt => opt.MapFrom(g => g.Groups))
-                .ForMember(gr => gr.Projects, opt => opt.MapFrom(g => g.Projects));
+                .ForMember(gr => gr.Lecturers, opt => opt.MapFrom(g => g.Lecturers.Select(gf => new LecturerResource
+                {
+                    LecturerId = gf.LecturerId,
+                    Name = gf.Name,
+                    Address = gf.Address,
+                    DateOfBirth = gf.DateOfBirth,
+                    Email = gf.Email,
+                    IsDeleted = gf.IsDeleted,
+                    PhoneNumber = gf.PhoneNumber
+                })))
+                .ForMember(gr => gr.Students, opt => opt.MapFrom(g => g.Students.Select(gf => new StudentResource
+                {
+                    Email = gf.Email,
+                    Address = gf.Address,
+                    DateOfBirth = gf.DateOfBirth,
+                    Id = gf.Id,
+                    IsDeleted = gf.IsDeleted,
+                    Name = gf.Name,
+                    PhoneNumber = gf.PhoneNumber,
+                    StudentCode = gf.StudentCode,
+                    Year = gf.Year
+                })))
+                .ForMember(gr => gr.Groups, opt => opt.MapFrom(g => g.Groups.Select(gf => new GroupResource
+                {
+                    GroupId = gf.GroupId,
+                    GroupName = gf.GroupName,
+                    isDeleted = gf.isDeleted,
+                    isConfirm = gf.isConfirm
+                })))
+                .ForMember(gr => gr.Projects, opt => opt.MapFrom(g => g.Projects.Select(gf => new ProjectResource
+                {
+                    ProjectId = gf.ProjectId,
+                    Desciption = gf.Desciption,
+                    ProjectCode = gf.ProjectCode,
+                    Title = gf.Title,
+                    Type = gf.Type
+                })));
 
             CreateMap<Quarter, QuarterResource>()
-                .ForMember(sr => sr.Groups, opt => opt.MapFrom(s => s.Groups))
-                .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(s => s.Enrollments));
+                .ForMember(sr => sr.Groups, opt => opt.MapFrom(s => s.Groups.Select(sf => new GroupResource
+                {
+                    GroupId = sf.GroupId,
+                    GroupName = sf.GroupName,
+                    isDeleted = sf.isDeleted,
+                    isConfirm = sf.isConfirm
+                })))
+                .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(s => s.Enrollments.Select(sf => new EnrollmentResource
+                {
+                    EnrollmentId = sf.EnrollmentId,
+                    EndDate = sf.EndDate,
+                    StartDate = sf.StartDate,
+                    Type = sf.Type
+                })));
 
 
             CreateMap<CouncilEnrollment, CouncilEnrollmentResource>()
@@ -112,7 +157,13 @@ namespace PMS.Mapping
                     MajorName = l.Major.MajorName,
                     MajorCode = l.Major.MajorCode
                 }))
-                .ForMember(lr => lr.Groups, opt => opt.MapFrom(l => l.Groups))
+                .ForMember(lr => lr.Groups, opt => opt.MapFrom(l => l.Groups.Select(lf => new GroupResource
+                {
+                    GroupId = lf.GroupId,
+                    GroupName = lf.GroupName,
+                    isDeleted = lf.isDeleted,
+                    isConfirm = lf.isConfirm
+                })))
                 .ForMember(lr => lr.CouncilEnrollments, opt => opt.MapFrom(l => l.CouncilEnrollments));
 
             CreateMap<Group, GroupResource>()
