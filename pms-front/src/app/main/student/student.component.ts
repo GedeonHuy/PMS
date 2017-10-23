@@ -1,8 +1,10 @@
+import { CommonModule } from '@angular/common';
+import { SignalrService } from './../../core/services/signalr.service';
 import { SystemConstants } from './../../core/common/system.constants';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { HubConnection } from '@aspnet/signalr-client';
 
@@ -17,25 +19,50 @@ export class StudentComponent implements OnInit {
   public students: any[];
   public student: any;
   public isClicked: boolean;
-  hubConnection: HubConnection;
-  constructor(private _dataService: DataService, private _notificationService: NotificationService) {
+  public canConnect: Boolean;
+  //hubConnection: HubConnection;
+  constructor(private _ngZone: NgZone, private _signalRService: SignalrService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
+    // this can subscribe for events  
+    this.subscribeToEvents();
+    // this can check for conenction exist or not.  
+    this.canConnect = _signalRService.connectionExists;
+  }
+
+  private subscribeToEvents(): void {
+
+    var self = this;
+    self.students = [];
+
+    // if connection exists it can call of method.  
+    this._signalRService.connectionEstablished.subscribe(() => {
+      this.canConnect = true;
+    });
+
+    // finally our service method to call when response received from server event and transfer response to some variable to be shwon on the browser.  
+    this._signalRService.send.subscribe((data: any) => {
+      this._ngZone.run(() => {
+          self.students.push(data);
+      });
+    });
   }
 
   ngOnInit() {
     this.loadData();
 
-    this.hubConnection = new HubConnection(SystemConstants.BASE_URL + "/hub");
-    this.hubConnection.on('Send', (data: any) => {
-      this.loadData();
-    });
-    this.hubConnection.start()
-      .then(() => {
-        console.log('Hub connection started')
-      })
-      .catch(err => {
-        console.log('Error while establishing connection')
-      });
+    // this.hubConnection = new HubConnection(SystemConstants.BASE_URL + "/hub");
+
+    // this.hubConnection.on('Send', (data: any) => {
+    //   this.loadData();
+    // });
+
+    // this.hubConnection.start()
+    //   .then(() => {
+    //     console.log('Hub connection started')
+    //   })
+    //   .catch(err => {
+    //     console.log('Error while establishing connection')
+    //   });
 
   }
 
@@ -74,7 +101,7 @@ export class StudentComponent implements OnInit {
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
-            this.hubConnection.invoke('Send', this.student);
+            //this.hubConnection.invoke('Send', this.student);
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
