@@ -43,6 +43,8 @@ namespace PMS
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ILecturerRepository, LecturerRepository>();
+            services.AddScoped<IMajorRepository, MajorRepository>();
+            services.AddScoped<IQuarterRepository, QuarterRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
@@ -131,7 +133,7 @@ namespace PMS
             });
 
             app.UseAuthentication();
-            
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

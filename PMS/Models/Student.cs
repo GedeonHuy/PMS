@@ -15,7 +15,7 @@ namespace PMS.Models
         public string Address { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string Major { get; set; }
+        public Major Major { get; set; }
         public string Year { get; set; }
         public bool IsDeleted { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }

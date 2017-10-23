@@ -15,6 +15,8 @@ namespace PMS.Resources
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsDeleted { get; set; }
+        public int? MajorId { get; set; }
+        public MajorResource Major { get; set; }
         public IEnumerable<CouncilEnrollmentResource> CouncilEnrollments { get; set; }
         public ICollection<GroupResource> Groups { get; set; }
         public LecturerResource()
