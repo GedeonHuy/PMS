@@ -18,7 +18,7 @@ namespace PMS.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            
+
             builder.Entity<ApplicationRole>().ToTable("ApplicationRole");
             builder.Entity<Council>().ToTable("Council");
             builder.Entity<CouncilEnrollment>().ToTable("CouncilErollment");
@@ -29,6 +29,8 @@ namespace PMS.Data
             builder.Entity<Project>().ToTable("Project");
             builder.Entity<Student>().ToTable("Student");
             builder.Entity<UploadedFile>().ToTable("UploadedFile");
+            builder.Entity<Major>().ToTable("Major");
+            builder.Entity<Semester>().ToTable("Semester");
         }
 
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
@@ -41,5 +43,7 @@ namespace PMS.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<UploadedFile> UploadedFiles { get; set; }
+        public DbSet<Major> Majors { get; set; }
+        public DbSet<Semester> Semesters { get; set; }
     }
 }

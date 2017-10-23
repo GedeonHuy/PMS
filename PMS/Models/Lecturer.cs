@@ -15,6 +15,7 @@ namespace PMS.Models
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsDeleted { get; set; }
+        public Major Major { get; set; }
         public IEnumerable<CouncilEnrollment> CouncilEnrollments { get; set; }
         public ICollection<Group> Groups { get; set; }
         public ICollection<Project> projectRepository { get; set; }

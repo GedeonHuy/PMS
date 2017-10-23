@@ -15,6 +15,8 @@ namespace PMS.Resources
         public string Desciption { get; set; }
         public bool IsDeleted { get; set; }
         public ICollection<GroupResource> Groups { get; set; }
+        public int? MajorId { get; set; }
+        public MajorResource Major { get; set; }
         public ProjectResource()
         {
             Groups = new Collection<GroupResource>();
