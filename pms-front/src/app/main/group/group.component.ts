@@ -19,6 +19,7 @@ export class GroupComponent implements OnInit {
   
   projects : any[];
   lecturers : any[];
+  
   constructor(private _authenService : AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isAdmin = false;
@@ -32,9 +33,11 @@ export class GroupComponent implements OnInit {
       this.projects = response;
     });
 
+    console.log(this.projects);
     this._dataService.get("/api/lecturers/getall").subscribe((response : any) => {
       this.lecturers = response;
     });
+    console.log(this.lecturers);
   }
 
   loadData() {
