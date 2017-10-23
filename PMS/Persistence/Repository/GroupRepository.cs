@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PMS.Data;
 using PMS.Models;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace PMS.Persistence
                 .Include(p => p.Enrollments)
                 .Include(p => p.UploadedFiles)
                 .Include(p => p.Lecturer)
+                .Include(p => p.Major)
+                .Include(p => p.Quarter)
                 .SingleOrDefaultAsync(s => s.GroupId == id);
         }
 
@@ -48,7 +51,27 @@ namespace PMS.Persistence
                 .Include(p => p.Project)
                 .Include(p => p.Enrollments)
                 .Include(p => p.UploadedFiles)
+                .Include(p => p.Major)
+                .Include(p => p.Quarter)
                 .ToListAsync();
+        }
+
+        public async Task<bool> CheckGroup(GroupResource group)
+        {
+            var lecturer = await context.Lecturers
+                .Include(l => l.Major)
+                .FirstOrDefaultAsync(l => l.LecturerId == group.LecturerId);
+            var project = await context.Projects
+                .Include(p => p.Major)
+                .FirstOrDefaultAsync(p => p.ProjectId == group.ProjectId);
+            var major = await context.Majors
+                .FirstOrDefaultAsync(m => m.MajorId == group.MajorId);
+            if ((major.MajorId != lecturer.Major.MajorId) || (major.MajorId != project.Major.MajorId)
+                || (lecturer.Major.MajorId != project.Major.MajorId))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

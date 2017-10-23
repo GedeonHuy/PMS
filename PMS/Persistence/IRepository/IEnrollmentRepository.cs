@@ -12,5 +12,6 @@ namespace PMS.Persistence
         void AddEnrollment(Enrollment enrollment);
         void RemoveEnrollment(Enrollment enrollment);
         Task<IEnumerable<Enrollment>> GetEnrollments();
+        bool CheckStudent(Student student, Group group);
     }
 }

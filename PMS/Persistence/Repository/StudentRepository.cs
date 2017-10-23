@@ -27,6 +27,7 @@ namespace PMS.Persistence
             }
             return await context.Students
                 .Include(s => s.Enrollments)
+                .Include(p => p.Major)
                 .SingleOrDefaultAsync(s => s.Id == id);
         }
 
@@ -35,6 +36,7 @@ namespace PMS.Persistence
         {
             return await context.Students
                 .Include(s => s.Enrollments)
+                .Include(p => p.Major)
                 .SingleOrDefaultAsync(s => s.Email == email);
         }
 
@@ -51,6 +53,7 @@ namespace PMS.Persistence
         public async Task<IEnumerable<Student>> GetStudents()
         {
             return await context.Students
+                .Include(p => p.Major)
                 .Include(s => s.Enrollments)
                 .ToListAsync();
         }

@@ -26,6 +26,7 @@ namespace PMS.Persistence
             return await context.Lecturers
                 .Include(l => l.Groups)
                 .Include(l => l.CouncilEnrollments)
+                .Include(p => p.Major)
                 .SingleOrDefaultAsync(s => s.LecturerId == id);
         }
 
@@ -44,6 +45,7 @@ namespace PMS.Persistence
             return await context.Lecturers
                 .Include(l => l.Groups)
                 .Include(l => l.CouncilEnrollments)
+                .Include(p => p.Major)
                 .ToListAsync();
         }
     }

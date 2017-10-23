@@ -24,6 +24,7 @@ namespace PMS.Persistence
             }
             return await context.Projects
                 .Include(p => p.Groups)
+                .Include(p => p.Major)
                 .SingleOrDefaultAsync(s => s.ProjectId == id);
         }
 
@@ -41,6 +42,7 @@ namespace PMS.Persistence
         {
             return await context.Projects
                 .Include(p => p.Groups)
+                .Include(p => p.Major)
                 .ToListAsync();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using PMS.Models;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace PMS.Persistence
         void AddGroup(Group group);
         void RemoveGroup(Group group);
         Task<IEnumerable<Group>> GetGroups();
+        Task<bool> CheckGroup(GroupResource group);
     }
 }

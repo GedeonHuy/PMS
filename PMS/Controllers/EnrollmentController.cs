@@ -46,8 +46,14 @@ namespace PMS.Controllers
 
             var enrollment = mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource);
             var student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
-
             var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
+            //case: student's major nad group's major is not the same
+            var checkStudent = enrollmentRepository.CheckStudent(student, group);
+            if (!checkStudent)
+            {
+                ModelState.AddModelError("Error", "Please check again. Your major and this group's major is not the same.");
+                return BadRequest(ModelState);
+            }
 
             //case: enrollment's type and project's type is different
             if (group.Project.Type != enrollmentResource.Type)

@@ -25,6 +25,7 @@ namespace PMS.Persistence
             }
             return await context.Enrollments
                 .Include(e => e.Student)
+                .Include(p => p.Quarter)
                 .SingleOrDefaultAsync(s => s.EnrollmentId == id);
         }
 
@@ -41,7 +42,17 @@ namespace PMS.Persistence
         public async Task<IEnumerable<Enrollment>> GetEnrollments()
         {
             return await context.Enrollments
+                .Include(p => p.Quarter)
                 .ToListAsync();
+        }
+
+        public bool CheckStudent(Student student, Group group)
+        {
+            if (student.Major.MajorId != group.Major.MajorId)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
