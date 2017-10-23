@@ -30,7 +30,7 @@ namespace PMS.Data
             builder.Entity<Student>().ToTable("Student");
             builder.Entity<UploadedFile>().ToTable("UploadedFile");
             builder.Entity<Major>().ToTable("Major");
-            builder.Entity<Semester>().ToTable("Semester");
+            builder.Entity<Quarter>().ToTable("Quarter");
         }
 
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
@@ -44,6 +44,6 @@ namespace PMS.Data
         public DbSet<Student> Students { get; set; }
         public DbSet<UploadedFile> UploadedFiles { get; set; }
         public DbSet<Major> Majors { get; set; }
-        public DbSet<Semester> Semesters { get; set; }
+        public DbSet<Quarter> Quarters { get; set; }
     }
 }

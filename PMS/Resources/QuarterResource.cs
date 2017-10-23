@@ -4,20 +4,20 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PMS.Models
+namespace PMS.Resources
 {
-    public class Semester
+    public class QuarterResource
     {
         public int SemesterId { get; set; }
         public string SemesterName { get; set; }
         public DateTime SemesterStart { get; set; }
         public DateTime SemesterEnd { get; set; }
-        public ICollection<Group> Groups { get; set; }
-        public ICollection<Enrollment> Enrollments { get; set; }
-        public Semester()
+        public ICollection<GroupResource> Groups { get; set; }
+        public ICollection<EnrollmentResource> Enrollments { get; set; }
+        public QuarterResource()
         {
-            Groups = new Collection<Group>();
-            Enrollments = new Collection<Enrollment>();
+            Groups = new Collection<GroupResource>();
+            Enrollments = new Collection<EnrollmentResource>();
         }
     }
 }

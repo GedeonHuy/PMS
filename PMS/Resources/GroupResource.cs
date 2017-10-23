@@ -21,8 +21,8 @@ namespace PMS.Resources
         public LecturerResource Lecturer { get; set; }
         public int? MajorId { get; set; }
         public MajorResource Major { get; set; }
-        public int? SemesterId { get; set; }
-        public SemesterResource Semester { get; set; }
+        public int? QuarterId { get; set; }
+        public QuarterResource Quarter { get; set; }
         public CouncilResource Council { get; set; }
         public ICollection<UploadedFileResource> UploadedFiles { get; set; }
         public GroupResource()

@@ -9,40 +9,40 @@ using System.Threading.Tasks;
 
 namespace PMS.Persistence.Repository
 {
-    public class SemesterRepository : ISemesterRepository
+    public class QuarterRepository : IQuarterRepository
     {
         private ApplicationDbContext context;
 
-        public SemesterRepository(ApplicationDbContext context)
+        public QuarterRepository(ApplicationDbContext context)
         {
             this.context = context;
         }
 
-        public async Task<Semester> GetSemester(int? id, bool includeRelated = true)
+        public async Task<Quarter> GetQuarter(int? id, bool includeRelated = true)
         {
             if (!includeRelated)
             {
-                return await context.Semesters.FindAsync(id);
+                return await context.Quarters.FindAsync(id);
             }
-            return await context.Semesters
+            return await context.Quarters
                 .Include(s => s.Groups)
                 .Include(s => s.Enrollments)
-                .SingleOrDefaultAsync(s => s.SemesterId == id);
+                .SingleOrDefaultAsync(s => s.QuarterId == id);
         }
 
-        public void AddSemester(Semester semester)
+        public void AddQuarter(Quarter Quarter)
         {
-            context.Semesters.Add(semester);
+            context.Quarters.Add(Quarter);
         }
 
-        public void RemoveSemester(Semester semester)
+        public void RemoveQuarter(Quarter Quarter)
         {
-            context.Remove(semester);
+            context.Remove(Quarter);
         }
 
-        public async Task<IEnumerable<Semester>> GetSemesters()
+        public async Task<IEnumerable<Quarter>> GetQuarters()
         {
-            return await context.Semesters
+            return await context.Quarters
                 .Include(s => s.Groups)
                 .Include(s => s.Enrollments)
                     .ToListAsync();

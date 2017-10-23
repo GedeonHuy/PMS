@@ -44,7 +44,7 @@ namespace PMS
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ILecturerRepository, LecturerRepository>();
             services.AddScoped<IMajorRepository, MajorRepository>();
-            services.AddScoped<ISemesterRepository, SemesterRepository>();
+            services.AddScoped<IQuarterRepository, QuarterRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 

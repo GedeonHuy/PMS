@@ -63,14 +63,14 @@ namespace PMS.Data
             }
             context.SaveChanges();
 
-            var semesters = new Semester[]
+            var quarters = new Quarter[]
             {
-                new Semester{SemesterName="HK1",SemesterStart=DateTime.Parse("2017-09-24"),SemesterEnd=DateTime.Parse("2017-12-02")},
-                new Semester{SemesterName="HK2",SemesterStart=DateTime.Parse("2017-12-03"),SemesterEnd=DateTime.Parse("2018-02-02")}
+                new Quarter{QuarterName="HK1",QuarterStart=DateTime.Parse("2017-09-24"),QuarterEnd=DateTime.Parse("2017-12-02")},
+                new Quarter{QuarterName="HK2",QuarterStart=DateTime.Parse("2017-12-03"),QuarterEnd=DateTime.Parse("2018-02-02")}
             };
-            foreach (Semester s in semesters)
+            foreach (Quarter q in quarters)
             {
-                context.Semesters.Add(s);
+                context.Quarters.Add(q);
             }
             context.SaveChanges();
 

@@ -29,7 +29,7 @@ namespace PMS.Mapping
                 .ForMember(gr => gr.Groups, opt => opt.MapFrom(g => g.Groups))
                 .ForMember(gr => gr.Projects, opt => opt.MapFrom(g => g.Projects));
 
-            CreateMap<Semester, SemesterResource>()
+            CreateMap<Quarter, QuarterResource>()
                 .ForMember(sr => sr.Groups, opt => opt.MapFrom(s => s.Groups))
                 .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(s => s.Enrollments));
 
@@ -76,13 +76,13 @@ namespace PMS.Mapping
 
             CreateMap<Enrollment, EnrollmentResource>()
                 .ForMember(er => er.Student, opt => opt.MapFrom(e => e.Student))
-                .ForMember(er => er.SemesterId, opt => opt.MapFrom(e => e.Semester.SemesterId))
-                .ForMember(er => er.Semester, opt => opt.MapFrom(e => new Semester
+                .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
+                .ForMember(er => er.Quarter, opt => opt.MapFrom(e => new Quarter
                 {
-                    SemesterId = e.Semester.SemesterId,
-                    SemesterName = e.Semester.SemesterName,
-                    SemesterEnd = e.Semester.SemesterEnd,
-                    SemesterStart = e.Semester.SemesterStart
+                    QuarterId = e.Quarter.QuarterId,
+                    QuarterName = e.Quarter.QuarterName,
+                    QuarterEnd = e.Quarter.QuarterEnd,
+                    QuarterStart = e.Quarter.QuarterStart
                 }))
                 .ForMember(er => er.Group, opt => opt.MapFrom(e => new GroupResource
                 {
@@ -116,13 +116,13 @@ namespace PMS.Mapping
                 .ForMember(lr => lr.CouncilEnrollments, opt => opt.MapFrom(l => l.CouncilEnrollments));
 
             CreateMap<Group, GroupResource>()
-                .ForMember(er => er.SemesterId, opt => opt.MapFrom(e => e.Semester.SemesterId))
-                .ForMember(er => er.Semester, opt => opt.MapFrom(e => new Semester
+                .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
+                .ForMember(er => er.Quarter, opt => opt.MapFrom(e => new Quarter
                 {
-                    SemesterId = e.Semester.SemesterId,
-                    SemesterName = e.Semester.SemesterName,
-                    SemesterEnd = e.Semester.SemesterEnd,
-                    SemesterStart = e.Semester.SemesterStart
+                    QuarterId = e.Quarter.QuarterId,
+                    QuarterName = e.Quarter.QuarterName,
+                    QuarterEnd = e.Quarter.QuarterEnd,
+                    QuarterStart = e.Quarter.QuarterStart
                 }))
                 .ForMember(gr => gr.MajorId, opt => opt.MapFrom(g => g.Major.MajorId))
                 .ForMember(gr => gr.Major, opt => opt.MapFrom(g => new MajorResource
@@ -199,8 +199,8 @@ namespace PMS.Mapping
             CreateMap<MajorResource, Major>()
                 .ForMember(m => m.MajorId, opt => opt.Ignore());
 
-            CreateMap<SemesterResource, Semester>()
-                .ForMember(m => m.SemesterId, opt => opt.Ignore());
+            CreateMap<QuarterResource, Quarter>()
+                .ForMember(m => m.QuarterId, opt => opt.Ignore());
         }
     }
 }

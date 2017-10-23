@@ -17,8 +17,8 @@ namespace PMS.Resources
         public StudentResource Student { get; set; }
         public int? GroupId { get; set; }
         public GroupResource Group { get; set; }
-        public int? SemesterId { get; set; }
-        public SemesterResource Semester { get; set; }
+        public int? QuarterId { get; set; }
+        public QuarterResource Quarter { get; set; }
 
         public string StudentEmail { get; set; }
     }

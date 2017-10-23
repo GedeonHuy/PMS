@@ -17,7 +17,7 @@ namespace PMS.Models
         public Council Council { get; set; }
         public bool isDeleted { get; set; }
         public bool isConfirm { get; set; }
-        public Semester Semester { get; set; }
+        public Quarter Quarter { get; set; }
         public ICollection<UploadedFile> UploadedFiles { get; set; }
         public Group()
         {
