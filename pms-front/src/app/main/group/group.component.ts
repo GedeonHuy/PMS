@@ -19,6 +19,9 @@ export class GroupComponent implements OnInit {
   
   projects : any[];
   lecturers : any[];
+  quarters : any[];
+  majors : any[];
+  
   
   constructor(private _authenService : AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
@@ -29,16 +32,34 @@ export class GroupComponent implements OnInit {
     this.loadData();
     this.permissionAccess();
 
-    this._dataService.get("/api/projects/getall").subscribe((response : any) => {
+    this._dataService.get("/api/quarters/getall").subscribe((response : any) => {
       this.projects = response;
+      console.log(this.projects);
     });
 
-    console.log(this.projects);
+    this._dataService.get("/api/majors/getall").subscribe((response : any) => {
+      this.majors = response;
+      console.log(this.majors);
+    });
+
+    this._dataService.get("/api/projects/getall").subscribe((response : any) => {
+      this.projects = response;
+      console.log(this.projects);
+    });
+
     this._dataService.get("/api/lecturers/getall").subscribe((response : any) => {
       this.lecturers = response;
+      console.log(this.lecturers);
     });
-    console.log(this.lecturers);
   }
+
+  onMajorChange() {
+    console.log(this.lecturers);
+    var selectedMajor = this.lecturers.find(m => m.lecturerId == this.group.lecturerId);
+    console.log(selectedMajor);
+    // this.lecturers = selectedMajor ? selectedMajor.lecturers : [];
+  }
+
 
   loadData() {
     this._dataService.get("/api/groups/getall").subscribe((response: any) => {

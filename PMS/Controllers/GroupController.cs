@@ -47,12 +47,12 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
             //case: lecturer, project and major is not the same
-            var checkGroup = await groupRepository.CheckGroup(groupResource);
-            if (!checkGroup)
-            {
-                ModelState.AddModelError("Error", "Stop hacking. Please set the Lecturer, project and group in the same Major.");
-                return BadRequest(ModelState);
-            }
+            // var checkGroup = await groupRepository.CheckGroup(groupResource);
+            // if (!checkGroup)
+            // {
+            //     ModelState.AddModelError("Error", "Stop hacking. Please set the Lecturer, project and group in the same Major.");
+            //     return BadRequest(ModelState);
+            // }
 
             var group = mapper.Map<GroupResource, Group>(groupResource);
 
