@@ -185,6 +185,7 @@ namespace PMS.Mapping
                 .ForMember(gr => gr.LecturerId, opt => opt.MapFrom(g => g.Lecturer.LecturerId))
                 .ForMember(gr => gr.Lecturer, opt => opt.MapFrom(g => new LecturerResource
                 {
+                    LecturerId = g.Lecturer.LecturerId,
                     Name = g.Lecturer.Name,
                     Address = g.Lecturer.Address,
                     DateOfBirth = g.Lecturer.DateOfBirth,
