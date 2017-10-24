@@ -54,10 +54,8 @@ export class GroupComponent implements OnInit {
   }
 
   onMajorChange() {
-    console.log(this.lecturers);
-    var selectedMajor = this.lecturers.find(m => m.lecturerId == this.group.lecturerId);
-    console.log(selectedMajor);
-    // this.lecturers = selectedMajor ? selectedMajor.lecturers : [];
+    var selectedMajor = this.lecturers.filter(l => l.majorId == this.group.majorId);
+    this.lecturers = selectedMajor;
   }
 
 

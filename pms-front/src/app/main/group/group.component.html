@@ -106,7 +106,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="group.lecturers" name="lecturerId" required #lecturer="ngModel">
+              <select class="form-control" [(ngModel)]="group.lecturerId" name="lecturerId" required #lecturer="ngModel">
                 <option value=""></option>
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
