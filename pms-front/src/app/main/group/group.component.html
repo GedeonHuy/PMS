@@ -86,7 +86,7 @@
             <div class="col-md-9 col-sm-9 col-xs-12">
               <select class="form-control" [(ngModel)]="group.quarterId" name="quarterId" required #quarter="ngModel">
                 <option value=""></option>
-                <option *ngFor="let m of quarters">{{ m.semesterId }}</option>
+                <option *ngFor="let q of quarters">{{ q.quarterName }}</option>
               </select>
               <small [hidden]="quarter.valid || (quarter.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the quarter </small>
             </div>
@@ -119,7 +119,7 @@
             <div class="col-md-9 col-sm-9 col-xs-12">
               <select class="form-control" [(ngModel)]="group.projectId" name="projectId" required #project="ngModel">
                 <option value=""></option>
-                <option *ngFor="let p of projects">{{ p.title }}</option>
+                <option *ngFor="let p of projects" value="{{p.projectId}}">{{ p.title }}</option>
               </select>
               <small [hidden]="project.valid || (project.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the project </small>
             </div>

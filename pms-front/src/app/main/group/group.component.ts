@@ -16,7 +16,8 @@ export class GroupComponent implements OnInit {
   public group: any;
   public isClicked: boolean;
   isAdmin : boolean;
-  
+  isLecturer : boolean;
+
   projects : any[];
   lecturers : any[];
   quarters : any[];
@@ -26,6 +27,7 @@ export class GroupComponent implements OnInit {
   constructor(private _authenService : AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isAdmin = false;
+    this.isLecturer = false;
   }
 
   ngOnInit() {
@@ -33,29 +35,27 @@ export class GroupComponent implements OnInit {
     this.permissionAccess();
 
     this._dataService.get("/api/quarters/getall").subscribe((response : any) => {
-      this.projects = response;
-      console.log(this.projects);
+      this.quarters = response;
     });
 
     this._dataService.get("/api/majors/getall").subscribe((response : any) => {
       this.majors = response;
-      console.log(this.majors);
     });
 
     this._dataService.get("/api/projects/getall").subscribe((response : any) => {
       this.projects = response;
-      console.log(this.projects);
     });
 
     this._dataService.get("/api/lecturers/getall").subscribe((response : any) => {
       this.lecturers = response;
-      console.log(this.lecturers);
     });
   }
 
   onMajorChange() {
-    var selectedMajor = this.lecturers.filter(l => l.majorId == this.group.majorId);
-    this.lecturers = selectedMajor;
+    var selectedMajorLecturer = this.lecturers.filter(l => l.majorId == this.group.majorId);
+    this.lecturers = selectedMajorLecturer;
+    var selectedMajorProject = this.projects.filter(p => p.majorId == this.group.majorId);
+    this.projects = selectedMajorProject;
   }
 
 
@@ -125,8 +125,9 @@ export class GroupComponent implements OnInit {
 
   permissionAccess() {
     var user = this._authenService.getLoggedInUser();
-    if(user.role === "Admin") {
+    if(user.role === "Admin" || user.role === "Lecturer") {
       this.isAdmin = true;
+      this.isLecturer = true;
       console.log(this.isAdmin);
     }
   }
