@@ -9,6 +9,7 @@ using PMS.Models;
 using PMS.Resources;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using PMS.Persistence.IRepository;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,10 +23,12 @@ namespace PMS.Controllers
         private IStudentRepository studentRepository;
         private IGroupRepository groupRepository;
         private UserManager<ApplicationUser> userManager;
+        private IQuarterRepository quarterRepository;
         private IUnitOfWork unitOfWork;
 
         public EnrollmentController(IMapper mapper, IUnitOfWork unitOfWork, IEnrollmentRepository enrollmentRepository,
-            IStudentRepository studentRepository, IGroupRepository groupRepository, UserManager<ApplicationUser> userManager)
+            IStudentRepository studentRepository, IGroupRepository groupRepository,
+            UserManager<ApplicationUser> userManager, IQuarterRepository quarterRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
@@ -33,6 +36,7 @@ namespace PMS.Controllers
             this.studentRepository = studentRepository;
             this.groupRepository = groupRepository;
             this.userManager = userManager;
+            this.quarterRepository = quarterRepository;
         }
 
         [HttpPost]
@@ -76,6 +80,9 @@ namespace PMS.Controllers
             {
                 enrollment.Student = student;
             }
+
+            var quarter = await quarterRepository.GetQuarter(enrollmentResource.QuarterId);
+            enrollment.Quarter = quarter;
 
             enrollmentRepository.AddEnrollment(enrollment);
             await unitOfWork.Complete();
@@ -127,6 +134,10 @@ namespace PMS.Controllers
             {
                 enrollment.Student = student;
             }
+
+            var quarter = await quarterRepository.GetQuarter(enrollmentResource.QuarterId);
+            enrollment.Quarter = quarter;
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Enrollment, EnrollmentResource>(enrollment);

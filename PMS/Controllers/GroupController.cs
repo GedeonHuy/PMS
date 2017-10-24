@@ -7,6 +7,7 @@ using PMS.Persistence;
 using AutoMapper;
 using PMS.Resources;
 using PMS.Models;
+using PMS.Persistence.IRepository;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,15 +20,22 @@ namespace PMS.Controllers
         private IGroupRepository groupRepository;
         private ILecturerRepository lecturerRepository;
         private IProjectRepository projectRepository;
+        private IMajorRepository majorRepository;
+        private IQuarterRepository quarterRepository;
         private IUnitOfWork unitOfWork;
 
-        public GroupController(IMapper mapper, IUnitOfWork unitOfWork, IGroupRepository groupRepository, ILecturerRepository lecturerRepository, IProjectRepository projectRepository)
+        public GroupController(IMapper mapper, IUnitOfWork unitOfWork,
+            IGroupRepository groupRepository, ILecturerRepository lecturerRepository,
+            IProjectRepository projectRepository, IMajorRepository majorRepository,
+            IQuarterRepository quarterRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
             this.groupRepository = groupRepository;
             this.lecturerRepository = lecturerRepository;
             this.projectRepository = projectRepository;
+            this.majorRepository = majorRepository;
+            this.quarterRepository = quarterRepository; ;
         }
 
         [HttpPost]
@@ -47,7 +55,9 @@ namespace PMS.Controllers
             }
 
             var group = mapper.Map<GroupResource, Group>(groupResource);
+
             group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId);
+
             if (groupResource.ProjectId == null)
             {
                 var otherProject = mapper.Map<ProjectResource, Project>(groupResource.OtherProject);
@@ -57,6 +67,12 @@ namespace PMS.Controllers
             {
                 group.Project = await projectRepository.GetProject(groupResource.ProjectId);
             }
+
+            var major = await majorRepository.GetMajor(groupResource.MajorId);
+            group.Major = major;
+
+            var quarter = await quarterRepository.GetQuarter(groupResource.QuarterId);
+            group.Quarter = quarter;
 
             groupRepository.AddGroup(group);
             await unitOfWork.Complete();
@@ -93,6 +109,13 @@ namespace PMS.Controllers
             {
                 group.Project = await projectRepository.GetProject(groupResource.ProjectId.Value);
             }
+
+            var major = await majorRepository.GetMajor(groupResource.MajorId);
+            group.Major = major;
+
+            var quarter = await quarterRepository.GetQuarter(groupResource.QuarterId);
+            group.Quarter = quarter;
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Group, GroupResource>(group);

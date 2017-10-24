@@ -76,12 +76,12 @@ namespace PMS.Data
 
             var lecturers = new Lecturer[]
             {
-                new Lecturer{Name="Lý Mạnh Hùng",DateOfBirth=DateTime.Parse("1980-02-05"),Email="hung.ly@eiu.edu.vn",PhoneNumber="0918843826",Address="Bình DƯơng"},
-                new Lecturer{Name="Nguyễn Tuấn Kiệt",DateOfBirth=DateTime.Parse("1985-11-12"),Email="kiet.nguyen@eiu.edu.vn",PhoneNumber="0934843856",Address="Bình Dương"},
-                new Lecturer{Name="Trần Nguyện Sơn Quân",DateOfBirth=DateTime.Parse("1980-12-29"),Email="quan.tran@eiu.edu.vn",PhoneNumber="0123843834",Address="Thành Phố Hồ Chí Minh"},
-                new Lecturer{Name="Lê Nhân Văn",DateOfBirth=DateTime.Parse("1986-11-10"),Email="van.le@eiu.edu.vn",PhoneNumber="0969843879",Address="Bình Dương"},
-                new Lecturer{Name="Nguyễn Đình Trung",DateOfBirth=DateTime.Parse("1979-02-13"),Email="trung.nguyen@eiu.edu.vn",PhoneNumber="0938843123",Address="Thành Phố Hồ Chí Minh"},
-                new Lecturer{Name="Trần Quang Vinh",DateOfBirth=DateTime.Parse("1982-11-30"),Email="hung.ly@eiu.edu.vn",PhoneNumber="0123843979",Address="Bình DƯơng"},
+                new Lecturer{Name="Lý Mạnh Hùng",DateOfBirth=DateTime.Parse("1980-02-05"),Email="hung.ly@eiu.edu.vn",PhoneNumber="0918843826",Address="Bình DƯơng",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Lecturer{Name="Nguyễn Tuấn Kiệt",DateOfBirth=DateTime.Parse("1985-11-12"),Email="kiet.nguyen@eiu.edu.vn",PhoneNumber="0934843856",Address="Bình Dương",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Lecturer{Name="Trần Nguyện Sơn Quân",DateOfBirth=DateTime.Parse("1980-12-29"),Email="quan.tran@eiu.edu.vn",PhoneNumber="0123843834",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Lecturer{Name="Lê Nhân Văn",DateOfBirth=DateTime.Parse("1986-11-10"),Email="van.le@eiu.edu.vn",PhoneNumber="0969843879",Address="Bình Dương",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Lecturer{Name="Nguyễn Đình Trung",DateOfBirth=DateTime.Parse("1979-02-13"),Email="trung.nguyen@eiu.edu.vn",PhoneNumber="0938843123",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
+                new Lecturer{Name="Trần Quang Vinh",DateOfBirth=DateTime.Parse("1982-11-30"),Email="hung.ly@eiu.edu.vn",PhoneNumber="0123843979",Address="Bình DƯơng",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
             };
             foreach (Lecturer s in lecturers)
             {
@@ -91,12 +91,12 @@ namespace PMS.Data
 
             var projects = new Project[]
             {
-                new Project{ProjectCode="1254",Title="Ứng dụng đặt xe trên mobile",Desciption="Thiết kế ứng dụng trên Android hoặc IOS giúp người dùng có thể xem đặt xe một cách tiện lợi",Type="A"},
-                new Project{ProjectCode="1317",Title="WebApplication hỗ trợ đặt món ăn",Desciption="Thiết kế website giúp tìm và đặt món ăn. Liên kết đến các shipper để giao hành nhanh nhất.",Type="Thực tập tốt nghiệp"},
-                new Project{ProjectCode="2001",Title="WebApplication mua bán trực tuyến",Desciption="Thiết kế website mua bán, tích hợp tài khoản, thanh toán online và quản lý kho hàng cho admin.",Type="B"},
-                new Project{ProjectCode="2658",Title="Ứng dụng game cờ vua trên Android",Desciption="Thiết kế game cờ vua sử dụng AI để phân tích các thế cờ, chiến thuật dựa trên từng người chơi.",Type="Tốt nghiệp"},
-                new Project{ProjectCode="1875",Title="Ứng dụng chia sẻ video",Desciption="Hỗ trợ người dùng chia sẽ video trên Facebook, Youtube và nhiều mạng xã hội khác một cách thuận tiện nhất.",Type="A"},
-                new Project{ProjectCode="3002",Title="WebApplication giải toán",Desciption="Thiết kế website hỗ trợ giải toán. Giải quyết các bài toán về đại số, hình học, toán cao ca61o nhanh nhất và có đưa ra giải thích cho người dùng dễ hiểu.",Type="B"}
+                new Project{ProjectCode="1254",Title="Ứng dụng đặt xe trên mobile",Desciption="Thiết kế ứng dụng trên Android hoặc IOS giúp người dùng có thể xem đặt xe một cách tiện lợi",Type="A",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Project{ProjectCode="1317",Title="WebApplication hỗ trợ đặt món ăn",Desciption="Thiết kế website giúp tìm và đặt món ăn. Liên kết đến các shipper để giao hành nhanh nhất.",Type="Thực tập tốt nghiệp",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Project{ProjectCode="2001",Title="WebApplication mua bán trực tuyến",Desciption="Thiết kế website mua bán, tích hợp tài khoản, thanh toán online và quản lý kho hàng cho admin.",Type="B",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Project{ProjectCode="2658",Title="Ứng dụng game cờ vua trên Android",Desciption="Thiết kế game cờ vua sử dụng AI để phân tích các thế cờ, chiến thuật dựa trên từng người chơi.",Type="Tốt nghiệp",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Project{ProjectCode="1875",Title="Ứng dụng chia sẻ video",Desciption="Hỗ trợ người dùng chia sẽ video trên Facebook, Youtube và nhiều mạng xã hội khác một cách thuận tiện nhất.",Type="A",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
+                new Project{ProjectCode="3002",Title="WebApplication giải toán",Desciption="Thiết kế website hỗ trợ giải toán. Giải quyết các bài toán về đại số, hình học, toán cao ca61o nhanh nhất và có đưa ra giải thích cho người dùng dễ hiểu.",Type="B",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)}
             };
             foreach (Project s in projects)
             {

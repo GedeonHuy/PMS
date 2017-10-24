@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using PMS.Persistence;
 using Microsoft.AspNetCore.SignalR;
 using PMS.Hubs;
+using PMS.Persistence.IRepository;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,18 +24,23 @@ namespace PMS.Controllers
     public class StudentController : Controller
     {
         private IMapper mapper;
-        private IStudentRepository repository;
+        private IStudentRepository studentRepository;
+        private IMajorRepository majorRepository;
         private IUnitOfWork unitOfWork;
         private IHubContext<PMSHub> hubContext { get; set; }
         private readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public StudentController(IHubContext<PMSHub> hubContext, ApplicationDbContext context, IMapper mapper, IStudentRepository repository, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        public StudentController(IHubContext<PMSHub> hubContext, ApplicationDbContext context,
+            IMapper mapper, IStudentRepository studentRepository,
+            IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager,
+            IMajorRepository majorRepository)
         {
             this.userManager = userManager;
             this.context = context;
             this.mapper = mapper;
-            this.repository = repository;
+            this.studentRepository = studentRepository;
+            this.majorRepository = majorRepository;
             this.unitOfWork = unitOfWork;
             this.hubContext = hubContext;
         }
@@ -49,6 +55,9 @@ namespace PMS.Controllers
             }
 
             var student = mapper.Map<SaveStudentResource, Student>(studentResource);
+
+            var major = await majorRepository.GetMajor(studentResource.MajorId);
+            student.Major = major;
 
             var user = new ApplicationUser
             {
@@ -68,10 +77,10 @@ namespace PMS.Controllers
                 }
             }
 
-            repository.AddStudent(student);
+            studentRepository.AddStudent(student);
             await unitOfWork.Complete();
 
-            student = await repository.GetStudent(student.Id);
+            student = await studentRepository.GetStudent(student.Id);
             await hubContext.Clients.All.InvokeAsync("Send", student);
             var result = mapper.Map<Student, StudentResource>(student);
 
@@ -87,12 +96,16 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var student = await repository.GetStudent(id);
+            var student = await studentRepository.GetStudent(id);
 
             if (student == null)
                 return NotFound();
 
             mapper.Map<SaveStudentResource, Student>(studentResource, student);
+
+            var major = await majorRepository.GetMajor(studentResource.MajorId);
+            student.Major = major;
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Student, StudentResource>(student);
@@ -103,14 +116,14 @@ namespace PMS.Controllers
         [Route("delete/{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var student = await repository.GetStudent(id, includeRelated: false);
+            var student = await studentRepository.GetStudent(id, includeRelated: false);
 
             if (student == null)
             {
                 return NotFound();
             }
 
-            repository.RemoveStudent(student);
+            studentRepository.RemoveStudent(student);
             await unitOfWork.Complete();
 
             return Ok(id);
@@ -120,7 +133,7 @@ namespace PMS.Controllers
         [Route("getstudent/{id}")]
         public async Task<IActionResult> GetStudent(int id)
         {
-            var student = await repository.GetStudent(id);
+            var student = await studentRepository.GetStudent(id);
 
             if (student == null)
             {
@@ -136,7 +149,7 @@ namespace PMS.Controllers
         [Route("getall")]
         public async Task<IActionResult> GetStudents()
         {
-            var students = await repository.GetStudents();
+            var students = await studentRepository.GetStudents();
             var studentResource = mapper.Map<IEnumerable<Student>, IEnumerable<StudentResource>>(students);
             return Ok(studentResource);
         }

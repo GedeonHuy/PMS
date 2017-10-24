@@ -8,10 +8,10 @@ namespace PMS.Resources
 {
     public class QuarterResource
     {
-        public int SemesterId { get; set; }
-        public string SemesterName { get; set; }
-        public DateTime SemesterStart { get; set; }
-        public DateTime SemesterEnd { get; set; }
+        public int QuarterId { get; set; }
+        public string QuarterName { get; set; }
+        public DateTime QuarterStart { get; set; }
+        public DateTime QuarterEnd { get; set; }
         public ICollection<GroupResource> Groups { get; set; }
         public ICollection<EnrollmentResource> Enrollments { get; set; }
         public QuarterResource()

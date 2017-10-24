@@ -7,6 +7,7 @@ using PMS.Persistence;
 using AutoMapper;
 using PMS.Resources;
 using PMS.Models;
+using PMS.Persistence.IRepository;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,14 +17,17 @@ namespace PMS.Controllers
     public class ProjectController : Controller
     {
         private IMapper mapper;
-        private IProjectRepository repository;
+        private IProjectRepository projectRepository;
+        private IMajorRepository majorRepository;
         private IUnitOfWork unitOfWork;
 
-        public ProjectController(IMapper mapper, IUnitOfWork unitOfWork, IProjectRepository repository)
+        public ProjectController(IMapper mapper, IUnitOfWork unitOfWork,
+            IProjectRepository projectRepository, IMajorRepository majorRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.repository = repository;
+            this.projectRepository = projectRepository;
+            this.majorRepository = majorRepository;
         }
 
         [HttpPost]
@@ -37,10 +41,13 @@ namespace PMS.Controllers
 
             var project = mapper.Map<ProjectResource, Project>(projectResource);
 
-            repository.AddProject(project);
+            var major = await majorRepository.GetMajor(projectResource.MajorId);
+            project.Major = major;
+
+            projectRepository.AddProject(project);
             await unitOfWork.Complete();
 
-            project = await repository.GetProject(project.ProjectId);
+            project = await projectRepository.GetProject(project.ProjectId);
 
             var result = mapper.Map<Project, ProjectResource>(project);
 
@@ -56,12 +63,16 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var project = await repository.GetProject(id);
+            var project = await projectRepository.GetProject(id);
 
             if (project == null)
                 return NotFound();
 
             mapper.Map<ProjectResource, Project>(projectResource, project);
+
+            var major = await majorRepository.GetMajor(projectResource.MajorId);
+            project.Major = major;
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Project, ProjectResource>(project);
@@ -71,14 +82,14 @@ namespace PMS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {
-            var project = await repository.GetProject(id, includeRelated: false);
+            var project = await projectRepository.GetProject(id, includeRelated: false);
 
             if (project == null)
             {
                 return NotFound();
             }
 
-            repository.RemoveProject(project);
+            projectRepository.RemoveProject(project);
             await unitOfWork.Complete();
 
             return Ok(id);
@@ -88,7 +99,7 @@ namespace PMS.Controllers
         [Route("getproject/{id}")]
         public async Task<IActionResult> GetProject(int id)
         {
-            var project = await repository.GetProject(id);
+            var project = await projectRepository.GetProject(id);
 
             if (project == null)
             {
@@ -104,7 +115,7 @@ namespace PMS.Controllers
         [Route("getall")]
         public async Task<IActionResult> GetProjects()
         {
-            var projects = await repository.GetProjects();
+            var projects = await projectRepository.GetProjects();
             var projectResource = mapper.Map<IEnumerable<Project>, IEnumerable<ProjectResource>>(projects);
             return Ok(projectResource);
         }

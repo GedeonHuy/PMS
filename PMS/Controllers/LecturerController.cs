@@ -9,6 +9,7 @@ using PMS.Resources;
 using PMS.Models;
 using PMS.Data;
 using Microsoft.AspNetCore.Identity;
+using PMS.Persistence.IRepository;
 
 // For more information on enabling MVC for empty lecturers, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,17 +20,19 @@ namespace PMS.Controllers
     {
 
         private IMapper mapper;
-        private ILecturerRepository repository;
+        private ILecturerRepository lecturerRepository;
+        private IMajorRepository majorRepository;
         private IUnitOfWork unitOfWork;
         private readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public LecturerController(ApplicationDbContext context, IMapper mapper, ILecturerRepository repository, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        public LecturerController(ApplicationDbContext context, IMapper mapper, ILecturerRepository lecturerRepository, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMajorRepository majorRepository)
         {
             this.userManager = userManager;
             this.context = context;
             this.mapper = mapper;
-            this.repository = repository;
+            this.lecturerRepository = lecturerRepository;
+            this.majorRepository = majorRepository;
             this.unitOfWork = unitOfWork;
         }
 
@@ -44,6 +47,9 @@ namespace PMS.Controllers
             }
 
             var lecturer = mapper.Map<LecturerResource, Lecturer>(lecturerResource);
+
+            var major = await majorRepository.GetMajor(lecturerResource.MajorId);
+            lecturer.Major = major;
 
             var user = new ApplicationUser
             {
@@ -69,10 +75,10 @@ namespace PMS.Controllers
             {
                 ModelState.AddModelError("", "'Lecturer' role does not exist");
             }
-            repository.AddLecturer(lecturer);
+            lecturerRepository.AddLecturer(lecturer);
             await unitOfWork.Complete();
 
-            lecturer = await repository.GetLecturer(lecturer.LecturerId);
+            lecturer = await lecturerRepository.GetLecturer(lecturer.LecturerId);
 
             var result = mapper.Map<Lecturer, LecturerResource>(lecturer);
 
@@ -88,12 +94,16 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var lecturer = await repository.GetLecturer(id);
+            var lecturer = await lecturerRepository.GetLecturer(id);
 
             if (lecturer == null)
                 return NotFound();
 
             mapper.Map<LecturerResource, Lecturer>(lecturerResource, lecturer);
+
+            var major = await majorRepository.GetMajor(lecturerResource.MajorId);
+            lecturer.Major = major;
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Lecturer, LecturerResource>(lecturer);
@@ -104,14 +114,14 @@ namespace PMS.Controllers
         [Route("delete/{id}")]
         public async Task<IActionResult> DeleteLecturer(int id)
         {
-            var lecturer = await repository.GetLecturer(id, includeRelated: false);
+            var lecturer = await lecturerRepository.GetLecturer(id, includeRelated: false);
 
             if (lecturer == null)
             {
                 return NotFound();
             }
 
-            repository.RemoveLecturer(lecturer);
+            lecturerRepository.RemoveLecturer(lecturer);
             await unitOfWork.Complete();
 
             return Ok(id);
@@ -121,7 +131,7 @@ namespace PMS.Controllers
         [Route("getlecturer/{id}")]
         public async Task<IActionResult> GetLecturer(int id)
         {
-            var lecturer = await repository.GetLecturer(id);
+            var lecturer = await lecturerRepository.GetLecturer(id);
 
             if (lecturer == null)
             {
@@ -137,7 +147,7 @@ namespace PMS.Controllers
         [Route("getall")]
         public async Task<IActionResult> GetLecturers()
         {
-            var lecturers = await repository.GetLecturers();
+            var lecturers = await lecturerRepository.GetLecturers();
             var lecturerResource = mapper.Map<IEnumerable<Lecturer>, IEnumerable<LecturerResource>>(lecturers);
             return Ok(lecturerResource);
         }

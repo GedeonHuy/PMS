@@ -1,9 +1,9 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "/Users/koragg/.dotnet/store/|arch|/|tfm|",
-      "/Users/koragg/.nuget/packages",
-      "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+      "C:\\Users\\damducduy\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\damducduy\\.nuget\\packages",
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
     ]
   }
 }
