@@ -12,7 +12,7 @@ namespace PMS.Resources
         public string ProjectCode { get; set; }
         public string Title { get; set; }
         public string Type { get; set; }
-        public string Desciption { get; set; }
+        public string Description { get; set; }
         public bool IsDeleted { get; set; }
         public ICollection<GroupResource> Groups { get; set; }
         public int? MajorId { get; set; }

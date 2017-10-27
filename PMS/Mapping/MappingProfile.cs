@@ -56,7 +56,7 @@ namespace PMS.Mapping
                 .ForMember(gr => gr.Projects, opt => opt.MapFrom(g => g.Projects.Select(gf => new ProjectResource
                 {
                     ProjectId = gf.ProjectId,
-                    Desciption = gf.Desciption,
+                    Description = gf.Description,
                     ProjectCode = gf.ProjectCode,
                     Title = gf.Title,
                     Type = gf.Type
@@ -197,7 +197,7 @@ namespace PMS.Mapping
                 .ForMember(gr => gr.Project, opt => opt.MapFrom(g => new ProjectResource
                 {
                     ProjectId = g.Project.ProjectId,
-                    Desciption = g.Project.Desciption,
+                    Description = g.Project.Description,
                     ProjectCode = g.Project.ProjectCode,
                     Title = g.Project.Title,
                     Type = g.Project.Type

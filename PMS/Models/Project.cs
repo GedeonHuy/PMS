@@ -12,7 +12,7 @@ namespace PMS.Models
         public string ProjectCode { get; set; }
         public string Title { get; set; }
         public string Type { get; set; }
-        public string Desciption { get; set; }
+        public string Description { get; set; }
         public bool IsDeleted { get; set; }
         public Major Major { get; set; }
         public Lecturer Lecturer { get; set; }
