@@ -24,8 +24,10 @@ namespace PMS.Persistence
                 return await context.Enrollments.FindAsync(id);
             }
             return await context.Enrollments
-                .Include(e => e.Student)
                 .Include(p => p.Quarter)
+                .Include(p => p.Group)
+                .Include(p => p.Grade)
+                .Include(p => p.Student)
                 .SingleOrDefaultAsync(s => s.EnrollmentId == id);
         }
 
@@ -43,6 +45,9 @@ namespace PMS.Persistence
         {
             return await context.Enrollments
                 .Include(p => p.Quarter)
+                .Include(p => p.Group)
+                .Include(p => p.Grade)
+                .Include(p => p.Student)
                 .ToListAsync();
         }
 
