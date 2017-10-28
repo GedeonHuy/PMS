@@ -46,8 +46,11 @@
                 <button class="btn btn-primary" (click)="showEditModal(group.groupId)">
                   <i class="fa fa-pencil-square-o"></i>
                 </button>
-                <button class="btn btn-danger" (click)="deletegroup(group.groupId)">
+                <button class="btn btn-danger" (click)="deleteGroup(group.groupId)">
                   <i class="fa fa-trash"></i>
+                </button>
+                <button class="btn btn-danger" (click)="joinGroup(group.groupId)">
+                 Join
                 </button>
               </td>
             </tr>
@@ -86,7 +89,7 @@
             <div class="col-md-9 col-sm-9 col-xs-12">
               <select class="form-control" [(ngModel)]="group.quarterId" name="quarterId" required #quarter="ngModel">
                 <option value=""></option>
-                <option *ngFor="let q of quarters">{{ q.quarterName }}</option>
+                <option *ngFor="let q of quarters" value="{{q.quarterId}}">{{ q.quarterName }}</option>
               </select>
               <small [hidden]="quarter.valid || (quarter.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the quarter </small>
             </div>

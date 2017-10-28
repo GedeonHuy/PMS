@@ -91,6 +91,7 @@ export class GroupComponent implements OnInit {
     if (valid) {
       this.isClicked = true;
       if (this.group.groupId == undefined) {
+        console.log(JSON.stringify(this.group));
         this._dataService.post('/api/groups/add', JSON.stringify(this.group))
           .subscribe((response: any) => {
             this.loadData();
@@ -111,7 +112,7 @@ export class GroupComponent implements OnInit {
     }
   }
 
-  deletegroup(id: any) {
+  deleteGroup(id: any) {
     this._notificationService.printConfirmationDialog("Delete confirm", () => this.deleteConfirm(id));
   }
 
@@ -130,5 +131,9 @@ export class GroupComponent implements OnInit {
       this.isLecturer = true;
       console.log(this.isAdmin);
     }
+  }
+
+  joinGroup() {
+
   }
 }

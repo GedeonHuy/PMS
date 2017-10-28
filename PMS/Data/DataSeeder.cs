@@ -29,7 +29,7 @@ namespace PMS.Data
                     UserName = "a@a.com"
                 };
 
-                var result = await _userManager.CreateAsync(user, "P@ssw0rd!");
+                var result = await _userManager.CreateAsync(user, "abc@123");
                 await _userManager.AddToRoleAsync(user, "Admin");
                 if (result.Succeeded)
                 {
