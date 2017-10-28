@@ -129,6 +129,7 @@ namespace PMS.Mapping
                     QuarterEnd = e.Quarter.QuarterEnd,
                     QuarterStart = e.Quarter.QuarterStart
                 }))
+                .ForMember(er => er.GroupId, opt => opt.MapFrom(e => e.Group.GroupId))
                 .ForMember(er => er.Group, opt => opt.MapFrom(e => new GroupResource
                 {
                     GroupId = e.Group.GroupId,
