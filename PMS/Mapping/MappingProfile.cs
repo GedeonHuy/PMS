@@ -120,6 +120,7 @@ namespace PMS.Mapping
                 })));
 
             CreateMap<Enrollment, EnrollmentResource>()
+                .ForMember(er => er.Grade, opt => opt.MapFrom(e => e.Grade))
                 .ForMember(er => er.Student, opt => opt.MapFrom(e => e.Student))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
                 .ForMember(er => er.Quarter, opt => opt.MapFrom(e => new Quarter
