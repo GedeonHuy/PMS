@@ -20,6 +20,7 @@ using PMS.Persistence.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using PMS.Hubs;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace PMS
 {
@@ -107,6 +108,12 @@ namespace PMS
             services.AddTransient<DataSeeder>();
             services.AddTransient<RoleSeed>();
             services.AddSignalR();
+            services.AddResponseCompression();
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+                options.Providers.Add<GzipCompressionProvider>();
+            });
             services.AddMvc();
         }
 
@@ -133,7 +140,7 @@ namespace PMS
             });
 
             app.UseAuthentication();
-
+            app.UseResponseCompression();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
