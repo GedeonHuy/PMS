@@ -50,7 +50,7 @@
                   <i class="fa fa-trash"></i>
                 </button>
                 <button class="btn btn-danger" (click)="joinGroup(group.groupId)">
-                 Join
+                  Join
                 </button>
               </td>
             </tr>
@@ -78,8 +78,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Name</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <input type="hidden" [(ngModel)]="group.groupId" name="groupId" />
-              <input type="text" #groupName="ngModel" [(ngModel)]="group.groupName" required minlength="10" name="groupName"
-                class="form-control">
+              <input type="text" #groupName="ngModel" [(ngModel)]="group.groupName" required minlength="10" name="groupName" class="form-control">
               <small [hidden]="groupName.valid || (groupName.pristine && !addEditForm.submitted)" class="text-danger"> At least 10 characters </small>
             </div>
           </div>
@@ -107,7 +106,7 @@
           </div>
           <div class="ln_solid"></div>
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <select class="form-control" [(ngModel)]="group.lecturerId" name="lecturerId" required #lecturer="ngModel">
                 <option value=""></option>
@@ -127,10 +126,61 @@
               <small [hidden]="project.valid || (project.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the project </small>
             </div>
           </div>
+
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="modalAddEdit.hide()" class="btn btn-primary">Cancel</button>
               <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid || isClicked">Save</button>
+              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--Modal add and edit Enrollment-->
+<div bsModal #enrollmentModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Create Enrollment</h4>
+        <button type="button" class="close pull-right" (click)="createEnrollmentForm.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal form-label-left" novalidate #enrollmentForm="ngForm" (ngSubmit)="applyEnrollment(enrollmentForm.valid)"
+          *ngIf="enrollment">
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Email</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="hidden" [(ngModel)]="enrollment.enrollmentId" name="enrollmentId" />
+              <input disabled type="text" #studentEmail="ngModel" [(ngModel)]="enrollment.studentEmail" required minlength="10" name="studentEmail"
+                class="form-control">
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Quarter</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select disabled class="form-control" [(ngModel)]="enrollment.quarterId" name="quarter" required #quarter="ngModel">
+                <option value=""></option>
+                <option *ngFor="let q of quarters" value="{{q.quarterId}}">{{ q.quarterName }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+
+          <div class="form-group">
+            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+              <button type="button" (click)="enrollmentModal.hide()" class="btn btn-primary">Cancel</button>
+              <button type="submit" class="btn btn-success" [disabled]="!enrollmentForm.form.valid || isClicked">Apply</button>
               <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
             </div>
           </div>

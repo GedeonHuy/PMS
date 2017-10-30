@@ -12,19 +12,24 @@ import { AuthenService } from './../../core/services/authen.service';
 })
 export class GroupComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
+  @ViewChild('enrollmentModal') public enrollmentModal: ModalDirective;
+
   public groups: any[];
   public group: any;
   public isClicked: boolean;
-  isAdmin : boolean;
-  isLecturer : boolean;
 
-  projects : any[];
-  lecturers : any[];
-  quarters : any[];
-  majors : any[];
+  public enrollment: any;
+
+  isAdmin: boolean;
+  isLecturer: boolean;
+
+  projects: any[];
+  lecturers: any[];
+  quarters: any[];
+  majors: any[];
+  groupToJoin : any;
   
-  
-  constructor(private _authenService : AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
+  constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isAdmin = false;
     this.isLecturer = false;
@@ -34,19 +39,23 @@ export class GroupComponent implements OnInit {
     this.loadData();
     this.permissionAccess();
 
-    this._dataService.get("/api/quarters/getall").subscribe((response : any) => {
+    this._dataService.get("/api/enrollments/getall").subscribe((response: any) => {
+      console.log(response);
+    });
+
+    this._dataService.get("/api/quarters/getall").subscribe((response: any) => {
       this.quarters = response;
     });
 
-    this._dataService.get("/api/majors/getall").subscribe((response : any) => {
+    this._dataService.get("/api/majors/getall").subscribe((response: any) => {
       this.majors = response;
     });
 
-    this._dataService.get("/api/projects/getall").subscribe((response : any) => {
+    this._dataService.get("/api/projects/getall").subscribe((response: any) => {
       this.projects = response;
     });
 
-    this._dataService.get("/api/lecturers/getall").subscribe((response : any) => {
+    this._dataService.get("/api/lecturers/getall").subscribe((response: any) => {
       this.lecturers = response;
     });
   }
@@ -61,7 +70,6 @@ export class GroupComponent implements OnInit {
 
   loadData() {
     this._dataService.get("/api/groups/getall").subscribe((response: any) => {
-      console.log(response);
       this.groups = response;
     });
   }
@@ -74,16 +82,15 @@ export class GroupComponent implements OnInit {
 
   //Edit method
   showEditModal(id: any) {
-    this.loadgroup(id);
+    this.loadGroup(id);
     this.modalAddEdit.show();
   }
 
   //Get Group with Id
-  loadgroup(id: any) {
+  loadGroup(id: any) {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {
         this.group = response;
-        console.log(this.group);
       });
   }
 
@@ -91,7 +98,6 @@ export class GroupComponent implements OnInit {
     if (valid) {
       this.isClicked = true;
       if (this.group.groupId == undefined) {
-        console.log(JSON.stringify(this.group));
         this._dataService.post('/api/groups/add', JSON.stringify(this.group))
           .subscribe((response: any) => {
             this.loadData();
@@ -126,14 +132,49 @@ export class GroupComponent implements OnInit {
 
   permissionAccess() {
     var user = this._authenService.getLoggedInUser();
-    if(user.role === "Admin" || user.role === "Lecturer") {
+    if (user.role === "Admin" || user.role === "Lecturer") {
       this.isAdmin = true;
       this.isLecturer = true;
       console.log(this.isAdmin);
     }
   }
 
-  joinGroup() {
-
+  joinGroup(id: any) {
+    var user = this._authenService.getLoggedInUser();
+    this._dataService.get('/api/groups/getgroup/' + id)
+      .subscribe((response: any) => {
+        this.groupToJoin = response;
+      });
+    this.enrollment = {};
+    console.log(this.groupToJoin);
+    this.enrollment.groupId = id;
+    this.enrollment.studentEmail = user.email;
+    this.enrollment.quarterId = this.groupToJoin.quarterId;
+    this.enrollmentModal.show();
   }
+
+  applyEnrollment(valid: boolean) {
+    if (valid) {
+      this.isClicked = true;
+      if (this.enrollment.enrollmentId == undefined) {
+        this._dataService.post('/api/enrollments/add', JSON.stringify(this.enrollment))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            this._notificationService.printSuccessMessage("Add Success");
+            this.isClicked = false;
+          }, error => this._dataService.handleError(error));
+      }
+      else {
+        this._dataService.put('/api/enrollments/update/' + this.enrollment.enrollmentId, JSON.stringify(this.enrollment))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            this._notificationService.printSuccessMessage("Update Success");
+            this.isClicked = false;
+          }, error => this._dataService.handleError(error));
+      }
+    }
+  }
+
 }
