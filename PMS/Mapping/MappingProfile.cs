@@ -104,7 +104,7 @@ namespace PMS.Mapping
                .ForMember(gr => gr.Enrollment, opt => opt.MapFrom(g => g.Enrollment));
 
             CreateMap<Student, StudentResource>()
-                .ForMember(sr => sr.Major, opt => opt.MapFrom(s => s.Major.MajorId))
+                .ForMember(sr => sr.MajorId, opt => opt.MapFrom(s => s.Major.MajorId))
                 .ForMember(sr => sr.Major, opt => opt.MapFrom(s => new MajorResource
                 {
                     MajorId = s.Major.MajorId,
