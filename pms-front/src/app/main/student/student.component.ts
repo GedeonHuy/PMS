@@ -19,6 +19,10 @@ export class StudentComponent implements OnInit {
   public students: any[];
   public student: any;
   public isClicked: boolean;
+
+  majors: any[];
+  
+
   public canConnect: Boolean;
   //hubConnection: HubConnection;
   constructor(private _ngZone: NgZone, private _signalRService: SignalrService, private _dataService: DataService, private _notificationService: NotificationService) {
@@ -63,6 +67,11 @@ export class StudentComponent implements OnInit {
     //   .catch(err => {
     //     console.log('Error while establishing connection')
     //   });
+
+
+    this._dataService.get("/api/majors/getall").subscribe((response: any) => {
+      this.majors = response;
+    });
 
   }
 

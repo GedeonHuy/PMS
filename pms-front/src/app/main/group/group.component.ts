@@ -1,9 +1,12 @@
+import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AuthenService } from './../../core/services/authen.service';
+import "rxjs/add/Observable/forkJoin";
+
 
 @Component({
   selector: 'app-group',
@@ -17,6 +20,8 @@ export class GroupComponent implements OnInit {
   public groups: any[];
   public group: any;
   public isClicked: boolean;
+  public isLoading: boolean;
+
 
   public enrollment: any;
 
@@ -27,9 +32,10 @@ export class GroupComponent implements OnInit {
   lecturers: any[];
   quarters: any[];
   majors: any[];
-  groupToJoin : any;
-  
+  groupToJoin: any;
+
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
+    this.isLoading = false;
     this.isClicked = false;
     this.isAdmin = false;
     this.isLecturer = false;
@@ -39,24 +45,23 @@ export class GroupComponent implements OnInit {
     this.loadData();
     this.permissionAccess();
 
+    Observable.forkJoin([
+      this._dataService.get("/api/quarters/getall"),
+
+      this._dataService.get("/api/majors/getall"),
+
+      this._dataService.get("/api/projects/getall"),
+
+      this._dataService.get("/api/lecturers/getall")
+    ]).subscribe(data => {
+      this.quarters = data[0],
+        this.majors = data[1],
+        this.projects = data[2],
+        this.lecturers = data[3]
+    });
+
     this._dataService.get("/api/enrollments/getall").subscribe((response: any) => {
       console.log(response);
-    });
-
-    this._dataService.get("/api/quarters/getall").subscribe((response: any) => {
-      this.quarters = response;
-    });
-
-    this._dataService.get("/api/majors/getall").subscribe((response: any) => {
-      this.majors = response;
-    });
-
-    this._dataService.get("/api/projects/getall").subscribe((response: any) => {
-      this.projects = response;
-    });
-
-    this._dataService.get("/api/lecturers/getall").subscribe((response: any) => {
-      this.lecturers = response;
     });
   }
 
@@ -77,13 +82,24 @@ export class GroupComponent implements OnInit {
   //Create method
   showAddModal() {
     this.group = {};
+    this.isLoading = true;
     this.modalAddEdit.show();
   }
 
   //Edit method
   showEditModal(id: any) {
-    this.loadGroup(id);
     this.modalAddEdit.show();
+    this.loadGroup(id);
+  }
+
+  hideAddEditModal() {
+    this.modalAddEdit.hide();
+    this.isLoading = false;
+  }
+
+  hideEnrollmentModal() {
+    this.enrollmentModal.hide();
+    this.isLoading = false;
   }
 
   //Get Group with Id
@@ -91,6 +107,7 @@ export class GroupComponent implements OnInit {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {
         this.group = response;
+        this.isLoading = true;
       });
   }
 
@@ -104,6 +121,7 @@ export class GroupComponent implements OnInit {
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
+            this.isLoading = false;
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -113,6 +131,7 @@ export class GroupComponent implements OnInit {
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
             this.isClicked = false;
+            this.isLoading = false;
           }, error => this._dataService.handleError(error));
       }
     }
@@ -140,17 +159,19 @@ export class GroupComponent implements OnInit {
   }
 
   joinGroup(id: any) {
-    var user = this._authenService.getLoggedInUser();
-    this._dataService.get('/api/groups/getgroup/' + id)
-      .subscribe((response: any) => {
-        this.groupToJoin = response;
-      });
-    this.enrollment = {};
-    console.log(this.groupToJoin);
-    this.enrollment.groupId = id;
-    this.enrollment.studentEmail = user.email;
-    this.enrollment.quarterId = this.groupToJoin.quarterId;
     this.enrollmentModal.show();
+    var user = this._authenService.getLoggedInUser();
+    this.enrollment = {};
+    
+    Observable.forkJoin(
+      this._dataService.get('/api/groups/getgroup/' + id)
+    ).subscribe(data => {
+      this.enrollment.groupId = id;
+      this.enrollment.studentEmail = user.email;
+      this.enrollment.quarterId = data[0].quarterId;
+      this.enrollment.type = data[0].project.type;
+      this.isLoading = true;  
+    });
   }
 
   applyEnrollment(valid: boolean) {
@@ -160,19 +181,25 @@ export class GroupComponent implements OnInit {
         this._dataService.post('/api/enrollments/add', JSON.stringify(this.enrollment))
           .subscribe((response: any) => {
             this.loadData();
-            this.modalAddEdit.hide();
+            this.enrollmentModal.hide();
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
-          }, error => this._dataService.handleError(error));
+            this.isLoading = false;
+          }, 
+          error => this._dataService.handleError(error));
+          this.enrollmentModal.hide();
       }
       else {
         this._dataService.put('/api/enrollments/update/' + this.enrollment.enrollmentId, JSON.stringify(this.enrollment))
           .subscribe((response: any) => {
             this.loadData();
-            this.modalAddEdit.hide();
+            this.enrollmentModal.hide();
             this._notificationService.printSuccessMessage("Update Success");
             this.isClicked = false;
-          }, error => this._dataService.handleError(error));
+            this.isLoading = false;
+          },          
+          error => this._dataService.handleError(error));
+          this.enrollmentModal.hide();
       }
     }
   }

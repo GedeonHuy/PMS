@@ -8,7 +8,7 @@
         <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
           <h1>Login</h1>
           <h2>a@a.com</h2>
-          <h2>P@ssw0rd!</h2>
+          <h2>abc@123</h2>
           <div [ngClass]="{ 'has-error' : f.submitted && !email.valid }">
             <input type="text" class="form-control" name="email" [(ngModel)]="model.email" #email="ngModel" required />
             <div *ngIf="f.submitted && !email.valid" class="help-block">Your Email</div>
