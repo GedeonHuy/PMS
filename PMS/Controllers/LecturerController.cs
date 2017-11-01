@@ -145,9 +145,9 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetLecturers(FilterResource filterResource)
+        public async Task<IActionResult> GetLecturers(QueryResource filterResource)
         {
-            var filter = mapper.Map<FilterResource, Filter>(filterResource);
+            var filter = mapper.Map<QueryResource, Query>(filterResource);
 
             var lecturers = await lecturerRepository.GetLecturers(filter);
             var lecturerResource = mapper.Map<IEnumerable<Lecturer>, IEnumerable<LecturerResource>>(lecturers);

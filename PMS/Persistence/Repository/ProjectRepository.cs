@@ -38,7 +38,7 @@ namespace PMS.Persistence
             context.Remove(project);
         }
 
-        public async Task<IEnumerable<Project>> GetProjects(Filter filter)
+        public async Task<IEnumerable<Project>> GetProjects(Query filter)
         {
             var query = context.Projects
                 .Include(p => p.Groups)

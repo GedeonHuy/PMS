@@ -40,7 +40,7 @@ namespace PMS.Persistence
             context.Remove(lecturer);
         }
 
-        public async Task<IEnumerable<Lecturer>> GetLecturers(Filter filter)
+        public async Task<IEnumerable<Lecturer>> GetLecturers(Query filter)
         {
             var query = context.Lecturers
                 .Include(l => l.Groups)

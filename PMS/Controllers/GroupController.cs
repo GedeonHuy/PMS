@@ -157,9 +157,9 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetGroups(FilterResource filterResource)
+        public async Task<IActionResult> GetGroups(QueryResource filterResource)
         {
-            var filter = mapper.Map<FilterResource, Filter>(filterResource);
+            var filter = mapper.Map<QueryResource, Query>(filterResource);
 
             var groups = await groupRepository.GetGroups(filter);
             var groupResource = mapper.Map<IEnumerable<Group>, IEnumerable<GroupResource>>(groups);

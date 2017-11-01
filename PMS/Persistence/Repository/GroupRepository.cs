@@ -44,7 +44,7 @@ namespace PMS.Persistence
             context.Remove(group);
         }
 
-        public async Task<IEnumerable<Group>> GetGroups(Filter filter)
+        public async Task<IEnumerable<Group>> GetGroups(Query filter)
         {
             var query = context.Groups
                 .Include(p => p.Lecturer)

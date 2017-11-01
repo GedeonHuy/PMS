@@ -206,7 +206,7 @@ namespace PMS.Mapping
                 }));
 
             //API Resource to domain
-            CreateMap<FilterResource, Filter>();
+            CreateMap<QueryResource, Query>();
 
             CreateMap<SaveStudentResource, Student>()
             .ForMember(s => s.Id, opt => opt.Ignore())

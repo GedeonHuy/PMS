@@ -11,6 +11,6 @@ namespace PMS.Persistence
         Task<Project> GetProject(int? id, bool includeRelated = true);
         void AddProject(Project project);
         void RemoveProject(Project project);
-        Task<IEnumerable<Project>> GetProjects(Filter filter);
+        Task<IEnumerable<Project>> GetProjects(Query filter);
     }
 }

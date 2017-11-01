@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+using PMS.Extensions;
 
 namespace PMS.Persistence
 {
@@ -50,23 +52,37 @@ namespace PMS.Persistence
             context.Remove(student);
         }
 
-        public async Task<IEnumerable<Student>> GetStudents(Filter filter)
+        public async Task<IEnumerable<Student>> GetStudents(Query queryObj)
         {
             var query = context.Students
                 .Include(p => p.Major)
                 .Include(s => s.Enrollments)
                 .AsQueryable();
 
-            if (filter.MajorId.HasValue)
+            //filter
+            if (queryObj.MajorId.HasValue)
             {
-                query = query.Where(q => q.Major.MajorId == filter.MajorId.Value);
+                query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
             }
 
-            if (filter.Year != null)
+            if (queryObj.Year != null)
             {
-                query = query.Where(q => q.Year == filter.Year);
+                query = query.Where(q => q.Year == queryObj.Year);
             }
 
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Student, object>>>()
+            {
+                ["name"] = s => s.Name,
+                ["code"] = s => s.StudentCode,
+                ["year"] = s => s.Year
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.Id);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
             return await query.ToListAsync();
         }
 
