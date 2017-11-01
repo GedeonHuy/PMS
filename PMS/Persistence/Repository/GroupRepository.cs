@@ -65,9 +65,9 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Project.ProjectId == filter.ProjectId.Value);
             }
 
-            if (filter.isConfirm.HasValue)
+            if (filter.isConfirm != null)
             {
-                query = query.Where(q => q.isConfirm == filter.isConfirm.Value);
+                query = query.Where(q => q.isConfirm == filter.isConfirm);
             }
 
             if (filter.QuarterId.HasValue)

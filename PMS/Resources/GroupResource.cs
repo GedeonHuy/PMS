@@ -11,7 +11,7 @@ namespace PMS.Resources
         public int GroupId { get; set; }
         public string GroupName { get; set; }
         public bool isDeleted { get; set; }
-        public bool isConfirm { get; set; }
+        public string isConfirm { get; set; }
         /// <other project selection>
         public ProjectResource OtherProject { get; set; }
         public ICollection<EnrollmentResource> Enrollments { get; set; }
@@ -29,6 +29,7 @@ namespace PMS.Resources
         {
             Enrollments = new Collection<EnrollmentResource>();
             UploadedFiles = new Collection<UploadedFileResource>();
+            isConfirm = "Pending";
         }
     }
 }

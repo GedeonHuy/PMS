@@ -16,13 +16,14 @@ namespace PMS.Models
         public Lecturer Lecturer { get; set; }
         public Council Council { get; set; }
         public bool isDeleted { get; set; }
-        public bool isConfirm { get; set; }
+        public string isConfirm { get; set; }
         public Quarter Quarter { get; set; }
         public ICollection<UploadedFile> UploadedFiles { get; set; }
         public Group()
         {
             Enrollments = new Collection<Enrollment>();
             UploadedFiles = new Collection<UploadedFile>();
+            isConfirm = "Pending";
         }
 
     }
