@@ -32,7 +32,6 @@ export class GroupComponent implements OnInit {
   lecturers: any[];
   quarters: any[];
   majors: any[];
-  groupToJoin: any;
 
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isLoading = false;
@@ -76,6 +75,7 @@ export class GroupComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/groups/getall").subscribe((response: any) => {
       this.groups = response;
+      console.log(this.groups);
     });
   }
 

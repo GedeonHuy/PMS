@@ -1,4 +1,3 @@
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MainComponent } from './main.component';
@@ -12,8 +11,9 @@ import { RoleModule } from './role/role.module';
 import { StudentModule } from './student/student.module';
 import { LecturerModule } from './lecturer/lecturer.module';
 import { ProjectModule } from './project/project.module';
-
 import { GroupModule } from './group/group.module';
+import { CouncilModule } from './council/council.module';
+
 import { SidebarMenuComponent } from './../shared/sidebar-menu/sidebar-menu.component';
 import { TopMenuComponent } from './../shared/top-menu/top-menu.component';
 
@@ -23,6 +23,7 @@ import { AdminAuthGuard } from './../core/guards/auth-admin.guard';
 import { SignalrService } from './../core/services/signalr.service';
 import { LecturerAuthGuard } from './../core/guards/auth-lecturer.guard';
 import { StudentAuthGuard } from './../core/guards/auth-student.guard';
+import { GradeComponent } from './grade/grade.component';
 
 @NgModule({
   imports: [
@@ -34,9 +35,10 @@ import { StudentAuthGuard } from './../core/guards/auth-student.guard';
     LecturerModule,
     ProjectModule,
     GroupModule,
+    CouncilModule,
     RouterModule.forChild(MainRoutes)
   ],
-  declarations: [MainComponent, SidebarMenuComponent, TopMenuComponent],
+  declarations: [MainComponent, SidebarMenuComponent, TopMenuComponent, GradeComponent],
   providers: [UtilityService, AuthenService, AdminAuthGuard, LecturerAuthGuard, StudentAuthGuard, SignalrService]
 })
 export class MainModule { }

@@ -33,6 +33,7 @@
               <th>Name</th>
               <th>Project</th>
               <th>Supervisor</th>
+              <th>Status</th>              
               <th></th>
             </tr>
           </thead>
@@ -42,6 +43,7 @@
               <td>{{group.groupName}}</td>
               <td>{{group.project.title}}</td>
               <td>{{group.lecturer.name}}</td>
+              <td>{{group.isConfirm}}</td>              
               <td>
                 <button class="btn btn-primary" (click)="showEditModal(group.groupId)">
                   <i class="fa fa-pencil-square-o"></i>
