@@ -38,12 +38,29 @@ namespace PMS.Persistence
             context.Remove(project);
         }
 
-        public async Task<IEnumerable<Project>> GetProjects()
+        public async Task<IEnumerable<Project>> GetProjects(Filter filter)
         {
-            return await context.Projects
+            var query = context.Projects
                 .Include(p => p.Groups)
                 .Include(p => p.Major)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (filter.Type != null)
+            {
+                query = query.Where(q => q.Type == filter.Type);
+            }
+
+            if (filter.LecturerId.HasValue)
+            {
+                query = query.Where(q => q.Lecturer.LecturerId == filter.LecturerId.Value);
+            }
+
+            if (filter.MajorId.HasValue)
+            {
+                query = query.Where(q => q.Major.MajorId == filter.MajorId.Value);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

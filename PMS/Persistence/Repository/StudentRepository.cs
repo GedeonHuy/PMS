@@ -50,12 +50,24 @@ namespace PMS.Persistence
             context.Remove(student);
         }
 
-        public async Task<IEnumerable<Student>> GetStudents()
+        public async Task<IEnumerable<Student>> GetStudents(Filter filter)
         {
-            return await context.Students
+            var query = context.Students
                 .Include(p => p.Major)
                 .Include(s => s.Enrollments)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (filter.MajorId.HasValue)
+            {
+                query = query.Where(q => q.Major.MajorId == filter.MajorId.Value);
+            }
+
+            if (filter.Year != null)
+            {
+                query = query.Where(q => q.Year == filter.Year);
+            }
+
+            return await query.ToListAsync();
         }
 
         public bool CheckStudentEnrollments(Student student, string Type)

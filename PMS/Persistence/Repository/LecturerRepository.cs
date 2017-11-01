@@ -40,13 +40,20 @@ namespace PMS.Persistence
             context.Remove(lecturer);
         }
 
-        public async Task<IEnumerable<Lecturer>> GetLecturers()
+        public async Task<IEnumerable<Lecturer>> GetLecturers(Filter filter)
         {
-            return await context.Lecturers
+            var query = context.Lecturers
                 .Include(l => l.Groups)
                 .Include(l => l.CouncilEnrollments)
                 .Include(p => p.Major)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (filter.MajorId.HasValue)
+            {
+                query = query.Where(q => q.Major.MajorId == filter.MajorId.Value);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

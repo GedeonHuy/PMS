@@ -44,16 +44,38 @@ namespace PMS.Persistence
             context.Remove(group);
         }
 
-        public async Task<IEnumerable<Group>> GetGroups()
+        public async Task<IEnumerable<Group>> GetGroups(Filter filter)
         {
-            return await context.Groups
+            var query = context.Groups
                 .Include(p => p.Lecturer)
                 .Include(p => p.Project)
                 .Include(p => p.Enrollments)
                 .Include(p => p.UploadedFiles)
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (filter.LecturerId.HasValue)
+            {
+                query = query.Where(q => q.Lecturer.LecturerId == filter.LecturerId.Value);
+            }
+
+            if (filter.ProjectId.HasValue)
+            {
+                query = query.Where(q => q.Project.ProjectId == filter.ProjectId.Value);
+            }
+
+            if (filter.isConfirm.HasValue)
+            {
+                query = query.Where(q => q.isConfirm == filter.isConfirm.Value);
+            }
+
+            if (filter.QuarterId.HasValue)
+            {
+                query = query.Where(q => q.Quarter.QuarterId == filter.QuarterId.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<bool> CheckGroup(GroupResource group)

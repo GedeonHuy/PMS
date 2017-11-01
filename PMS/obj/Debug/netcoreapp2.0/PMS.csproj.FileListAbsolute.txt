@@ -50,3 +50,15 @@ D:/PMS/trunk/PMS/obj/Debug/netcoreapp2.0/PMS.csprojResolveAssemblyReference.cach
 /Users/koragg/Desktop/testblock/PMS/PMS/obj/Debug/netcoreapp2.0/PMS.pdb
 /Users/koragg/Desktop/PMS/PMS/obj/Debug/netcoreapp2.0/PMS.csprojResolveAssemblyReference.cache
 /Users/koragg/Desktop/PMS/PMS/obj/Debug/netcoreapp2.0/UserSecretsAssemblyInfo.cs
+D:\PMS\trunk\PMS\bin\Debug\netcoreapp2.0\PMS.deps.json
+D:\PMS\trunk\PMS\bin\Debug\netcoreapp2.0\PMS.runtimeconfig.json
+D:\PMS\trunk\PMS\bin\Debug\netcoreapp2.0\PMS.runtimeconfig.dev.json
+D:\PMS\trunk\PMS\bin\Debug\netcoreapp2.0\PMS.dll
+D:\PMS\trunk\PMS\bin\Debug\netcoreapp2.0\PMS.pdb
+D:\PMS\trunk\PMS\obj\Debug\netcoreapp2.0\PMS.csprojResolveAssemblyReference.cache
+D:\PMS\trunk\PMS\obj\Debug\netcoreapp2.0\PMS.csproj.CoreCompileInputs.cache
+D:\PMS\trunk\PMS\obj\Debug\netcoreapp2.0\PMS.AssemblyInfoInputs.cache
+D:\PMS\trunk\PMS\obj\Debug\netcoreapp2.0\PMS.AssemblyInfo.cs
+D:\PMS\trunk\PMS\obj\Debug\netcoreapp2.0\PMS.dll
+D:\PMS\trunk\PMS\obj\Debug\netcoreapp2.0\PMS.pdb
+D:\PMS\trunk\PMS\obj\Debug\netcoreapp2.0\UserSecretsAssemblyInfo.cs

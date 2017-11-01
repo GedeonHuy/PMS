@@ -11,6 +11,6 @@ namespace PMS.Persistence
         Task<Lecturer> GetLecturer(int? id, bool includeRelated = true);
         void AddLecturer(Lecturer lecturer);
         void RemoveLecturer(Lecturer lecturer);
-        Task<IEnumerable<Lecturer>> GetLecturers();
+        Task<IEnumerable<Lecturer>> GetLecturers(Filter filter);
     }
 }

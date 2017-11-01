@@ -40,7 +40,7 @@ namespace PMS.Controllers
 
             //case: missing set point
             var nullPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == null);
-            if (nullPercentCount != councilResource.LecturerInformations.Count)
+            if (nullPercentCount > 0)
             {
                 ModelState.AddModelError("Error", "If you set percentage of score, u must set for all lecturer");
                 return BadRequest(ModelState);
