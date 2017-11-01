@@ -12,7 +12,7 @@ namespace PMS.Persistence
         Task<Group> GetGroup(int? id, bool includeRelated = true);
         void AddGroup(Group group);
         void RemoveGroup(Group group);
-        Task<IEnumerable<Group>> GetGroups();
+        Task<IEnumerable<Group>> GetGroups(Filter filter);
         Task<bool> CheckGroup(GroupResource group);
     }
 }
