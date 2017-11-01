@@ -13,5 +13,6 @@ namespace PMS.Models
         public bool? isConfirm { get; set; }
         public string Year { get; set; }
         public string Type { get; set; }
+        public int? QuarterId { get; set; }
     }
 }

@@ -70,6 +70,11 @@ namespace PMS.Persistence
                 query = query.Where(q => q.isConfirm == filter.isConfirm.Value);
             }
 
+            if (filter.QuarterId.HasValue)
+            {
+                query = query.Where(q => q.Quarter.QuarterId == filter.QuarterId.Value);
+            }
+
             return await query.ToListAsync();
         }
 
