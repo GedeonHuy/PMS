@@ -55,6 +55,11 @@ namespace PMS.Persistence
                 .Include(p => p.Quarter)
                 .AsQueryable();
 
+            if (filter.Email != null)
+            {
+                query = query.Where(q => q.Lecturer.Email == filter.Email);
+            }
+
             if (filter.LecturerId.HasValue)
             {
                 query = query.Where(q => q.Lecturer.LecturerId == filter.LecturerId.Value);
