@@ -147,11 +147,11 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetStudents(QueryResource filterResource)
+        public async Task<IActionResult> GetStudents(QueryResource queryResource)
         {
-            var filter = mapper.Map<QueryResource, Query>(filterResource);
+            var query = mapper.Map<QueryResource, Query>(queryResource);
 
-            var students = await studentRepository.GetStudents(filter);
+            var students = await studentRepository.GetStudents(query);
             var studentResource = mapper.Map<IEnumerable<Student>, IEnumerable<StudentResource>>(students);
             return Ok(studentResource);
         }

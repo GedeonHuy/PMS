@@ -157,11 +157,11 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetGroups(QueryResource filterResource)
+        public async Task<IActionResult> GetGroups(QueryResource queryResource)
         {
-            var filter = mapper.Map<QueryResource, Query>(filterResource);
+            var query = mapper.Map<QueryResource, Query>(queryResource);
 
-            var groups = await groupRepository.GetGroups(filter);
+            var groups = await groupRepository.GetGroups(query);
             var groupResource = mapper.Map<IEnumerable<Group>, IEnumerable<GroupResource>>(groups);
             return Ok(groupResource);
         }

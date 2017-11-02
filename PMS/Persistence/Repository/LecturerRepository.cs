@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PMS.Data;
+using PMS.Extensions;
 using PMS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PMS.Persistence
@@ -40,7 +42,7 @@ namespace PMS.Persistence
             context.Remove(lecturer);
         }
 
-        public async Task<IEnumerable<Lecturer>> GetLecturers(Query filter)
+        public async Task<IEnumerable<Lecturer>> GetLecturers(Query queryObj)
         {
             var query = context.Lecturers
                 .Include(l => l.Groups)
@@ -48,11 +50,23 @@ namespace PMS.Persistence
                 .Include(p => p.Major)
                 .AsQueryable();
 
-            if (filter.MajorId.HasValue)
+            //filter
+            if (queryObj.MajorId.HasValue)
             {
-                query = query.Where(q => q.Major.MajorId == filter.MajorId.Value);
+                query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
             }
 
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Lecturer, object>>>()
+            {
+                ["name"] = s => s.Name,
+                ["major"] = s => s.Major.MajorName,
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.LecturerId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
             return await query.ToListAsync();
         }
     }

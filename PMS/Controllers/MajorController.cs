@@ -104,9 +104,11 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetMajors()
+        public async Task<IActionResult> GetMajors(QueryResource queryResource)
         {
-            var majors = await repository.GetMajors();
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+
+            var majors = await repository.GetMajors(query);
             var majorResource = mapper.Map<IEnumerable<Major>, IEnumerable<MajorResource>>(majors);
             return Ok(majorResource);
         }

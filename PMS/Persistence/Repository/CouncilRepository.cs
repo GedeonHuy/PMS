@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PMS.Data;
+using PMS.Extensions;
 using PMS.Models;
 using PMS.Persistence.IRepository;
 using PMS.Resources.SubResources;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PMS.Persistence.Repository
@@ -42,12 +44,27 @@ namespace PMS.Persistence.Repository
             context.Remove(council);
         }
 
-        public async Task<IEnumerable<Council>> GetCouncils()
+        public async Task<IEnumerable<Council>> GetCouncils(Query queryObj)
         {
-            return await context.Councils
+            var query = context.Councils
                          .Include(c => c.CouncilEnrollments)
                             .ThenInclude(l => l.Lecturer)
-                         .ToListAsync();
+                          .AsQueryable();
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Council, object>>>()
+            {
+                ["grade"] = s => s.ResultGrade,
+                ["code"] = s => s.ResultScore,
+                ["group"] = s => s.Group.GroupName
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.CouncilId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
+            return await query.ToListAsync();
+
         }
 
         public async Task AddLecturers(Council council, ICollection<LecturerInformationResource> lecturerInformations)

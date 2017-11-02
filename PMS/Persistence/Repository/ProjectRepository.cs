@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PMS.Data;
+using PMS.Extensions;
 using PMS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PMS.Persistence
@@ -38,27 +40,43 @@ namespace PMS.Persistence
             context.Remove(project);
         }
 
-        public async Task<IEnumerable<Project>> GetProjects(Query filter)
+        public async Task<IEnumerable<Project>> GetProjects(Query queryObj)
         {
             var query = context.Projects
                 .Include(p => p.Groups)
                 .Include(p => p.Major)
                 .AsQueryable();
 
-            if (filter.Type != null)
+            //filter
+            if (queryObj.Type != null)
             {
-                query = query.Where(q => q.Type == filter.Type);
+                query = query.Where(q => q.Type == queryObj.Type);
             }
 
-            if (filter.LecturerId.HasValue)
+            if (queryObj.LecturerId.HasValue)
             {
-                query = query.Where(q => q.Lecturer.LecturerId == filter.LecturerId.Value);
+                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
             }
 
-            if (filter.MajorId.HasValue)
+            if (queryObj.MajorId.HasValue)
             {
-                query = query.Where(q => q.Major.MajorId == filter.MajorId.Value);
+                query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
             }
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Project, object>>>()
+            {
+                ["title"] = s => s.Title,
+                ["type"] = s => s.Type,
+                ["code"] = s => s.ProjectCode,
+                ["description"] = s => s.Description,
+                ["major"] = s => s.Major.MajorName,
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.ProjectId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
 
             return await query.ToListAsync();
         }

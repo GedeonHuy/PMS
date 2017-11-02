@@ -11,6 +11,6 @@ namespace PMS.Persistence.IRepository
         Task<Quarter> GetQuarter(int? id, bool includeRelated = true);
         void AddQuarter(Quarter semester);
         void RemoveQuarter(Quarter semester);
-        Task<IEnumerable<Quarter>> GetQuarters();
+        Task<IEnumerable<Quarter>> GetQuarters(Query queryObj);
     }
 }

@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PMS.Data;
+using PMS.Extensions;
 using PMS.Models;
 using PMS.Persistence.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PMS.Persistence.Repository
@@ -40,12 +42,26 @@ namespace PMS.Persistence.Repository
             context.Remove(Quarter);
         }
 
-        public async Task<IEnumerable<Quarter>> GetQuarters()
+        public async Task<IEnumerable<Quarter>> GetQuarters(Query queryObj)
         {
-            return await context.Quarters
+            var query = context.Quarters
                 .Include(s => s.Groups)
                 .Include(s => s.Enrollments)
-                    .ToListAsync();
+                .AsQueryable();
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Quarter, object>>>()
+            {
+                ["name"] = s => s.QuarterName,
+                ["start"] = s => s.QuarterStart,
+                ["end"] = s => s.QuarterEnd
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.QuarterId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
+            return await query.ToListAsync();
         }
     }
 }

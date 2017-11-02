@@ -11,7 +11,7 @@ namespace PMS.Persistence.IRepository
         Task<Major> GetMajor(int? id, bool includeRelated = true);
         void AddMajor(Major major);
         void RemoveMajor(Major major);
-        Task<IEnumerable<Major>> GetMajors();
+        Task<IEnumerable<Major>> GetMajors(Query queryObj);
 
     }
 }
