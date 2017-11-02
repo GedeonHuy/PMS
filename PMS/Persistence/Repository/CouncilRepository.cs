@@ -140,5 +140,39 @@ namespace PMS.Persistence.Repository
                 context.Remove(councilEnrollment);
             }
         }
+
+        public string CheckLecturerInformations(LecturerInformationResource lecturerInformations)
+        {
+            var president = lecturerInformations.President;
+            if (president.ScorePercent == null || president.ScorePercent == 0)
+            {
+                return "nullOrZeroScorePercent";
+            }
+
+            var serectory = lecturerInformations.Serectory;
+            if (serectory.ScorePercent == null || serectory.ScorePercent == 0)
+            {
+                return "nullOrZeroScorePercent";
+            }
+
+            var reviewer = lecturerInformations.Reviewer;
+            if (reviewer.ScorePercent == null || reviewer.ScorePercent == 0)
+            {
+                return "nullOrZeroScorePercent";
+            }
+
+            var supervisor = lecturerInformations.Supervisor;
+            if (supervisor.ScorePercent == null || supervisor.ScorePercent == 0)
+            {
+                return "nullOrZeroScorePercent";
+            }
+
+            if (president.ScorePercent + serectory.ScorePercent + reviewer.ScorePercent + supervisor.ScorePercent != 100)
+            {
+                return "sumScorePercentIsNot100";
+            }
+
+            return "correct";
+        }
     }
 }
