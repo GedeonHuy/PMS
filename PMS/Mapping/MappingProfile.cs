@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using PMS.Models;
 using PMS.Resources;
+using PMS.Resources.SubResources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,11 @@ namespace PMS.Mapping
             //Domain to API Resource
             CreateMap<Council, CouncilResource>()
             .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId))
+            .ForMember(cr => cr.LecturerInformations, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new LecturerInformationResource
+            {
+                LecturerId = cf.Lecturer.LecturerId,
+                ScorePercent = cf.Percentage
+            })))
             .ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new CouncilEnrollment
             {
                 CouncilEnrollmentId = cf.CouncilEnrollmentId,
@@ -232,31 +238,31 @@ namespace PMS.Mapping
                 .ForMember(c => c.CouncilId, opt => opt.Ignore());
 
             CreateMap<CouncilEnrollmentResource, CouncilEnrollment>()
-                .ForMember(c => c.CouncilEnrollmentId, opt => opt.Ignore());
+                                        .ForMember(c => c.CouncilEnrollmentId, opt => opt.Ignore());
 
             CreateMap<GradeResource, Grade>()
-                .ForMember(g => g.GradeId, opt => opt.Ignore());
+                                        .ForMember(g => g.GradeId, opt => opt.Ignore());
 
             CreateMap<RoleResource, ApplicationRole>()
-                .ForMember(r => r.Id, opt => opt.Ignore());
+                                        .ForMember(r => r.Id, opt => opt.Ignore());
 
             CreateMap<EnrollmentResource, Enrollment>()
-                .ForMember(e => e.EnrollmentId, opt => opt.Ignore());
+                                        .ForMember(e => e.EnrollmentId, opt => opt.Ignore());
 
             CreateMap<GroupResource, Group>()
-                .ForMember(g => g.GroupId, opt => opt.Ignore());
+                                        .ForMember(g => g.GroupId, opt => opt.Ignore());
 
             CreateMap<ProjectResource, Project>()
-                .ForMember(p => p.ProjectId, opt => opt.Ignore());
+                                        .ForMember(p => p.ProjectId, opt => opt.Ignore());
 
             CreateMap<LecturerResource, Lecturer>()
-                .ForMember(l => l.LecturerId, opt => opt.Ignore());
+                                        .ForMember(l => l.LecturerId, opt => opt.Ignore());
 
             CreateMap<MajorResource, Major>()
-                .ForMember(m => m.MajorId, opt => opt.Ignore());
+                                        .ForMember(m => m.MajorId, opt => opt.Ignore());
 
             CreateMap<QuarterResource, Quarter>()
-                .ForMember(m => m.QuarterId, opt => opt.Ignore());
+                                        .ForMember(m => m.QuarterId, opt => opt.Ignore());
         }
     }
 }
