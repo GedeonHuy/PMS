@@ -81,7 +81,7 @@ namespace PMS.Controllers
             await unitOfWork.Complete();
 
             student = await studentRepository.GetStudent(student.Id);
-            await hubContext.Clients.All.InvokeAsync("Send", student);
+            await hubContext.Clients.All.InvokeAsync("LoadData");
             var result = mapper.Map<Student, StudentResource>(student);
 
             return Ok(result);

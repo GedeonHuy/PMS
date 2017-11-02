@@ -1,0 +1,127 @@
+<div class="page-title">
+  <div class="title_left">
+    <h3>Manage all group is accepted</h3>
+  </div>
+  <div class="title_right">
+    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Input role...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">Search!</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <ul class="nav navbar-right panel_toolbox">
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Project</th>
+              <th>Supervisor</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let group of groups">
+              <td>{{group.groupId}}</td>
+              <td>{{group.groupName}}</td>
+              <td>{{group.project.title}}</td>
+              <td>{{group.lecturer.name}}</td>
+              <td>{{group.isConfirm}}</td>
+              <td>
+                <button class="btn btn-info" (click)="assignCouncil(group.groupId)">
+                  <i class="fa fa-users"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal add and edit Enrollment-->
+<div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Assign Council</h4>
+        <span *ngIf="!isLoading" class="fa fa-refresh fa-spin"></span>
+        <button type="button" class="close pull-right" (click)="hidemodalAddEdit()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)"
+          *ngIf="council && isLoading">
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">President</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="council.lecturerInformations" name="president" required #president="ngModel">
+                <option value=""></option>
+                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+              </select>
+              <small [hidden]="president.valid || (president.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the president </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Secretary</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="council.lecturerInformations" name="secretary" required #secretary="ngModel">
+                <option value=""></option>
+                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+              </select>
+              <small [hidden]="secretary.valid || (secretary.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the secretary </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="council.lecturerInformations" name="supervisor" required #supervisor="ngModel">
+                <option value=""></option>
+                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+              </select>
+              <small [hidden]="supervisor.valid || (supervisor.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the supervisor </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Reviewer</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="council.lecturerInformations" name="reviewer" required #reviewer="ngModel">
+                <option value=""></option>
+                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+              </select>
+              <small [hidden]="reviewer.valid || (reviewer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the reviewer </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+              <button type="button" (click)="hideAddEditModal()" class="btn btn-primary">Cancel</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid || isClicked">Save</button>
+              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

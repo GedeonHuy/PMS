@@ -1,3 +1,4 @@
+import { ConfirmGroupComponent } from './confirm-group.component';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
@@ -5,14 +6,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { StudentComponent } from './student.component';
-import { PaginationComponent } from './../../shared/pagination/pagination.component';
 
-const StudentRoutes: Routes = [
+const ConfirmGroupRoutes: Routes = [
   //localhost:xxxx/main/user
   { path: '', redirectTo: 'index', pathMatch: 'full' },
-  //localhost:xxxx/main/user/index
-  { path: 'index', component: StudentComponent }
+  //localhost:xxxx/main/council/index
+  { path: 'index', component: ConfirmGroupComponent }
 ]
 
 @NgModule({
@@ -20,9 +19,9 @@ const StudentRoutes: Routes = [
     CommonModule,
     FormsModule,
     ModalModule.forRoot(),
-    RouterModule.forChild(StudentRoutes)
+    RouterModule.forChild(ConfirmGroupRoutes)
   ],
-  declarations: [StudentComponent, PaginationComponent],
+  declarations: [ConfirmGroupComponent],
   providers: [DataService, NotificationService]
 })
-export class StudentModule { }
+export class ConfirmGroupModule { }

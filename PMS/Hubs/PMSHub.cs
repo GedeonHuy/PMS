@@ -9,9 +9,9 @@ namespace PMS.Hubs
 {
     public class PMSHub : Hub
     {
-        public Task Send(Student name)
+        public Task LoadData()
         {
-            return Clients.All.InvokeAsync("Send", name);
+            return Clients.All.InvokeAsync("LoadData");
         }
 
     }

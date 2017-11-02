@@ -31,7 +31,6 @@
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th>Id</th>
               <th>Student Code</th>
               <th>Name</th>
               <th>Email</th>
@@ -39,8 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let student of students">
-              <td>{{student.id}}</td>
+            <tr *ngFor="let student of queryResult.items">
               <td>{{student.studentCode}}</td>
               <td>{{student.name}}</td>
               <td>{{student.email}}</td>
@@ -55,11 +53,11 @@
             </tr>
           </tbody>
         </table>
-
       </div>
     </div>
   </div>
 </div>
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>         
 
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"

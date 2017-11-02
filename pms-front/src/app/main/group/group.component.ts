@@ -27,7 +27,8 @@ export class GroupComponent implements OnInit {
 
   isAdmin: boolean;
   isLecturer: boolean;
-
+  isStudent: boolean;
+  
   projects: any[];
   lecturers: any[];
   quarters: any[];
@@ -37,6 +38,7 @@ export class GroupComponent implements OnInit {
     this.isLoading = false;
     this.isClicked = false;
     this.isAdmin = false;
+    this.isStudent = false;
     this.isLecturer = false;
   }
 
@@ -154,7 +156,9 @@ export class GroupComponent implements OnInit {
     if (user.role === "Admin" || user.role === "Lecturer") {
       this.isAdmin = true;
       this.isLecturer = true;
-      console.log(this.isAdmin);
+    }
+    if(user.role === "Student") {
+      this.isStudent = true;
     }
   }
 

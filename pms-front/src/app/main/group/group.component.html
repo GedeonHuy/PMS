@@ -51,7 +51,7 @@
                 <button class="btn btn-danger" (click)="deleteGroup(group.groupId)">
                   <i class="fa fa-trash"></i>
                 </button>
-                <button class="btn btn-info" (click)="joinGroup(group.groupId)">
+                <button *ngIf="isStudent" class="btn btn-info" (click)="joinGroup(group.groupId)">
                   <i class="fa fa-sign-in"></i>
                 </button>
               </td>

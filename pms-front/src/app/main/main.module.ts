@@ -12,7 +12,7 @@ import { StudentModule } from './student/student.module';
 import { LecturerModule } from './lecturer/lecturer.module';
 import { ProjectModule } from './project/project.module';
 import { GroupModule } from './group/group.module';
-import { CouncilModule } from './council/council.module';
+import { ConfirmGroupModule } from './confirm-group/confirm-group.module';
 
 import { SidebarMenuComponent } from './../shared/sidebar-menu/sidebar-menu.component';
 import { TopMenuComponent } from './../shared/top-menu/top-menu.component';
@@ -35,10 +35,10 @@ import { GradeComponent } from './grade/grade.component';
     LecturerModule,
     ProjectModule,
     GroupModule,
-    CouncilModule,
+    ConfirmGroupModule,
     RouterModule.forChild(MainRoutes)
   ],
-  declarations: [MainComponent, SidebarMenuComponent, TopMenuComponent, GradeComponent],
+  declarations: [MainComponent, SidebarMenuComponent, TopMenuComponent],
   providers: [UtilityService, AuthenService, AdminAuthGuard, LecturerAuthGuard, StudentAuthGuard, SignalrService]
 })
 export class MainModule { }
