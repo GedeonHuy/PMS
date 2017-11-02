@@ -211,6 +211,8 @@ namespace PMS.Mapping
                     Type = g.Project.Type
                 }));
 
+            CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
+
             //API Resource to domain
             CreateMap<QueryResource, Query>();
 

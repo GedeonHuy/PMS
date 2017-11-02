@@ -44,8 +44,10 @@ namespace PMS.Persistence.Repository
             context.Remove(major);
         }
 
-        public async Task<IEnumerable<Major>> GetMajors(Query queryObj)
+        public async Task<QueryResult<Major>> GetMajors(Query queryObj)
         {
+            var result = new QueryResult<Major>();
+
             var query = context.Majors
                 .Include(m => m.Groups)
                 .Include(m => m.Lecturers)
@@ -64,7 +66,15 @@ namespace PMS.Persistence.Repository
                 query = query.OrderByDescending(s => s.MajorId);
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
-            return await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
     }
 }

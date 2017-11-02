@@ -42,8 +42,10 @@ namespace PMS.Persistence
             context.Remove(lecturer);
         }
 
-        public async Task<IEnumerable<Lecturer>> GetLecturers(Query queryObj)
+        public async Task<QueryResult<Lecturer>> GetLecturers(Query queryObj)
         {
+            var result = new QueryResult<Lecturer>();
+
             var query = context.Lecturers
                 .Include(l => l.Groups)
                 .Include(l => l.CouncilEnrollments)
@@ -67,7 +69,15 @@ namespace PMS.Persistence
                 query = query.OrderByDescending(s => s.LecturerId);
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
-            return await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
     }
 }

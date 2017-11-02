@@ -104,13 +104,13 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetQuarters(QueryResource queryResource)
+        public async Task<QueryResultResource<QuarterResource>> GetQuarters(QueryResource queryResource)
         {
             var query = mapper.Map<QueryResource, Query>(queryResource);
 
-            var Quarters = await repository.GetQuarters(query);
-            var QuarterResource = mapper.Map<IEnumerable<Quarter>, IEnumerable<QuarterResource>>(Quarters);
-            return Ok(QuarterResource);
+            var queryResult = await repository.GetQuarters(query);
+
+            return mapper.Map<QueryResult<Quarter>, QueryResultResource<QuarterResource>>(queryResult);
         }
     }
 }

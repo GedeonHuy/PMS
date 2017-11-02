@@ -45,8 +45,10 @@ namespace PMS.Persistence.Repository
             context.Remove(council);
         }
 
-        public async Task<IEnumerable<Council>> GetCouncils(Query queryObj)
+        public async Task<QueryResult<Council>> GetCouncils(Query queryObj)
         {
+            var result = new QueryResult<Council>();
+
             var query = context.Councils
                          .Include(c => c.CouncilEnrollments)
                             .ThenInclude(l => l.Lecturer)
@@ -65,7 +67,15 @@ namespace PMS.Persistence.Repository
                 query = query.OrderByDescending(s => s.CouncilId);
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
-            return await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
 
         }
 

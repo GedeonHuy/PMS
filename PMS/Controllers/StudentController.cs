@@ -147,13 +147,12 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetStudents(QueryResource queryResource)
+        public async Task<QueryResultResource<StudentResource>> GetStudents(QueryResource queryResource)
         {
             var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await studentRepository.GetStudents(query);
 
-            var students = await studentRepository.GetStudents(query);
-            var studentResource = mapper.Map<IEnumerable<Student>, IEnumerable<StudentResource>>(students);
-            return Ok(studentResource);
+            return mapper.Map<QueryResult<Student>, QueryResultResource<StudentResource>>(queryResult);
         }
 
         private bool RoleExists(string roleName)

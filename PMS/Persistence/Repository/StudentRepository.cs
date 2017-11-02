@@ -52,8 +52,10 @@ namespace PMS.Persistence
             context.Remove(student);
         }
 
-        public async Task<IEnumerable<Student>> GetStudents(Query queryObj)
+        public async Task<QueryResult<Student>> GetStudents(Query queryObj)
         {
+            var result = new QueryResult<Student>();
+
             var query = context.Students
                 .Include(p => p.Major)
                 .Include(s => s.Enrollments)
@@ -83,7 +85,15 @@ namespace PMS.Persistence
                 query = query.OrderByDescending(s => s.Id);
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
-            return await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
 
         public bool CheckStudentEnrollments(Student student, string Type)

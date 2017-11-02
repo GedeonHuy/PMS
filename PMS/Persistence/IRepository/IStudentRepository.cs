@@ -12,7 +12,7 @@ namespace PMS.Persistence
         Task<Student> GetStudentByEmail(string email);
         void AddStudent(Student student);
         void RemoveStudent(Student student);
-        Task<IEnumerable<Student>> GetStudents(Query filter);
+        Task<QueryResult<Student>> GetStudents(Query filter);
         bool CheckStudentEnrollments(Student student, string Type);
     }
 }

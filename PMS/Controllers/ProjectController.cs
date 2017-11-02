@@ -113,13 +113,13 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetProjects(QueryResource queryResource)
+        public async Task<QueryResultResource<ProjectResource>> GetProjects(QueryResource queryResource)
         {
             var query = mapper.Map<QueryResource, Query>(queryResource);
 
-            var projects = await projectRepository.GetProjects(query);
-            var projectResource = mapper.Map<IEnumerable<Project>, IEnumerable<ProjectResource>>(projects);
-            return Ok(projectResource);
+            var queryResult = await projectRepository.GetProjects(query);
+
+            return mapper.Map<QueryResult<Project>, QueryResultResource<ProjectResource>>(queryResult);
         }
     }
 }

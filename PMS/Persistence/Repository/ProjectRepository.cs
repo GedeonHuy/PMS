@@ -40,8 +40,10 @@ namespace PMS.Persistence
             context.Remove(project);
         }
 
-        public async Task<IEnumerable<Project>> GetProjects(Query queryObj)
+        public async Task<QueryResult<Project>> GetProjects(Query queryObj)
         {
+            var result = new QueryResult<Project>();
+
             var query = context.Projects
                 .Include(p => p.Groups)
                 .Include(p => p.Major)
@@ -78,7 +80,14 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
-            return await query.ToListAsync();
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
     }
 }

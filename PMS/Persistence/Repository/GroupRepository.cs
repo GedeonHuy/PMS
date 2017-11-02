@@ -46,8 +46,10 @@ namespace PMS.Persistence
             context.Remove(group);
         }
 
-        public async Task<IEnumerable<Group>> GetGroups(Query queryObj)
+        public async Task<QueryResult<Group>> GetGroups(Query queryObj)
         {
+            var result = new QueryResult<Group>();
+
             var query = context.Groups
                 .Include(p => p.Lecturer)
                 .Include(p => p.Project)
@@ -96,7 +98,15 @@ namespace PMS.Persistence
                 query = query.OrderByDescending(s => s.GroupId);
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
-            return await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
 
         public async Task<bool> CheckGroup(GroupResource group)

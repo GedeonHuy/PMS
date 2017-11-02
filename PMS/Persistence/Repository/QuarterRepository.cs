@@ -42,8 +42,10 @@ namespace PMS.Persistence.Repository
             context.Remove(Quarter);
         }
 
-        public async Task<IEnumerable<Quarter>> GetQuarters(Query queryObj)
+        public async Task<QueryResult<Quarter>> GetQuarters(Query queryObj)
         {
+            var result = new QueryResult<Quarter>();
+
             var query = context.Quarters
                 .Include(s => s.Groups)
                 .Include(s => s.Enrollments)
@@ -61,7 +63,15 @@ namespace PMS.Persistence.Repository
                 query = query.OrderByDescending(s => s.QuarterId);
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
-            return await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
     }
 }

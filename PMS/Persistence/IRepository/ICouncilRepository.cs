@@ -13,7 +13,7 @@ namespace PMS.Persistence.IRepository
         Task<Council> GetCouncil(int? id, bool includeRelated = true);
         void AddCouncil(Council council);
         void RemoveCouncil(Council council);
-        Task<IEnumerable<Council>> GetCouncils(Query queryObj);
+        Task<QueryResult<Council>> GetCouncils(Query queryObj);
         Task AddLecturers(Council council, ICollection<LecturerInformationResource> lecturerInformations);
     }
 }

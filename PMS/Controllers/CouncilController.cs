@@ -166,13 +166,12 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetCouncils(QueryResource queryResource)
+        public async Task<QueryResultResource<CouncilResource>> GetCouncils(QueryResource queryResource)
         {
             var query = mapper.Map<QueryResource, Query>(queryResource);
 
-            var councils = await councilRepository.GetCouncils(query);
-            var councilResource = mapper.Map<IEnumerable<Council>, IEnumerable<CouncilResource>>(councils);
-            return Ok(councilResource);
+            var queryResult = await councilRepository.GetCouncils(query);
+            return mapper.Map<QueryResult<Council>, QueryResultResource<CouncilResource>>(queryResult);
         }
     }
 }
