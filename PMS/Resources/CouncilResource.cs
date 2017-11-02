@@ -15,11 +15,10 @@ namespace PMS.Resources
         public string ResultScore { get; set; }
         public bool IsDeleted { get; set; }
         public int? GroupId { get; set; }
-        public ICollection<LecturerInformationResource> LecturerInformations { get; set; }
+        public LecturerInformationResource LecturerInformations { get; set; }
         public ICollection<CouncilEnrollment> CouncilEnrollments { get; set; }
         public CouncilResource()
         {
-            LecturerInformations = new Collection<LecturerInformationResource>();
             CouncilEnrollments = new Collection<CouncilEnrollment>();
         }
     }

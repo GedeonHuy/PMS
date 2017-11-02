@@ -31,6 +31,8 @@ namespace PMS.Persistence.Repository
             return await context.Councils
                 .Include(c => c.CouncilEnrollments)
                     .ThenInclude(l => l.Lecturer)
+                 .Include(c => c.CouncilEnrollments)
+                    .ThenInclude(l => l.CouncilRole)
                 .Include(c => c.Group)
                 .SingleOrDefaultAsync(s => s.CouncilId == id);
         }
@@ -52,6 +54,8 @@ namespace PMS.Persistence.Repository
             var query = context.Councils
                          .Include(c => c.CouncilEnrollments)
                             .ThenInclude(l => l.Lecturer)
+                         .Include(c => c.CouncilEnrollments)
+                            .ThenInclude(l => l.CouncilRole)
                          .Include(c => c.Group)
                           .AsQueryable();
 
@@ -79,32 +83,61 @@ namespace PMS.Persistence.Repository
 
         }
 
-        public async Task AddLecturers(Council council, ICollection<LecturerInformationResource> lecturerInformations)
+        public async Task AddLecturers(Council council, LecturerInformationResource lecturerInformations)
         {
-            foreach (var lecturerInformation in lecturerInformations)
+            var presidentCouncilEnrollment = new CouncilEnrollment
             {
-                var lecturer = await context.Lecturers.FirstOrDefaultAsync(l => l.LecturerId == lecturerInformation.LecturerId);
-                if (lecturerInformation.ScorePercent == null)
-                {
-                    council.CouncilEnrollments.Add(new CouncilEnrollment
-                    {
-                        Council = council,
-                        Lecturer = lecturer,
-                        Percentage = (100.0 / lecturerInformations.Count),
-                        IsDeleted = false
-                    });
-                }
-                else
-                {
-                    council.CouncilEnrollments.Add(new CouncilEnrollment
-                    {
-                        Council = council,
-                        Lecturer = lecturer,
-                        Percentage = lecturerInformation.ScorePercent,
-                        IsDeleted = false
-                    });
-                }
+                Council = council,
+                IsDeleted = false,
+                isMark = false,
+                Percentage = lecturerInformations.President.ScorePercent,
+                CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "President"),
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.President.LecturerId)
 
+            };
+
+            var serectoryCouncilEnrollment = new CouncilEnrollment
+            {
+                Council = council,
+                IsDeleted = false,
+                isMark = false,
+                Percentage = lecturerInformations.Serectory.ScorePercent,
+                CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Serectory"),
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Serectory.LecturerId)
+            };
+
+            var reviewerCouncilEnrollment = new CouncilEnrollment
+            {
+                Council = council,
+                IsDeleted = false,
+                isMark = false,
+                Percentage = lecturerInformations.Reviewer.ScorePercent,
+                CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Reviewer"),
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Reviewer.LecturerId)
+            };
+
+            var supervisorCouncilEnrollment = new CouncilEnrollment
+            {
+                Council = council,
+                IsDeleted = false,
+                isMark = false,
+                Percentage = lecturerInformations.Supervisor.ScorePercent,
+                CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Supervisor"),
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Supervisor.LecturerId)
+            };
+
+            context.CouncilEnrollments.Add(presidentCouncilEnrollment);
+            context.CouncilEnrollments.Add(serectoryCouncilEnrollment);
+            context.CouncilEnrollments.Add(reviewerCouncilEnrollment);
+            context.CouncilEnrollments.Add(supervisorCouncilEnrollment);
+        }
+
+        public void RemoveOldLecturer(Council council)
+        {
+            var councilEnrollments = council.CouncilEnrollments.ToList();
+            foreach (var councilEnrollment in councilEnrollments)
+            {
+                context.Remove(councilEnrollment);
             }
         }
     }

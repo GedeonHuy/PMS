@@ -31,6 +31,7 @@ namespace PMS.Data
             builder.Entity<UploadedFile>().ToTable("UploadedFile");
             builder.Entity<Major>().ToTable("Major");
             builder.Entity<Quarter>().ToTable("Quarter");
+            builder.Entity<CouncilRole>().ToTable("CouncilRole");
         }
 
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
@@ -45,5 +46,6 @@ namespace PMS.Data
         public DbSet<UploadedFile> UploadedFiles { get; set; }
         public DbSet<Major> Majors { get; set; }
         public DbSet<Quarter> Quarters { get; set; }
+        public DbSet<CouncilRole> CouncilRoles { get; set; }
     }
 }

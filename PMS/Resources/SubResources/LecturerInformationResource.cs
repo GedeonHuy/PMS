@@ -7,7 +7,9 @@ namespace PMS.Resources.SubResources
 {
     public class LecturerInformationResource
     {
-        public int LecturerId { get; set; }
-        public double? ScorePercent { get; set; }
+        public PresidentResource President { get; set; }
+        public SerectoryResource Serectory { get; set; }
+        public ReviewerResource Reviewer { get; set; }
+        public SupervisorResource Supervisor { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace PMS.Persistence.IRepository
         void AddCouncil(Council council);
         void RemoveCouncil(Council council);
         Task<QueryResult<Council>> GetCouncils(Query queryObj);
-        Task AddLecturers(Council council, ICollection<LecturerInformationResource> lecturerInformations);
+        Task AddLecturers(Council council, LecturerInformationResource lecturerInformations);
+        void RemoveOldLecturer(Council council);
     }
 }

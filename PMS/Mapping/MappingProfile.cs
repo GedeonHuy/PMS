@@ -16,11 +16,29 @@ namespace PMS.Mapping
             //Domain to API Resource
             CreateMap<Council, CouncilResource>()
             .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId))
-            .ForMember(cr => cr.LecturerInformations, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new LecturerInformationResource
+            .ForMember(cr => cr.LecturerInformations, opt => opt.MapFrom(c => new LecturerInformationResource
             {
-                LecturerId = cf.Lecturer.LecturerId,
-                ScorePercent = cf.Percentage
-            })))
+                President = new PresidentResource
+                {
+                    LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "President").Lecturer.LecturerId,
+                    ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "President").Percentage
+                },
+                Serectory = new SerectoryResource
+                {
+                    LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Serectory").Lecturer.LecturerId,
+                    ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Serectory").Percentage
+                },
+                Reviewer = new ReviewerResource
+                {
+                    LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Reviewer").Lecturer.LecturerId,
+                    ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Reviewer").Percentage
+                },
+                Supervisor = new SupervisorResource
+                {
+                    LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Supervisor").Lecturer.LecturerId,
+                    ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Supervisor").Percentage
+                }
+            }))
             .ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new CouncilEnrollment
             {
                 CouncilEnrollmentId = cf.CouncilEnrollmentId,

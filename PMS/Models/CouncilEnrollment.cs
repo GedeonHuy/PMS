@@ -13,5 +13,6 @@ namespace PMS.Models
         public Council Council { get; set; }
         public double? Percentage { get; set; }
         public bool isMark { get; set; }
+        public CouncilRole CouncilRole { get; set; }
     }
 }

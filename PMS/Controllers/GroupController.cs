@@ -162,7 +162,7 @@ namespace PMS.Controllers
             var query = mapper.Map<QueryResource, Query>(queryResource);
 
             var queryResult = await groupRepository.GetGroups(query);
-            return mapper.Map<QueryResult<Group>, QueryResultResource<GradeResource>>(queryResult);
+            return mapper.Map<QueryResult<Group>, QueryResultResource<GroupResource>>(queryResult);
         }
     }
 }

@@ -104,6 +104,19 @@ namespace PMS.Data
             }
             context.SaveChanges();
 
+            var councilRoles = new CouncilRole[]
+            {
+                new CouncilRole{CouncilRoleName="President"},
+                new CouncilRole{CouncilRoleName="Serectory"},
+                new CouncilRole{CouncilRoleName="Supervisor"},
+                new CouncilRole{CouncilRoleName="Reviewer"}
+            };
+            foreach (CouncilRole c in councilRoles)
+            {
+                context.CouncilRoles.Add(c);
+            }
+            context.SaveChanges();
+
             // var roles = new ApplicationRole[] {
             //     new ApplicationRole{Name="Admin", Description="Highest authority with few specifically restricted actions."},
             //     new ApplicationRole{Name="Lecturer", Description="Can create Project and upload files."},
