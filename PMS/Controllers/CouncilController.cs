@@ -80,29 +80,21 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            ////case: missing set point
-            //var nullPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == null);
-            //if (nullPercentCount != councilResource.LecturerInformations.Count)
-            //{
-            //    ModelState.AddModelError("Error", "If you set percentage of score, u must set for all lecturer");
-            //    return BadRequest(ModelState);
-            //}
+            var checkLecturerInformations = councilRepository.CheckLecturerInformations(councilResource.LecturerInformations);
 
-            ////case: one percent of score is equal 0
-            //var zeroPercentCount = councilResource.LecturerInformations.Count(l => l.ScorePercent == 0);
-            //if (zeroPercentCount > 0)
-            //{
-            //    ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0");
-            //    return BadRequest(ModelState);
-            //}
+            ////case: one percent of score is equal 0 or null          
+            if (checkLecturerInformations == "nullOrZeroScorePercent")
+            {
+                ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0 or null");
+                return BadRequest(ModelState);
+            }
 
-            ////case: the total sum of score is not 100
-            //var PercentSum = councilResource.LecturerInformations.Sum(l => l.ScorePercent);
-            //if (PercentSum != 100.0 && PercentSum != 0)
-            //{
-            //    ModelState.AddModelError("Error", "If total percentage of score is not equal 100%");
-            //    return BadRequest(ModelState);
-            //}
+            //case: the total sum of score is not 100
+            if (checkLecturerInformations == "sumScorePercentIsNot100")
+            {
+                ModelState.AddModelError("Error", "If total percentage of score is not equal 100%");
+                return BadRequest(ModelState);
+            }
 
             var council = await councilRepository.GetCouncil(id);
 
