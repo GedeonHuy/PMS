@@ -31,6 +31,7 @@ namespace PMS.Persistence.Repository
             return await context.Councils
                 .Include(c => c.CouncilEnrollments)
                     .ThenInclude(l => l.Lecturer)
+                .Include(c => c.Group)
                 .SingleOrDefaultAsync(s => s.CouncilId == id);
         }
 
@@ -49,6 +50,7 @@ namespace PMS.Persistence.Repository
             var query = context.Councils
                          .Include(c => c.CouncilEnrollments)
                             .ThenInclude(l => l.Lecturer)
+                         .Include(c => c.Group)
                           .AsQueryable();
 
             //sort
