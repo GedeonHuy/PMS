@@ -12,7 +12,9 @@ import { StudentModule } from './student/student.module';
 import { LecturerModule } from './lecturer/lecturer.module';
 import { ProjectModule } from './project/project.module';
 import { GroupModule } from './group/group.module';
+import { MajorModule } from './major/major.module';
 import { ConfirmGroupModule } from './confirm-group/confirm-group.module';
+import { PaginationModule } from './../shared/pagination/pagination.module';
 
 import { SidebarMenuComponent } from './../shared/sidebar-menu/sidebar-menu.component';
 import { TopMenuComponent } from './../shared/top-menu/top-menu.component';
@@ -35,7 +37,9 @@ import { GradeComponent } from './grade/grade.component';
     LecturerModule,
     ProjectModule,
     GroupModule,
+    MajorModule,
     ConfirmGroupModule,
+    PaginationModule,
     RouterModule.forChild(MainRoutes)
   ],
   declarations: [MainComponent, SidebarMenuComponent, TopMenuComponent],

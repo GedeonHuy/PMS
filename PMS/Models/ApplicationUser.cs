@@ -19,8 +19,8 @@ namespace PMS.Models
 
         public string Avatar { get; set; }
 
+        public string Major { get; set; }
         public DateTime CreatedOn { get; set; }
-
         public DateTime UpdatedOn { get; set; }
         public bool IsDeleted { get; set; }
     }

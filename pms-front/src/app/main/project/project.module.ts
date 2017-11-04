@@ -1,3 +1,4 @@
+import { PaginationModule } from './../../shared/pagination/pagination.module';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
@@ -18,6 +19,7 @@ const ProjectRoutes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    PaginationModule,
     ModalModule.forRoot(),
     RouterModule.forChild(ProjectRoutes)
   ],

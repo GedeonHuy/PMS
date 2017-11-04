@@ -18,6 +18,8 @@ export class GroupComponent implements OnInit {
   @ViewChild('enrollmentModal') public enrollmentModal: ModalDirective;
 
   public groups: any[];
+  public queryResult: any = {};
+
   public group: any;
   public isClicked: boolean;
   public isLoading: boolean;
@@ -28,12 +30,16 @@ export class GroupComponent implements OnInit {
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
-  
+
   projects: any[];
   lecturers: any[];
   quarters: any[];
   majors: any[];
+  PAGE_SIZE = 5;
 
+  query: any = {
+    pageSize: this.PAGE_SIZE
+  };
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isLoading = false;
     this.isClicked = false;
@@ -55,10 +61,10 @@ export class GroupComponent implements OnInit {
 
       this._dataService.get("/api/lecturers/getall")
     ]).subscribe(data => {
-      this.quarters = data[0],
-        this.majors = data[1],
-        this.projects = data[2],
-        this.lecturers = data[3]
+      this.quarters = data[0].items,
+      this.majors = data[1].items,
+      this.projects = data[2].items,
+      this.lecturers = data[3].items
     });
 
     this._dataService.get("/api/enrollments/getall").subscribe((response: any) => {
@@ -75,10 +81,20 @@ export class GroupComponent implements OnInit {
 
 
   loadData() {
-    this._dataService.get("/api/groups/getall").subscribe((response: any) => {
-      this.groups = response;
-      console.log(this.groups);
+    this._dataService.get("/api/groups/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+      this.queryResult = response;
     });
+  }
+
+  toQueryString(obj) {
+    var parts = [];
+    for (var property in obj) {
+      var value = obj[property];
+      if (value != null && value != undefined)
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+    }
+
+    return parts.join('&');
   }
 
   //Create method
@@ -157,7 +173,7 @@ export class GroupComponent implements OnInit {
       this.isAdmin = true;
       this.isLecturer = true;
     }
-    if(user.role === "Student") {
+    if (user.role === "Student") {
       this.isStudent = true;
     }
   }
@@ -166,7 +182,7 @@ export class GroupComponent implements OnInit {
     this.enrollmentModal.show();
     var user = this._authenService.getLoggedInUser();
     this.enrollment = {};
-    
+
     Observable.forkJoin(
       this._dataService.get('/api/groups/getgroup/' + id)
     ).subscribe(data => {
@@ -174,7 +190,7 @@ export class GroupComponent implements OnInit {
       this.enrollment.studentEmail = user.email;
       this.enrollment.quarterId = data[0].quarterId;
       this.enrollment.type = data[0].project.type;
-      this.isLoading = true;  
+      this.isLoading = true;
     });
   }
 
@@ -189,9 +205,9 @@ export class GroupComponent implements OnInit {
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
             this.isLoading = false;
-          }, 
+          },
           error => this._dataService.handleError(error));
-          this.enrollmentModal.hide();
+        this.enrollmentModal.hide();
       }
       else {
         this._dataService.put('/api/enrollments/update/' + this.enrollment.enrollmentId, JSON.stringify(this.enrollment))
@@ -201,11 +217,16 @@ export class GroupComponent implements OnInit {
             this._notificationService.printSuccessMessage("Update Success");
             this.isClicked = false;
             this.isLoading = false;
-          },          
+          },
           error => this._dataService.handleError(error));
-          this.enrollmentModal.hide();
+        this.enrollmentModal.hide();
       }
     }
+  }
+
+  onPageChange(page) {
+    this.query.page = page;
+    this.loadData();
   }
 
 }

@@ -54,6 +54,7 @@ namespace PMS.Controllers
             var user = new ApplicationUser
             {
                 FullName = lecturer.Name,
+                Major = lecturer.Major.MajorName,
                 Email = lecturer.Email,
                 UserName = lecturer.Email
             };

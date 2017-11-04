@@ -15,7 +15,8 @@ import "rxjs/add/Observable/forkJoin";
 export class ConfirmGroupComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
 
-  public groups: any[];
+  public queryResult: any = {};
+  
   public group: any;
 
   public isClicked: boolean;
@@ -28,7 +29,21 @@ export class ConfirmGroupComponent implements OnInit {
   lecturers: any[];
   lecturerInformations: any[];
   
-  public council : any;
+  public councilEnrollment: any;
+  public council: any;
+  public president : any;
+  public secretary : any;
+  public supervisor : any;
+  public reviewer : any;
+  
+  public scorePercents : any [] = [25, 50, 75, 100];
+  
+  
+  PAGE_SIZE = 10;
+  
+    query: any = {
+      pageSize: this.PAGE_SIZE
+    };
 
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isLoading = false;
@@ -47,32 +62,68 @@ export class ConfirmGroupComponent implements OnInit {
       this._dataService.get("/api/lecturers/getall")
       
     ]).subscribe(data => {
-        this.lecturers = data[0]
+        this.lecturers = data[0].items
     });
 
     this._dataService.get("/api/councils/getcouncilenrollment/1").subscribe((response: any) => {
-      console.log(response.lecturerInformations[0]);
+      console.log(response.lecturerInformations.president);
     });
   }
 
   loadData() {
     this._dataService.get("/api/groups/getall?isConfirm=Accepted").subscribe((response: any) => {
-      this.groups = response;
+      this.queryResult = response;
+      console.log(response.items);
     });
   }
 
+  toQueryString(obj) {
+    var parts = [];
+    for (var property in obj) {
+      var value = obj[property];
+      if (value != null && value != undefined) 
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+    }
+
+    return parts.join('&');
+  }
   //Create method
   assignCouncil(id : any) {
     this.modalAddEdit.show();
     this.council = {};
+    this.councilEnrollment = {};  
+    this.president = {};  
+    this.secretary = {};
+    this.supervisor = {};
+    this.reviewer = {};
+
     Observable.forkJoin(
       this._dataService.get('/api/groups/getgroup/' + id)
     ).subscribe(data => {
       this.group = data[0];
       this.lecturers = this.lecturers.filter(l => l.majorId == this.group.majorId);  
       this.council.groudId = this.group.groupId;
-      this.isLoading = true;      
+      this.council.lecturerInformations = this.councilEnrollment;
+      this.council.lecturerInformations.president = this.president;
+      this.council.lecturerInformations.secretary = this.secretary;
+      this.council.lecturerInformations.supervisor = this.supervisor;
+      this.council.lecturerInformations.reviewer = this.reviewer;
+      
+      this.isLoading = true;     
     });       
+  }
+
+  //Edit method
+  showEditModal(id: any) {
+    this.modalAddEdit.show();
+    this.loadAssignCouncil(id);
+  }
+
+  loadAssignCouncil(id : any) {
+    this._dataService.get("/api/councils/getcouncilenrollment/1").subscribe((response: any) => {
+      this.council = response;
+      this.isLoading = true;
+  });
   }
 
   hideAddEditModal() {
@@ -83,8 +134,9 @@ export class ConfirmGroupComponent implements OnInit {
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;
-      if (this.group.groupId == undefined) {
-        this._dataService.post('/api/groups/add', JSON.stringify(this.group))
+      console.log(this.council);
+      if (this.council.councilId == undefined) {
+        this._dataService.post('/api/councils/add', JSON.stringify(this.council))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
@@ -94,7 +146,7 @@ export class ConfirmGroupComponent implements OnInit {
           }, error => this._dataService.handleError(error));
       }
       else {
-        this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.group))
+        this._dataService.put('/api/councils/update/' + this.council.councilId, JSON.stringify(this.council))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
@@ -111,7 +163,7 @@ export class ConfirmGroupComponent implements OnInit {
   }
 
   deleteConfirm(id: any) {
-    this._dataService.delete('/api/groups/delete/' + id)
+    this._dataService.delete('/api/councils/delete/' + id)
       .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");
         this.loadData();

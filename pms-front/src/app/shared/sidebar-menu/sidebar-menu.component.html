@@ -8,7 +8,7 @@
       </li>
       <li *ngIf="isAdmin" [hidden]="isAdmin">
         <a>
-          <i class="fa fa-desktop"></i> System
+          <i class="fa fa-desktop"></i> Manage
           <span class="fa fa-chevron-down"></span>
         </a>
         <ul class="nav child_menu">
@@ -25,10 +25,37 @@
             <a routerLink="/main/project/index" routerLinkActive="active">Projects</a>
           </li>
           <li>
-            <a routerLink="/main/group/index" routerLinkActive="active">Groups</a>
+            <a routerLink="/main/major/index" routerLinkActive="active">Majors</a>            
+          </li>
+        </ul>
+      </li>
+
+      <li *ngIf="isAdmin" [hidden]="isAdmin">
+        <a>
+          <i class="fa fa-desktop"></i> Groups
+          <span class="fa fa-chevron-down"></span>
+        </a>
+        <ul class="nav child_menu">
+          <li>
+            <a routerLink="/main/group/index" routerLinkActive="active">Pending</a>
           </li>
           <li>
-            <a routerLink="/main/confirm-group/index" routerLinkActive="active">Confirm Group</a>
+            <a routerLink="/main/confirm-group/index" routerLinkActive="active">Accepted</a>            
+          </li>
+        </ul>
+      </li>
+
+      <li *ngIf="isAdmin" [hidden]="isAdmin">
+        <a>
+          <i class="fa fa-desktop"></i> Enrollments
+          <span class="fa fa-chevron-down"></span>
+        </a>
+        <ul class="nav child_menu">
+          <li>
+            <a routerLink="/main/group/index" routerLinkActive="active">Pending</a>
+          </li>
+          <li>
+            <a routerLink="/main/confirm-group/index" routerLinkActive="active">Accepted</a>            
           </li>
         </ul>
       </li>

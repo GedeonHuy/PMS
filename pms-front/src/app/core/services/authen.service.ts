@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map'
-
 import { SystemConstants } from '../../core/common/system.constants';
 import { LoggedInUser } from './../models/loggedin.user';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -32,6 +29,7 @@ export class AuthenService {
         }
       });
   }
+
   logout() {
     localStorage.removeItem(SystemConstants.CURRENT_USER);
   }
@@ -54,30 +52,12 @@ export class AuthenService {
         userData.avatar,
         userData.email,
         userData.fullName,
-        userData.role,
+        userData.role,        
+        userData.major,        
         userData.userName);
     }
     else
       user = null;
     return user;
-  }
-
-
-  checkAdmin(user : LoggedInUser) {
-    if(user.role === "Admin") {
-      return true;
-    }
-  }
-
-  checkStudent(user : LoggedInUser) {
-    if(user.role === "Student") {
-      return true;
-    }
-  }
-
-  checkLecturer(user : LoggedInUser) {
-    if(user.role === "Lecturer") {
-      return true;
-    }
   }
 }

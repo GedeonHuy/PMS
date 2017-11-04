@@ -1,3 +1,4 @@
+import { PaginationModule } from './../../shared/pagination/pagination.module';
 import { LecturerComponent } from './lecturer.component';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from './../../core/services/notification.service';
@@ -18,6 +19,7 @@ const LecturerRoutes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    PaginationModule,
     ModalModule.forRoot(),
     RouterModule.forChild(LecturerRoutes)
   ],

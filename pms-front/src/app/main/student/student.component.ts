@@ -22,10 +22,10 @@ export class StudentComponent implements OnInit {
   public student: any;
   public isClicked: boolean;
   hubConnection: HubConnection;
-
+  majors: any[];
+  
   PAGE_SIZE = 10;
 
-  majors: any[];
   query: any = {
     pageSize: this.PAGE_SIZE
   };
@@ -51,7 +51,7 @@ export class StudentComponent implements OnInit {
 
 
     this._dataService.get("/api/majors/getall").subscribe((response: any) => {
-      this.majors = response;
+      this.majors = response.items;
     });
 
   }
@@ -60,7 +60,6 @@ export class StudentComponent implements OnInit {
     this._dataService.get("/api/students/getall" + "?" + this.toQueryString(this.query)).
       subscribe((response: any) => {
         this.queryResult = response;
-        console.log(response);
       });
   }
 

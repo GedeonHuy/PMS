@@ -13,9 +13,18 @@ import { AuthenService } from './../../core/services/authen.service';
 export class LecturerComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   public lecturers: any[];
+  public queryResult: any = {};
+  
   public lecturer: any;
   public isClicked: boolean;
   isAdmin : boolean;
+
+  PAGE_SIZE = 3;
+  
+    query: any = {
+      pageSize: this.PAGE_SIZE
+    };
+
   constructor(private _authenService : AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isAdmin = false;
@@ -27,9 +36,9 @@ export class LecturerComponent implements OnInit {
   }
 
   loadData() {
-    this._dataService.get("/api/lecturers/getall").subscribe((response: any) => {
-      console.log(response);
-      this.lecturers = response;
+    this._dataService.get("/api/lecturers/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+      this.queryResult = response;
+      console.log(this.queryResult);
     });
   }
 
@@ -78,6 +87,16 @@ export class LecturerComponent implements OnInit {
     }
   }
 
+  toQueryString(obj) {
+    var parts = [];
+    for (var property in obj) {
+      var value = obj[property];
+      if (value != null && value != undefined) 
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+    }
+
+    return parts.join('&');
+  }
   deletelecturer(id: any) {
     this._notificationService.printConfirmationDialog("Delete confirm", () => this.deleteConfirm(id));
   }
@@ -97,4 +116,9 @@ export class LecturerComponent implements OnInit {
       console.log(this.isAdmin);
     }
   }
+  onPageChange(page) {
+    this.query.page = page;
+    this.loadData();
+  }
+
 }

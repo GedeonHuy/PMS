@@ -62,6 +62,9 @@
     </div>
   </div>
 </div>
+
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>         
+
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true">

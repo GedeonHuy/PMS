@@ -17,6 +17,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using System.Text;
+using PMS.Data;
 
 namespace PMS.Controllers
 {
@@ -30,18 +31,21 @@ namespace PMS.Controllers
         private readonly ILogger _logger;
         private readonly IConfiguration _config;
 
+        private readonly ApplicationDbContext _context;
+
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ILogger<AccountController> logger,
-            IConfiguration config)
+            IConfiguration config, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _config = config;
+            _context = context;
         }
 
         [TempData]
@@ -457,15 +461,11 @@ namespace PMS.Controllers
                     var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
                     if (result.Succeeded)
                     {
-                        IdentityOptions _options = new IdentityOptions();
-
                         var claims = new[]
                         {
                           new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                           new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                          new Claim(_options.ClaimsIdentity.UserIdClaimType, user.Id.ToString()),
-                          new Claim(_options.ClaimsIdentity.UserNameClaimType, user.UserName),
-                          new Claim("role", _userManager.GetRolesAsync(user).Result[0])
+                          new Claim("role", _userManager.GetRolesAsync(user).Result[0]),
                         };
 
                         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
@@ -474,7 +474,7 @@ namespace PMS.Controllers
                         var token = new JwtSecurityToken(_config["Tokens:Issuer"],
                           _config["Tokens:Issuer"],
                           claims,
-                          expires: DateTime.Now.AddDays(30),
+                          expires: DateTime.Now.AddDays(1),
                           signingCredentials: creds);
 
                         return Ok(
@@ -484,10 +484,11 @@ namespace PMS.Controllers
                                 fullName = user.FullName,
                                 userName = user.UserName,
                                 email = user.Email,
+                                major = user.Major,
                                 role = _userManager.GetRolesAsync(user).Result[0],//get role user sign in
                                 avatar = user.Avatar,
                             }
-                          );
+                        );
                     }
                 }
             }

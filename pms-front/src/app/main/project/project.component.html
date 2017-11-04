@@ -39,7 +39,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let project of projects">
+            <tr *ngFor="let project of queryResult.items">
               <td>{{project.id}}</td>
               <td>{{project.title}}</td>
               <td>{{project.type}}</td>
@@ -61,6 +61,7 @@
     </div>
   </div>
 </div>
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>         
 
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -89,7 +90,7 @@
           <div class="ln_solid"></div>
 
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Make</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
 
               <select id="type" class="form-control" [(ngModel)]="project.type" name="type" required #type="ngModel">

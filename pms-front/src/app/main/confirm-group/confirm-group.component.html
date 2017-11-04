@@ -35,7 +35,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let group of groups">
+            <tr *ngFor="let group of queryResult.items">
               <td>{{group.groupId}}</td>
               <td>{{group.groupName}}</td>
               <td>{{group.project.title}}</td>
@@ -45,6 +45,9 @@
                 <button class="btn btn-info" (click)="assignCouncil(group.groupId)">
                   <i class="fa fa-users"></i>
                 </button>
+                <button class="btn btn-primary" (click)="showEditModal(group.groupId)">
+                  <i class="fa fa-pencil-square-o"></i>
+                </button>
               </td>
             </tr>
           </tbody>
@@ -53,6 +56,7 @@
     </div>
   </div>
 </div>
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>
 
 <!--Modal add and edit Enrollment-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -68,48 +72,95 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)"
-          *ngIf="council && isLoading">
+          *ngIf="council && councilEnrollment && isLoading">
+
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">President</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="council.lecturerInformations" name="president" required #president="ngModel">
+              <input type="hidden" [(ngModel)]="council.councilId" name="councilId" />
+              <select class="form-control" [(ngModel)]="councilEnrollment.president.lecturerId" name="lecturerId" required #president="ngModel">
                 <option value=""></option>
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="president.valid || (president.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the president </small>
             </div>
           </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="councilEnrollment.president.scorePercent" name="scorePercent" required #scorePercentPresident="ngModel">
+                <option value=""></option>
+                <option *ngFor="let s of scorePercents">{{ s }}</option>
+              </select>
+              <small [hidden]="scorePercentPresident.valid || (scorePercentPresident.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the score percent </small>
+            </div>
+          </div>
           <div class="ln_solid"></div>
+
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Secretary</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="council.lecturerInformations" name="secretary" required #secretary="ngModel">
+              <select class="form-control" [(ngModel)]="councilEnrollment.secretary.lecturerId" name="lecturerId" required #secretary="ngModel">
                 <option value=""></option>
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="secretary.valid || (secretary.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the secretary </small>
             </div>
           </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="councilEnrollment.secretary.scorePercent" name="scorePercent" required #scorePercentSecretary="ngModel">
+                <option value=""></option>
+                <option *ngFor="let s of scorePercents">{{ s }}</option>
+              </select>
+              <small [hidden]="scorePercentSecretary.valid || (scorePercentSecretary.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the score percent </small>
+            </div>
+          </div>
           <div class="ln_solid"></div>
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="council.lecturerInformations" name="supervisor" required #supervisor="ngModel">
+              <select class="form-control" [(ngModel)]="councilEnrollment.supervisor.lecturerId" name="lecturerId" required #supervisor="ngModel">
                 <option value=""></option>
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="supervisor.valid || (supervisor.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the supervisor </small>
             </div>
           </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="councilEnrollment.supervisor.scorePercent" name="scorePercent" required #scorePercentSupervisor="ngModel">
+                <option value=""></option>
+                <option *ngFor="let s of scorePercents">{{ s }}</option>
+              </select>
+              <small [hidden]="scorePercentSupervisor.valid || (scorePercentSupervisor.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the score percent </small>
+            </div>
+          </div>
           <div class="ln_solid"></div>
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Reviewer</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="council.lecturerInformations" name="reviewer" required #reviewer="ngModel">
+              <select class="form-control" [(ngModel)]="councilEnrollment.reviewer.lecturerId" name="lecturerId" required #reviewer="ngModel">
                 <option value=""></option>
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="reviewer.valid || (reviewer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the reviewer </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="councilEnrollment.reviewer.scorePercent" name="scorePercent" required #scorePercentReviewer="ngModel">
+                <option value=""></option>
+                <option *ngFor="let s of scorePercents">{{ s }}</option>
+              </select>
+              <small [hidden]="scorePercentReviewer.valid || (scorePercentReviewer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the score percent </small>
             </div>
           </div>
           <div class="ln_solid"></div>

@@ -15,6 +15,13 @@ export class ProjectComponent implements OnInit {
   public projects: any[];
   public project: any;
   public isClicked: boolean;
+  public queryResult: any = {};
+  
+  PAGE_SIZE = 3;
+  
+    query: any = {
+      pageSize: this.PAGE_SIZE
+    };
 
   public types : any [] = [ProjectTypesConstants.A, ProjectTypesConstants.B, ProjectTypesConstants.C, ProjectTypesConstants.D];
 
@@ -27,9 +34,8 @@ export class ProjectComponent implements OnInit {
   }
 
   loadData() {
-    this._dataService.get("/api/projects/getall").subscribe((response: any) => {
-      console.log(response);
-      this.projects = response;
+    this._dataService.get("/api/projects/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+      this.queryResult = response;
     });
   }
 
@@ -89,4 +95,20 @@ export class ProjectComponent implements OnInit {
         this.loadData();
       });
   }
+
+  toQueryString(obj) {
+    var parts = [];
+    for (var property in obj) {
+      var value = obj[property];
+      if (value != null && value != undefined) 
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+    }
+
+    return parts.join('&');
+  }
+  onPageChange(page) {
+    this.query.page = page;
+    this.loadData();
+  }
+
 }
