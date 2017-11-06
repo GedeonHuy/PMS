@@ -1,47 +1,119 @@
 <div class="page-title">
-    <div class="title_left">
-      <h3>Plain Page</h3>
-    </div>
+  <div class="title_left">
+    <h3>Home</h3>
+  </div>
 
-    <div class="title_right">
-      <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search for...">
-          <span class="input-group-btn">
-              <button class="btn btn-default" type="button">Go!</button>
-            </span>
-        </div>
+  <div class="title_right">
+    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search for...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">Go!</button>
+        </span>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="clearfix"></div>
+<div class="clearfix"></div>
 
-  <div class="row">
-    <div class="col-md-12 col-sm-12 col-xs-12">
-      <div class="x_panel">
-        <div class="x_title">
-          <h2>Plain Page</h2>
-          <ul class="nav navbar-right panel_toolbox">
-            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Settings 1</a>
-                </li>
-                <li><a href="#">Settings 2</a>
-                </li>
-              </ul>
-            </li>
-            <li><a class="close-link"><i class="fa fa-close"></i></a>
-            </li>
-          </ul>
-          <div class="clearfix"></div>
-        </div>
-        <div class="x_content">
-          Add content to the page ...
-        </div>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>Welcome to PMS!</h2>
+        <ul class="nav navbar-right panel_toolbox">
+          <li>
+            <a class="collapse-link">
+              <i class="fa fa-chevron-up"></i>
+            </a>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+              <i class="fa fa-wrench"></i>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="#">Settings 1</a>
+              </li>
+              <li>
+                <a href="#">Settings 2</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a class="close-link">
+              <i class="fa fa-close"></i>
+            </a>
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+        Create enrollments for project
+        <button class="btn btn-primary" (click)="createEnrollment()">
+          <i class="fa fa-plus"></i>
+        </button>
       </div>
     </div>
   </div>
+</div>
+
+
+<!--Modal add and edit Enrollment-->
+<div bsModal #enrollmentModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Create Enrollment</h4>             
+      <span *ngIf="!isLoading" class="fa fa-refresh fa-spin"></span>
+      <button type="button" class="close pull-right" (click)="hideEnrollmentModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal form-label-left" novalidate #enrollmentForm="ngForm" (ngSubmit)="applyEnrollment(enrollmentForm.valid)"
+        *ngIf="enrollment && isLoading">
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Email</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="hidden" [(ngModel)]="enrollment.enrollmentId" name="enrollmentId" />
+            <input disabled type="text" #studentEmail="ngModel" [(ngModel)]="enrollment.studentEmail" required minlength="10" name="studentEmail"
+              class="form-control">
+          </div>
+        </div>
+        <div class="ln_solid"></div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Quarter</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <select class="form-control" [(ngModel)]="enrollment.quarterId" name="quarter" required #quarter="ngModel">
+              <option value=""></option>
+              <option *ngFor="let q of quarters" value="{{q.quarterId}}">{{ q.quarterName }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="ln_solid"></div>
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="text" #type="ngModel" [(ngModel)]="enrollment.type" required name="type"
+              class="form-control">
+          </div>
+        </div>
+        <div class="ln_solid"></div>
+
+        <div class="form-group">
+          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+            <button type="button" (click)="hideEnrollmentModal()" class="btn btn-primary">Cancel</button>
+            <button type="submit" class="btn btn-success" [disabled]="!enrollmentForm.form.valid || isClicked">Apply</button>
+            <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+

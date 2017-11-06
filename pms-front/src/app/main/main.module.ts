@@ -13,6 +13,7 @@ import { LecturerModule } from './lecturer/lecturer.module';
 import { ProjectModule } from './project/project.module';
 import { GroupModule } from './group/group.module';
 import { MajorModule } from './major/major.module';
+import { EnrollmentModule } from './enrollment/enrollment.module';
 import { ConfirmGroupModule } from './confirm-group/confirm-group.module';
 import { PaginationModule } from './../shared/pagination/pagination.module';
 
@@ -36,8 +37,9 @@ import { GradeComponent } from './grade/grade.component';
     StudentModule,
     LecturerModule,
     ProjectModule,
-    GroupModule,
     MajorModule,
+    EnrollmentModule,
+    GroupModule,    
     ConfirmGroupModule,
     PaginationModule,
     RouterModule.forChild(MainRoutes)

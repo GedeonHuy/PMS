@@ -18,7 +18,7 @@ export class LecturerComponent implements OnInit {
   public lecturer: any;
   public isClicked: boolean;
   isAdmin : boolean;
-
+  majors : any[];
   PAGE_SIZE = 3;
   
     query: any = {
@@ -33,12 +33,15 @@ export class LecturerComponent implements OnInit {
   ngOnInit() {
     this.loadData();
     this.permissionAccess();
+
+    this._dataService.get("/api/majors/getall").subscribe((response: any) => {
+      this.majors = response.items;
+    });
   }
 
   loadData() {
     this._dataService.get("/api/lecturers/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log(this.queryResult);
     });
   }
 

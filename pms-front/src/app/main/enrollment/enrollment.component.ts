@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Response } from '@angular/http';
+import { NotificationService } from './../../core/services/notification.service';
+import { DataService } from './../../core/services/data.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { AuthenService } from './../../core/services/authen.service';
 
 @Component({
   selector: 'app-enrollment',
@@ -6,10 +11,121 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./enrollment.component.css']
 })
 export class EnrollmentComponent implements OnInit {
+  @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
+  public enrollments: any[];
+  public queryResult: any = {};
 
-  constructor() { }
+  public enrollment: any;
+  public isClicked: boolean;
+
+  isAdmin: boolean;
+  isLecturer: boolean;
+
+  PAGE_SIZE = 3;
+
+  query: any = {
+    pageSize: this.PAGE_SIZE,
+    filter : "isConfirm=true"
+  };
+
+  constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
+    this.isClicked = false;
+    this.isAdmin = false;
+    this.isLecturer = false;
+  }
 
   ngOnInit() {
+    this.loadData();
+    this.permissionAccess();
+  }
+
+  loadData() {
+    this._dataService.get("/api/enrollments/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+      this.queryResult = response;
+      console.log("/api/enrollments/getall" + "?" + this.toQueryString(this.query));
+    });
+  }
+
+  //Create method
+  showAddModal() {
+    this.enrollment = {};
+    this.modalAddEdit.show();
+  }
+
+  //Edit method
+  showEditModal(id: any) {
+    this.loadenrollment(id);
+    this.modalAddEdit.show();
+  }
+
+  //Get Role with Id
+  loadenrollment(id: any) {
+    this._dataService.get('/api/enrollments/getenrollment/' + id)
+      .subscribe((response: any) => {
+        this.enrollment = response;
+        console.log(this.enrollment);
+      });
+  }
+
+  saveChange(valid: boolean) {
+    if (valid) {
+      this.isClicked = true;
+      if (this.enrollment.enrollmentId == undefined) {
+        this._dataService.post('/api/enrollments/add', JSON.stringify(this.enrollment))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            this._notificationService.printSuccessMessage("Add Success");
+            this.isClicked = false;
+          }, error => this._dataService.handleError(error));
+      }
+      else {
+        this._dataService.put('/api/enrollments/update/' + this.enrollment.enrollmentId, JSON.stringify(this.enrollment))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            this._notificationService.printSuccessMessage("Update Success");
+            this.isClicked = false;
+          }, error => this._dataService.handleError(error));
+      }
+    }
+  }
+
+  toQueryString(obj) {
+    var parts = [];
+    for (var property in obj) {
+      var value = obj[property];
+      if (value != null && value != undefined)
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+    }
+
+    return parts.join('&');
+  }
+  deleteenrollment(id: any) {
+    this._notificationService.printConfirmationDialog("Delete confirm", () => this.deleteConfirm(id));
+  }
+
+  deleteConfirm(id: any) {
+    this._dataService.delete('/api/enrollments/delete/' + id)
+      .subscribe((response: Response) => {
+        this._notificationService.printSuccessMessage("Delete Success");
+        this.loadData();
+      });
+  }
+
+  permissionAccess() {
+    var user = this._authenService.getLoggedInUser();
+    if (user.role === "Admin") {
+      this.isAdmin = true;
+    }
+
+    if (user.role === "enrollment") {
+      this.isLecturer = true;
+    }
+  }
+  onPageChange(page) {
+    this.query.page = page;
+    this.loadData();
   }
 
 }

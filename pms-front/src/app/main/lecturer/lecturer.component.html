@@ -20,7 +20,7 @@
     <div class="x_panel">
       <div class="x_title">
         <ul class="nav navbar-right panel_toolbox">
-          <li *ngIf="isAdmin" [hidden]="isAdmin" >
+          <li *ngIf="isAdmin" [hidden]="isAdmin">
             <button class="btn btn-success" (click)="showAddModal()">Add</button>
           </li>
         </ul>
@@ -34,6 +34,7 @@
               <th>Id</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Major</th>
               <th></th>
             </tr>
           </thead>
@@ -42,11 +43,12 @@
               <td>{{lecturer.lecturerId}}</td>
               <td>{{lecturer.name}}</td>
               <td>{{lecturer.email}}</td>
+              <td>{{lecturer.major.majorName}}</td>
               <td>
-                <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-primary" (click)="showEditModal(lecturer.lecturerId)">
+                <button *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-primary" (click)="showEditModal(lecturer.lecturerId)">
                   <i class="fa fa-pencil-square-o"></i>
                 </button>
-                <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-danger" (click)="deletelecturer(lecturer.lecturerId)">
+                <button *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-danger" (click)="deletelecturer(lecturer.lecturerId)">
                   <i class="fa fa-trash"></i>
                 </button>
 
@@ -59,7 +61,7 @@
     </div>
   </div>
 </div>
-<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>         
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>
 
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -95,6 +97,21 @@
               </small>
             </div>
           </div>
+
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Major</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="lecturer.majorId" name="majorId" required #major="ngModel">
+                <option value=""></option>
+                <option *ngFor="let m of majors" value="{{m.majorId}}">{{ m.majorName }}</option>
+              </select>
+              <small [hidden]="major.valid || (major.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the major </small>
+            </div>
+          </div>
+
+          <div class="ln_solid"></div>
+
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="modalAddEdit.hide()" class="btn btn-primary">Cancel</button>

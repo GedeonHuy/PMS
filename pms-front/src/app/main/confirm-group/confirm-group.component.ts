@@ -64,16 +64,11 @@ export class ConfirmGroupComponent implements OnInit {
     ]).subscribe(data => {
         this.lecturers = data[0].items
     });
-
-    this._dataService.get("/api/councils/getcouncilenrollment/1").subscribe((response: any) => {
-      console.log(response.lecturerInformations.president);
-    });
   }
 
   loadData() {
     this._dataService.get("/api/groups/getall?isConfirm=Accepted").subscribe((response: any) => {
       this.queryResult = response;
-      console.log(response.items);
     });
   }
 

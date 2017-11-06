@@ -2,18 +2,25 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home.component';
 import { Routes, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { NotificationService } from './../../core/services/notification.service';
+import { DataService } from './../../core/services/data.service';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
-const homeRoutes: Routes = [
-   //localhost:4200/main/home
+const HomeRoutes: Routes = [
+  //localhost:4200/main/home
   { path: '', redirectTo: 'index', pathMatch: 'full' },
-   //localhost:4200/main/home/index
+  //localhost:4200/main/home/index
   { path: 'index', component: HomeComponent }
 ]
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(homeRoutes)
+    FormsModule,
+    ModalModule.forRoot(),
+    RouterModule.forChild(HomeRoutes)
   ],
-  declarations: [HomeComponent]
+  declarations: [HomeComponent],
+  providers: [DataService, NotificationService]
 })
 export class HomeModule { }

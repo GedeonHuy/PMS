@@ -25,6 +25,8 @@ export const MainRoutes: Routes = [
             //localhost:xxxx/main/group
             { path: 'group', loadChildren: './group/group.module#GroupModule' },
             //localhost:xxxx/main/group
+            { path: 'enrollment', loadChildren: './enrollment/enrollment.module#EnrollmentModule' },
+            //localhost:xxxx/main/group
             { path: 'confirm-group', loadChildren: './confirm-group/confirm-group.module#ConfirmGroupModule', canActivate:[AdminAuthGuard]},       
         ]
     }
