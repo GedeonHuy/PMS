@@ -24,11 +24,13 @@ namespace PMS.Controllers
         private IGroupRepository groupRepository;
         private UserManager<ApplicationUser> userManager;
         private IQuarterRepository quarterRepository;
+        private ILecturerRepository lecturerRepository;
         private IUnitOfWork unitOfWork;
 
         public EnrollmentController(IMapper mapper, IUnitOfWork unitOfWork, IEnrollmentRepository enrollmentRepository,
             IStudentRepository studentRepository, IGroupRepository groupRepository,
-            UserManager<ApplicationUser> userManager, IQuarterRepository quarterRepository)
+            UserManager<ApplicationUser> userManager, IQuarterRepository quarterRepository,
+            ILecturerRepository lecturerRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
@@ -37,6 +39,7 @@ namespace PMS.Controllers
             this.groupRepository = groupRepository;
             this.userManager = userManager;
             this.quarterRepository = quarterRepository;
+            this.lecturerRepository = lecturerRepository;
         }
 
         [HttpPost]
@@ -51,6 +54,10 @@ namespace PMS.Controllers
             var enrollment = mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource);
             var student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
             var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
+
+            var lecturer = await lecturerRepository.GetLecturer(enrollmentResource.LecturerId);
+            enrollment.Lecturer = lecturer;
+
             //case: student's major nad group's major is not the same
             var checkStudent = enrollmentRepository.CheckStudent(student, group);
             if (!checkStudent)
@@ -110,6 +117,9 @@ namespace PMS.Controllers
 
             mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource, enrollment);
             var student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
+
+            var lecturer = await lecturerRepository.GetLecturer(enrollmentResource.LecturerId);
+            enrollment.Lecturer = lecturer;
 
             var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
 

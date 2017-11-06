@@ -28,6 +28,7 @@ namespace PMS.Persistence
                 .Include(p => p.Group)
                 .Include(p => p.Grade)
                 .Include(p => p.Student)
+                .Include(p => p.Lecturer)
                 .SingleOrDefaultAsync(s => s.EnrollmentId == id);
         }
 
@@ -48,6 +49,7 @@ namespace PMS.Persistence
                 .Include(p => p.Group)
                 .Include(p => p.Grade)
                 .Include(p => p.Student)
+                .Include(p => p.Lecturer)
                 .ToListAsync();
         }
 

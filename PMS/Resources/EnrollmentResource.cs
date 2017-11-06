@@ -12,6 +12,7 @@ namespace PMS.Resources
         public DateTime EndDate { get; set; }
         public string Type { get; set; }
         public bool IsDeleted { get; set; }
+        public bool isConfirm { get; set; }
         public GradeResource GradeId { get; set; }
         public GradeResource Grade { get; set; }
         //public int StudentId { get; set; }
@@ -20,7 +21,8 @@ namespace PMS.Resources
         public GroupResource Group { get; set; }
         public int? QuarterId { get; set; }
         public QuarterResource Quarter { get; set; }
-
+        public int? LecturerId { get; set; }
+        public LecturerResource Lecturer { get; set; }
         public string StudentEmail { get; set; }
     }
 }

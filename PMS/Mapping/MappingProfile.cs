@@ -161,6 +161,17 @@ namespace PMS.Mapping
                     GroupName = e.Group.GroupName,
                     isDeleted = e.Group.isDeleted,
                     isConfirm = e.Group.isConfirm
+                }))
+                .ForMember(er => er.LecturerId, opt => opt.MapFrom(e => e.Lecturer.LecturerId))
+                .ForMember(er => er.Lecturer, opt => opt.MapFrom(e => new LecturerResource
+                {
+                    LecturerId = e.Lecturer.LecturerId,
+                    Name = e.Lecturer.Name,
+                    Address = e.Lecturer.Address,
+                    DateOfBirth = e.Lecturer.DateOfBirth,
+                    Email = e.Lecturer.Email,
+                    IsDeleted = e.Lecturer.IsDeleted,
+                    PhoneNumber = e.Lecturer.PhoneNumber
                 }));
 
             CreateMap<ApplicationRole, RoleResource>();
