@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace PMS.Models
     public class Group
     {
         public int GroupId { get; set; }
+        [MaxLength(30, ErrorMessage = "Maximum length for the name is 30 characters.")]
         public string GroupName { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
         public Project Project { get; set; }
