@@ -12,12 +12,16 @@ namespace PMS.Models
         public DateTime EndDate { get; set; }
         public string Type { get; set; }
         public bool IsDeleted { get; set; }
-        public bool isConfirm { get; set; }
+        public string isConfirm { get; set; }
         public Grade Grade { get; set; }
         public Quarter Quarter { get; set; }
         public Student Student { get; set; }
         public Lecturer Lecturer { get; set; }
         public Group Group { get; set; }
+        public Enrollment()
+        {
+            isConfirm = "Pending";
+        }
     }
 
 }

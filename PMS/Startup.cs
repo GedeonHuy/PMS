@@ -52,6 +52,8 @@ namespace PMS
             services.AddAutoMapper();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //    services.AddDbContext<ApplicationDbContext>(options =>
+            //options.UseSqlite("Data Source=PMS.db"));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
