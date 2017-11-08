@@ -53,7 +53,10 @@ namespace PMS.Controllers
 
             var enrollment = mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource);
             var student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
+            enrollment.Student = student;
+
             var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
+            enrollment.Group = group;
 
             var lecturer = await lecturerRepository.GetLecturer(enrollmentResource.LecturerId);
             enrollment.Lecturer = lecturer;
@@ -117,11 +120,13 @@ namespace PMS.Controllers
 
             mapper.Map<EnrollmentResource, Enrollment>(enrollmentResource, enrollment);
             var student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
+            enrollment.Student = student;
+
+            var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
+            enrollment.Group = group;
 
             var lecturer = await lecturerRepository.GetLecturer(enrollmentResource.LecturerId);
             enrollment.Lecturer = lecturer;
-
-            var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
 
             //case: enrollment's type and project's type is different
             if (group.Project.Type != enrollmentResource.Type)
@@ -183,17 +188,17 @@ namespace PMS.Controllers
             }
 
             var enrollmentResource = mapper.Map<Enrollment, EnrollmentResource>(enrollment);
-
             return Ok(enrollmentResource);
         }
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetEnrollments()
+        public async Task<QueryResultResource<EnrollmentResource>> GetEnrollments(QueryResource queryResource)
         {
-            var enrollments = await enrollmentRepository.GetEnrollments();
-            var enrollmentResource = mapper.Map<IEnumerable<Enrollment>, IEnumerable<EnrollmentResource>>(enrollments);
-            return Ok(enrollmentResource);
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await enrollmentRepository.GetEnrollments(query);
+
+            return mapper.Map<QueryResult<Enrollment>, QueryResultResource<EnrollmentResource>>(queryResult);
         }
 
         //private async Task<string> getCurrentUserEmailAsync()

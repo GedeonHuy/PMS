@@ -11,7 +11,7 @@ namespace PMS.Persistence
         Task<Enrollment> GetEnrollment(int? id, bool includeRelated = true);
         void AddEnrollment(Enrollment enrollment);
         void RemoveEnrollment(Enrollment enrollment);
-        Task<IEnumerable<Enrollment>> GetEnrollments();
+        Task<QueryResult<Enrollment>> GetEnrollments(Query queryObj);
         bool CheckStudent(Student student, Group group);
     }
 }
