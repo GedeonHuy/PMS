@@ -70,11 +70,11 @@ namespace PMS.Controllers
             //}
 
             //case: enrollment's type and project's type is different
-            //if (group.Project.Type != enrollmentResource.Type)
-            //{
-            //    ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
-            //    return BadRequest(ModelState);
-            //}
+            if (group != null && group.Project.Type != enrollmentResource.Type)
+            {
+                ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
+                return BadRequest(ModelState);
+            }
             //else
             //{
             //    enrollment.Group = await groupRepository.GetGroup(enrollmentResource.GroupId);
