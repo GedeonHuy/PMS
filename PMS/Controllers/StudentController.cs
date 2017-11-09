@@ -147,6 +147,26 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
+        [Route("getenrollments/{email}")]
+        public async Task<QueryResultResource<EnrollmentResource>> GetEnrollments(string email, QueryResource queryResource)
+        {
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await studentRepository.GetEnrollments(query, email);
+
+            return mapper.Map<QueryResult<Enrollment>, QueryResultResource<EnrollmentResource>>(queryResult);
+        }
+
+        [HttpGet]
+        [Route("getgroups/{email}")]
+        public async Task<QueryResultResource<GroupResource>> GetGroups(string email, QueryResource queryResource)
+        {
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await studentRepository.GetGroups(query, email);
+
+            return mapper.Map<QueryResult<Group>, QueryResultResource<GroupResource>>(queryResult);
+        }
+
+        [HttpGet]
         [Route("getall")]
         public async Task<QueryResultResource<StudentResource>> GetStudents(QueryResource queryResource)
         {

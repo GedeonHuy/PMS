@@ -29,6 +29,7 @@ namespace PMS.Persistence
             return await context.Groups
                 .Include(p => p.Project)
                 .Include(p => p.Enrollments)
+                    .ThenInclude(e => e.Student)
                 .Include(p => p.UploadedFiles)
                 .Include(p => p.Lecturer)
                 .Include(p => p.Major)
@@ -54,17 +55,13 @@ namespace PMS.Persistence
                 .Include(p => p.Lecturer)
                 .Include(p => p.Project)
                 .Include(p => p.Enrollments)
+                    .ThenInclude(e => e.Student)
                 .Include(p => p.UploadedFiles)
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
                 .AsQueryable();
 
             //filter
-            if (queryObj.Email != null)
-            {
-                query = query.Where(q => q.Lecturer.Email == queryObj.Email);
-            }
-
             if (queryObj.LecturerId.HasValue)
             {
                 query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);

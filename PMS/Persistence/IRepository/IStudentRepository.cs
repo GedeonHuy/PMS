@@ -14,5 +14,7 @@ namespace PMS.Persistence
         void RemoveStudent(Student student);
         Task<QueryResult<Student>> GetStudents(Query filter);
         bool CheckStudentEnrollments(Student student, string Type);
+        Task<QueryResult<Enrollment>> GetEnrollments(Query queryObj, string email);
+        Task<QueryResult<Group>> GetGroups(Query queryObj, string email);
     }
 }
