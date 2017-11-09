@@ -266,6 +266,9 @@ namespace PMS.Mapping
                 }
             });
 
+            CreateMap<StudentResource, Student>()
+                .ForMember(c => c.Id, opt => opt.Ignore());
+
             CreateMap<CouncilResource, Council>()
                 .ForMember(c => c.CouncilId, opt => opt.Ignore());
 
