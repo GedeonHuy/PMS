@@ -17,7 +17,8 @@ export class EnrollmentComponent implements OnInit {
 
   public enrollment: any;
   public isClicked: boolean;
-
+  public isLoading : boolean;
+  
   isAdmin: boolean;
   isLecturer: boolean;
 
@@ -25,13 +26,17 @@ export class EnrollmentComponent implements OnInit {
 
   query: any = {
     pageSize: this.PAGE_SIZE,
-    filter : "isConfirm=true"
+    isConfirm : "Pending"
   };
+
+  public typeStatus : any [] = ["Accepted", "Pending", "Denied"];
+  
 
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isAdmin = false;
     this.isLecturer = false;
+    this.isLoading = false;
   }
 
   ngOnInit() {
@@ -54,16 +59,15 @@ export class EnrollmentComponent implements OnInit {
 
   //Edit method
   showEditModal(id: any) {
-    this.loadenrollment(id);
+    this.loadEnrollment(id);
     this.modalAddEdit.show();
   }
 
-  //Get Role with Id
-  loadenrollment(id: any) {
+  //Get enrollment with Id
+  loadEnrollment(id: any) {
     this._dataService.get('/api/enrollments/getenrollment/' + id)
       .subscribe((response: any) => {
         this.enrollment = response;
-        console.log(this.enrollment);
       });
   }
 
@@ -80,8 +84,10 @@ export class EnrollmentComponent implements OnInit {
           }, error => this._dataService.handleError(error));
       }
       else {
+        console.log(this.enrollment);
         this._dataService.put('/api/enrollments/update/' + this.enrollment.enrollmentId, JSON.stringify(this.enrollment))
           .subscribe((response: any) => {
+            console.log(this.enrollment);
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
@@ -101,7 +107,7 @@ export class EnrollmentComponent implements OnInit {
 
     return parts.join('&');
   }
-  deleteenrollment(id: any) {
+  deletEnrollment(id: any) {
     this._notificationService.printConfirmationDialog("Delete confirm", () => this.deleteConfirm(id));
   }
 

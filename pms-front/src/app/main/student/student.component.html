@@ -103,6 +103,26 @@
               </small>
             </div>
           </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Address</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #address="ngModel" [(ngModel)]="student.address" required name="address" class="form-control">
+              <small [hidden]="address.valid || (address.pristine && !addEditForm.submitted)" class="text-danger">
+                Address is required
+              </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Phone number</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #phone="ngModel" [(ngModel)]="student.phoneNumber" required name="phone" class="form-control">
+              <small [hidden]="phone.valid || (phone.pristine && !addEditForm.submitted)" class="text-danger">
+                Phone number is required
+              </small>
+            </div>
+          </div>
           <div class="ln_solid"></div>          
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Major</label>

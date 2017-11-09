@@ -1,3 +1,65 @@
-<p>
-  confirm-enrollment works!
-</p>
+<div class="page-title">
+  <div class="title_left">
+    <h3>Manage Enrollment</h3>
+  </div>
+
+  <div class="title_right">
+    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Input role...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">Search!</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <ul class="nav navbar-right panel_toolbox">
+          <li *ngIf="isAdmin" [hidden]="isAdmin" >
+            <button class="btn btn-success" (click)="showAddModal()">Add</button>
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Student</th>
+              <th>Lecturer</th>
+              <th>Status</th>
+              
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let enrollment of queryResult.items">
+              <td>{{enrollment.enrollmentId}}</td>
+              <td>{{enrollment.studentEmail}}</td>
+              <td>{{enrollment.lecturer.name}}</td>
+              <td>{{enrollment.isConfirm}}</td>              
+              <td>
+                <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-primary" (click)="showEditModal(enrollment.enrollmentId)">
+                  <i class="fa fa-pencil-square-o"></i>
+                </button>
+                <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-danger" (click)="deletEnrollment(enrollment.enrollmentId)">
+                  <i class="fa fa-trash"></i>
+                </button>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>         

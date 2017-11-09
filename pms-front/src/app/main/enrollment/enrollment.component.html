@@ -32,21 +32,24 @@
           <thead>
             <tr>
               <th>Id</th>
-              <th>Name</th>
-              <th>Email</th>
+              <th>Student</th>
+              <th>Lecturer</th>
+              <th>Status</th>
+              
               <th></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let enrollment of queryResult.items">
               <td>{{enrollment.enrollmentId}}</td>
-              <td>{{enrollment.name}}</td>
-              <td>{{enrollment.email}}</td>
+              <td>{{enrollment.studentEmail}}</td>
+              <td>{{enrollment.lecturer.name}}</td>
+              <td>{{enrollment.isConfirm}}</td>              
               <td>
                 <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-primary" (click)="showEditModal(enrollment.enrollmentId)">
                   <i class="fa fa-pencil-square-o"></i>
                 </button>
-                <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-danger" (click)="deleteenrollment(enrollment.enrollmentId)">
+                <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-danger" (click)="deletEnrollment(enrollment.enrollmentId)">
                   <i class="fa fa-trash"></i>
                 </button>
 
@@ -76,24 +79,45 @@
         <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)"
           *ngIf="enrollment">
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Email</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <input type="hidden" [(ngModel)]="enrollment.enrollmentId" name="id" />
-              <input type="text" #name="ngModel" [(ngModel)]="enrollment.name" required minlength="10" name="name" class="form-control">
-              <small [hidden]="name.valid || (name.pristine && !addEditForm.submitted)" class="text-danger">
-                At least 10 characters
+              <input disabled type="text" #studentEmail="ngModel" [(ngModel)]="enrollment.studentEmail" required name="studentEmail" class="form-control">
+              <small [hidden]="studentEmail.valid || (studentEmail.pristine && !addEditForm.submitted)" class="text-danger">
+                Student Email is required
               </small>
             </div>
           </div>
           <div class="ln_solid"></div>
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Email</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <input type="text" #email="ngModel" [(ngModel)]="enrollment.email" required name="email" class="form-control">
-              <small [hidden]="email.valid || (email.pristine && !addEditForm.submitted)" class="text-danger">
-                Email is required
+              <input disabled type="text" #lecturerId="ngModel" [(ngModel)]="enrollment.lecturerId" required name="lecturer" class="form-control">
+              <small [hidden]="lecturerId.valid || (lecturerId.pristine && !addEditForm.submitted)" class="text-danger">
+                Lecturer is required
               </small>
             </div>
+          </div>
+
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Quarter</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input disabled type="text" #quarterId="ngModel" [(ngModel)]="enrollment.quarterId" required name="quarter" class="form-control">
+              <small [hidden]="quarterId.valid || (quarterId.pristine && !addEditForm.submitted)" class="text-danger">
+                Quarter is required
+              </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select id="status" class="form-control" [(ngModel)]="enrollment.isConfirm" name="status" required #status="ngModel">
+                <option value=""></option>
+                <option *ngFor="let st of typeStatus">{{ st }}</option>
+              </select>           
+             </div>
           </div>
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
