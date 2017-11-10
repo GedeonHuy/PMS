@@ -17,6 +17,7 @@ namespace PMS.Models
         public int? QuarterId { get; set; }
         public string Email { get; set; }
         public string SortBy { get; set; }
+        public bool isDeniedByLecturer { get; set; }
         public bool IsSortAscending { get; set; }
         public int Page { get; set; }
         public byte PageSize { get; set; }

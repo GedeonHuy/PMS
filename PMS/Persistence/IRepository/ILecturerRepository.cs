@@ -12,5 +12,6 @@ namespace PMS.Persistence
         void AddLecturer(Lecturer lecturer);
         void RemoveLecturer(Lecturer lecturer);
         Task<QueryResult<Lecturer>> GetLecturers(Query filter);
+        Task<IEnumerable<Enrollment>> FinishGroupingAsync(string email, int QuarterId);
     }
 }

@@ -72,6 +72,11 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Type == queryObj.Type);
             }
 
+            if (queryObj.isDeniedByLecturer == true)
+            {
+                query = query.Where(q => q.Lecturer == null);
+            }
+
             if (queryObj.LecturerId.HasValue)
             {
                 query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);

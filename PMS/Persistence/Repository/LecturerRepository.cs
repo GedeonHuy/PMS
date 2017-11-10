@@ -42,6 +42,23 @@ namespace PMS.Persistence
             context.Remove(lecturer);
         }
 
+        public async Task<IEnumerable<Enrollment>> FinishGroupingAsync(string email, int QuarterId)
+        {
+            var enrollments = await context.Enrollments
+                                .Include(e => e.Grade)
+                                .Include(e => e.Group)
+                                .Include(e => e.Lecturer)
+                                .Include(e => e.Student)
+                                .Include(e => e.Quarter)
+                                .Where(e => e.Lecturer.Email == email && e.Quarter.QuarterId == QuarterId && e.Group == null)
+                                .ToListAsync();
+            foreach (var enrollment in enrollments)
+            {
+                enrollment.Lecturer = null;
+            }
+            return enrollments;
+        }
+
         public async Task<QueryResult<Lecturer>> GetLecturers(Query queryObj)
         {
             var result = new QueryResult<Lecturer>();

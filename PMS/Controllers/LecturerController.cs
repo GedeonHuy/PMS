@@ -154,6 +154,22 @@ namespace PMS.Controllers
             return mapper.Map<QueryResult<Lecturer>, QueryResultResource<LecturerResource>>(queryResult);
         }
 
+        [HttpGet]
+        [Route("finishgrouping")]
+        public async Task<IActionResult> FinishGrouping(string email, int QuarterId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var erollments = await lecturerRepository.FinishGroupingAsync(email, QuarterId);
+            await unitOfWork.Complete();
+
+            var enrollmentResource = mapper.Map<IEnumerable<Enrollment>, IEnumerable<EnrollmentResource>>(erollments);
+            return Ok(enrollmentResource);
+        }
+
         private bool RoleExists(string roleName)
         {
             return context.ApplicationRole.Any(r => r.Name == roleName);
