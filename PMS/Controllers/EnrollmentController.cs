@@ -42,6 +42,7 @@ namespace PMS.Controllers
             this.lecturerRepository = lecturerRepository;
         }
 
+
         [HttpPost]
         [Route("add")]
         public async Task<IActionResult> CreateEnrollment([FromBody]EnrollmentResource enrollmentResource)
@@ -65,7 +66,7 @@ namespace PMS.Controllers
                 ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
                 return BadRequest(ModelState);
             }
-            else if (!groupRepository.CheckEnrollment(group, enrollment))
+            else if (group != null && !groupRepository.CheckEnrollment(group, enrollment))
             {
                 ModelState.AddModelError("Warning", "This group already has this student.");
                 return BadRequest(ModelState);
