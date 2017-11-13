@@ -55,41 +55,25 @@ namespace PMS.Controllers
             var student = await studentRepository.GetStudentByEmail(enrollmentResource.StudentEmail);
             enrollment.Student = student;
 
-            var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
-            enrollment.Group = group;
-
             var lecturer = await lecturerRepository.GetLecturer(enrollmentResource.LecturerId);
             enrollment.Lecturer = lecturer;
 
-            //case: student's major nad group's major is not the same
-            //var checkStudent = enrollmentRepository.CheckStudent(student, group);
-            //if (!checkStudent)
-            //{
-            //    ModelState.AddModelError("Error", "Please check again. Your major and this group's major is not the same.");
-            //    return BadRequest(ModelState);
-            //}
-
-            //case: enrollment's type and project's type is different
+            //case: enrollment's type and project's type is different and the student has been already in group
+            var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
             if (group != null && group.Project.Type != enrollmentResource.Type)
             {
                 ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
                 return BadRequest(ModelState);
             }
-            //else
-            //{
-            //    enrollment.Group = await groupRepository.GetGroup(enrollmentResource.GroupId);
-            //}
-
-            //case: student registed another group with the same type
-            //if (!studentRepository.CheckStudentEnrollments(student, enrollmentResource.Type))
-            //{
-            //    ModelState.AddModelError("Error", "Student has an enrollment for this type of project in another group");
-            //    return BadRequest(ModelState);
-            //}
-            //else
-            //{
-            //    enrollment.Student = student;
-            //}
+            else if (!groupRepository.CheckEnrollment(group, enrollment))
+            {
+                ModelState.AddModelError("Warning", "This group already has this student.");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                enrollment.Group = group;
+            }
 
             var quarter = await quarterRepository.GetQuarter(enrollmentResource.QuarterId);
             enrollment.Quarter = quarter;
@@ -181,6 +165,21 @@ namespace PMS.Controllers
         public async Task<IActionResult> GetEnrollment(int id)
         {
             var enrollment = await enrollmentRepository.GetEnrollment(id);
+
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            var enrollmentResource = mapper.Map<Enrollment, EnrollmentResource>(enrollment);
+            return Ok(enrollmentResource);
+        }
+
+        [HttpGet]
+        [Route("getenrollmentbyemail/{email}")]
+        public async Task<IActionResult> GetEnrollmentByEmail(string email)
+        {
+            var enrollment = await enrollmentRepository.GetEnrollmentByEmail(email);
 
             if (enrollment == null)
             {

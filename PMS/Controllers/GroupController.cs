@@ -22,12 +22,13 @@ namespace PMS.Controllers
         private IProjectRepository projectRepository;
         private IMajorRepository majorRepository;
         private IQuarterRepository quarterRepository;
+        private IEnrollmentRepository enrollmentRepository;
         private IUnitOfWork unitOfWork;
 
         public GroupController(IMapper mapper, IUnitOfWork unitOfWork,
             IGroupRepository groupRepository, ILecturerRepository lecturerRepository,
             IProjectRepository projectRepository, IMajorRepository majorRepository,
-            IQuarterRepository quarterRepository)
+            IQuarterRepository quarterRepository, IEnrollmentRepository enrollmentRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
@@ -35,7 +36,8 @@ namespace PMS.Controllers
             this.lecturerRepository = lecturerRepository;
             this.projectRepository = projectRepository;
             this.majorRepository = majorRepository;
-            this.quarterRepository = quarterRepository; ;
+            this.quarterRepository = quarterRepository;
+            this.enrollmentRepository = enrollmentRepository;
         }
 
         [HttpPost]
@@ -78,6 +80,9 @@ namespace PMS.Controllers
             await unitOfWork.Complete();
 
             group = await groupRepository.GetGroup(group.GroupId);
+
+            await enrollmentRepository.AddEnrollmentsToGroup(group, groupResource);
+            await unitOfWork.Complete();
 
             var result = mapper.Map<Group, GroupResource>(group);
 

@@ -2,6 +2,7 @@
 using PMS.Data;
 using PMS.Extensions;
 using PMS.Models;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,16 @@ namespace PMS.Persistence
                 .Include(p => p.Student)
                 .Include(p => p.Lecturer)
                 .SingleOrDefaultAsync(s => s.EnrollmentId == id);
+        }
+        public async Task<Enrollment> GetEnrollmentByEmail(string email)
+        {
+            return await context.Enrollments
+                .Include(p => p.Quarter)
+                .Include(p => p.Group)
+                .Include(p => p.Grade)
+                .Include(p => p.Student)
+                .Include(p => p.Lecturer)
+                .SingleOrDefaultAsync(s => s.Student.Email == email);
         }
 
         public void AddEnrollment(Enrollment enrollemnt)
@@ -114,6 +125,15 @@ namespace PMS.Persistence
                 return false;
             }
             return true;
+        }
+
+        public async Task AddEnrollmentsToGroup(Group group, GroupResource groupResource)
+        {
+            foreach (var enrollmentResource in groupResource.Enrollments)
+            {
+                var enrollment = await GetEnrollment(enrollmentResource.EnrollmentId);
+                enrollment.Group.GroupId = group.GroupId;
+            }
         }
     }
 }

@@ -106,6 +106,18 @@ namespace PMS.Persistence
             return result;
         }
 
+        public bool CheckEnrollment(Group group, Enrollment enrollment)
+        {
+            if (group.Enrollments.Any(e => e.Student.Id == enrollment.Student.Id))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         public async Task<bool> CheckGroup(GroupResource group)
         {
             var lecturer = await context.Lecturers
