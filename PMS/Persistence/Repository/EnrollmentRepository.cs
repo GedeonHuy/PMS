@@ -87,7 +87,8 @@ namespace PMS.Persistence
             {
                 ["type"] = s => s.Type,
                 ["grade"] = s => s.Grade,
-                ["quarter"] = s => s.Quarter.QuarterId
+                ["quarter"] = s => s.Quarter.QuarterId,
+                ["email"] = s => s.Student.Email
             };
             if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
             {
