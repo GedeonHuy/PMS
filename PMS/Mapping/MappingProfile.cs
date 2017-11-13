@@ -238,7 +238,7 @@ namespace PMS.Mapping
                 //    GradeId = e.Grade.GradeId,
                 //    isConfirm = e.isConfirm,
                 //    IsDeleted = e.IsDeleted,
-                //    QuarterId = e.Quarter.QuarterId,
+                //    QuarterId = e.Quarter.QuarterId,.
                 //    GroupId = e.Group.GroupId,
                 //    LecturerId = e.Lecturer.LecturerId,
                 //    StudentEmail = e.Student.Email
