@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PMS.Controllers;
 using PMS.Data;
 using PMS.Extensions;
 using PMS.Models;
@@ -127,13 +128,5 @@ namespace PMS.Persistence
             return true;
         }
 
-        public async Task AddEnrollmentsToGroup(Group group, GroupResource groupResource)
-        {
-            foreach (var enrollmentResource in groupResource.Enrollments)
-            {
-                var enrollment = await GetEnrollment(enrollmentResource.EnrollmentId);
-                enrollment.Group.GroupId = group.GroupId;
-            }
-        }
     }
 }

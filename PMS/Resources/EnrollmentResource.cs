@@ -13,7 +13,7 @@ namespace PMS.Resources
         public string Type { get; set; }
         public bool IsDeleted { get; set; }
         public string isConfirm { get; set; }
-        public GradeResource GradeId { get; set; }
+        public int? GradeId { get; set; }
         public GradeResource Grade { get; set; }
         //public int StudentId { get; set; }
         public StudentResource Student { get; set; }

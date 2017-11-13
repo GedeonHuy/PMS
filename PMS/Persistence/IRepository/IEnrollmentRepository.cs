@@ -15,6 +15,5 @@ namespace PMS.Persistence
         void RemoveEnrollment(Enrollment enrollment);
         Task<QueryResult<Enrollment>> GetEnrollments(Query queryObj);
         bool CheckStudent(Student student, Group group);
-        Task AddEnrollmentsToGroup(Group group, GroupResource groupResource);
     }
 }

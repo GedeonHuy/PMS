@@ -140,7 +140,14 @@ namespace PMS.Mapping
                     EnrollmentId = e.EnrollmentId,
                     EndDate = e.EndDate,
                     StartDate = e.StartDate,
-                    Type = e.Type
+                    Type = e.Type,
+                    GradeId = e.Grade.GradeId,
+                    isConfirm = e.isConfirm,
+                    IsDeleted = e.IsDeleted,
+                    QuarterId = e.Quarter.QuarterId,
+                    GroupId = e.Group.GroupId,
+                    LecturerId = e.Lecturer.LecturerId,
+                    StudentEmail = e.Student.Email
                 })));
 
             CreateMap<Enrollment, EnrollmentResource>()
@@ -222,6 +229,20 @@ namespace PMS.Mapping
                 .ForMember(lr => lr.CouncilEnrollments, opt => opt.MapFrom(l => l.CouncilEnrollments));
 
             CreateMap<Group, GroupResource>()
+                //.ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => new EnrollmentResource
+                //{
+                //    EnrollmentId = e.EnrollmentId,
+                //    EndDate = e.EndDate,
+                //    StartDate = e.StartDate,
+                //    Type = e.Type,
+                //    GradeId = e.Grade.GradeId,
+                //    isConfirm = e.isConfirm,
+                //    IsDeleted = e.IsDeleted,
+                //    QuarterId = e.Quarter.QuarterId,
+                //    GroupId = e.Group.GroupId,
+                //    LecturerId = e.Lecturer.LecturerId,
+                //    StudentEmail = e.Student.Email
+                //})))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
                 .ForMember(er => er.Quarter, opt => opt.MapFrom(e => new Quarter
                 {
