@@ -42,6 +42,7 @@ export class LecturerComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/lecturers/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
+      console.log(this.queryResult.items);
     });
   }
 
@@ -62,7 +63,6 @@ export class LecturerComponent implements OnInit {
     this._dataService.get('/api/lecturers/getlecturer/' + id)
       .subscribe((response: any) => {
         this.lecturer = response;
-        console.log(this.lecturer);
       });
   }
 

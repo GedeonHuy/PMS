@@ -23,7 +23,7 @@ export const MainRoutes: Routes = [
             //localhost:xxxx/main/project
             { path: 'project', loadChildren: './project/project.module#ProjectModule' },
             //localhost:xxxx/main/group
-            { path: 'group', loadChildren: './group/group.module#GroupModule' },
+            { path: 'group', loadChildren: './group/group.module#GroupModule', canActivate:[AdminAuthGuard]},
             //localhost:xxxx/main/group
             { path: 'enrollment', loadChildren: './enrollment/enrollment.module#EnrollmentModule' },
             //localhost:xxxx/main/group

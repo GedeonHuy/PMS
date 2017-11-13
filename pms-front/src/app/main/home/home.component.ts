@@ -22,6 +22,11 @@ export class HomeComponent implements OnInit {
   public isClicked: boolean;
   public isLoading: boolean;
 
+
+  isAdmin: boolean;
+  isLecturer: boolean;
+  isStudent: boolean;
+
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isLoading = false;
     this.isClicked = false;
@@ -29,11 +34,6 @@ export class HomeComponent implements OnInit {
     this.isStudent = false;
     this.isLecturer = false;
   }
-
-
-  isAdmin: boolean;
-  isLecturer: boolean;
-  isStudent: boolean;
   projects: any[];
   lecturers: any[];
   quarters: any[];
@@ -48,10 +48,11 @@ export class HomeComponent implements OnInit {
       this._dataService.get("/api/lecturers/getall")
     ]).subscribe(data => {
       this.quarters = data[0].items,
-        this.lecturers = data[1].items
+      this.lecturers = data[1].items
       this.isLoading = true;
     });
 
+    this.permissionAccess();
   }
 
 
@@ -64,6 +65,11 @@ export class HomeComponent implements OnInit {
     this.isLoading = true;
   }
 
+  hideEnrollmentModal() {
+    this.enrollmentModal.hide();
+    this.isLoading = false;
+  }
+
   toQueryString(obj) {
     var parts = [];
     for (var property in obj) {
@@ -71,16 +77,10 @@ export class HomeComponent implements OnInit {
       if (value != null && value != undefined)
         parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
     }
-
     return parts.join('&');
   }
 
-  hideEnrollmentModal() {
-    this.enrollmentModal.hide();
-    this.isLoading = false;
-  }
-
-  saveChange(valid: boolean) {
+  applyEnrollment(valid: boolean) {
     if (valid) {
       this.isClicked = true;      
       if (this.enrollment.id == undefined) {
@@ -93,6 +93,19 @@ export class HomeComponent implements OnInit {
             this.isLoading = false;
           }, error => this._dataService.handleError(error));
       }
+    }
+  }
+
+  permissionAccess() {
+    var user = this._authenService.getLoggedInUser();
+    if (user.role === "Admin" ) {
+      this.isAdmin = true;
+    }
+    if (user.role === "Lecturer" ) {
+      this.isLecturer = true;
+    }
+    if (user.role === "Student") {
+      this.isStudent = true;
     }
   }
 }

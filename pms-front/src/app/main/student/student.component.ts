@@ -4,7 +4,7 @@ import { SystemConstants } from './../../core/common/system.constants';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
-import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { HubConnection } from '@aspnet/signalr-client';
 
@@ -53,7 +53,6 @@ export class StudentComponent implements OnInit {
     this._dataService.get("/api/majors/getall").subscribe((response: any) => {
       this.majors = response.items;
     });
-
   }
 
   loadData() {

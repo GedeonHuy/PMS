@@ -1,6 +1,6 @@
 <div class="page-title">
   <div class="title_left">
-    <h3>Home</h3>
+    <h3>Welcome to PMS!</h3>
   </div>
 
   <div class="title_right">
@@ -18,42 +18,169 @@
 <div class="clearfix"></div>
 
 <div class="row">
-  <div class="col-md-12 col-sm-12 col-xs-12">
+  
+  <!-- Zone student -->
+  <div *ngIf="isStudent" class="col-md-6 col-sm-6 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Welcome to PMS!</h2>
+        <h2>My Enrollments</h2>
         <ul class="nav navbar-right panel_toolbox">
-          <li>
-            <a class="collapse-link">
-              <i class="fa fa-chevron-up"></i>
-            </a>
+          <button class="btn btn-success" (click)="createEnrollment()">
+            <i class="fa fa-plus"></i>
+          </button>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Username</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isStudent" class="col-md-6 col-sm-6 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>My Groups</h2>
+        <ul class="nav navbar-right panel_toolbox">
+          <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
           </li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-              <i class="fa fa-wrench"></i>
-            </a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
             <ul class="dropdown-menu" role="menu">
-              <li>
-                <a href="#">Settings 1</a>
+              <li><a href="#">Settings 1</a>
               </li>
-              <li>
-                <a href="#">Settings 2</a>
+              <li><a href="#">Settings 2</a>
               </li>
             </ul>
           </li>
-          <li>
-            <a class="close-link">
-              <i class="fa fa-close"></i>
-            </a>
+          <li><a class="close-link"><i class="fa fa-close"></i></a>
           </li>
         </ul>
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
-        Create enrollments for project
-        <button class="btn btn-primary" (click)="createEnrollment()">
-          <i class="fa fa-plus"></i>
-        </button>
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Username</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Zone lecturer -->
+  <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>My Groups</h2>
+        <ul class="nav navbar-right panel_toolbox">
+          <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Settings 1</a>
+              </li>
+              <li><a href="#">Settings 2</a>
+              </li>
+            </ul>
+          </li>
+          <li><a class="close-link"><i class="fa fa-close"></i></a>
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Username</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </table>
+
       </div>
     </div>
   </div>
@@ -73,7 +200,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal form-label-left" novalidate #enrollmentForm="ngForm" (ngSubmit)="saveChange(enrollmentForm.valid)"
+        <form class="form-horizontal form-label-left" novalidate #enrollmentForm="ngForm" (ngSubmit)="applyEnrollment(enrollmentForm.valid)"
           *ngIf="enrollment && isLoading">
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Email</label>
@@ -136,4 +263,83 @@
       </div>
     </div>
   </div>
+</div>
+
+
+<!--Modal add and edit Group-->
+<div bsModal #groupModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Create Group</h4>
+      <span *ngIf="!isLoading" class="fa fa-refresh fa-spin"></span>
+      <button type="button" class="close pull-right" (click)="hideGroup()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal form-label-left" novalidate #groupForm="ngForm" (ngSubmit)="applyGroup(groupForm.valid)"
+        *ngIf="group && isLoading">
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Email</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="hidden" [(ngModel)]="enrollment.enrollmentId" name="enrollmentId" />
+            <input disabled type="text" #studentEmail="ngModel" [(ngModel)]="enrollment.studentEmail" required minlength="10" name="studentEmail"
+              class="form-control">
+          </div>
+        </div>
+        <div class="ln_solid"></div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <select class="form-control" [(ngModel)]="enrollment.lecturerId" name="lecturer" required #lecturer="ngModel">
+              <option value=""></option>
+              <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+            </select>
+            <small [hidden]="lecturer.valid || (lecturer.pristine && !enrollmentForm.submitted)" class="text-danger"> Please specify the lecturer </small>              
+          </div>
+        </div>
+
+        <div class="ln_solid"></div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Quarter</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <select class="form-control" [(ngModel)]="enrollment.quarterId" name="quarter" required #quarter="ngModel">
+              <option value=""></option>
+              <option *ngFor="let q of quarters" value="{{q.quarterId}}">{{ q.quarterName }}</option>
+            </select>
+            <small [hidden]="quarter.valid || (quarter.pristine && !enrollmentForm.submitted)" class="text-danger"> Please specify the lecturer </small>                            
+          </div>
+        </div>
+        <div class="ln_solid"></div>
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+
+            <select id="type" class="form-control" [(ngModel)]="enrollment.type" name="type" required #type="ngModel">
+              <option value=""></option>
+              <option *ngFor="let t of types">{{ t }}</option>
+            </select>
+            <small [hidden]="type.valid || (type.pristine && !enrollmentForm.submitted)" class="text-danger">
+              Please specify the project type            
+             </small>
+          </div>
+
+        </div>
+        <div class="ln_solid"></div>
+
+        <div class="form-group">
+          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+            <button type="button" (click)="hideEnrollmentModal()" class="btn btn-primary">Cancel</button>
+            <button type="submit" class="btn btn-success" [disabled]="!enrollmentForm.form.valid || isClicked">Apply</button>
+            <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 </div>

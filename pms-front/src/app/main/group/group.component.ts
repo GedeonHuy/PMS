@@ -2,10 +2,11 @@ import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AuthenService } from './../../core/services/authen.service';
 import "rxjs/add/Observable/forkJoin";
+import { forEach } from '@angular/router/src/utils/collection';
 
 
 @Component({
@@ -21,11 +22,10 @@ export class GroupComponent implements OnInit {
   public queryResult: any = {};
 
   public group: any;
+  public enrollment: any;
+
   public isClicked: boolean;
   public isLoading: boolean;
-
-
-  public enrollment: any;
 
   isAdmin: boolean;
   isLecturer: boolean;
@@ -34,20 +34,25 @@ export class GroupComponent implements OnInit {
   projects: any[];
   lecturers: any[];
   quarters: any[];
+  public enrollments: any[];
+
   majors: any[];
   PAGE_SIZE = 5;
 
   query: any = {
     pageSize: this.PAGE_SIZE
   };
-  constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
+  constructor(myElement: ElementRef, private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isLoading = false;
     this.isClicked = false;
     this.isAdmin = false;
     this.isStudent = false;
     this.isLecturer = false;
+    this.statusSelect = false;
+    this.elementRef = myElement;
   }
 
+  public listStudents: string[] = [];
   ngOnInit() {
     this.loadData();
     this.permissionAccess();
@@ -59,16 +64,19 @@ export class GroupComponent implements OnInit {
 
       this._dataService.get("/api/projects/getall"),
 
-      this._dataService.get("/api/lecturers/getall")
+      this._dataService.get("/api/lecturers/getall"),
+
+      this._dataService.get("/api/enrollments/getall?isConfirm=Accepted")
+
     ]).subscribe(data => {
       this.quarters = data[0].items,
-      this.majors = data[1].items,
-      this.projects = data[2].items,
-      this.lecturers = data[3].items
-    });
-
-    this._dataService.get("/api/enrollments/getall").subscribe((response: any) => {
-      console.log(response);
+        this.majors = data[1].items,
+        this.projects = data[2].items,
+        this.lecturers = data[3].items
+      this.enrollments = data[4].items
+      for (let entity of this.enrollments) {
+        this.listStudents.push(entity.studentEmail);
+      }
     });
   }
 
@@ -115,10 +123,6 @@ export class GroupComponent implements OnInit {
     this.isLoading = false;
   }
 
-  hideEnrollmentModal() {
-    this.enrollmentModal.hide();
-    this.isLoading = false;
-  }
 
   //Get Group with Id
   loadGroup(id: any) {
@@ -152,6 +156,8 @@ export class GroupComponent implements OnInit {
             this.isLoading = false;
           }, error => this._dataService.handleError(error));
       }
+
+      console.log(this.group);
     }
   }
 
@@ -169,64 +175,79 @@ export class GroupComponent implements OnInit {
 
   permissionAccess() {
     var user = this._authenService.getLoggedInUser();
-    if (user.role === "Admin" || user.role === "Lecturer") {
+    if (user.role === "Admin") {
       this.isAdmin = true;
+    }
+
+    if (user.role === "Lecturer") {
       this.isLecturer = true;
     }
+
     if (user.role === "Student") {
       this.isStudent = true;
-    }
-  }
-
-  joinGroup(id: any) {
-    this.enrollmentModal.show();
-    var user = this._authenService.getLoggedInUser();
-    this.enrollment = {};
-
-    Observable.forkJoin(
-      this._dataService.get('/api/groups/getgroup/' + id)
-    ).subscribe(data => {
-      this.enrollment.groupId = id;
-      this.enrollment.studentEmail = user.email;
-      this.enrollment.quarterId = data[0].quarterId;
-      this.enrollment.type = data[0].project.type;
-      this.isLoading = true;
-    });
-  }
-
-  applyEnrollment(valid: boolean) {
-    if (valid) {
-      this.isClicked = true;
-      if (this.enrollment.enrollmentId == undefined) {
-        this._dataService.post('/api/enrollments/add', JSON.stringify(this.enrollment))
-          .subscribe((response: any) => {
-            this.loadData();
-            this.enrollmentModal.hide();
-            this._notificationService.printSuccessMessage("Add Success");
-            this.isClicked = false;
-            this.isLoading = false;
-          },
-          error => this._dataService.handleError(error));
-        this.enrollmentModal.hide();
-      }
-      else {
-        this._dataService.put('/api/enrollments/update/' + this.enrollment.enrollmentId, JSON.stringify(this.enrollment))
-          .subscribe((response: any) => {
-            this.loadData();
-            this.enrollmentModal.hide();
-            this._notificationService.printSuccessMessage("Update Success");
-            this.isClicked = false;
-            this.isLoading = false;
-          },
-          error => this._dataService.handleError(error));
-        this.enrollmentModal.hide();
-      }
     }
   }
 
   onPageChange(page) {
     this.query.page = page;
     this.loadData();
+  }
+
+
+  public filteredList = [];
+  public elementRef;
+  public queryToSelect = '';
+  public selected = [];
+
+  filter() {
+    if (this.queryToSelect !== "") {
+      this.filteredList = this.listStudents.filter(function (el) {
+        return el.toLowerCase().indexOf(this.queryToSelect.toLowerCase()) > -1;
+      }.bind(this));
+    } else {
+      this.filteredList = [];
+    }
+  }
+
+  getEnrollment(email: string) {
+    this._dataService.get("/api/enrollments/getenrollmentbyemail/" + email)
+      .subscribe((response: any) => {
+        this.enrollment = response;
+      });
+      this.statusSelect = true;              
+  }
+
+  select(item) {
+    this.getEnrollment(item);
+    this.group.enrollments = [];
+    this.statusSelect = true;                
+    if (this.enrollment != null) {
+      this.group.enrollments.push(this.enrollment);
+      this.selected.push(item);
+
+      this.queryToSelect = '';
+      this.filteredList = [];
+    }
+  }
+
+  remove(item) {
+    this.selected.splice(this.selected.indexOf(item), 1);
+  }
+
+  public statusSelect: boolean;
+
+  handleClick(event) {
+    var clickedComponent = event.target;
+    var inside = false;
+    do {
+      if (clickedComponent === this.elementRef.nativeElement) {
+        inside = true;
+      }
+      clickedComponent = clickedComponent.parentNode;
+    } while (clickedComponent);
+    if (!inside) {
+      this.filteredList = [];
+    }
   }
 
 }
