@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,8 @@ namespace PMS.Resources
     public class GroupResource
     {
         public int GroupId { get; set; }
+        [Required]
+        [MaxLength(30)]
         public string GroupName { get; set; }
         public bool isDeleted { get; set; }
         public string isConfirm { get; set; }

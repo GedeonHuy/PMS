@@ -10,7 +10,6 @@ namespace PMS.Models
     public class Group
     {
         public int GroupId { get; set; }
-        [MaxLength(30, ErrorMessage = "Maximum length for the name is 30 characters.")]
         public string GroupName { get; set; }
         public Project Project { get; set; }
         public Major Major { get; set; }

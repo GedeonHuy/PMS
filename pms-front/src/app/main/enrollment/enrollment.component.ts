@@ -125,7 +125,7 @@ export class EnrollmentComponent implements OnInit {
       this.isAdmin = true;
     }
 
-    if (user.role === "enrollment") {
+    if (user.role === "Lecturer") {
       this.isLecturer = true;
     }
   }

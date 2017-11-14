@@ -85,8 +85,8 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Name</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <input type="hidden" [(ngModel)]="group.groupId" name="groupId" />
-              <input type="text" #groupName="ngModel" [(ngModel)]="group.groupName" required minlength="10" name="groupName" class="form-control">
-              <small [hidden]="groupName.valid || (groupName.pristine && !addEditForm.submitted)" class="text-danger"> At least 10 characters </small>
+              <input type="text" #groupName="ngModel" [(ngModel)]="group.groupName" name="groupName" class="form-control">
+              <small [hidden]="groupName.valid || (groupName.pristine && !addEditForm.submitted)" class="text-danger"> Maximum length is 30 </small>
             </div>
           </div>
           <div class="ln_solid"></div>
