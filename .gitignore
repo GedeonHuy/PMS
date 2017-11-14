@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/obj
+/pms-front/src/app/main/group_backup.rar
+/PMS/obj/Release/netcoreapp2.0
