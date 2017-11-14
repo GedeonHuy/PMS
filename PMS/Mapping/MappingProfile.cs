@@ -323,6 +323,11 @@ namespace PMS.Mapping
                 .ForMember(e => e.EnrollmentId, opt => opt.Ignore());
 
             CreateMap<GroupResource, Group>()
+                .ForMember(g => g.GroupId, opt => opt.Ignore())
+                .ForMember(g => g.Enrollments, opt => opt.Ignore())
+                .ForMember(g => g.Project, opt => opt.Ignore())
+                .ForMember(g => g.Council, opt => opt.Ignore())
+                .ForMember(g => g.Lecturer, opt => opt.Ignore())
                 .ForMember(g => g.GroupId, opt => opt.Ignore());
 
             CreateMap<ProjectResource, Project>()
