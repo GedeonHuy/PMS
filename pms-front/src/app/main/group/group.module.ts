@@ -7,6 +7,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { GroupComponent } from './group.component';
 import { PaginationModule } from './../../shared/pagination/pagination.module';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
 const GroupRoutes: Routes = [
   //localhost:xxxx/main/user
@@ -20,6 +21,7 @@ const GroupRoutes: Routes = [
     CommonModule,
     FormsModule,
     PaginationModule,
+    MultiselectDropdownModule,
     ModalModule.forRoot(),
     RouterModule.forChild(GroupRoutes)
   ],
