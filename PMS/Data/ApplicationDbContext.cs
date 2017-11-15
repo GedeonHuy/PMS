@@ -34,6 +34,7 @@ namespace PMS.Data
             builder.Entity<Major>().ToTable("Major");
             builder.Entity<Quarter>().ToTable("Quarter");
             builder.Entity<CouncilRole>().ToTable("CouncilRole");
+            builder.Entity<Excel>().ToTable("Excel");
         }
 
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
@@ -51,5 +52,6 @@ namespace PMS.Data
         public DbSet<Major> Majors { get; set; }
         public DbSet<Quarter> Quarters { get; set; }
         public DbSet<CouncilRole> CouncilRoles { get; set; }
+        public DbSet<Excel> Excels { get; set; }
     }
 }

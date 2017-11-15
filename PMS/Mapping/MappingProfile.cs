@@ -277,7 +277,7 @@ namespace PMS.Mapping
                     Title = g.Project.Title,
                     Type = g.Project.Type
                 }));
-
+            CreateMap<Excel, ExcelResource>();
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
 
             //API Resource to domain
@@ -340,6 +340,8 @@ namespace PMS.Mapping
 
             CreateMap<QuarterResource, Quarter>()
                  .ForMember(m => m.QuarterId, opt => opt.Ignore());
+            CreateMap<ExcelResource, Excel>()
+                .ForMember(m => m.ExcelId, opt => opt.Ignore());
         }
     }
 }
