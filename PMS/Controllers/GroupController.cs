@@ -142,8 +142,33 @@ namespace PMS.Controllers
 
             var quarter = await quarterRepository.GetQuarter(groupResource.QuarterId);
             group.Quarter = quarter;
-
             await unitOfWork.Complete();
+
+            group.Enrollments.Clear();
+
+            foreach (var enrollmentResource in groupResource.Enrollments)
+            {
+                var enrollment = await enrollmentRepository.GetEnrollment(enrollmentResource.EnrollmentId);
+                //case: enrollment's type and project's type is different and the student has been already in group
+
+                if (group != null && group.Project.Type != enrollment.Type)
+                {
+                    ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
+                    return BadRequest(ModelState);
+                }
+                else if (group != null && !groupRepository.CheckEnrollment(group, enrollment))
+                {
+                    ModelState.AddModelError("Warning", "This group already has this student.");
+                    return BadRequest(ModelState);
+                }
+                else
+                {
+                    enrollment.Group = group;
+                    group.Enrollments.Add(enrollment);
+                    await unitOfWork.Complete();
+                }
+
+            }
 
             var result = mapper.Map<Group, GroupResource>(group);
             return Ok(result);

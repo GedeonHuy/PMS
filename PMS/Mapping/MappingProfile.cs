@@ -134,21 +134,21 @@ namespace PMS.Mapping
                     MajorId = s.Major.MajorId,
                     MajorName = s.Major.MajorName,
                     MajorCode = s.Major.MajorCode
-                }))
-                .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => new EnrollmentResource
-                {
-                    EnrollmentId = e.EnrollmentId,
-                    EndDate = e.EndDate,
-                    StartDate = e.StartDate,
-                    Type = e.Type,
-                    GradeId = e.Grade.GradeId,
-                    isConfirm = e.isConfirm,
-                    IsDeleted = e.IsDeleted,
-                    QuarterId = e.Quarter.QuarterId,
-                    GroupId = e.Group.GroupId,
-                    LecturerId = e.Lecturer.LecturerId,
-                    StudentEmail = e.Student.Email
-                })));
+                }));
+            //.ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => new EnrollmentResource
+            //{
+            //    EnrollmentId = e.EnrollmentId,
+            //    EndDate = e.EndDate,
+            //    StartDate = e.StartDate,
+            //    Type = e.Type,
+            //    GradeId = e.Grade.GradeId,
+            //    isConfirm = e.isConfirm,
+            //    IsDeleted = e.IsDeleted,
+            //    QuarterId = e.Quarter.QuarterId,
+            //    GroupId = e.Group.GroupId,
+            //    LecturerId = e.Lecturer.LecturerId,
+            //    StudentEmail = e.Student.Email
+            //})));
 
             CreateMap<Enrollment, EnrollmentResource>()
                 .ForMember(er => er.StudentEmail, opt => opt.MapFrom(e => e.Student.Email))
