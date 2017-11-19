@@ -90,11 +90,15 @@ namespace PMS.Controllers
                 if (group != null && group.Project.Type != enrollment.Type)
                 {
                     ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
+                    groupRepository.RemoveGroup(group);
+                    await unitOfWork.Complete();
                     return BadRequest(ModelState);
                 }
                 else if (group != null && !groupRepository.CheckEnrollment(group, enrollment))
                 {
                     ModelState.AddModelError("Warning", "This group already has this student.");
+                    groupRepository.RemoveGroup(group);
+                    await unitOfWork.Complete();
                     return BadRequest(ModelState);
                 }
                 else
