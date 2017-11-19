@@ -38,7 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let group of groups">
+            <tr *ngFor="let group of queryResult.items">
               <td>{{group.groupId}}</td>
               <td>{{group.groupName}}</td>
               <td>{{group.project.title}}</td>
@@ -50,9 +50,6 @@
                 </button>
                 <button class="btn btn-danger" (click)="deleteGroup(group.groupId)">
                   <i class="fa fa-trash"></i>
-                </button>
-                <button *ngIf="isStudent" class="btn btn-info" (click)="joinGroup(group.groupId)">
-                  <i class="fa fa-sign-in"></i>
                 </button>
               </td>
             </tr>
@@ -117,7 +114,7 @@
             <div class="col-md-9 col-sm-9 col-xs-12">
               <select class="form-control" [(ngModel)]="group.lecturerId" name="lecturerId" required #lecturer="ngModel">
                 <option value=""></option>
-                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+                <option *ngFor="let l of listLecturer" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="lecturer.valid || (lecturer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the lecturer </small>
             </div>
@@ -128,7 +125,7 @@
             <div class="col-md-9 col-sm-9 col-xs-12">
               <select class="form-control" [(ngModel)]="group.projectId" name="projectId" required #project="ngModel">
                 <option value=""></option>
-                <option *ngFor="let p of projects" value="{{p.projectId}}">{{ p.title }}</option>
+                <option *ngFor="let p of listProject" value="{{p.projectId}}">{{ p.title }}</option>
               </select>
               <small [hidden]="project.valid || (project.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the project </small>
             </div>
@@ -136,32 +133,11 @@
 
           <div class="ln_solid"></div>
 
-          <!-- <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="students">Students</label>
-
-            <div class="col-md-9 col-sm-9 col-xs-12">
-
-              <input id="students" type="text" placeholder="Please input student email" name="queryToSelect" [(ngModel)]="queryToSelect" (keyup)=filter() class="form-control">
-
-              <div class="suggestions" *ngIf="filteredList.length > 0">
-                <ul *ngFor="let item of filteredList">
-                  <li>
-                    <a (click)="select(item)">{{item}}</a>
-                  </li>
-                </ul>
-              </div>
-              <div *ngFor="let item of selected">
-                <div *ngIf="statusSelect" class="selected">
-                  <span>{{item}}</span>
-                  <a (click)="remove(item)">x</a>
-                </div>
-              </div>
-            </div>
-          </div> -->
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Students</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <ss-multiselect-dropdown [settings]="mySettings" [ngModelOptions]="{standalone: true}" (ngModelChange)="onChange($event)" [options]="allEnrollments" [(ngModel)]="group.enrollments"></ss-multiselect-dropdown>
+              <ss-multiselect-dropdown [settings]="mySettings" [ngModelOptions]="{standalone: true}"
+                [options]="allEnrollments" [(ngModel)]="enrollments"></ss-multiselect-dropdown>
             </div>
           </div>
 

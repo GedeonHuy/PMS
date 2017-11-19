@@ -46,7 +46,7 @@
               <td>{{enrollment.lecturer.name}}</td>
               <td>{{enrollment.isConfirm}}</td>              
               <td>
-                <button  *ngIf="isLecturer" [hidden]="isLecturer" class="btn btn-primary" (click)="showEditModal(enrollment.enrollmentId)">
+                <button  class="btn btn-primary" (click)="showEditModal(enrollment.enrollmentId)">
                   <i class="fa fa-pencil-square-o"></i>
                 </button>
                 <button  *ngIf="isLecturer" [hidden]="isLecturer" class="btn btn-danger" (click)="deletEnrollment(enrollment.enrollmentId)">
@@ -82,7 +82,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Email</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <input type="hidden" [(ngModel)]="enrollment.enrollmentId" name="id" />
-              <input disabled type="text" #studentEmail="ngModel" [(ngModel)]="enrollment.studentEmail" required name="studentEmail" class="form-control">
+              <input disabled type="text" #studentEmail="ngModel" [(ngModel)]="enrollment.studentEmail" name="studentEmail" class="form-control">
               <small [hidden]="studentEmail.valid || (studentEmail.pristine && !addEditForm.submitted)" class="text-danger">
                 Student Email is required
               </small>
@@ -92,7 +92,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <input disabled type="text" #lecturerId="ngModel" [(ngModel)]="enrollment.lecturerId" required name="lecturer" class="form-control">
+              <input disabled type="text" #lecturerId="ngModel" [(ngModel)]="enrollment.lecturerId" name="lecturer" class="form-control">
               <small [hidden]="lecturerId.valid || (lecturerId.pristine && !addEditForm.submitted)" class="text-danger">
                 Lecturer is required
               </small>
@@ -103,7 +103,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Quarter</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <input disabled type="text" #quarterId="ngModel" [(ngModel)]="enrollment.quarterId" required name="quarter" class="form-control">
+              <input disabled type="text" #quarterId="ngModel" [(ngModel)]="enrollment.quarterId" name="quarter" class="form-control">
               <small [hidden]="quarterId.valid || (quarterId.pristine && !addEditForm.submitted)" class="text-danger">
                 Quarter is required
               </small>

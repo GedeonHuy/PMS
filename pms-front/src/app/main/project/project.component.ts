@@ -29,13 +29,19 @@ export class ProjectComponent implements OnInit {
     this.isClicked = false;
   }
 
+  majors : any[];
+
   ngOnInit() {
     this.loadData();
+    this._dataService.get("/api/majors/getall").subscribe((response: any) => {
+      this.majors = response.items;
+    });
   }
 
   loadData() {
     this._dataService.get("/api/projects/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
+      console.log(this.queryResult.items);
     });
   }
 
