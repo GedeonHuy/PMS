@@ -1,4 +1,5 @@
-﻿using PMS.Models;
+﻿using OfficeOpenXml;
+using PMS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace PMS.Persistence.IRepository
         void AddExcel(Excel excel);
         void RemoveExcel(Excel excel);
         Task<IEnumerable<Excel>> GetExcels();
+        Task AddStudent(Student student, ExcelWorksheet worksheet, int row);
     }
 }

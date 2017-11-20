@@ -96,14 +96,14 @@ namespace PMS.Persistence.Repository
 
             };
 
-            var serectoryCouncilEnrollment = new CouncilEnrollment
+            var secretaryCouncilEnrollment = new CouncilEnrollment
             {
                 Council = council,
                 IsDeleted = false,
                 isMark = false,
-                Percentage = lecturerInformations.Serectory.ScorePercent,
+                Percentage = lecturerInformations.Secretary.ScorePercent,
                 CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Serectory"),
-                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Serectory.LecturerId)
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Secretary.LecturerId)
             };
 
             var reviewerCouncilEnrollment = new CouncilEnrollment
@@ -127,7 +127,7 @@ namespace PMS.Persistence.Repository
             };
 
             context.CouncilEnrollments.Add(presidentCouncilEnrollment);
-            context.CouncilEnrollments.Add(serectoryCouncilEnrollment);
+            context.CouncilEnrollments.Add(secretaryCouncilEnrollment);
             context.CouncilEnrollments.Add(reviewerCouncilEnrollment);
             context.CouncilEnrollments.Add(supervisorCouncilEnrollment);
         }
@@ -149,8 +149,8 @@ namespace PMS.Persistence.Repository
                 return "nullOrZeroScorePercent";
             }
 
-            var serectory = lecturerInformations.Serectory;
-            if (serectory.ScorePercent == null || serectory.ScorePercent == 0)
+            var secretary = lecturerInformations.Secretary;
+            if (secretary.ScorePercent == null || secretary.ScorePercent == 0)
             {
                 return "nullOrZeroScorePercent";
             }
@@ -167,7 +167,7 @@ namespace PMS.Persistence.Repository
                 return "nullOrZeroScorePercent";
             }
 
-            if (president.ScorePercent + serectory.ScorePercent + reviewer.ScorePercent + supervisor.ScorePercent != 100)
+            if (president.ScorePercent + secretary.ScorePercent + reviewer.ScorePercent + supervisor.ScorePercent != 100)
             {
                 return "sumScorePercentIsNot100";
             }

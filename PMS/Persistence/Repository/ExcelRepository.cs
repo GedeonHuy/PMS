@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using PMS.Data;
 using PMS.Models;
 using PMS.Persistence.IRepository;
@@ -42,6 +43,24 @@ namespace PMS.Persistence.Repository
         {
             return await context.Excels
                     .ToListAsync();
+        }
+
+        public async Task AddStudent(Student student, ExcelWorksheet worksheet, int row)
+        {
+            student.StudentCode = worksheet.Cells[row, 2].Value.ToString();
+            student.Name = worksheet.Cells[row, 3].Value.ToString().Trim() + " " +
+                worksheet.Cells[row, 4].Value.ToString().Trim();
+            student.Email = worksheet.Cells[row, 8].Value.ToString().Trim();
+            student.Address = worksheet.Cells[row, 9].Value.ToString().Trim();
+            student.PhoneNumber = worksheet.Cells[row, 10].Value.ToString().Trim();
+            var majorName = worksheet.Cells[row, 11].Value.ToString().Trim().ToLower();
+            var major = await context.Majors
+                .Include(m => m.Groups)
+                .Include(m => m.Lecturers)
+                .Include(m => m.Students)
+                .Include(m => m.Projects)
+                .SingleOrDefaultAsync(g => g.MajorName.ToLower() == majorName);
+            student.Major = major;
         }
     }
 }

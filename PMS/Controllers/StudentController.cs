@@ -177,13 +177,6 @@ namespace PMS.Controllers
             return mapper.Map<QueryResult<Student>, QueryResultResource<StudentResource>>(queryResult);
         }
 
-        [HttpPost]
-        [Route("uploadfile")]
-        public string Upload(IFormFile file)
-        {
-
-            return "successfull";
-        }
         private bool RoleExists(string roleName)
         {
             return context.ApplicationRole.Any(r => r.Name == roleName);
