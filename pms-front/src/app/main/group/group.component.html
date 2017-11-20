@@ -112,9 +112,9 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="group.lecturerId" name="lecturerId" required #lecturer="ngModel">
+              <select class="form-control" [(ngModel)]="group.lecturerId" (change)="onLecturerChange()" name="lecturerId" required #lecturer="ngModel">
                 <option value=""></option>
-                <option *ngFor="let l of listLecturer" value="{{l.lecturerId}}">{{ l.name }}</option>
+                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="lecturer.valid || (lecturer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the lecturer </small>
             </div>
@@ -125,7 +125,7 @@
             <div class="col-md-9 col-sm-9 col-xs-12">
               <select class="form-control" [(ngModel)]="group.projectId" name="projectId" required #project="ngModel">
                 <option value=""></option>
-                <option *ngFor="let p of listProject" value="{{p.projectId}}">{{ p.title }}</option>
+                <option *ngFor="let p of projects" value="{{p.projectId}}">{{ p.title }}</option>
               </select>
               <small [hidden]="project.valid || (project.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the project </small>
             </div>
@@ -136,8 +136,26 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Students</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <ss-multiselect-dropdown [settings]="mySettings" [ngModelOptions]="{standalone: true}"
-                [options]="allEnrollments" [(ngModel)]="enrollments"></ss-multiselect-dropdown>
+              <ss-multiselect-dropdown [settings]="mySettings" [ngModelOptions]="{standalone: true}" [options]="allEnrollments" [(ngModel)]="enrollments"></ss-multiselect-dropdown>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-3 col-sm-3 col-xs-12"></div>
+              
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #enrollment="ngModel" [(ngModel)]="group.enrollments.studentEmail" name="enrollment" class="form-control">
+            </div>
+          </div>
+
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select id="status" class="form-control" [(ngModel)]="group.isConfirm" name="status" required #status="ngModel">
+                <option value=""></option>
+                <option *ngFor="let st of typeStatus">{{ st }}</option>
+              </select>
             </div>
           </div>
 

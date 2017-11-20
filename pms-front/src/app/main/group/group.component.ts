@@ -42,8 +42,12 @@ export class GroupComponent implements OnInit {
   PAGE_SIZE = 5;
 
   query: any = {
-    pageSize: this.PAGE_SIZE
+    pageSize: this.PAGE_SIZE,
+    isConfirm: "Pending"
   };
+
+  public typeStatus : any [] = ["Accepted", "Pending", "Denied"];
+  
 
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isLoading = false;
@@ -73,16 +77,15 @@ export class GroupComponent implements OnInit {
 
   }
 
-  listLecturer : any[];
-  listProject : any[];
   onMajorChange() {
-    this.listLecturer = this.lecturers;
-    var selectedMajorLecturer = this.listLecturer.filter(l => l.majorId == this.group.majorId);
-    this.listLecturer = selectedMajorLecturer;
+    var selectedMajor = this.majors.find(m => m.majorId == this.group.majorId);
+    this.lecturers = selectedMajor ? selectedMajor.lecturers : [];
+    this.projects = selectedMajor ? selectedMajor.projects : [];
+  }
 
-    this.listProject = this.projects
-    var selectedMajorProject = this.listProject.filter(p => p.majorId == this.group.majorId);
-    this.listProject = selectedMajorProject;
+  onLecturerChange() {
+    var selectedLecturer = this.lecturers.find(l => l.lecturerId == this.group.lecturerId);
+    this.group.majorId = selectedLecturer.majorId;    
   }
 
 
@@ -112,8 +115,8 @@ export class GroupComponent implements OnInit {
 
   //Edit method
   showEditModal(id: any) {
+    this.loadGroup(id);    
     this.modalAddEdit.show();
-    this.loadGroup(id);
   }
 
   hideAddEditModal() {
@@ -127,7 +130,9 @@ export class GroupComponent implements OnInit {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {
         this.group = response;
-        console.log(this.group);
+        this.enrollments = response.enrollments;  
+        console.log(this.enrollments);     
+        console.log(this.group.enrollments);
         this.isLoading = true;
       });
   }
@@ -135,27 +140,27 @@ export class GroupComponent implements OnInit {
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;
-      // if (this.group.groupId == undefined) {
-      //   this.group.enrollments = this.enrollments;
-      //   this._dataService.post('/api/groups/add', JSON.stringify(this.group))
-      //     .subscribe((response: any) => {
-      //       this.loadData();
-      //       this.modalAddEdit.hide();
-      //       this._notificationService.printSuccessMessage("Add Success");
-      //       this.isClicked = false;
-      //       this.isLoading = false;
-      //     }, error => this._dataService.handleError(error));
-      // }
-      // else {
-      //   this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.group))
-      //     .subscribe((response: any) => {
-      //       this.loadData();
-      //       this.modalAddEdit.hide();
-      //       this._notificationService.printSuccessMessage("Update Success");
-      //       this.isClicked = false;
-      //       this.isLoading = false;
-      //     }, error => this._dataService.handleError(error));
-      // }
+      if (this.group.groupId == undefined) {
+        this.group.enrollments = this.enrollments;
+        this._dataService.post('/api/groups/add', JSON.stringify(this.group))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            this._notificationService.printSuccessMessage("Add Success");
+            this.isClicked = false;
+            this.isLoading = false;
+          }, error => this._dataService.handleError(error));
+      }
+      else {
+        this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.group))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            this._notificationService.printSuccessMessage("Update Success");
+            this.isClicked = false;
+            this.isLoading = false;
+          }, error => this._dataService.handleError(error));
+      }
         console.log(this.group);
     }
   }
