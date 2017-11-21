@@ -11,10 +11,11 @@ using AutoMapper;
 using PMS.Resources;
 using PMS.Persistence;
 using PMS.Persistence.IRepository;
+using OfficeOpenXml;
 
 namespace PMS.Controllers
 {
-    [Route("/api/students/upload")]
+
     public class ExcelController : Controller
     {
         private readonly int MAX_BYTES = 10 * 1024 * 1024;
@@ -24,56 +25,20 @@ namespace PMS.Controllers
         private IMapper mapper;
         private IUnitOfWork unitOfWork;
         private IExcelRepository excelRepository;
+        private IStudentRepository studentRepository;
+        private ILecturerRepository lecturerRepository;
 
-        public ExcelController(IHostingEnvironment host, IExcelRepository excelRepository, IMapper mapper, IUnitOfWork unitOfWork)
+        public ExcelController(IHostingEnvironment host, IExcelRepository excelRepository,
+            IStudentRepository studentRepository, ILecturerRepository lecturerRepository,
+            IMapper mapper, IUnitOfWork unitOfWork)
         {
             this.host = host;
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
             this.excelRepository = excelRepository;
+            this.studentRepository = studentRepository;
+            this.lecturerRepository = lecturerRepository;
         }
-        [HttpPost]
-        public async Task<IActionResult> UploadFileAsync(IFormFile file)
-        {
-            var uploadFolderPath = Path.Combine(host.WebRootPath, "uploads");
-            if (!Directory.Exists(uploadFolderPath))
-            {
-                Directory.CreateDirectory(uploadFolderPath);
-            }
 
-            if (file == null)
-            {
-                return BadRequest("STOP HACKING OUR WEBSITE. SEND A FILE FOR US TO EXECUTE, PLEASE");
-            }
-
-            if (file.Length == 0)
-            {
-                return BadRequest("DO YOU THINK A EMPTY FILE CAN CRASH OUR WEBSITE");
-            }
-
-            if (file.Length > MAX_BYTES)
-            {
-                return BadRequest("PLEASE CHOOSE A FILE WHICH SIZE < 10 MB. OUR SYSTEM IS TOO BUSY TO DO EXECUTE THIS FILE");
-            }
-
-            if (!ACCEPTED_FILE_TYPES.Any(s => s == Path.GetExtension(file.FileName.ToLower())))
-            {
-                return BadRequest("ARE YOU HAPPY WHEN DO THAT. CHOOSE VALID TYPE, PLEASE");
-            }
-
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            var filePath = Path.Combine(uploadFolderPath, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var excel = new Excel { FileName = fileName };
-            excelRepository.AddExcel(excel);
-            await unitOfWork.Complete();
-
-            return Ok(mapper.Map<Excel, ExcelResource>(excel));
-        }
     }
 }

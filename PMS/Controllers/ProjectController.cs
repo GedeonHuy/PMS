@@ -8,6 +8,10 @@ using AutoMapper;
 using PMS.Resources;
 using PMS.Models;
 using PMS.Persistence.IRepository;
+using Microsoft.AspNetCore.Http;
+using OfficeOpenXml;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,18 +20,26 @@ namespace PMS.Controllers
     [Route("/api/projects")]
     public class ProjectController : Controller
     {
+        private readonly int MAX_BYTES = 10 * 1024 * 1024;
+        private readonly string[] ACCEPTED_FILE_TYPES = new[] { ".xlsx", ".xlsm", ".xlsb", ".xltx",
+        ".xltm",".xls",".xlt",".xls",".xml",".xlam",".xla",".xlw",".xlr"};
         private IMapper mapper;
         private IProjectRepository projectRepository;
         private IMajorRepository majorRepository;
+        private IHostingEnvironment host;
         private IUnitOfWork unitOfWork;
+        private IExcelRepository excelRepository;
 
         public ProjectController(IMapper mapper, IUnitOfWork unitOfWork,
-            IProjectRepository projectRepository, IMajorRepository majorRepository)
+            IProjectRepository projectRepository, IMajorRepository majorRepository,
+            IHostingEnvironment host, IExcelRepository excelRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
             this.projectRepository = projectRepository;
             this.majorRepository = majorRepository;
+            this.host = host;
+            this.excelRepository = excelRepository;
         }
 
         [HttpPost]
@@ -120,6 +132,83 @@ namespace PMS.Controllers
             var queryResult = await projectRepository.GetProjects(query);
 
             return mapper.Map<QueryResult<Project>, QueryResultResource<ProjectResource>>(queryResult);
+        }
+
+        [HttpPost]
+        [Route("upload")]
+        public async Task<IActionResult> UploadLecturerFile(IFormFile file)
+        {
+            var uploadFolderPath = Path.Combine(host.WebRootPath, "uploads/project");
+            if (!Directory.Exists(uploadFolderPath))
+            {
+                Directory.CreateDirectory(uploadFolderPath);
+            }
+
+            if (file == null)
+            {
+                return BadRequest("STOP HACKING OUR WEBSITE. SEND A FILE FOR US TO EXECUTE, PLEASE");
+            }
+
+            if (file.Length == 0)
+            {
+                return BadRequest("DO YOU THINK A EMPTY FILE CAN CRASH OUR WEBSITE");
+            }
+
+            if (file.Length > MAX_BYTES)
+            {
+                return BadRequest("PLEASE CHOOSE A FILE WHICH SIZE < 10 MB. OUR SYSTEM IS TOO BUSY TO DO EXECUTE THIS FILE");
+            }
+
+            if (!ACCEPTED_FILE_TYPES.Any(s => s == Path.GetExtension(file.FileName.ToLower())))
+            {
+                return BadRequest("ARE YOU HAPPY WHEN DO THAT. CHOOSE VALID TYPE, PLEASE");
+            }
+
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadFolderPath, fileName);
+
+            //create excel
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // add projects
+            using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                int rowCount = worksheet.Dimension.Rows;
+                try
+                {
+                    for (int row = 3; row <= rowCount; row++)
+                    {
+                        var val = worksheet.Cells[row, 2].Value;
+                        if (val == null)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Project project = new Project();
+                            await excelRepository.AddProject(project, worksheet, row);
+                            projectRepository.AddProject(project);
+                        }
+                        await unitOfWork.Complete();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest("CHECK YOUR FILE AGAIN, PLEASE. SOME WRONG WITH THIS FILE"
+                        + "\n" + "Detail: " + ex.Message);
+                }
+            }
+
+            //add to db
+            var excel = new Excel { FileName = fileName };
+            excelRepository.AddExcel(excel);
+            await unitOfWork.Complete();
+
+            return Ok(mapper.Map<Excel, ExcelResource>(excel));
         }
     }
 }

@@ -14,5 +14,7 @@ namespace PMS.Persistence.IRepository
         void RemoveExcel(Excel excel);
         Task<IEnumerable<Excel>> GetExcels();
         Task AddStudent(Student student, ExcelWorksheet worksheet, int row);
+        Task AddLecturer(Lecturer lecturer, ExcelWorksheet worksheet, int row);
+        Task AddProject(Project project, ExcelWorksheet worksheet, int row);
     }
 }

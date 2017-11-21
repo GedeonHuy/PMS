@@ -23,7 +23,7 @@ namespace PMS.Mapping
                     LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "President").Lecturer.LecturerId,
                     ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "President").Percentage
                 },
-                Serectory = new SerectoryResource
+                Secretary = new SecretaryResource
                 {
                     LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Serectory").Lecturer.LecturerId,
                     ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Serectory").Percentage

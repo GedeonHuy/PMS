@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.SignalR;
 using PMS.Hubs;
 using PMS.Persistence.IRepository;
 using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using OfficeOpenXml;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,18 +27,24 @@ namespace PMS.Controllers
     [Route("/api/students")]
     public class StudentController : Controller
     {
+        private readonly int MAX_BYTES = 10 * 1024 * 1024;
+        private readonly string[] ACCEPTED_FILE_TYPES = new[] { ".xlsx", ".xlsm", ".xlsb", ".xltx",
+        ".xltm",".xls",".xlt",".xls",".xml",".xlam",".xla",".xlw",".xlr"};
         private IMapper mapper;
         private IStudentRepository studentRepository;
         private IMajorRepository majorRepository;
         private IUnitOfWork unitOfWork;
         private IHubContext<PMSHub> hubContext { get; set; }
+
+        private IHostingEnvironment host;
+        private IExcelRepository excelRepository;
         private readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
 
         public StudentController(IHubContext<PMSHub> hubContext, ApplicationDbContext context,
             IMapper mapper, IStudentRepository studentRepository,
             IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager,
-            IMajorRepository majorRepository)
+            IMajorRepository majorRepository, IHostingEnvironment host, IExcelRepository excelRepository)
         {
             this.userManager = userManager;
             this.context = context;
@@ -44,6 +53,8 @@ namespace PMS.Controllers
             this.majorRepository = majorRepository;
             this.unitOfWork = unitOfWork;
             this.hubContext = hubContext;
+            this.host = host;
+            this.excelRepository = excelRepository;
         }
 
         [HttpPost]
@@ -175,6 +186,83 @@ namespace PMS.Controllers
             var queryResult = await studentRepository.GetStudents(query);
 
             return mapper.Map<QueryResult<Student>, QueryResultResource<StudentResource>>(queryResult);
+        }
+
+        [HttpPost]
+        [Route("upload")]
+        public async Task<IActionResult> UploadStudentFile(IFormFile file)
+        {
+            var uploadFolderPath = Path.Combine(host.WebRootPath, "uploads/student");
+            if (!Directory.Exists(uploadFolderPath))
+            {
+                Directory.CreateDirectory(uploadFolderPath);
+            }
+
+            if (file == null)
+            {
+                return BadRequest("STOP HACKING OUR WEBSITE. SEND A FILE FOR US TO EXECUTE, PLEASE");
+            }
+
+            if (file.Length == 0)
+            {
+                return BadRequest("DO YOU THINK A EMPTY FILE CAN CRASH OUR WEBSITE");
+            }
+
+            if (file.Length > MAX_BYTES)
+            {
+                return BadRequest("PLEASE CHOOSE A FILE WHICH SIZE < 10 MB. OUR SYSTEM IS TOO BUSY TO DO EXECUTE THIS FILE");
+            }
+
+            if (!ACCEPTED_FILE_TYPES.Any(s => s == Path.GetExtension(file.FileName.ToLower())))
+            {
+                return BadRequest("ARE YOU HAPPY WHEN DO THAT. CHOOSE VALID TYPE, PLEASE");
+            }
+
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadFolderPath, fileName);
+
+            //create excel
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // add students
+            using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                int rowCount = worksheet.Dimension.Rows;
+                try
+                {
+                    for (int row = 3; row <= rowCount; row++)
+                    {
+                        var val = worksheet.Cells[row, 2].Value;
+                        if (val == null)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Student student = new Student();
+                            await excelRepository.AddStudent(student, worksheet, row);
+                            studentRepository.AddStudent(student);
+                        }
+                        await unitOfWork.Complete();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest("CHECK YOUR FILE AGAIN, PLEASE. SOME WRONG WITH THIS FILE"
+                        + "\n" + "Detail: " + ex.Message);
+                }
+            }
+
+            //add to db
+            var excel = new Excel { FileName = fileName };
+            excelRepository.AddExcel(excel);
+            await unitOfWork.Complete();
+
+            return Ok(mapper.Map<Excel, ExcelResource>(excel));
         }
 
         private bool RoleExists(string roleName)
