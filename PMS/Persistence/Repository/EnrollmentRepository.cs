@@ -84,9 +84,9 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Type == queryObj.Type);
             }
 
-            if (queryObj.isDeniedByLecturer == true)
+            if (queryObj.Email != null)
             {
-                query = query.Where(q => q.Lecturer == null);
+                query = query.Where(q => q.Lecturer.Email == queryObj.Email || q.Lecturer == null);
             }
 
             if (queryObj.LecturerId.HasValue)
