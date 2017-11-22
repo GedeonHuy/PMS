@@ -91,7 +91,7 @@ namespace PMS.Persistence
 
             if (queryObj.LecturerId.HasValue)
             {
-                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value || q.Lecturer == null);
             }
 
             //sort
