@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
@@ -6,9 +7,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AuthenService } from './../../core/services/authen.service';
 import { ProjectTypesConstants } from './../../core/common/projectType.constants';
-
 import "rxjs/add/Observable/forkJoin";
-
 
 @Component({
   selector: 'app-home',
@@ -18,16 +17,20 @@ import "rxjs/add/Observable/forkJoin";
 export class HomeComponent implements OnInit {
   @ViewChild('enrollmentModal') public enrollmentModal: ModalDirective;
   public enrollment: any;
+  public enrollments: any = {};
+  public enrollmentsAccept : any = {};
+  public groups: any = {};
+
+  public user: any;
 
   public isClicked: boolean;
   public isLoading: boolean;
-
 
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
 
-  constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
+  constructor(private router: Router, private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isLoading = false;
     this.isClicked = false;
     this.isAdmin = false;
@@ -48,11 +51,53 @@ export class HomeComponent implements OnInit {
       this._dataService.get("/api/lecturers/getall")
     ]).subscribe(data => {
       this.quarters = data[0].items,
-      this.lecturers = data[1].items
+        this.lecturers = data[1].items
       this.isLoading = true;
     });
-
+    this.user = this._authenService.getLoggedInUser();
     this.permissionAccess();
+    
+    if (this.user.role === "Student") {
+      this.loadStudentEnrollment();
+      this.loadStudentGroup();
+    }
+
+    if (this.user.role === "Lecturer") {
+      this.loadLecturerEnrollment();
+      this.loadLecturerEnrollmentAccepted();
+      this.loadLecturerGroup();
+    }
+  }
+
+  loadStudentEnrollment() {
+    this._dataService.get("/api/students/getenrollments/" + this.user.email).subscribe((response: any) => {
+      this.enrollments = response;
+    });
+  }
+
+  loadStudentGroup() {
+    this._dataService.get("/api/groups/getall/" + "?email=" + this.user.email).subscribe((response: any) => {
+      this.groups = response;
+    });
+  }
+
+  loadLecturerEnrollment() {
+    this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?isConfirm=Pending").subscribe((response: any) => {
+      this.enrollments = response;
+    });
+  }
+
+  loadLecturerEnrollmentAccepted() {
+    this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?isConfirm=Accepted").subscribe((response: any) => {
+      this.enrollmentsAccept = response;
+    });
+  }
+
+  loadLecturerGroup() {
+    this._dataService.get("/api/groups/getgroups/" + this.user.email).subscribe((response: any) => {
+      this.groups = response;
+      console.log(response);
+    });
   }
 
 
@@ -82,12 +127,13 @@ export class HomeComponent implements OnInit {
 
   applyEnrollment(valid: boolean) {
     if (valid) {
-      this.isClicked = true;      
+      this.isClicked = true;
       if (this.enrollment.id == undefined) {
         console.log(this.enrollment);
         this._dataService.post('/api/enrollments/add', JSON.stringify(this.enrollment))
           .subscribe((response: any) => {
             this.enrollmentModal.hide();
+            this.loadStudentEnrollment();
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
             this.isLoading = false;
@@ -97,14 +143,13 @@ export class HomeComponent implements OnInit {
   }
 
   permissionAccess() {
-    var user = this._authenService.getLoggedInUser();
-    if (user.role === "Admin" ) {
+    if (this.user.role === "Admin") {
       this.isAdmin = true;
     }
-    if (user.role === "Lecturer" ) {
+    if (this.user.role === "Lecturer") {
       this.isLecturer = true;
     }
-    if (user.role === "Student") {
+    if (this.user.role === "Student") {
       this.isStudent = true;
     }
   }

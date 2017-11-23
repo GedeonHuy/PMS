@@ -27,6 +27,7 @@ import { SignalrService } from './../core/services/signalr.service';
 import { LecturerAuthGuard } from './../core/guards/auth-lecturer.guard';
 import { StudentAuthGuard } from './../core/guards/auth-student.guard';
 import { GradeComponent } from './grade/grade.component';
+import { AdminLecturerAuthGuard } from './../core/guards/auth-admin-lecturer.guard';
 
 @NgModule({
   imports: [
@@ -45,6 +46,6 @@ import { GradeComponent } from './grade/grade.component';
     RouterModule.forChild(MainRoutes)
   ],
   declarations: [MainComponent, SidebarMenuComponent, TopMenuComponent],
-  providers: [UtilityService, AuthenService, AdminAuthGuard, LecturerAuthGuard, StudentAuthGuard, SignalrService]
+  providers: [UtilityService, AuthenService, AdminAuthGuard, LecturerAuthGuard, AdminLecturerAuthGuard, StudentAuthGuard, SignalrService]
 })
 export class MainModule { }

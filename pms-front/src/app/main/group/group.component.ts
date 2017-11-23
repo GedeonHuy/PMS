@@ -46,6 +46,8 @@ export class GroupComponent implements OnInit {
     isConfirm: "Pending"
   };
 
+  public user : any;
+
   public typeStatus : any [] = ["Accepted", "Pending", "Denied"];
   
 
@@ -178,16 +180,16 @@ export class GroupComponent implements OnInit {
   }
 
   permissionAccess() {
-    var user = this._authenService.getLoggedInUser();
-    if (user.role === "Admin") {
+    this.user = this._authenService.getLoggedInUser();
+    if (this.user.role === "Admin") {
       this.isAdmin = true;
     }
 
-    if (user.role === "Lecturer") {
+    if (this.user.role === "Lecturer") {
       this.isLecturer = true;
     }
 
-    if (user.role === "Student") {
+    if (this.user.role === "Student") {
       this.isStudent = true;
     }
   }

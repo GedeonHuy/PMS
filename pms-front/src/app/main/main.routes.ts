@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './main.component';
 import { AdminAuthGuard } from './../core/guards/auth-admin.guard';
+import { LecturerAuthGuard } from '../core/guards/auth-lecturer.guard';
+import { AdminLecturerAuthGuard } from './../core/guards/auth-admin-lecturer.guard';
 
 export const MainRoutes: Routes = [
     {
@@ -23,7 +25,7 @@ export const MainRoutes: Routes = [
             //localhost:xxxx/main/project
             { path: 'project', loadChildren: './project/project.module#ProjectModule' },
             //localhost:xxxx/main/group
-            { path: 'group', loadChildren: './group/group.module#GroupModule', canActivate:[AdminAuthGuard]},
+            { path: 'group', loadChildren: './group/group.module#GroupModule', canActivate:[AdminLecturerAuthGuard]},
             //localhost:xxxx/main/group
             { path: 'enrollment', loadChildren: './enrollment/enrollment.module#EnrollmentModule' },
             //localhost:xxxx/main/group

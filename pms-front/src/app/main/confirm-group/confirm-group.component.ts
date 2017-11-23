@@ -84,6 +84,7 @@ export class ConfirmGroupComponent implements OnInit {
 
     return parts.join('&');
   }
+  
   //Create method
   assignCouncil(id: any) {
     this.modalAddEdit.show();
@@ -99,7 +100,7 @@ export class ConfirmGroupComponent implements OnInit {
     ).subscribe(data => {
       this.group = data[0];
       this.lecturers = this.lecturers.filter(l => l.majorId == this.group.majorId);
-      this.council.groudId = this.group.groupId;
+      this.council.groupId = this.group.groupId;
       this.council.lecturerInformations = this.councilEnrollment;
       this.council.lecturerInformations.president = this.president;
       this.council.lecturerInformations.secretary = this.secretary;
@@ -117,7 +118,7 @@ export class ConfirmGroupComponent implements OnInit {
   }
 
   loadAssignCouncil(id: any) {
-    this._dataService.get("/api/councils/getcouncilenrollment/1").subscribe((response: any) => {
+    this._dataService.get("/api/councils/getcouncilenrollment/" + id).subscribe((response: any) => {
       this.council = response;
       this.isLoading = true;
     });
@@ -132,26 +133,26 @@ export class ConfirmGroupComponent implements OnInit {
     if (valid) {
       this.isClicked = true;
       console.log(this.council);
-      // if (this.council.councilId == undefined) {
-      //   this._dataService.post('/api/councils/add', JSON.stringify(this.council))
-      //     .subscribe((response: any) => {
-      //       this.loadData();
-      //       this.modalAddEdit.hide();
-      //       this._notificationService.printSuccessMessage("Add Success");
-      //       this.isClicked = false;
-      //       this.isLoading = false;
-      //     }, error => this._dataService.handleError(error));
-      // }
-      // else {
-      //   this._dataService.put('/api/councils/update/' + this.council.councilId, JSON.stringify(this.council))
-      //     .subscribe((response: any) => {
-      //       this.loadData();
-      //       this.modalAddEdit.hide();
-      //       this._notificationService.printSuccessMessage("Update Success");
-      //       this.isClicked = false;
-      //       this.isLoading = false;
-      //     }, error => this._dataService.handleError(error));
-      // }
+      if (this.council.councilId == undefined) {
+        this._dataService.post('/api/councils/add', JSON.stringify(this.council))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            this._notificationService.printSuccessMessage("Add Success");
+            this.isClicked = false;
+            this.isLoading = false;
+          }, error => this._dataService.handleError(error));
+      }
+      else {
+        this._dataService.put('/api/councils/update/' + this.council.councilId, JSON.stringify(this.council))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            this._notificationService.printSuccessMessage("Update Success");
+            this.isClicked = false;
+            this.isLoading = false;
+          }, error => this._dataService.handleError(error));
+      }
     }
   }
 
