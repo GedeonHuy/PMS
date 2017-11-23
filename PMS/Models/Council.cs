@@ -14,9 +14,11 @@ namespace PMS.Models
         public bool IsDeleted { get; set; }
         public Group Group { get; set; }
         public ICollection<CouncilEnrollment> CouncilEnrollments { get; set; }
+        public bool isAllScored { get; set; }
         public Council()
         {
             CouncilEnrollments = new Collection<CouncilEnrollment>();
+            isAllScored = false;
         }
     }
 

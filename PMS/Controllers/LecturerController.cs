@@ -183,6 +183,26 @@ namespace PMS.Controllers
             return Ok(enrollmentResource);
         }
 
+        [HttpGet]
+        [Route("getenrollments/{email}")]
+        public async Task<QueryResultResource<EnrollmentResource>> GetEnrollments(string email, QueryResource queryResource)
+        {
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await lecturerRepository.GetEnrollments(query, email);
+
+            return mapper.Map<QueryResult<Enrollment>, QueryResultResource<EnrollmentResource>>(queryResult);
+        }
+
+        [HttpGet]
+        [Route("getgroups/{email}")]
+        public async Task<QueryResultResource<GroupResource>> GetGroups(string email, QueryResource queryResource)
+        {
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await lecturerRepository.GetGroups(query, email);
+
+            return mapper.Map<QueryResult<Group>, QueryResultResource<GroupResource>>(queryResult);
+        }
+
         [HttpPost]
         [Route("upload")]
         public async Task<IActionResult> UploadLecturerFile(IFormFile file)

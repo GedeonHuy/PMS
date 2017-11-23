@@ -45,6 +45,10 @@ namespace PMS.Controllers
             var councilEnrollment = mapper.Map<CouncilEnrollmentResource, CouncilEnrollment>(councilEnrollmentResource);
             councilEnrollment.Lecturer = await lecturerRepository.GetLecturer(councilEnrollmentResource.LecturerID);
             councilEnrollment.Council = await councilRepository.GetCouncil(councilEnrollmentResource.CouncilID);
+            if (councilEnrollment.Score != null)
+            {
+                councilEnrollment.isMarked = true;
+            }
 
             councilEnrollmentRepository.AddCouncilEnrollment(councilEnrollment);
             await unitOfWork.Complete();
@@ -73,6 +77,10 @@ namespace PMS.Controllers
             mapper.Map<CouncilEnrollmentResource, CouncilEnrollment>(councilEnrollmentResource, councilEnrollment);
             councilEnrollment.Lecturer = await lecturerRepository.GetLecturer(councilEnrollmentResource.LecturerID);
             councilEnrollment.Council = await councilRepository.GetCouncil(councilEnrollmentResource.CouncilID);
+            if (councilEnrollment.Score != null)
+            {
+                councilEnrollment.isMarked = true;
+            }
             await unitOfWork.Complete();
 
             var result = mapper.Map<CouncilEnrollment, CouncilEnrollmentResource>(councilEnrollment);
@@ -107,6 +115,20 @@ namespace PMS.Controllers
                 return NotFound();
             }
 
+            var councilEnrollmentResource = mapper.Map<CouncilEnrollment, CouncilEnrollmentResource>(councilEnrollment);
+
+            return Ok(councilEnrollmentResource);
+        }
+
+        [HttpGet]
+        [Route("getcouncilenrollmentbylectureremail/{email}")]
+        public async Task<IActionResult> GetCouncilEnrollmentByLecturerEmail(string email, [FromBody]CouncilResource councilResource)
+        {
+            var councilEnrollment = await councilEnrollmentRepository.GetCouncilEnrollmentByLecturerEmail(email, councilResource);
+            if (councilEnrollment == null)
+            {
+                return NotFound();
+            }
             var councilEnrollmentResource = mapper.Map<CouncilEnrollment, CouncilEnrollmentResource>(councilEnrollment);
 
             return Ok(councilEnrollmentResource);

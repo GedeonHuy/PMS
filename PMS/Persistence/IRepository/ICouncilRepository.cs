@@ -1,4 +1,5 @@
 ﻿using PMS.Models;
+using PMS.Resources;
 using PMS.Resources.SubResources;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,7 @@ namespace PMS.Persistence.IRepository
         Task AddLecturers(Council council, LecturerInformationResource lecturerInformations);
         void RemoveOldLecturer(Council council);
         string CheckLecturerInformations(LecturerInformationResource lecturerInformations);
+        double CalculateScore(Council council);
+        void CalculateGrade(Council council);
     }
 }

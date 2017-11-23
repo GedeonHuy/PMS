@@ -2,6 +2,7 @@
 using PMS.Data;
 using PMS.Models;
 using PMS.Persistence.IRepository;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,17 @@ namespace PMS.Persistence.Repository
         {
             return await context.CouncilEnrollments
                 .ToListAsync();
+        }
+
+        public async Task<CouncilEnrollment> GetCouncilEnrollmentByLecturerEmail(string email, CouncilResource councilResource)
+        {
+            var councilEnrollment = await context.CouncilEnrollments
+                                    .Include(c => c.Lecturer)
+                                    .Include(c => c.Council)
+                                    .SingleOrDefaultAsync(c => c.Council.CouncilId == councilResource.CouncilId
+                                    && c.Lecturer.Email == email);
+
+            return councilEnrollment;
         }
     }
 }

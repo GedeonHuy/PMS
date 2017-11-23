@@ -3,6 +3,7 @@ using PMS.Data;
 using PMS.Extensions;
 using PMS.Models;
 using PMS.Persistence.IRepository;
+using PMS.Resources;
 using PMS.Resources.SubResources;
 using System;
 using System.Collections.Generic;
@@ -89,7 +90,7 @@ namespace PMS.Persistence.Repository
             {
                 Council = council,
                 IsDeleted = false,
-                isMark = false,
+                isMarked = false,
                 Percentage = lecturerInformations.President.ScorePercent,
                 CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "President"),
                 Lecturer = await context.Lecturers.FindAsync(lecturerInformations.President.LecturerId)
@@ -100,7 +101,7 @@ namespace PMS.Persistence.Repository
             {
                 Council = council,
                 IsDeleted = false,
-                isMark = false,
+                isMarked = false,
                 Percentage = lecturerInformations.Secretary.ScorePercent,
                 CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Serectory"),
                 Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Secretary.LecturerId)
@@ -110,7 +111,7 @@ namespace PMS.Persistence.Repository
             {
                 Council = council,
                 IsDeleted = false,
-                isMark = false,
+                isMarked = false,
                 Percentage = lecturerInformations.Reviewer.ScorePercent,
                 CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Reviewer"),
                 Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Reviewer.LecturerId)
@@ -120,7 +121,7 @@ namespace PMS.Persistence.Repository
             {
                 Council = council,
                 IsDeleted = false,
-                isMark = false,
+                isMarked = false,
                 Percentage = lecturerInformations.Supervisor.ScorePercent,
                 CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Supervisor"),
                 Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Supervisor.LecturerId)
@@ -173,6 +174,80 @@ namespace PMS.Persistence.Repository
             }
 
             return "correct";
+        }
+
+        public double CalculateScore(Council council)
+        {
+            double score = 0;
+            foreach (var councilenrollment in council.CouncilEnrollments)
+            {
+                score += councilenrollment.Score.Value * (councilenrollment.Percentage.Value / 100);
+            }
+            return score;
+        }
+        public void CalculateGrade(Council council)
+        {
+            var score = Double.Parse(council.ResultScore);
+            if (score >= 90 && score <= 100)
+            {
+                //well done
+                council.ResultGrade = "A";
+            }
+            else if (score >= 85)
+            {
+                //good
+                council.ResultGrade = "A-";
+            }
+            else if (score >= 80)
+            {
+                //unlucky
+                council.ResultGrade = "B+";
+            }
+            else if (score >= 75)
+            {
+                //keep fighting
+                council.ResultGrade = "B";
+            }
+            else if (score >= 70)
+            {
+                //care
+                council.ResultGrade = "B-";
+            }
+            else if (score >= 65)
+            {
+                //need more try
+                council.ResultGrade = "C+";
+            }
+            else if (score >= 60)
+            {
+                //noob
+                council.ResultGrade = "C";
+            }
+            else if (score >= 55)
+            {
+                //chicken
+                council.ResultGrade = "C-";
+            }
+            else if (score >= 53)
+            {
+                //quit
+                council.ResultGrade = "D+";
+            }
+            else if (score >= 52)
+            {
+                //no word
+                council.ResultGrade = "D";
+            }
+            else if (score >= 50)
+            {
+                // lucky
+                council.ResultGrade = "D-";
+            }
+            else
+            {
+                //poor you bro
+                council.ResultGrade = "F";
+            }
         }
     }
 }

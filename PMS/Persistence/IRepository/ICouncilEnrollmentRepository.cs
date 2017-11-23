@@ -1,4 +1,5 @@
 ﻿using PMS.Models;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace PMS.Persistence.IRepository
         void AddCouncilEnrollment(CouncilEnrollment CouncilEnrollment);
         void RemoveCouncilEnrollment(CouncilEnrollment CouncilEnrollment);
         Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollments();
+        Task<CouncilEnrollment> GetCouncilEnrollmentByLecturerEmail(string email, CouncilResource councilResource);
     }
 }

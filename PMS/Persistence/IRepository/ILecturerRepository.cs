@@ -13,5 +13,7 @@ namespace PMS.Persistence
         void RemoveLecturer(Lecturer lecturer);
         Task<QueryResult<Lecturer>> GetLecturers(Query filter);
         Task<IEnumerable<Enrollment>> FinishGroupingAsync(string email, int QuarterId);
+        Task<QueryResult<Enrollment>> GetEnrollments(Query queryObj, string email);
+        Task<QueryResult<Group>> GetGroups(Query queryObj, string email);
     }
 }

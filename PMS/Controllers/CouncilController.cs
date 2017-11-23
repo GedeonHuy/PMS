@@ -19,14 +19,18 @@ namespace PMS.Controllers
         private IMapper mapper;
         private ICouncilRepository councilRepository;
         private IGroupRepository groupRepository;
+        private ICouncilEnrollmentRepository councilEnrollmentRepository;
         private IUnitOfWork unitOfWork;
 
-        public CouncilController(IMapper mapper, IUnitOfWork unitOfWork, ICouncilRepository councilRepository, IGroupRepository groupRepository)
+        public CouncilController(IMapper mapper, IUnitOfWork unitOfWork,
+            ICouncilRepository councilRepository, IGroupRepository groupRepository,
+            ICouncilEnrollmentRepository councilEnrollmentRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
             this.councilRepository = councilRepository;
             this.groupRepository = groupRepository;
+            this.councilEnrollmentRepository = councilEnrollmentRepository;
         }
 
         [HttpPost]
@@ -65,6 +69,12 @@ namespace PMS.Controllers
 
             await councilRepository.AddLecturers(council, councilResource.LecturerInformations);
             await unitOfWork.Complete();
+
+            if (council.CouncilEnrollments.Count(c => c.isMarked == true) == council.CouncilEnrollments.Count)
+            {
+                council.isAllScored = true;
+                await unitOfWork.Complete();
+            }
 
             var result = mapper.Map<Council, CouncilResource>(council);
 
@@ -114,6 +124,12 @@ namespace PMS.Controllers
             await councilRepository.AddLecturers(council, councilResource.LecturerInformations);
             await unitOfWork.Complete();
 
+            if (council.CouncilEnrollments.Count(c => c.isMarked == true) == council.CouncilEnrollments.Count)
+            {
+                council.isAllScored = true;
+                await unitOfWork.Complete();
+            }
+
             var result = mapper.Map<Council, CouncilResource>(council);
             return Ok(result);
         }
@@ -136,7 +152,7 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
-        [Route("getcouncilenrollment/{id}")]
+        [Route("getcouncil/{id}")]
         public async Task<IActionResult> GetCouncil(int id)
         {
             var council = await councilRepository.GetCouncil(id);
@@ -146,6 +162,12 @@ namespace PMS.Controllers
                 return NotFound();
             }
 
+            //check number of Lecturer marked, and set isAllScored
+            if (council.CouncilEnrollments.Count(c => c.isMarked == true) == council.CouncilEnrollments.Count)
+            {
+                council.isAllScored = true;
+                await unitOfWork.Complete();
+            }
             var councilResource = mapper.Map<Council, CouncilResource>(council);
 
             return Ok(councilResource);
@@ -159,6 +181,55 @@ namespace PMS.Controllers
 
             var queryResult = await councilRepository.GetCouncils(query);
             return mapper.Map<QueryResult<Council>, QueryResultResource<CouncilResource>>(queryResult);
+        }
+
+        [HttpGet]
+        [Route("calculatescore/{id}")]
+        public async Task<IActionResult> CalculateScore(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var council = await councilRepository.GetCouncil(id);
+
+            if (council.isAllScored == false)
+            {
+                ModelState.AddModelError("Error", "One or a few lecturers have not marked yet");
+                return BadRequest(ModelState);
+            }
+
+            var score = councilRepository.CalculateScore(council);
+            council.ResultScore = score.ToString();
+            await unitOfWork.Complete();
+
+            var result = mapper.Map<Council, CouncilResource>(council);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("calculategrade/{id}")]
+        public async Task<IActionResult> CalculateGrade(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var council = await councilRepository.GetCouncil(id);
+
+            if (String.IsNullOrEmpty(council.ResultScore))
+            {
+                ModelState.AddModelError("Error", "Please calcualte the score before calcualate the grade.");
+                return BadRequest(ModelState);
+            }
+
+            councilRepository.CalculateGrade(council);
+            await unitOfWork.Complete();
+
+            var result = mapper.Map<Council, CouncilResource>(council);
+            return Ok(result);
         }
     }
 }

@@ -12,7 +12,8 @@ namespace PMS.Models
         public Lecturer Lecturer { get; set; }
         public Council Council { get; set; }
         public double? Percentage { get; set; }
-        public bool isMark { get; set; }
+        public double? Score { get; set; }
+        public bool isMarked { get; set; }
         public CouncilRole CouncilRole { get; set; }
     }
 }
