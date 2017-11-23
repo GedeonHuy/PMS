@@ -44,6 +44,8 @@ namespace PMS.Persistence.Repository
         public async Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollments()
         {
             return await context.CouncilEnrollments
+                                .Include(c => c.Lecturer)
+                .Include(c => c.Council)
                 .ToListAsync();
         }
 

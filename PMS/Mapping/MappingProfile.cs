@@ -43,7 +43,9 @@ namespace PMS.Mapping
             {
                 CouncilEnrollmentId = cf.CouncilEnrollmentId,
                 IsDeleted = cf.IsDeleted,
-                Percentage = cf.Percentage
+                Percentage = cf.Percentage,
+                Score = cf.Score,
+                isMarked = cf.isMarked
 
             })));
 
@@ -121,7 +123,9 @@ namespace PMS.Mapping
                     CouncilId = c.Council.CouncilId,
                     ResultGrade = c.Council.ResultGrade,
                     ResultScore = c.Council.ResultScore,
-                    IsDeleted = c.Council.IsDeleted
+                    IsDeleted = c.Council.IsDeleted,
+                    isAllScored = c.Council.isAllScored
+
                 }));
 
             CreateMap<Grade, GradeResource>()

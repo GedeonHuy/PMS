@@ -14,5 +14,7 @@ namespace PMS.Resources
         public int? CouncilID { get; set; }
         public CouncilResource Council { get; set; }
         public int Percentage { get; set; }
+        public double? Score { get; set; }
+        public bool isMarked { get; set; }
     }
 }
