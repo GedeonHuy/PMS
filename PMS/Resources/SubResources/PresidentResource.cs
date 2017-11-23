@@ -9,5 +9,6 @@ namespace PMS.Resources.SubResources
     {
         public int LecturerId { get; set; }
         public double? ScorePercent { get; set; }
+        public double? Score { get; set; }
     }
 }
