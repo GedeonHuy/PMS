@@ -107,7 +107,7 @@ namespace PMS.Persistence
                 .Include(p => p.Grade)
                 .Include(p => p.Student)
                 .Include(p => p.Lecturer)
-                .Where(e => e.Student.Email == email)
+                .Where(e => e.Lecturer.Email == email)
                 .AsQueryable();
 
             //filter
@@ -162,7 +162,7 @@ namespace PMS.Persistence
         public async Task<QueryResult<Group>> GetGroups(Query queryObj, string email)
         {
             var result = new QueryResult<Group>();
-            var student = await context.Students.FirstOrDefaultAsync(s => s.Email == email);
+            var lecturer = await context.Lecturers.FirstOrDefaultAsync(s => s.Email == email);
             var query = context.Groups
                 .Include(p => p.Lecturer)
                 .Include(p => p.Project)
@@ -171,7 +171,7 @@ namespace PMS.Persistence
                 .Include(p => p.UploadedFiles)
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
-                .Where(g => g.Enrollments.Any(e => e.Student == student))
+                .Where(g => g.Enrollments.Any(e => e.Lecturer == lecturer))
                 .AsQueryable();
 
             //filter
