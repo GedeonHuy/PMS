@@ -17,20 +17,25 @@ export class ConfirmEnrollmentComponent implements OnInit {
 
   public enrollment: any;
   public isClicked: boolean;
-  public isLoading : boolean;
-  
+  public isLoading: boolean;
+  public user: any;
   isAdmin: boolean;
   isLecturer: boolean;
 
   PAGE_SIZE = 3;
 
-  query: any = {
+  queryAdmin: any = {
     pageSize: this.PAGE_SIZE,
-    isConfirm : "Accepted"
+    isConfirm: "Pending"
   };
 
-  public typeStatus : any [] = ["Accepted", "Pending", "Denied"];
-  
+  query: any = {
+    pageSize: this.PAGE_SIZE,
+    isConfirm: "Pending"
+  };
+
+  public typeStatus: any[] = ["Accepted", "Pending", "Denied"];
+
 
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
@@ -40,16 +45,27 @@ export class ConfirmEnrollmentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadData();
+    this.user = this._authenService.getLoggedInUser();
+    if (this.user.role === "Admin") {
+      this.loadDataAdmin();
+    }
+
+    if (this.user.role === "Lecturer") {
+      this.loadData();
+    }
   }
 
-  loadData() {
-    this._dataService.get("/api/enrollments/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+  loadDataAdmin() {
+    this._dataService.get("/api/enrollments/getall" + "?" + this.toQueryString(this.queryAdmin)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log(this.queryResult.items);
     });
   }
 
+  loadData() {
+    this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+      this.queryResult = response;
+    });
+  }
 
   toQueryString(obj) {
     var parts = [];
@@ -61,10 +77,9 @@ export class ConfirmEnrollmentComponent implements OnInit {
 
     return parts.join('&');
   }
-  
+
   onPageChange(page) {
     this.query.page = page;
     this.loadData();
   }
-
 }

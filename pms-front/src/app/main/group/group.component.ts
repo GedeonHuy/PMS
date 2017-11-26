@@ -20,7 +20,7 @@ export class GroupComponent implements OnInit {
 
   public groups: any[];
   public queryResult: any = {};
-
+  
   public group: any = {};
   public enrollment: any;
 
@@ -36,7 +36,7 @@ export class GroupComponent implements OnInit {
   projects: any[];
   lecturers: any[];
   quarters: any[];
-  public enrollments: any[];
+  public enrollments: string[] = [];
 
   majors: any[];
   PAGE_SIZE = 5;
@@ -50,7 +50,6 @@ export class GroupComponent implements OnInit {
 
   public typeStatus : any [] = ["Accepted", "Pending", "Denied"];
   
-
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isLoading = false;
     this.isClicked = false;
@@ -109,10 +108,16 @@ export class GroupComponent implements OnInit {
   }
 
   //Create method
-  showAddModal() {
+  showAddModal() {    
     this.group = {};
     this.isLoading = true;
     this.modalAddEdit.show();
+  }
+
+  handler(type: string, $event: ModalDirective) {
+    if(type === "onHide" || type === "onHidden") {
+      this.enrollments = [];
+    }
   }
 
   //Edit method
@@ -123,6 +128,7 @@ export class GroupComponent implements OnInit {
 
   hideAddEditModal() {
     this.modalAddEdit.hide();
+    this.enrollments = [];
     this.isLoading = false;
   }
 
@@ -131,10 +137,10 @@ export class GroupComponent implements OnInit {
   loadGroup(id: any) {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {
-        this.group = response;
-        this.enrollments = response.enrollments;  
-        console.log(this.enrollments);     
-        console.log(this.group.enrollments);
+        this.group = response;   
+        for(let e of response.enrollments) {
+          this.enrollments.push(e.studentEmail);
+        }
         this.isLoading = true;
       });
   }
@@ -163,7 +169,6 @@ export class GroupComponent implements OnInit {
             this.isLoading = false;
           }, error => this._dataService.handleError(error));
       }
-        console.log(this.group);
     }
   }
 
@@ -199,20 +204,12 @@ export class GroupComponent implements OnInit {
     this.loadData();
   }
 
-
-  getEnrollment(email: string) {
-    this._dataService.get("/api/enrollments/getenrollmentbyemail/" + email)
-      .subscribe((response: any) => {
-        this.enrollment = response;
-      });
-  }
-
   public allEnrollments: IMultiSelectOption[] = [];
 
   loadEnrollments() {
     this._dataService.get("/api/enrollments/getall" + "?" + "isConfirm=Accepted").subscribe((response: any) => {
       for (let enrollment of response.items) {
-        this.allEnrollments.push({ id: enrollment, name: enrollment.studentEmail + "-" + enrollment.lecturer.name });
+        this.allEnrollments.push({ id: enrollment.studentEmail, name: enrollment.studentEmail});
       }
     });
   }
@@ -226,4 +223,8 @@ export class GroupComponent implements OnInit {
     dynamicTitleMaxItems: 3,
     displayAllSelectedText: true
   };
+
+  onChange() {
+    console.log(this.enrollments);
+}
 }

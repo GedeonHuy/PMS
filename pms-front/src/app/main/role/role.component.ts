@@ -23,7 +23,6 @@ export class RoleComponent implements OnInit {
 
   loadData() {
     this._dataService.get("/api/roles/getall").subscribe((response: any) => {
-      console.log(response);
       this.roles = response;
     }, error => this._dataService.handleError(error));
   }
@@ -45,14 +44,12 @@ export class RoleComponent implements OnInit {
     this._dataService.get('/api/roles/getrole/' + id)
       .subscribe((response: any) => {
         this.entity = response;
-        console.log(this.entity);
       });
   }
 
   saveChange(valid: boolean) {
     if (valid) {
       if (this.entity.id == undefined) {
-        console.log(this.entity.id);
         this._dataService.post('/api/roles/add', JSON.stringify(this.entity))
           .subscribe((response: any) => {
             this.loadData();

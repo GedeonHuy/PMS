@@ -42,7 +42,6 @@ export class LecturerComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/lecturers/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log(this.queryResult.items);
     });
   }
 
@@ -116,7 +115,6 @@ export class LecturerComponent implements OnInit {
     var user = this._authenService.getLoggedInUser();
     if(user.role === "Admin") {
       this.isAdmin = true;
-      console.log(this.isAdmin);
     }
   }
   onPageChange(page) {

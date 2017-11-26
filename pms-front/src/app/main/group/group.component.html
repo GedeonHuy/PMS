@@ -64,7 +64,10 @@
 
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-  aria-hidden="true">
+  aria-hidden="true"  (onShow)="handler('onShow', $event)"
+  (onShown)="handler('onShown', $event)"
+  (onHide)="handler('onHide', $event)"
+  (onHidden)="handler('onHidden', $event)">
 
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -136,7 +139,15 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Students</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <ss-multiselect-dropdown [settings]="mySettings" [ngModelOptions]="{standalone: true}" [options]="allEnrollments" [(ngModel)]="enrollments"></ss-multiselect-dropdown>
+              <ss-multiselect-dropdown (ngModelChange)="onChange($event)" [settings]="mySettings" [ngModelOptions]="{standalone: true}" [options]="allEnrollments" [(ngModel)]="enrollments"></ss-multiselect-dropdown>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
+
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" disabled [(ngModel)]="enrollments" name="studentEmail" class="form-control" />
             </div>
           </div>
 

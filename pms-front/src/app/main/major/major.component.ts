@@ -38,7 +38,6 @@ export class MajorComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/majors/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log(this.queryResult);
     });
   }
 
@@ -113,7 +112,6 @@ export class MajorComponent implements OnInit {
     var user = this._authenService.getLoggedInUser();
     if (user.role === "Admin") {
       this.isAdmin = true;
-      console.log(this.isAdmin);
     }
   }
   onPageChange(page) {

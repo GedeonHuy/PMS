@@ -14,7 +14,7 @@ export class EnrollmentComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   public enrollments: any[];
   public queryResult: any = {};
-
+  public user : any;
   public enrollment: any;
   public isClicked: boolean;
   public isLoading : boolean;
@@ -23,6 +23,11 @@ export class EnrollmentComponent implements OnInit {
   isLecturer: boolean;
 
   PAGE_SIZE = 3;
+
+  queryAdmin: any = {
+    pageSize: this.PAGE_SIZE,
+    isConfirm : "Pending"
+  };
 
   query: any = {
     pageSize: this.PAGE_SIZE,
@@ -40,14 +45,26 @@ export class EnrollmentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadData();
+    this.user = this._authenService.getLoggedInUser();
+    if(this.user.role === "Admin") {
+      this.loadDataAdmin();
+    }
+
+    if(this.user.role === "Lecturer") {
+      this.loadData();
+    }
     this.permissionAccess();
   }
 
-  loadData() {
-    this._dataService.get("/api/enrollments/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+  loadDataAdmin() {
+    this._dataService.get("/api/enrollments/getall" + "?" + this.toQueryString(this.queryAdmin)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log("/api/enrollments/getall" + "?" + this.toQueryString(this.query));
+    });
+  }
+
+  loadData() {
+    this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+      this.queryResult = response;
     });
   }
 
@@ -77,18 +94,16 @@ export class EnrollmentComponent implements OnInit {
       if (this.enrollment.enrollmentId == undefined) {
         this._dataService.post('/api/enrollments/add', JSON.stringify(this.enrollment))
           .subscribe((response: any) => {
-            this.loadData();
+            this.loadDataAdmin();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
       }
       else {
-        console.log(this.enrollment);
         this._dataService.put('/api/enrollments/update/' + this.enrollment.enrollmentId, JSON.stringify(this.enrollment))
           .subscribe((response: any) => {
-            console.log(this.enrollment);
-            this.loadData();
+            this.loadDataAdmin();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
             this.isClicked = false;
@@ -104,7 +119,6 @@ export class EnrollmentComponent implements OnInit {
       if (value != null && value != undefined)
         parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
     }
-
     return parts.join('&');
   }
   deletEnrollment(id: any) {
@@ -115,23 +129,23 @@ export class EnrollmentComponent implements OnInit {
     this._dataService.delete('/api/enrollments/delete/' + id)
       .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");
-        this.loadData();
+        this.loadDataAdmin();
       });
   }
 
   permissionAccess() {
-    var user = this._authenService.getLoggedInUser();
-    if (user.role === "Admin") {
+    if (this.user.role === "Admin") {
       this.isAdmin = true;
     }
 
-    if (user.role === "Lecturer") {
+    if (this.user.role === "Lecturer") {
       this.isLecturer = true;
     }
   }
+
   onPageChange(page) {
-    this.query.page = page;
-    this.loadData();
+    this.queryAdmin.page = page;
+    this.loadDataAdmin();
   }
 
 }

@@ -16,6 +16,9 @@ import { HubConnection } from '@aspnet/signalr-client';
 export class StudentComponent implements OnInit {
 
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
+
+  public id : any;
+
   public students: any[];  
   public queryResult: any = {};
 
@@ -33,6 +36,7 @@ export class StudentComponent implements OnInit {
     this.isClicked = false;
   }
   ngOnInit() {
+    this.id = 0;
     this.loadData();
     this.hubConnection = new HubConnection(SystemConstants.BASE_URL + "/hub");
 
