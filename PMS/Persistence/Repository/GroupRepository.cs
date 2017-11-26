@@ -34,6 +34,7 @@ namespace PMS.Persistence
                 .Include(p => p.Lecturer)
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
+                .Include(p => p.Council)
                 .SingleOrDefaultAsync(s => s.GroupId == id);
         }
 
@@ -59,6 +60,7 @@ namespace PMS.Persistence
                 .Include(p => p.UploadedFiles)
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
+                .Include(p => p.Council)
                 .AsQueryable();
 
             //filter
