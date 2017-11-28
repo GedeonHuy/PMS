@@ -60,6 +60,21 @@
         </ul>
       </li>
 
+      <li *ngIf="isAdmin" [hidden]="isAdmin">
+        <a>
+          <i class="fa fa-desktop"></i> Councils
+          <span class="fa fa-chevron-down"></span>
+        </a>
+        <ul class="nav child_menu">
+          <li>
+            <a routerLink="/main/group/index" routerLinkActive="active">Manage Councils</a>
+          </li>
+          <li>
+            <a routerLink="/main/grade/index" routerLinkActive="active">Grading</a>
+          </li>
+        </ul>
+      </li>
+
       <li *ngIf="!isAdmin" [hidden]="isAdmin">
         <a routerLink="/main/project/index" routerLinkActive="active">
           <i class="fa fa-book"></i> Projects
