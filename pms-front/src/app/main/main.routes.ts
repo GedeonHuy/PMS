@@ -25,7 +25,6 @@ export const MainRoutes: Routes = [
             //localhost:xxxx/main/project
             { path: 'project', loadChildren: './project/project.module#ProjectModule' },
             //localhost:xxxx/main/group
-<<<<<<< HEAD
             { path: 'group', loadChildren: './group/group.module#GroupModule', canActivate: [AdminLecturerAuthGuard] },
             //localhost:xxxx/main/enrollment
             { path: 'enrollment', loadChildren: './enrollment/enrollment.module#EnrollmentModule' },
@@ -33,7 +32,6 @@ export const MainRoutes: Routes = [
             { path: 'confirm-group', loadChildren: './confirm-group/confirm-group.module#ConfirmGroupModule', canActivate: [AdminAuthGuard] },
             //localhost:xxxx/main/group-details
             { path: 'group-details', loadChildren: './group-details/group-details.module#GroupDetailsModule' },
-=======
             { path: 'group', loadChildren: './group/group.module#GroupModule', canActivate:[AdminLecturerAuthGuard]},
             //localhost:xxxx/main/council
             { path: 'council', loadChildren: './council/council.module#CouncilModule', canActivate:[AdminAuthGuard]},
@@ -41,7 +39,6 @@ export const MainRoutes: Routes = [
             { path: 'enrollment', loadChildren: './enrollment/enrollment.module#EnrollmentModule' },
             //localhost:xxxx/main/confirm-group
             { path: 'confirm-group', loadChildren: './confirm-group/confirm-group.module#ConfirmGroupModule', canActivate:[AdminAuthGuard]},       
->>>>>>> ff833f5cfe74fe60b4c3f1c3f1fadf1f4a7ac1cc
         ]
     }
 
