@@ -31,7 +31,7 @@ export class ConfirmGroupComponent implements OnInit {
   lecturerInformations: any[];
 
   public councilEnrollment: any;
-  public council: any;
+  public council: any = {};
   public president: any;
   public secretary: any;
   public supervisor: any;
@@ -84,11 +84,10 @@ export class ConfirmGroupComponent implements OnInit {
 
     return parts.join('&');
   }
-  
+
   //Create method
   assignCouncil(id: any) {
     this.modalAddEdit.show();
-    this.council = {};
     this.councilEnrollment = {};
     this.president = {};
     this.secretary = {};
@@ -99,13 +98,19 @@ export class ConfirmGroupComponent implements OnInit {
       this._dataService.get('/api/groups/getgroup/' + id)
     ).subscribe(data => {
       this.group = data[0];
-      this.lecturers = this.lecturers.filter(l => l.majorId == this.group.majorId);
-      this.council.groupId = this.group.groupId;
-      this.council.lecturerInformations = this.councilEnrollment;
-      this.council.lecturerInformations.president = this.president;
-      this.council.lecturerInformations.secretary = this.secretary;
-      this.council.lecturerInformations.supervisor = this.supervisor;
-      this.council.lecturerInformations.reviewer = this.reviewer;
+      if (this.group.council === null) {
+        this.lecturers = this.lecturers.filter(l => l.majorId == this.group.majorId);
+        this.council.groupId = this.group.groupId;
+        this.council.lecturerInformations = this.councilEnrollment;
+        this.council.lecturerInformations.president = this.president;
+        this.council.lecturerInformations.secretary = this.secretary;
+        this.council.lecturerInformations.supervisor = this.supervisor;
+        this.council.lecturerInformations.reviewer = this.reviewer;
+      } else {
+        this._dataService.get("/api/councils/getcouncil/" + this.group.council.councilId).subscribe((response: any) => {
+          console.log(response);
+        });
+      }
 
       this.isLoading = true;
     });
@@ -132,7 +137,6 @@ export class ConfirmGroupComponent implements OnInit {
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;
-      console.log(this.council);
       if (this.council.councilId == undefined) {
         this._dataService.post('/api/councils/add', JSON.stringify(this.council))
           .subscribe((response: any) => {

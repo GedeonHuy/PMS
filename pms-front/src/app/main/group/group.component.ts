@@ -62,7 +62,6 @@ export class GroupComponent implements OnInit {
   ngOnInit() {
     this.loadData();
     this.permissionAccess();
-    this.loadEnrollments();
     Observable.forkJoin([
       this._dataService.get("/api/quarters/getall"),
       this._dataService.get("/api/majors/getall"),
@@ -110,7 +109,7 @@ export class GroupComponent implements OnInit {
   //Create method
   showAddModal() {    
     this.group = {};
-    this.isLoading = true;
+    this.loadEnrollments();
     this.modalAddEdit.show();
   }
 
@@ -148,8 +147,10 @@ export class GroupComponent implements OnInit {
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;
+      console.log(this.group);
       if (this.group.groupId == undefined) {
         this.group.enrollments = this.enrollments;
+        console.log(this.enrollments);
         this._dataService.post('/api/groups/add', JSON.stringify(this.group))
           .subscribe((response: any) => {
             this.loadData();
@@ -207,10 +208,11 @@ export class GroupComponent implements OnInit {
   public allEnrollments: IMultiSelectOption[] = [];
 
   loadEnrollments() {
-    this._dataService.get("/api/enrollments/getall" + "?" + "isConfirm=Accepted").subscribe((response: any) => {
+    this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?isConfirm=Accepted").subscribe((response: any) => {
       for (let enrollment of response.items) {
-        this.allEnrollments.push({ id: enrollment.studentEmail, name: enrollment.studentEmail});
+        this.allEnrollments.push({ id: enrollment, name: enrollment.studentEmail});
       }
+      this.isLoading = true;      
     });
   }
 
@@ -223,8 +225,4 @@ export class GroupComponent implements OnInit {
     dynamicTitleMaxItems: 3,
     displayAllSelectedText: true
   };
-
-  onChange() {
-    console.log(this.enrollments);
-}
 }

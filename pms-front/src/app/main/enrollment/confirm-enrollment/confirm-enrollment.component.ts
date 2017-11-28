@@ -1,3 +1,4 @@
+import { query } from '@angular/core/src/animation/dsl';
 import { AuthenService } from './../../../core/services/authen.service';
 import { NotificationService } from './../../../core/services/notification.service';
 import { DataService } from './../../../core/services/data.service';
@@ -26,12 +27,12 @@ export class ConfirmEnrollmentComponent implements OnInit {
 
   queryAdmin: any = {
     pageSize: this.PAGE_SIZE,
-    isConfirm: "Pending"
+    isConfirm: "Accepted"
   };
 
   query: any = {
     pageSize: this.PAGE_SIZE,
-    isConfirm: "Pending"
+    isConfirm: "Accepted"
   };
 
   public typeStatus: any[] = ["Accepted", "Pending", "Denied"];
@@ -58,13 +59,14 @@ export class ConfirmEnrollmentComponent implements OnInit {
   loadDataAdmin() {
     this._dataService.get("/api/enrollments/getall" + "?" + this.toQueryString(this.queryAdmin)).subscribe((response: any) => {
       this.queryResult = response;
+      console.log(this.queryResult.items);
     });
   }
 
   loadData() {
     this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-    });
+   });
   }
 
   toQueryString(obj) {

@@ -76,19 +76,19 @@ export class HomeComponent implements OnInit {
   }
 
   loadStudentGroup() {
-    this._dataService.get("/api/groups/getall/" + "?email=" + this.user.email).subscribe((response: any) => {
+    this._dataService.get("/api/groups/getall/" + "?email=" + this.user.email + "&pageSize=3").subscribe((response: any) => {
       this.groups = response;
     });
   }
 
   loadLecturerEnrollment() {
-    this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?isConfirm=Pending").subscribe((response: any) => {
+    this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?isConfirm=Pending&pageSize=3").subscribe((response: any) => {
       this.enrollments = response;
     });
   }
 
   loadLecturerEnrollmentAccepted() {
-    this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?isConfirm=Accepted").subscribe((response: any) => {
+    this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?isConfirm=Accepted&pageSize=3").subscribe((response: any) => {
       this.enrollmentsAccept = response;
     });
   }

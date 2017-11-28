@@ -85,6 +85,7 @@ export class StudentComponent implements OnInit {
         this.student = response;
       });
   }
+
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;

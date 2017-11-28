@@ -16,6 +16,7 @@ import { MajorModule } from './major/major.module';
 import { EnrollmentModule } from './enrollment/enrollment.module';
 import { ConfirmGroupModule } from './confirm-group/confirm-group.module';
 import { PaginationModule } from './../shared/pagination/pagination.module';
+import { GroupDetailsComponent } from './group-details/group-details.component';
 
 import { SidebarMenuComponent } from './../shared/sidebar-menu/sidebar-menu.component';
 import { TopMenuComponent } from './../shared/top-menu/top-menu.component';
@@ -28,6 +29,7 @@ import { LecturerAuthGuard } from './../core/guards/auth-lecturer.guard';
 import { StudentAuthGuard } from './../core/guards/auth-student.guard';
 import { GradeComponent } from './grade/grade.component';
 import { AdminLecturerAuthGuard } from './../core/guards/auth-admin-lecturer.guard';
+import { GroupDetailsModule } from './group-details/group-details.module';
 
 @NgModule({
   imports: [
@@ -40,7 +42,8 @@ import { AdminLecturerAuthGuard } from './../core/guards/auth-admin-lecturer.gua
     ProjectModule,
     MajorModule,
     EnrollmentModule,
-    GroupModule,    
+    GroupModule,
+    GroupDetailsModule,    
     ConfirmGroupModule,
     PaginationModule,
     RouterModule.forChild(MainRoutes)
