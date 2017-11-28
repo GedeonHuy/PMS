@@ -29,11 +29,8 @@ import { LecturerAuthGuard } from './../core/guards/auth-lecturer.guard';
 import { StudentAuthGuard } from './../core/guards/auth-student.guard';
 import { GradeComponent } from './grade/grade.component';
 import { AdminLecturerAuthGuard } from './../core/guards/auth-admin-lecturer.guard';
-<<<<<<< HEAD
 import { GroupDetailsModule } from './group-details/group-details.module';
-=======
 import { CouncilModule } from './council/council.module';
->>>>>>> ff833f5cfe74fe60b4c3f1c3f1fadf1f4a7ac1cc
 
 @NgModule({
   imports: [
@@ -47,11 +44,8 @@ import { CouncilModule } from './council/council.module';
     MajorModule,
     EnrollmentModule,
     GroupModule,
-<<<<<<< HEAD
     GroupDetailsModule,    
-=======
     CouncilModule,    
->>>>>>> ff833f5cfe74fe60b4c3f1c3f1fadf1f4a7ac1cc
     ConfirmGroupModule,
     PaginationModule,
     RouterModule.forChild(MainRoutes)
