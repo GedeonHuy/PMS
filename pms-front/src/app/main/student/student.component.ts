@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { NgForm } from '@angular/forms';
 import { SignalrService } from './../../core/services/signalr.service';
 import { SystemConstants } from './../../core/common/system.constants';
 import { Response } from '@angular/http';
@@ -17,16 +18,16 @@ export class StudentComponent implements OnInit {
 
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
 
-  public id : any;
+  public id: any;
 
-  public students: any[];  
+  public students: any[];
   public queryResult: any = {};
 
   public student: any;
   public isClicked: boolean;
   hubConnection: HubConnection;
   majors: any[];
-  
+
   PAGE_SIZE = 10;
 
   query: any = {
@@ -86,14 +87,15 @@ export class StudentComponent implements OnInit {
       });
   }
 
-  saveChange(valid: boolean) {
-    if (valid) {
+  saveChange(form: NgForm) {
+    if (form.valid) {
       this.isClicked = true;
       if (this.student.id == undefined) {
         this._dataService.post('/api/students/add', JSON.stringify(this.student))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
+            form.resetForm();
             this.hubConnection.invoke('LoadData');
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
@@ -104,6 +106,7 @@ export class StudentComponent implements OnInit {
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
+            form.resetForm();            
             this._notificationService.printSuccessMessage("Update Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
@@ -132,7 +135,7 @@ export class StudentComponent implements OnInit {
     var parts = [];
     for (var property in obj) {
       var value = obj[property];
-      if (value != null && value != undefined) 
+      if (value != null && value != undefined)
         parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
     }
 

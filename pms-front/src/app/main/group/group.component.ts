@@ -147,10 +147,8 @@ export class GroupComponent implements OnInit {
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;
-      console.log(this.group);
       if (this.group.groupId == undefined) {
         this.group.enrollments = this.enrollments;
-        console.log(this.enrollments);
         this._dataService.post('/api/groups/add', JSON.stringify(this.group))
           .subscribe((response: any) => {
             this.loadData();

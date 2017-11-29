@@ -6,18 +6,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { ChartModule } from 'angular2-chartjs';
 
 const GroupDetailsRoutes: Routes = [
-  //localhost:xxxx/main/user
-  { path: '', redirectTo: 'index', pathMatch: 'full' },
   //localhost:xxxx/main/user/index
-  { path: 'index', component: GroupDetailsComponent }
+  { path: '', component: GroupDetailsComponent }
 ]
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ChartModule,
     ModalModule.forRoot(),
     RouterModule.forChild(GroupDetailsRoutes)
   ],

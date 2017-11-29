@@ -20,7 +20,8 @@ export class HomeComponent implements OnInit {
   public enrollments: any = {};
   public enrollmentsAccept : any = {};
   public groups: any = {};
-
+  public groupsStudent: any = {};  
+  public groupsAccepted : any = {};
   public user: any;
 
   public isClicked: boolean;
@@ -66,18 +67,19 @@ export class HomeComponent implements OnInit {
       this.loadLecturerEnrollment();
       this.loadLecturerEnrollmentAccepted();
       this.loadLecturerGroup();
+      this.loadLecturerGroupAccepted();
     }
   }
 
   loadStudentEnrollment() {
-    this._dataService.get("/api/students/getenrollments/" + this.user.email).subscribe((response: any) => {
+    this._dataService.get("/api/students/getenrollments/" + this.user.email + "?pageSize=3").subscribe((response: any) => {
       this.enrollments = response;
     });
   }
 
   loadStudentGroup() {
-    this._dataService.get("/api/groups/getall/" + "?email=" + this.user.email + "&pageSize=3").subscribe((response: any) => {
-      this.groups = response;
+    this._dataService.get("/api/students/getgroups/"  + this.user.email + "?pageSize=3").subscribe((response: any) => {
+      this.groupsStudent = response;
     });
   }
 
@@ -94,9 +96,14 @@ export class HomeComponent implements OnInit {
   }
 
   loadLecturerGroup() {
-    this._dataService.get("/api/groups/getgroups/" + this.user.email).subscribe((response: any) => {
+    this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Pending&pageSize=3").subscribe((response: any) => {
       this.groups = response;
-      console.log(response);
+    });
+  }
+
+  loadLecturerGroupAccepted() {
+    this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Accepted&pageSize=3").subscribe((response: any) => {
+      this.groupsAccepted = response;
     });
   }
 

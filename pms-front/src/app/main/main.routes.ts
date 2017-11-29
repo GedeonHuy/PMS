@@ -30,8 +30,9 @@ export const MainRoutes: Routes = [
             { path: 'enrollment', loadChildren: './enrollment/enrollment.module#EnrollmentModule' },
             //localhost:xxxx/main/confirm-group
             { path: 'confirm-group', loadChildren: './confirm-group/confirm-group.module#ConfirmGroupModule', canActivate: [AdminAuthGuard] },
-            //localhost:xxxx/main/group-details
-            { path: 'group-details', loadChildren: './group-details/group-details.module#GroupDetailsModule' },
+            //localhost:xxxx/main/group-details/id
+            { path: 'group-details/:id', loadChildren: './group-details/group-details.module#GroupDetailsModule' },
+            //localhost:xxxx/main/group
             { path: 'group', loadChildren: './group/group.module#GroupModule', canActivate:[AdminLecturerAuthGuard]},
             //localhost:xxxx/main/council
             { path: 'council', loadChildren: './council/council.module#CouncilModule', canActivate:[AdminAuthGuard]},

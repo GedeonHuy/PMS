@@ -73,7 +73,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)"
+        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm)"
           *ngIf="student">
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Code</label>

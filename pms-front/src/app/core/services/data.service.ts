@@ -25,6 +25,11 @@ export class DataService {
       .map(this.extractData);
   }
 
+  getGithub(url: string) {
+    return this._http.get(url)
+      .map(this.extractData);
+  }
+
   post(url: string, data?: any) {
     this.headers.delete("Authorization");
     this.headers.append("Authorization", "Bearer " + this._authService.getLoggedInUser().access_token);

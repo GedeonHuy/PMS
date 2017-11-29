@@ -32,7 +32,8 @@
         "../node_modules/signalr/jquery.signalR.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
         "../node_modules/fastclick/lib/fastclick.js",
-        "../node_modules/alertifyjs/build/alertify.js"       
+        "../node_modules/alertifyjs/build/alertify.js",
+        "../node_modules/chart.js/dist/chart.js"      
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
