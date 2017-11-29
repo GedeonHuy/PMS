@@ -1,27 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PMS.Models
+namespace PMS.Resources
 {
-    public class Announcement
+    public class AnnouncementResource
     {
         public int AnnouncementId { get; set; }
-        [StringLength(250)]
-        [Required]
         public string Title { set; get; }
         public string Content { set; get; }
         public DateTime CreatedDate { get; set; }
-        [StringLength(128)]
+
         public string UserId { set; get; }
-        public ICollection<AnnouncementUser> AnnouncementUsers { get; set; }
+        public ICollection<AnnouncementUserResource> AnnouncementUsers { get; set; }
         public bool IsDeleted { get; set; }
-        public Announcement()
+        public AnnouncementResource()
         {
-            AnnouncementUsers = new Collection<AnnouncementUser>();
+            AnnouncementUsers = new Collection<AnnouncementUserResource>();
             IsDeleted = true;
             CreatedDate = DateTime.Now;
         }

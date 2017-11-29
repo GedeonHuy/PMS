@@ -14,6 +14,36 @@ namespace PMS.Mapping
         public MappingProfile()
         {
             //Domain to API Resource
+            CreateMap<Announcement, AnnouncementResource>()
+            .ForMember(cr => cr.AnnouncementUsers, opt => opt.MapFrom(c => c.AnnouncementUsers.Select(cf => new AnnouncementUserResource
+            {
+                AnnouncementUserId = cf.AnnouncementUserId,
+                IsDeleted = cf.IsDeleted,
+                AppUser = new ApplicationUserResource
+                {
+                    Avatar = cf.AppUser.Avatar,
+                    CreatedOn = cf.AppUser.CreatedOn,
+                    FullName = cf.AppUser.FullName,
+                    IsDeleted = cf.AppUser.IsDeleted,
+                    Major = cf.AppUser.Major,
+                    UpdatedOn = cf.AppUser.UpdatedOn
+                }
+            }
+            )));
+
+            CreateMap<AnnouncementUser, AnnouncementUserResource>()
+                .ForMember(cr => cr.AnnouncementId, opt => opt.MapFrom(c => c.Announcement.AnnouncementId))
+                .ForMember(cr => cr.AppUser, opt => opt.MapFrom(c => new ApplicationUserResource
+                {
+                    Avatar = c.AppUser.Avatar,
+                    CreatedOn = c.AppUser.CreatedOn,
+                    FullName = c.AppUser.FullName,
+                    IsDeleted = c.AppUser.IsDeleted,
+                    Major = c.AppUser.Major,
+                    UpdatedOn = c.AppUser.UpdatedOn
+                }));
+
+
             CreateMap<Council, CouncilResource>()
             .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId))
             .ForMember(cr => cr.LecturerInformations, opt => opt.MapFrom(c => new LecturerInformationResource
@@ -301,6 +331,12 @@ namespace PMS.Mapping
                     s.Enrollments.Add(e);
                 }
             });
+
+            CreateMap<AnnouncementResource, Announcement>()
+                .ForMember(c => c.AnnouncementId, opt => opt.Ignore());
+
+            CreateMap<AnnouncementUserResource, AnnouncementUser>()
+                .ForMember(c => c.AnnouncementUserId, opt => opt.Ignore());
 
             CreateMap<StudentResource, Student>()
                 .ForMember(c => c.Id, opt => opt.Ignore());

@@ -22,6 +22,7 @@ namespace PMS.Data
             builder.Entity<ApplicationRole>().ToTable("ApplicationRole");
             builder.Entity<ApplicationUser>().ToTable("ApplicationUser");
             builder.Entity<Announcement>().ToTable("Announcement");
+            builder.Entity<AnnouncementUser>().ToTable("AnnouncementUser");
             builder.Entity<Council>().ToTable("Council");
             builder.Entity<CouncilEnrollment>().ToTable("CouncilErollment");
             builder.Entity<Enrollment>().ToTable("Enrollment");
@@ -40,6 +41,7 @@ namespace PMS.Data
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Announcement> Announcement { get; set; }
+        public DbSet<AnnouncementUser> AnnouncementUser { get; set; }
         public DbSet<Council> Councils { get; set; }
         public DbSet<CouncilEnrollment> CouncilEnrollments { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
