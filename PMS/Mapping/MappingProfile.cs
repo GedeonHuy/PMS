@@ -80,6 +80,7 @@ namespace PMS.Mapping
                 {
                     GroupId = gf.GroupId,
                     GroupName = gf.GroupName,
+                    LinkGitHub = gf.LinkGitHub,
                     isDeleted = gf.isDeleted,
                     isConfirm = gf.isConfirm
                 })))
@@ -97,6 +98,7 @@ namespace PMS.Mapping
                 {
                     GroupId = sf.GroupId,
                     GroupName = sf.GroupName,
+                    LinkGitHub = sf.LinkGitHub,
                     isDeleted = sf.isDeleted,
                     isConfirm = sf.isConfirm
                 })))
@@ -192,6 +194,7 @@ namespace PMS.Mapping
                 {
                     GroupId = e.Group.GroupId,
                     GroupName = e.Group.GroupName,
+                    LinkGitHub = e.Group.LinkGitHub,
                     isDeleted = e.Group.isDeleted,
                     isConfirm = e.Group.isConfirm
                 }))
@@ -231,27 +234,15 @@ namespace PMS.Mapping
                 {
                     GroupId = lf.GroupId,
                     GroupName = lf.GroupName,
+                    LinkGitHub = lf.LinkGitHub,
                     isDeleted = lf.isDeleted,
                     isConfirm = lf.isConfirm
                 })))
                 .ForMember(lr => lr.CouncilEnrollments, opt => opt.MapFrom(l => l.CouncilEnrollments));
 
             CreateMap<Group, GroupResource>()
-                //.ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => new EnrollmentResource
-                //{
-                //    EnrollmentId = e.EnrollmentId,
-                //    EndDate = e.EndDate,
-                //    StartDate = e.StartDate,
-                //    Type = e.Type,
-                //    GradeId = e.Grade.GradeId,
-                //    isConfirm = e.isConfirm,
-                //    IsDeleted = e.IsDeleted,
-                //    QuarterId = e.Quarter.QuarterId,
-                //    LecturerId = e.Lecturer.LecturerId,
-                //    StudentEmail = e.Student.Email
-                //})))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
-                .ForMember(er => er.Quarter, opt => opt.MapFrom(e => new Quarter
+                .ForMember(er => er.Quarter, opt => opt.MapFrom(e => new QuarterResource
                 {
                     QuarterId = e.Quarter.QuarterId,
                     QuarterName = e.Quarter.QuarterName,

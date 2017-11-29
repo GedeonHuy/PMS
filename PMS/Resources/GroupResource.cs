@@ -13,6 +13,7 @@ namespace PMS.Resources
         [Required]
         [MaxLength(30)]
         public string GroupName { get; set; }
+        public string LinkGitHub { get; set; }
         public bool isDeleted { get; set; }
         public string isConfirm { get; set; }
         /// <other project selection>

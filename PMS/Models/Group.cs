@@ -11,6 +11,7 @@ namespace PMS.Models
     {
         public int GroupId { get; set; }
         public string GroupName { get; set; }
+        public string LinkGitHub { get; set; }
         public Project Project { get; set; }
         public Major Major { get; set; }
         public Lecturer Lecturer { get; set; }
