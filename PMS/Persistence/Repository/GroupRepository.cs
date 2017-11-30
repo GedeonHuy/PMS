@@ -35,7 +35,6 @@ namespace PMS.Persistence
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
                 .Include(p => p.Council)
-                    .ThenInclude(c => c.CouncilEnrollments)
                 .SingleOrDefaultAsync(s => s.GroupId == id);
         }
 
@@ -62,7 +61,6 @@ namespace PMS.Persistence
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
                 .Include(p => p.Council)
-                    .ThenInclude(c => c.CouncilEnrollments)
                 .AsQueryable();
 
             //filter
