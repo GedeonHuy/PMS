@@ -68,6 +68,7 @@ namespace PMS.Controllers
             {
                 FullName = lecturer.Name,
                 Major = lecturer.Major.MajorName,
+                Avatar = "/assets/images/user.png",
                 Email = lecturer.Email,
                 UserName = lecturer.Email
             };

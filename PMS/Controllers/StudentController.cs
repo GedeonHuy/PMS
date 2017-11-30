@@ -75,6 +75,7 @@ namespace PMS.Controllers
             {
                 FullName = student.Name,
                 Email = student.Email,
+                Avatar = "/assets/images/user.png",
                 Major = student.Major.MajorName,
                 UserName = student.Email
             };
