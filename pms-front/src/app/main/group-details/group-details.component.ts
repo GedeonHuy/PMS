@@ -12,6 +12,7 @@ export class GroupDetailsComponent implements OnInit {
   groupId: any;
   group: any;
   dataCommit: any[] = [];
+  commitDetails : any[] = [];
   linkGithub : string;
   linkDowload : string;
   github: any;
@@ -38,7 +39,6 @@ export class GroupDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.loadGroupDetails(this.groupId);
-
   }
 
   data = {
@@ -46,6 +46,7 @@ export class GroupDetailsComponent implements OnInit {
     datasets: [
       {
         label: "Commits in 10 weeks",
+        fill: false,
         data: this.dataCommit,
         borderColor: "#66cc66",
         borderWidth: 1        
@@ -63,9 +64,9 @@ export class GroupDetailsComponent implements OnInit {
         this.group = response;
         this.linkGithub = response.linkGitHub.replace("https://github.com/", "");
         this.linkDowload = response.linkGitHub + "/archive/master.zip";
-        console.log(this.linkDowload);
         this.loadGithub(this.linkGithub);
         this.loadDataCommits(this.linkGithub + "/stats/participation");
+        this.loadCommitDetails(this.linkGithub + "/commits");
         this.isLoading = true;
       });
   }
@@ -75,9 +76,17 @@ export class GroupDetailsComponent implements OnInit {
     this._dataService.getGithub(link)
       .subscribe((response: any) => {
         this.github = response;
-        console.log(this.github);
         this.isLoadGit = true;
       });
+  }
+
+  loadCommitDetails(link : string) {
+    this._dataService.getGithub(link)
+    .subscribe((response: any) => {
+      for (var i = 0; i < 3; i++) {
+        this.commitDetails.push(response[i]);    
+      }      
+    });
   }
 
   loadDataCommits(link: string) {
