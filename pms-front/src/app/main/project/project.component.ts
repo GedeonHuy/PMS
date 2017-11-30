@@ -41,7 +41,6 @@ export class ProjectComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/projects/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log(response.items);
     });
   }
 

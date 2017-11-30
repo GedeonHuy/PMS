@@ -12,16 +12,20 @@ export class GroupDetailsComponent implements OnInit {
   groupId: any;
   group: any;
   dataCommit: any[] = [];
+  linkGithub : string;
+  linkDowload : string;
   github: any;
-  commits: any;
+  commits: number = 0;
   isLoading: boolean;
   isLoadGit: boolean;
+  isLoadDataCommit : boolean;
 
   constructor(private route: ActivatedRoute,
     private router: Router, private _dataService: DataService) {
 
     this.isLoading = false;
     this.isLoadGit = false;
+    this.isLoadDataCommit = false;
 
     route.params.subscribe(p => {
       this.groupId = +p['id'];
@@ -34,9 +38,6 @@ export class GroupDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.loadGroupDetails(this.groupId);
-    this.loadGithub("https://api.github.com/repos/QuanHuynhM/PMS");
-    this.loadCommits("https://api.github.com/repos/QuanHuynhM/PMS/commits");
-    this.loadDataCommits("https://api.github.com/repos/QuanHuynhM/PMS/stats/participation");
 
   }
 
@@ -60,6 +61,11 @@ export class GroupDetailsComponent implements OnInit {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {
         this.group = response;
+        this.linkGithub = response.linkGitHub.replace("https://github.com/", "");
+        this.linkDowload = response.linkGitHub + "/archive/master.zip";
+        console.log(this.linkDowload);
+        this.loadGithub(this.linkGithub);
+        this.loadDataCommits(this.linkGithub + "/stats/participation");
         this.isLoading = true;
       });
   }
@@ -74,22 +80,15 @@ export class GroupDetailsComponent implements OnInit {
       });
   }
 
-  loadCommits(link: string) {
-    this._dataService.getGithub(link)
-      .subscribe((response: any) => {
-        this.commits = response.length;
-      });
-  }
-
   loadDataCommits(link: string) {
     this._dataService.getGithub(link)
       .subscribe((response: any) => {
         var tmpWeeks = response.all.reverse();
         for (var i = 0; i < 10; i++) {
           this.dataCommit.push(tmpWeeks[i]);
+          this.commits = this.commits + tmpWeeks[i];
         }
-      });
-      console.log(this.dataCommit);
-      
+        this.isLoadDataCommit = true;
+      });      
   }
 }

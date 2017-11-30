@@ -26,7 +26,7 @@ export class DataService {
   }
 
   getGithub(url: string) {
-    return this._http.get(url)
+    return this._http.get(SystemConstants.GITHUB_API_URL + url)
       .map(this.extractData);
   }
 

@@ -90,6 +90,16 @@
             </div>
           </div>
           <div class="ln_solid"></div>
+
+          <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Link Github</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <input type="text" #linkGitHub="ngModel" [(ngModel)]="group.linkGitHub" name="linkGitHub" class="form-control">
+                <small [hidden]="linkGitHub.valid || (linkGitHub.pristine && !addEditForm.submitted)" class="text-danger"> Maximum length is 30 </small>
+              </div>
+            </div>
+            <div class="ln_solid"></div>
+
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Quarter</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
