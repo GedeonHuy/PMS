@@ -1,6 +1,6 @@
 <div class="page-title">
   <div class="title_left">
-    <h3>Manage council</h3>
+    <h3>Manage Councils</h3>
   </div>
 
   <div class="title_right">
@@ -32,16 +32,20 @@
           <thead>
             <tr>
               <th>Id</th>
-              <th>Name</th>
-              <th>Description</th>
+              <th>ResultGrade</th>
+              <th>ResultScore</th>
+              <th>Group</th>
+              <th>Supervisor</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let council of councils">
-              <td>{{council.id}}</td>
-              <td>{{council.name}}</td>
-              <td>{{council.description}}</td>
+            <tr *ngFor="let c of councils">
+              <td>{{c.councilId}}</td>
+              <td>{{c.resultGrade}}</td>
+              <td>{{c.resultScore}}</td>
+              <td>{{c.group.groupName}}</td>
+              <td>:D</td>
               <td>
                 <button class="btn btn-primary" (click)="showEditModal(council.id)">
                   <i class="fa fa-pencil-square-o"></i>
@@ -74,26 +78,34 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)"
-          *ngIf="entity">
+          *ngIf="council">
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Grade</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <input type="hidden" [(ngModel)]="entity.id" name="id" />
-              <input type="text" #name="ngModel" [(ngModel)]="entity.name" required minlength="3" name="name" class="form-control">
-              <small [hidden]="name.valid || (name.pristine && !addEditForm.submitted)" class="text-danger">
-                At least 3 characters
-              </small>
+              <input type="hidden" [(ngModel)]="council.councilId" name="councilId" />
+              <input type="hidden" [(ngModel)]="council.isAllScored" name="isAllScored" />
+              <input type="text" #resultGrade="ngModel" [(ngModel)]="council.resultGrade" name="Grade" class="form-control">
             </div>
           </div>
+          
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Description</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <textarea class="form-control" #description="ngModel" required [(ngModel)]="entity.description" name="description" rows="3"></textarea>
-              <small [hidden]="description.valid || (description.pristine && !addEditForm.submitted)" class="text-danger">
-                Description is required
-              </small>
+              <input type="text" #resultScore="ngModel" [(ngModel)]="council.resultScore" name="Score" class="form-control">
             </div>
           </div>
+          
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Group</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="council.groupId" name="groupId" required #groupId="ngModel">
+                <option value=""></option>
+                <option *ngFor="let g of groups" value="{{g.groupId}}">{{ g.groupName }}</option>
+              </select>
+              <small [hidden]="group.valid || (group.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the group </small>
+            </div>
+          </div>
+
           <div class="ln_solid"></div>
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">

@@ -11,5 +11,13 @@ namespace PMS.Resources.SubResources
         public SecretaryResource Secretary { get; set; }
         public ReviewerResource Reviewer { get; set; }
         public SupervisorResource Supervisor { get; set; }
+
+        public LecturerInformationResource()
+        {
+            President = new PresidentResource();
+            Secretary = new SecretaryResource();
+            Reviewer = new ReviewerResource();
+            Supervisor = new SupervisorResource();
+        }
     }
 }
