@@ -136,7 +136,6 @@ export class HomeComponent implements OnInit {
     if (valid) {
       this.isClicked = true;
       if (this.enrollment.id == undefined) {
-        console.log(this.enrollment);
         this._dataService.post('/api/enrollments/add', JSON.stringify(this.enrollment))
           .subscribe((response: any) => {
             this.enrollmentModal.hide();
