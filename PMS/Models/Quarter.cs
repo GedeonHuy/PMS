@@ -11,8 +11,7 @@ namespace PMS.Models
     {
         public int QuarterId { get; set; }
         [Required]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Enter alphabets only, please !")]
-        [MaxLength(6, ErrorMessage = "Maximum length for the name is 7 characters.")]
+        [MaxLength(20, ErrorMessage = "Maximum length for the name is 20 characters.")]
         public string QuarterName { get; set; }
         public DateTime QuarterStart { get; set; }
         public DateTime QuarterEnd { get; set; }
