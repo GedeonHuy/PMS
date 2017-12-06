@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+import { NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SignalrService } from './../../core/services/signalr.service';
 import { SystemConstants } from './../../core/common/system.constants';
@@ -19,10 +21,13 @@ export class CouncilComponent implements OnInit {
 
   public id : any;
   
+  public temp = '';
+
   public councils: any[];  
   public queryResult: any = {};
-
   public council: any;
+
+  public isLoading: boolean;
   public isClicked: boolean;
   hubConnection: HubConnection;
   groups: any[];
@@ -33,10 +38,16 @@ export class CouncilComponent implements OnInit {
     pageSize: this.PAGE_SIZE
   };
   constructor(private _dataService: DataService, private _notificationService: NotificationService) {
+    this.isLoading = false;
     this.isClicked = false;
   }
 
   ngOnInit() {
+
+    this._dataService.get("/api/groups/getall").subscribe((response: any) => {
+      this.groups = response.items;
+    });
+
     this.id = 0;
     this.loadData();
     this.hubConnection = new HubConnection(SystemConstants.BASE_URL + "/hub");
@@ -53,35 +64,30 @@ export class CouncilComponent implements OnInit {
         console.log('Error while establishing connection')
       });
 
-
-
-    this._dataService.get("/api/groups/getall").subscribe((response: any) => {
-      this.groups = response.items;
-    });
   }
 
   loadData() {
-    this._dataService.get("/api/councils/getall" + "?" + this.toQueryString(this.query)).
-      subscribe((response: any) => {
-        this.queryResult = response;
-      });
+    this._dataService.get("/api/councils/getall").subscribe((response: any) => {
+      this.councils = response.items;
+    });
   }
 
   //Create method
   showAddModal() {
     this.council = {};
+
     this.modalAddEdit.show();
   }
-
+  
   //Edit method
   showEditModal(id: any) {
     this.loadCouncil(id);
     this.modalAddEdit.show();
   }
 
-  //Get Student with Id
+  //Get council with Id
   loadCouncil(id: any) {
-    this._dataService.get('/api/students/getstudent/' + id)
+    this._dataService.get('/api/councils/getcouncil/' + id)
       .subscribe((response: any) => {
         this.council = response;
       });
@@ -90,7 +96,7 @@ export class CouncilComponent implements OnInit {
     if (valid) {
       this.isClicked = true;
       if (this.council.id == undefined) {
-        this._dataService.post('/api/students/add', JSON.stringify(this.council))
+        this._dataService.post('/api/councils/add', JSON.stringify(this.council))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
@@ -98,9 +104,10 @@ export class CouncilComponent implements OnInit {
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
+          console.log(this.council);
       }
       else {
-        this._dataService.put('/api/students/update/' + this.council.id, JSON.stringify(this.council))
+        this._dataService.put('/api/councils/update/' + this.council.id, JSON.stringify(this.council))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
@@ -116,13 +123,13 @@ export class CouncilComponent implements OnInit {
   }
 
   deleteConfirm(id: any) {
-    this._dataService.delete('/api/students/delete/' + id)
+    this._dataService.delete('/api/councils/delete/' + id)
       .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");
         this.loadData();
       });
   }
-  
+
   onPageChange(page) {
     this.query.page = page;
     this.loadData();

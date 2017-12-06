@@ -23,7 +23,7 @@
     "@angular/router": "^4.2.4",
     "@aspnet/signalr-client": "^1.0.0-alpha2-final",
     "alertifyjs": "^1.11.0",
-    "angular-2-dropdown-multiselect": "^1.6.2",
+    "angular-2-dropdown-multiselect": "^1.6.3",
     "angular2-chartjs": "^0.4.1",
     "angular2-charts": "^0.1.2",
     "animate.css": "^3.5.2",
