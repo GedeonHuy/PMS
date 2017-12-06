@@ -4,7 +4,7 @@ import { MainComponent } from './main.component';
 import { MainRoutes } from './main.routes';
 import { RouterModule, Routes } from '@angular/router';
 
-
+import { AnnouncementModule } from './announcement/announcement.module';
 import { UserModule } from './user/user.module';
 import { HomeModule } from './home/home.module';
 import { RoleModule } from './role/role.module';
@@ -34,6 +34,7 @@ import { CouncilModule } from './council/council.module';
 
 @NgModule({
   imports: [
+    AnnouncementModule,
     CommonModule,
     HomeModule,    
     UserModule,
