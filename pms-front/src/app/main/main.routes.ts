@@ -10,6 +10,8 @@ export const MainRoutes: Routes = [
         path: '', component: MainComponent, children: [
             //localhost:xxxx/main
             { path: '', redirectTo: 'main/home', pathMatch: 'full' },
+             //localhost:xxxx/main/announcement
+             { path: 'announcement', loadChildren: './announcement/announcement.module#AnnouncementModule', canActivate: [AdminAuthGuard] },
             //localhost:xxxx/main/home
             { path: 'home', loadChildren: './home/home.module#HomeModule' },
             //localhost:xxxx/main/user
