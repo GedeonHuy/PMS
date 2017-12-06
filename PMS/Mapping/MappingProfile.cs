@@ -123,7 +123,10 @@ namespace PMS.Mapping
                     Description = gf.Description,
                     ProjectCode = gf.ProjectCode,
                     Title = gf.Title,
-                    Type = gf.Type
+                    Type = gf.Type,
+                    IsCompleted = gf.IsCompleted,
+                    IsDeleted = gf.IsDeleted
+
                 })));
 
             CreateMap<Quarter, QuarterResource>()
@@ -307,7 +310,9 @@ namespace PMS.Mapping
                     Description = g.Project.Description,
                     ProjectCode = g.Project.ProjectCode,
                     Title = g.Project.Title,
-                    Type = g.Project.Type
+                    Type = g.Project.Type,
+                    IsDeleted = g.Project.IsDeleted,
+                    IsCompleted = g.Project.IsCompleted
                 }));
             CreateMap<Excel, ExcelResource>();
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
@@ -380,6 +385,9 @@ namespace PMS.Mapping
                  .ForMember(m => m.QuarterId, opt => opt.Ignore());
             CreateMap<ExcelResource, Excel>()
                 .ForMember(m => m.ExcelId, opt => opt.Ignore());
+
+            CreateMap<CouncilEnrollmentResource, CouncilEnrollment>()
+                .ForMember(m => m.CouncilEnrollmentId, opt => opt.Ignore());
         }
     }
 }

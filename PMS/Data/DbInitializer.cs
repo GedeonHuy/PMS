@@ -65,8 +65,10 @@ namespace PMS.Data
 
             var quarters = new Quarter[]
             {
-                new Quarter{QuarterName="HK1",QuarterStart=DateTime.Parse("2017-09-24"),QuarterEnd=DateTime.Parse("2017-12-02")},
-                new Quarter{QuarterName="HK2",QuarterStart=DateTime.Parse("2017-12-03"),QuarterEnd=DateTime.Parse("2018-02-02")}
+                new Quarter{QuarterName="Học Kì 1 - năm 2017-2018",QuarterStart=DateTime.Parse("2017-09-24"),QuarterEnd=DateTime.Parse("2017-12-02")},
+                new Quarter{QuarterName="Học Kì 2 - năm 2017-2018",QuarterStart=DateTime.Parse("2017-12-03"),QuarterEnd=DateTime.Parse("2018-02-02")},
+                new Quarter{QuarterName="Học Kì 3 - năm 2017-2018",QuarterStart=DateTime.Parse("2018-02-10"),QuarterEnd=DateTime.Parse("2018-05-20")},
+                new Quarter{QuarterName="Học Kì Hè - năm 2017-2018",QuarterStart=DateTime.Parse("2018-06-01"),QuarterEnd=DateTime.Parse("2018-08-30")}
             };
             foreach (Quarter q in quarters)
             {
