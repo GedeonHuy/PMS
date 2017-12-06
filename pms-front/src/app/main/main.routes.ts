@@ -16,6 +16,8 @@ export const MainRoutes: Routes = [
             { path: 'home', loadChildren: './home/home.module#HomeModule' },
             //localhost:xxxx/main/user
             { path: 'user', loadChildren: './user/user.module#UserModule' },
+            //localhost:xxxx/main/user
+            { path: 'quarter', loadChildren: './quarter/quarter.module#QuarterModule', canActivate: [AdminAuthGuard]  },            
             //localhost:xxxx/main/role
             { path: 'role', loadChildren: './role/role.module#RoleModule', canActivate: [AdminAuthGuard] },
             //localhost:xxxx/main/role

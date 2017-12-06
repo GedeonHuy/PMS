@@ -14,43 +14,44 @@ export class EnrollmentComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   public enrollments: any[];
   public queryResult: any = {};
-  public user : any;
+  public user: any;
   public enrollment: any;
   public isClicked: boolean;
-  public isLoading : boolean;
-  
+  public isLoading: boolean;
+
   isAdmin: boolean;
   isLecturer: boolean;
-
+  isLoadData: boolean;
   PAGE_SIZE = 3;
 
   queryAdmin: any = {
     pageSize: this.PAGE_SIZE,
-    isConfirm : "Pending"
+    isConfirm: "Pending"
   };
 
   query: any = {
     pageSize: this.PAGE_SIZE,
-    isConfirm : "Pending"
+    isConfirm: "Pending"
   };
 
-  public typeStatus : any [] = ["Accepted", "Pending", "Denied"];
-  
+  public typeStatus: any[] = ["Accepted", "Pending", "Denied"];
+
 
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isAdmin = false;
     this.isLecturer = false;
     this.isLoading = false;
+    this.isLoadData = false;
   }
 
   ngOnInit() {
     this.user = this._authenService.getLoggedInUser();
-    if(this.user.role === "Admin") {
+    if (this.user.role === "Admin") {
       this.loadDataAdmin();
     }
 
-    if(this.user.role === "Lecturer") {
+    if (this.user.role === "Lecturer") {
       this.loadData();
     }
     this.permissionAccess();
@@ -59,12 +60,14 @@ export class EnrollmentComponent implements OnInit {
   loadDataAdmin() {
     this._dataService.get("/api/enrollments/getall" + "?" + this.toQueryString(this.queryAdmin)).subscribe((response: any) => {
       this.queryResult = response;
+      this.isLoadData = true;
     });
   }
 
   loadData() {
     this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
+      this.isLoadData = true;
     });
   }
 
@@ -144,8 +147,15 @@ export class EnrollmentComponent implements OnInit {
   }
 
   onPageChange(page) {
+    this.isLoadData = false;
     this.queryAdmin.page = page;
-    this.loadDataAdmin();
+    if (this.user.role === "Admin") {
+      this.loadDataAdmin();
+    }
+
+    if (this.user.role === "Lecturer") {
+      this.loadData();
+    }
   }
 
 }

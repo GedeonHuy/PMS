@@ -42,17 +42,26 @@ export class HomeComponent implements OnInit {
   lecturers: any[];
   quarters: any[];
 
+  public totalProjects : any;
+  public totalLecturers : any;
+  public totalStudents : any;
+  
   public types: any[] = [ProjectTypesConstants.A, ProjectTypesConstants.B, ProjectTypesConstants.C, ProjectTypesConstants.D];
 
 
   ngOnInit() {
     Observable.forkJoin([
       this._dataService.get("/api/quarters/getall"),
-
-      this._dataService.get("/api/lecturers/getall")
+      this._dataService.get("/api/projects/getall"),      
+      this._dataService.get("/api/lecturers/getall"),
+      this._dataService.get("/api/students/getall")
+      
     ]).subscribe(data => {
       this.quarters = data[0].items,
-        this.lecturers = data[1].items
+      this.totalProjects = data[1].totalItems,
+        this.lecturers = data[2].items,
+        this.totalLecturers = data[2].totalItems,
+        this.totalStudents = data[3].totalItems
       this.isLoading = true;
     });
     this.user = this._authenService.getLoggedInUser();
@@ -158,5 +167,10 @@ export class HomeComponent implements OnInit {
     if (this.user.role === "Student") {
       this.isStudent = true;
     }
+  }
+
+
+  loadAllProject() {
+    
   }
 }

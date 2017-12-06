@@ -16,6 +16,7 @@ import { MajorModule } from './major/major.module';
 import { EnrollmentModule } from './enrollment/enrollment.module';
 import { ConfirmGroupModule } from './confirm-group/confirm-group.module';
 import { PaginationModule } from './../shared/pagination/pagination.module';
+import { QuarterModule } from './quarter/quarter.module';
 import { GroupDetailsComponent } from './group-details/group-details.component';
 
 import { SidebarMenuComponent } from './../shared/sidebar-menu/sidebar-menu.component';

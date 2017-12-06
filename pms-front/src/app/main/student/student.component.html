@@ -14,8 +14,11 @@
     </div>
   </div>
 </div>
+<img *ngIf="!isLoadData" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
+/>
+
 <div class="clearfix"></div>
-<div class="row">
+<div class="row" *ngIf="isLoadData">
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
@@ -59,7 +62,7 @@
     </div>
   </div>
 </div>
-<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>         
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>
 
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -73,8 +76,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm)"
-          *ngIf="student">
+        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm)" *ngIf="student">
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Code</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
@@ -125,7 +127,7 @@
               </small>
             </div>
           </div>
-          <div class="ln_solid"></div>          
+          <div class="ln_solid"></div>
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Major</label>
             <div class="col-md-9 col-sm-9 col-xs-12">

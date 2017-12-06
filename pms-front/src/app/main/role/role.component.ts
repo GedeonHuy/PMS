@@ -14,8 +14,11 @@ export class RoleComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   public roles: any[];
   public entity: any;
-
-  constructor(private _dataService: DataService, private _notificationService: NotificationService) { }
+  isLoadData : boolean;
+  
+  constructor(private _dataService: DataService, private _notificationService: NotificationService) {
+    this.isLoadData = false;
+   }
 
   ngOnInit() {
     this.loadData();
@@ -24,6 +27,7 @@ export class RoleComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/roles/getall").subscribe((response: any) => {
       this.roles = response;
+      this.isLoadData = true;      
     }, error => this._dataService.handleError(error));
   }
 

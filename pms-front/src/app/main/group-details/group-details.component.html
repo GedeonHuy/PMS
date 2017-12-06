@@ -2,7 +2,6 @@
   <div class="page-title">
     <div class="title_left">
       <h3>Group Detail</h3>
-      <span *ngIf="!isLoading" class="fa fa-refresh fa-spin"></span>      
     </div>
 
     <div class="title_right">
@@ -16,10 +15,11 @@
       </div>
     </div>
   </div>
-
+  <img *ngIf="!isLoading" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
+  />
   <div class="clearfix"></div>
 
-  <div class="row">
+  <div class="row" *ngIf="isLoading">
     <div class="col-md-12">
       <div class="x_panel">
         <div class="x_title">

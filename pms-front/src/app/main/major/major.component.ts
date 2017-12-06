@@ -18,7 +18,7 @@ export class MajorComponent implements OnInit {
   public major: any;
   public isClicked: boolean;
   isAdmin: boolean;
-
+  isLoadData : boolean;
   PAGE_SIZE = 2;
 
   query: any = {
@@ -28,6 +28,7 @@ export class MajorComponent implements OnInit {
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isAdmin = false;
+    this.isLoadData = false;
   }
 
   ngOnInit() {
@@ -38,6 +39,7 @@ export class MajorComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/majors/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
+      this.isLoadData = true;      
     });
   }
 
@@ -115,6 +117,7 @@ export class MajorComponent implements OnInit {
     }
   }
   onPageChange(page) {
+    this.isLoadData = false;    
     this.query.page = page;
     this.loadData();
   }

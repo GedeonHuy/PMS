@@ -14,13 +14,15 @@
     </div>
   </div>
 </div>
+<img *ngIf="!isLoadData" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
+/>
 <div class="clearfix"></div>
-<div class="row">
+<div class="row" *ngIf="isLoadData">
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
         <ul class="nav navbar-right panel_toolbox">
-          <li *ngIf="isAdmin" [hidden]="isAdmin" >
+          <li *ngIf="isAdmin" [hidden]="isAdmin">
             <button class="btn btn-success" (click)="showAddModal()">Add</button>
           </li>
         </ul>
@@ -43,10 +45,10 @@
               <td>{{major.majorName}}</td>
               <td>{{major.majorCode}}</td>
               <td>
-                <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-primary" (click)="showEditModal(major.majorId)">
+                <button *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-primary" (click)="showEditModal(major.majorId)">
                   <i class="fa fa-pencil-square-o"></i>
                 </button>
-                <button  *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-danger" (click)="deletemajor(major.majorId)">
+                <button *ngIf="isAdmin" [hidden]="isAdmin" class="btn btn-danger" (click)="deletemajor(major.majorId)">
                   <i class="fa fa-trash"></i>
                 </button>
 
@@ -59,7 +61,7 @@
     </div>
   </div>
 </div>
-<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>         
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>
 
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -81,7 +83,7 @@
               <input type="hidden" [(ngModel)]="major.majorId" name="id" />
               <input type="text" #majorName="ngModel" [(ngModel)]="major.majorName" required name="majorName" class="form-control">
               <small [hidden]="majorName.valid || (majorName.pristine && !addEditForm.submitted)" class="text-danger">
-                Major Name is required                
+                Major Name is required
               </small>
             </div>
           </div>

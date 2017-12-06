@@ -25,6 +25,8 @@ export class StudentComponent implements OnInit {
 
   public student: any;
   public isClicked: boolean;
+  isLoadData : boolean;
+
   hubConnection: HubConnection;
   majors: any[];
 
@@ -35,6 +37,7 @@ export class StudentComponent implements OnInit {
   };
   constructor(private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
+    this.isLoadData = false;
   }
   ngOnInit() {
     this.id = 0;
@@ -64,6 +67,7 @@ export class StudentComponent implements OnInit {
     this._dataService.get("/api/students/getall" + "?" + this.toQueryString(this.query)).
       subscribe((response: any) => {
         this.queryResult = response;
+        this.isLoadData = true;        
       });
   }
 
@@ -128,6 +132,7 @@ export class StudentComponent implements OnInit {
   }
 
   onPageChange(page) {
+    this.isLoadData = false;    
     this.query.page = page;
     this.loadData();
   }

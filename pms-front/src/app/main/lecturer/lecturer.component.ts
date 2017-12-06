@@ -17,6 +17,7 @@ export class LecturerComponent implements OnInit {
   
   public lecturer: any;
   public isClicked: boolean;
+  isLoadData : boolean;
   isAdmin : boolean;
   majors : any[];
   PAGE_SIZE = 3;
@@ -28,6 +29,7 @@ export class LecturerComponent implements OnInit {
   constructor(private _authenService : AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isAdmin = false;
+    this.isLoadData = false;
   }
 
   ngOnInit() {
@@ -42,6 +44,7 @@ export class LecturerComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/lecturers/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
+      this.isLoadData = true;      
     });
   }
 
@@ -118,6 +121,7 @@ export class LecturerComponent implements OnInit {
     }
   }
   onPageChange(page) {
+    this.isLoadData = false;    
     this.query.page = page;
     this.loadData();
   }

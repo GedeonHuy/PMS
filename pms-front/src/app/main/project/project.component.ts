@@ -17,6 +17,8 @@ export class ProjectComponent implements OnInit {
   public isClicked: boolean;
   public queryResult: any = {};
   
+  isLoadData : boolean;
+
   PAGE_SIZE = 3;
   
     query: any = {
@@ -27,6 +29,7 @@ export class ProjectComponent implements OnInit {
 
   constructor(private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
+    this.isLoadData = false;
   }
 
   majors : any[];
@@ -41,6 +44,7 @@ export class ProjectComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/projects/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
+      this.isLoadData = true;
     });
   }
 
@@ -112,6 +116,7 @@ export class ProjectComponent implements OnInit {
     return parts.join('&');
   }
   onPageChange(page) {
+    this.isLoadData = false;
     this.query.page = page;
     this.loadData();
   }

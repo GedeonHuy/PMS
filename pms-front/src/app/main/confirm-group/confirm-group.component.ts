@@ -26,7 +26,7 @@ export class ConfirmGroupComponent implements OnInit {
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
-
+  isLoadData: boolean;
   lecturers: any[];
   lecturerInformations: any[];
 
@@ -52,6 +52,7 @@ export class ConfirmGroupComponent implements OnInit {
     this.isAdmin = false;
     this.isStudent = false;
     this.isLecturer = false;
+    this.isLoadData = false;
   }
 
   ngOnInit() {
@@ -70,7 +71,7 @@ export class ConfirmGroupComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/groups/getall?isConfirm=Accepted").subscribe((response: any) => {
       this.queryResult = response;
-      console.log(response.items);
+      this.isLoadData = true;
     });
   }
 
@@ -181,5 +182,11 @@ export class ConfirmGroupComponent implements OnInit {
     if (user.role === "Student") {
       this.isStudent = true;
     }
+  }
+
+  onPageChange(page) {
+    this.isLoadData = false;
+    this.query.page = page;
+    this.loadData();
   }
 }

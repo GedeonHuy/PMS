@@ -22,7 +22,7 @@ export class ConfirmEnrollmentComponent implements OnInit {
   public user: any;
   isAdmin: boolean;
   isLecturer: boolean;
-
+  isLoadData: boolean;
   PAGE_SIZE = 3;
 
   queryAdmin: any = {
@@ -43,6 +43,7 @@ export class ConfirmEnrollmentComponent implements OnInit {
     this.isAdmin = false;
     this.isLecturer = false;
     this.isLoading = false;
+    this.isLoadData = false;
   }
 
   ngOnInit() {
@@ -59,14 +60,15 @@ export class ConfirmEnrollmentComponent implements OnInit {
   loadDataAdmin() {
     this._dataService.get("/api/enrollments/getall" + "?" + this.toQueryString(this.queryAdmin)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log(this.queryResult.items);
+      this.isLoadData = true;
     });
   }
 
   loadData() {
     this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-   });
+      this.isLoadData = true;
+    });
   }
 
   toQueryString(obj) {
@@ -81,7 +83,14 @@ export class ConfirmEnrollmentComponent implements OnInit {
   }
 
   onPageChange(page) {
+    this.isLoadData = false;
     this.query.page = page;
-    this.loadData();
+    if (this.user.role === "Admin") {
+      this.loadDataAdmin();
+    }
+
+    if (this.user.role === "Lecturer") {
+      this.loadData();
+    }
   }
 }

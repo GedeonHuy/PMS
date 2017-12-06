@@ -26,7 +26,7 @@ export class GroupComponent implements OnInit {
 
   public isClicked: boolean;
   public isLoading: boolean;
-
+  isLoadData : boolean;
   public isLoadEnrollment: boolean;
 
   isAdmin: boolean;
@@ -56,6 +56,7 @@ export class GroupComponent implements OnInit {
     this.isAdmin = false;
     this.isStudent = false;
     this.isLecturer = false;
+    this.isLoadData = false;
     this.isLoadEnrollment = false;
   }
 
@@ -83,15 +84,10 @@ export class GroupComponent implements OnInit {
     this.projects = selectedMajor ? selectedMajor.projects : [];
   }
 
-  onLecturerChange() {
-    var selectedLecturer = this.lecturers.find(l => l.lecturerId == this.group.lecturerId);
-    this.group.majorId = selectedLecturer.majorId;    
-  }
-
-
   loadData() {
     this._dataService.get("/api/groups/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
+      this.isLoadData = true;      
     });
   }
 
@@ -200,6 +196,7 @@ export class GroupComponent implements OnInit {
   }
 
   onPageChange(page) {
+    this.isLoadData = false;    
     this.query.page = page;
     this.loadData();
   }
