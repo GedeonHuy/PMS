@@ -16,5 +16,11 @@ namespace PMS.Resources
         public int Percentage { get; set; }
         public double? Score { get; set; }
         public bool isMarked { get; set; }
+
+        public CouncilEnrollmentResource()
+        {
+            Lecturer = new LecturerResource();
+            Council = new CouncilResource();
+        }
     }
 }

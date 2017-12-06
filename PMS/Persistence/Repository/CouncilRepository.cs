@@ -58,6 +58,7 @@ namespace PMS.Persistence.Repository
                          .Include(c => c.CouncilEnrollments)
                             .ThenInclude(l => l.CouncilRole)
                          .Include(c => c.Group)
+                            .ThenInclude(p => p.Project)
                           .AsQueryable();
 
             //sort

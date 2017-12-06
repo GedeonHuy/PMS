@@ -59,5 +59,14 @@ namespace PMS.Persistence.Repository
 
             return councilEnrollment;
         }
+
+        public async Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByCouncilId(int id)
+        {
+            return await context.CouncilEnrollments
+                                .Where(c => c.Council.CouncilId == id)
+                                .Include(c => c.Lecturer)
+                                .Include(c => c.CouncilRole)
+                                .ToListAsync();
+        }
     }
 }

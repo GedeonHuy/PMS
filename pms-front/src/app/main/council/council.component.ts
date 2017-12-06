@@ -27,6 +27,8 @@ export class CouncilComponent implements OnInit {
   public queryResult: any = {};
   public council: any;
 
+  public councilEnrollments: any[];
+
   public isLoading: boolean;
   public isClicked: boolean;
   hubConnection: HubConnection;
@@ -47,23 +49,8 @@ export class CouncilComponent implements OnInit {
     this._dataService.get("/api/groups/getall").subscribe((response: any) => {
       this.groups = response.items;
     });
-
-    this.id = 0;
+    
     this.loadData();
-    this.hubConnection = new HubConnection(SystemConstants.BASE_URL + "/hub");
-
-    this.hubConnection.on('LoadData', (data: any) => {
-      this.loadData();
-    });
-
-    this.hubConnection.start()
-      .then(() => {
-        console.log('Hub connection started')
-      })
-      .catch(err => {
-        console.log('Error while establishing connection')
-      });
-
   }
 
   loadData() {
@@ -81,15 +68,17 @@ export class CouncilComponent implements OnInit {
   
   //Edit method
   showEditModal(id: any) {
-    this.loadCouncil(id);
+    this.loadCouncilEnrollments(id);
     this.modalAddEdit.show();
   }
 
   //Get council with Id
-  loadCouncil(id: any) {
-    this._dataService.get('/api/councils/getcouncil/' + id)
+  loadCouncilEnrollments(id: any) {
+    this._dataService.get('/api/councilenrollments/getcouncilenrollmentsbycouncilid/' + id)
       .subscribe((response: any) => {
-        this.council = response;
+        this.councilEnrollments = response.items;
+
+        console.log(response);
       });
   }
   saveChange(valid: boolean) {

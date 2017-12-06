@@ -14,5 +14,6 @@ namespace PMS.Persistence.IRepository
         void RemoveCouncilEnrollment(CouncilEnrollment CouncilEnrollment);
         Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollments();
         Task<CouncilEnrollment> GetCouncilEnrollmentByLecturerEmail(string email, CouncilResource councilResource);
+        Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByCouncilId(int id);
     }
 }

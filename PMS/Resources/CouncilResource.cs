@@ -15,13 +15,13 @@ namespace PMS.Resources
         public string ResultScore { get; set; }
         public bool IsDeleted { get; set; }
         public int? GroupId { get; set; }
-        public Group Group { get; set; }
+        public string GroupName { get; set; }
+        public string ProjectName { get; set; }
         public bool isAllScored { get; set; }
         public LecturerInformationResource LecturerInformations { get; set; }
         public ICollection<CouncilEnrollment> CouncilEnrollments { get; set; }
         public CouncilResource()
         {   
-            Group = new Group();
             LecturerInformations = new LecturerInformationResource();
             CouncilEnrollments = new Collection<CouncilEnrollment>();
             isAllScored = false;

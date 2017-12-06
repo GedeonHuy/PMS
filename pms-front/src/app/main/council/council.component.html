@@ -31,26 +31,26 @@
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th>Id</th>
-              <th>ResultGrade</th>
-              <th>ResultScore</th>
+              <th>Council Code</th>
               <th>Group</th>
-              <th>Supervisor</th>
+              <th>Project</th>
+              <th>Score</th>
+              <th>Grade</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let c of councils">
               <td>{{c.councilId}}</td>
-              <td>{{c.resultGrade}}</td>
+              <td>{{c.groupName}}</td>
+              <td>{{c.projectName}}</td>
               <td>{{c.resultScore}}</td>
-              <td>{{c.group.groupName}}</td>
-              <td>:D</td>
+              <td>{{c.resultGrade}}</td>
               <td>
-                <button class="btn btn-primary" (click)="showEditModal(council.id)">
+                <button class="btn btn-primary" (click)="showEditModal(c.councilId)">
                   <i class="fa fa-pencil-square-o"></i>
                 </button>
-                <button class="btn btn-danger" (click)="deletecouncil(council.id)">
+                <button class="btn btn-danger" (click)="deletecouncil(c.councilId)">
                   <i class="fa fa-trash"></i>
                 </button>
 
@@ -66,51 +66,81 @@
 <pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>         
 
 <!--Modal add and edit-->
-<div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" council="dialog" aria-labelledby="myLargeModalLabel"
+<div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Add/Edit council</h4>
+        <h4 class="modal-title pull-left">Add/Edit lecturer</h4>
         <button type="button" class="close pull-right" (click)="modalAddEdit.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" *ngFor="let c of councilEnrollments">
         <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)"
-          *ngIf="council">
+          *ngIf="c">
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Grade</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <input type="hidden" [(ngModel)]="council.councilId" name="councilId" />
-              <input type="hidden" [(ngModel)]="council.isAllScored" name="isAllScored" />
-              <input type="text" #resultGrade="ngModel" [(ngModel)]="council.resultGrade" name="Grade" class="form-control">
+              <input type="hidden" [(ngModel)]="lecturer.lecturerId" name="id" />
+              <input type="text" #councilEnrollmentId="ngModel" [(ngModel)]="c.councilEnrollmentId" name="councilEnrollmentId" class="form-control">
+              <small [hidden]="councilEnrollmentId.valid || (councilEnrollmentId.pristine && !addEditForm.submitted)" class="text-danger">
+                ABC
+              </small>
             </div>
           </div>
-          
+          <div class="ln_solid"></div>
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Email</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <input type="text" #resultScore="ngModel" [(ngModel)]="council.resultScore" name="Score" class="form-control">
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Group</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="council.groupId" name="groupId" required #groupId="ngModel">
-                <option value=""></option>
-                <option *ngFor="let g of groups" value="{{g.groupId}}">{{ g.groupName }}</option>
-              </select>
-              <small [hidden]="group.valid || (group.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the group </small>
+              <input type="text" #email="ngModel" [(ngModel)]="lecturer.email" required name="email" class="form-control">
+              <small [hidden]="email.valid || (email.pristine && !addEditForm.submitted)" class="text-danger">
+                Email is required
+              </small>
             </div>
           </div>
 
           <div class="ln_solid"></div>
           <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Address</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #address="ngModel" [(ngModel)]="lecturer.address" required name="address" class="form-control">
+              <small [hidden]="address.valid || (address.pristine && !addEditForm.submitted)" class="text-danger">
+                Address is required
+              </small>
+            </div>
+          </div>
+
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Phone number</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #phone="ngModel" [(ngModel)]="lecturer.phoneNumber" required name="phone" class="form-control">
+              <small [hidden]="phone.valid || (phone.pristine && !addEditForm.submitted)" class="text-danger">
+                Phone number is required
+              </small>
+            </div>
+          </div>
+
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Major</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="lecturer.majorId" name="majorId" required #major="ngModel">
+                <option value=""></option>
+                <option *ngFor="let m of majors" value="{{m.majorId}}">{{ m.majorName }}</option>
+              </select>
+              <small [hidden]="major.valid || (major.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the major </small>
+            </div>
+          </div>
+
+          <div class="ln_solid"></div>
+
+          <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="modalAddEdit.hide()" class="btn btn-primary">Cancel</button>
-              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid">Save</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid || isClicked">Save</button>
+              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
             </div>
           </div>
         </form>

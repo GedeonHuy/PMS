@@ -42,21 +42,21 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var checkLecturerInformations = councilRepository.CheckLecturerInformations(councilResource.LecturerInformations);
+            // var checkLecturerInformations = councilRepository.CheckLecturerInformations(councilResource.LecturerInformations);
 
-            ////case: one percent of score is equal 0 or null          
-            if (checkLecturerInformations == "nullOrZeroScorePercent")
-            {
-                ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0 or null");
-                return BadRequest(ModelState);
-            }
+            // //case: one percent of score is equal 0 or null          
+            // if (checkLecturerInformations == "nullOrZeroScorePercent")
+            // {
+            //     ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0 or null");
+            //     return BadRequest(ModelState);
+            // }
 
-            //case: the total sum of score is not 100
-            if (checkLecturerInformations == "sumScorePercentIsNot100")
-            {
-                ModelState.AddModelError("Error", "If total percentage of score is not equal 100%");
-                return BadRequest(ModelState);
-            }
+            // //case: the total sum of score is not 100
+            // if (checkLecturerInformations == "sumScorePercentIsNot100")
+            // {
+            //     ModelState.AddModelError("Error", "If total percentage of score is not equal 100%");
+            //     return BadRequest(ModelState);
+            // }
 
             var council = mapper.Map<CouncilResource, Council>(councilResource);
             var group = await groupRepository.GetGroup(councilResource.GroupId);

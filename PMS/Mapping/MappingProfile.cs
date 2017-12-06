@@ -45,7 +45,9 @@ namespace PMS.Mapping
 
 
             CreateMap<Council, CouncilResource>()
-            .ForMember(cr => cr.Group, opt => opt.MapFrom(c => c.Group))
+            //.ForMember(cr => cr.Group, opt => opt.MapFrom(c => c.Group))
+            .ForMember(cr => cr.ProjectName, opt => opt.MapFrom(c => c.Group.Project.Title))
+            .ForMember(cr => cr.GroupName, opt => opt.MapFrom(c => c.Group.GroupName))
             .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId))
             .ForMember(cr => cr.LecturerInformations, opt => opt.MapFrom(c => new LecturerInformationResource
             {

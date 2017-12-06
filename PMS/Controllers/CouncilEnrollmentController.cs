@@ -13,7 +13,7 @@ using PMS.Models;
 
 namespace PMS.Controllers
 {
-    [Route("/api/councilEnrollments")]
+    [Route("/api/councilenrollments")]
     public class CouncilEnrollmentController : Controller
     {
         private IMapper mapper;
@@ -139,6 +139,15 @@ namespace PMS.Controllers
         public async Task<IActionResult> GetCouncilEnrollments()
         {
             var councilEnrollments = await councilEnrollmentRepository.GetCouncilEnrollments();
+            var councilEnrollmentResource = mapper.Map<IEnumerable<CouncilEnrollment>, IEnumerable<CouncilEnrollmentResource>>(councilEnrollments);
+            return Ok(councilEnrollmentResource);
+        }
+
+        [HttpGet]
+        [Route("getcouncilenrollmentsbycouncilid/{id}")]
+        public async Task<IActionResult> GetCouncilEnrollmentsByCouncilId(int id)
+        {
+            var councilEnrollments = await councilEnrollmentRepository.GetCouncilEnrollmentsByCouncilId(id);
             var councilEnrollmentResource = mapper.Map<IEnumerable<CouncilEnrollment>, IEnumerable<CouncilEnrollmentResource>>(councilEnrollments);
             return Ok(councilEnrollmentResource);
         }

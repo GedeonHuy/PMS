@@ -86,12 +86,12 @@ export class ConfirmGroupComponent implements OnInit {
   }
 
   //Create method
-  assignCouncil(id: any) {
+  assignCouncil(id: any, theSupervisor: any) {
     this.modalAddEdit.show();
     this.councilEnrollment = {};
     this.president = {};
     this.secretary = {};
-    this.supervisor = {};
+    this.supervisor = theSupervisor;
     this.reviewer = {};
 
     Observable.forkJoin(
