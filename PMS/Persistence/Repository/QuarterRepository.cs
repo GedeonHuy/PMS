@@ -73,5 +73,14 @@ namespace PMS.Persistence.Repository
 
             return result;
         }
+
+        public async Task<Quarter> GetCurrentQuarter()
+        {
+            var currentDate = DateTime.Now.Date;
+            return await context.Quarters
+                .Include(s => s.Groups)
+                .Include(s => s.Enrollments)
+                .FirstOrDefaultAsync(s => s.QuarterStart < currentDate && s.QuarterEnd > currentDate);
+        }
     }
 }

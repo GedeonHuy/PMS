@@ -87,7 +87,7 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
-        [Route("getgrade/{id}")]
+        [Route("getquarter/{id}")]
         public async Task<IActionResult> GetQuarter(int id)
         {
             var Quarter = await repository.GetQuarter(id);
@@ -111,6 +111,22 @@ namespace PMS.Controllers
             var queryResult = await repository.GetQuarters(query);
 
             return mapper.Map<QueryResult<Quarter>, QueryResultResource<QuarterResource>>(queryResult);
+        }
+
+        [HttpGet]
+        [Route("getcurrentquarter")]
+        public async Task<IActionResult> GetCurrentQuarter()
+        {
+            var Quarter = await repository.GetCurrentQuarter();
+
+            if (Quarter == null)
+            {
+                return NotFound();
+            }
+
+            var QuarterResource = mapper.Map<Quarter, QuarterResource>(Quarter);
+
+            return Ok(QuarterResource);
         }
     }
 }

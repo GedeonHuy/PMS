@@ -12,5 +12,6 @@ namespace PMS.Persistence.IRepository
         void AddQuarter(Quarter semester);
         void RemoveQuarter(Quarter semester);
         Task<QueryResult<Quarter>> GetQuarters(Query queryObj);
+        Task<Quarter> GetCurrentQuarter();
     }
 }
