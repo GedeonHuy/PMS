@@ -1,3 +1,4 @@
+import { SystemConstants } from './../../core/common/system.constants';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
@@ -22,15 +23,14 @@ export class EnrollmentComponent implements OnInit {
   isAdmin: boolean;
   isLecturer: boolean;
   isLoadData: boolean;
-  PAGE_SIZE = 3;
 
   queryAdmin: any = {
-    pageSize: this.PAGE_SIZE,
+    pageSize: SystemConstants.PAGE_SIZE,
     isConfirm: "Pending"
   };
 
   query: any = {
-    pageSize: this.PAGE_SIZE,
+    pageSize: SystemConstants.PAGE_SIZE,
     isConfirm: "Pending"
   };
 

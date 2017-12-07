@@ -1,3 +1,4 @@
+import { SystemConstants } from './../../core/common/system.constants';
 import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
@@ -7,7 +8,6 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AuthenService } from './../../core/services/authen.service';
 import "rxjs/add/Observable/forkJoin";
 import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
-
 
 @Component({
   selector: 'app-group',
@@ -39,10 +39,9 @@ export class GroupComponent implements OnInit {
   public enrollments: string[] = [];
 
   majors: any[];
-  PAGE_SIZE = 5;
 
   query: any = {
-    pageSize: this.PAGE_SIZE,
+    pageSize: SystemConstants.PAGE_SIZE,
     isConfirm: "Pending"
   };
 

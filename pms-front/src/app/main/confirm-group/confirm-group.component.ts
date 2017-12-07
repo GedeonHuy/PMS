@@ -1,3 +1,4 @@
+import { SystemConstants } from './../../core/common/system.constants';
 import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
@@ -6,7 +7,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AuthenService } from './../../core/services/authen.service';
 import "rxjs/add/Observable/forkJoin";
-import { query } from '@angular/core/src/animation/dsl';
 
 @Component({
   selector: 'app-confirm-group',
@@ -39,11 +39,8 @@ export class ConfirmGroupComponent implements OnInit {
 
   public scorePercents: any[] = [25, 50, 75, 100];
 
-
-  PAGE_SIZE = 10;
-
   query: any = {
-    pageSize: this.PAGE_SIZE
+    pageSize: SystemConstants.PAGE_SIZE
   };
 
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {

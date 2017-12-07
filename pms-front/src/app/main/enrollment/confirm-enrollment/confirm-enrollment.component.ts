@@ -1,3 +1,4 @@
+import { SystemConstants } from './../../../core/common/system.constants';
 import { query } from '@angular/core/src/animation/dsl';
 import { AuthenService } from './../../../core/services/authen.service';
 import { NotificationService } from './../../../core/services/notification.service';
@@ -23,15 +24,14 @@ export class ConfirmEnrollmentComponent implements OnInit {
   isAdmin: boolean;
   isLecturer: boolean;
   isLoadData: boolean;
-  PAGE_SIZE = 3;
 
   queryAdmin: any = {
-    pageSize: this.PAGE_SIZE,
+    pageSize: SystemConstants.PAGE_SIZE,
     isConfirm: "Accepted"
   };
 
   query: any = {
-    pageSize: this.PAGE_SIZE,
+    pageSize: SystemConstants.PAGE_SIZE,
     isConfirm: "Accepted"
   };
 

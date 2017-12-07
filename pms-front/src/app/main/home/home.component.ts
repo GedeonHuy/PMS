@@ -18,10 +18,10 @@ export class HomeComponent implements OnInit {
   @ViewChild('enrollmentModal') public enrollmentModal: ModalDirective;
   public enrollment: any;
   public enrollments: any = {};
-  public enrollmentsAccept : any = {};
+  public enrollmentsAccept: any = {};
   public groups: any = {};
-  public groupsStudent: any = {};  
-  public groupsAccepted : any = {};
+  public groupsStudent: any = {};
+  public groupsAccepted: any = {};
   public user: any;
 
   public isClicked: boolean;
@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit {
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
+  isLoadData: boolean;
 
   constructor(private router: Router, private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isLoading = false;
@@ -37,28 +38,29 @@ export class HomeComponent implements OnInit {
     this.isAdmin = false;
     this.isStudent = false;
     this.isLecturer = false;
+    this.isLoadData = false;
   }
   projects: any[];
   lecturers: any[];
   quarters: any[];
 
-  public totalProjects : any;
-  public totalLecturers : any;
-  public totalStudents : any;
-  
+  public totalProjects: any;
+  public totalLecturers: any;
+  public totalStudents: any;
+
   public types: any[] = [ProjectTypesConstants.A, ProjectTypesConstants.B, ProjectTypesConstants.C, ProjectTypesConstants.D];
 
 
   ngOnInit() {
     Observable.forkJoin([
       this._dataService.get("/api/quarters/getall"),
-      this._dataService.get("/api/projects/getall"),      
+      this._dataService.get("/api/projects/getall"),
       this._dataService.get("/api/lecturers/getall"),
       this._dataService.get("/api/students/getall")
-      
+
     ]).subscribe(data => {
       this.quarters = data[0].items,
-      this.totalProjects = data[1].totalItems,
+        this.totalProjects = data[1].totalItems,
         this.lecturers = data[2].items,
         this.totalLecturers = data[2].totalItems,
         this.totalStudents = data[3].totalItems
@@ -66,18 +68,20 @@ export class HomeComponent implements OnInit {
     });
     this.user = this._authenService.getLoggedInUser();
     this.permissionAccess();
-    
+
     if (this.user.role === "Student") {
-      this.loadStudentEnrollment();
-      this.loadStudentGroup();
+      this.loadDataStudent();
     }
 
     if (this.user.role === "Lecturer") {
-      this.loadLecturerEnrollment();
-      this.loadLecturerEnrollmentAccepted();
-      this.loadLecturerGroup();
-      this.loadLecturerGroupAccepted();
+      this.loadLecturerData();
     }
+  }
+
+  loadDataStudent() {
+    this.loadStudentEnrollment();
+    this.loadStudentGroup();
+    this.isLoadData = true;
   }
 
   loadStudentEnrollment() {
@@ -87,9 +91,17 @@ export class HomeComponent implements OnInit {
   }
 
   loadStudentGroup() {
-    this._dataService.get("/api/students/getgroups/"  + this.user.email + "?pageSize=3").subscribe((response: any) => {
+    this._dataService.get("/api/students/getgroups/" + this.user.email + "?pageSize=3").subscribe((response: any) => {
       this.groupsStudent = response;
     });
+  }
+
+  loadLecturerData() {
+    this.loadLecturerEnrollment();
+    this.loadLecturerEnrollmentAccepted();
+    this.loadLecturerGroup();
+    this.loadLecturerGroupAccepted();
+    this.isLoadData = true;
   }
 
   loadLecturerEnrollment() {
@@ -167,10 +179,5 @@ export class HomeComponent implements OnInit {
     if (this.user.role === "Student") {
       this.isStudent = true;
     }
-  }
-
-
-  loadAllProject() {
-    
   }
 }

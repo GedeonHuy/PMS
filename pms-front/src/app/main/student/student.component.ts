@@ -30,17 +30,14 @@ export class StudentComponent implements OnInit {
   hubConnection: HubConnection;
   majors: any[];
 
-  PAGE_SIZE = 10;
-
   query: any = {
-    pageSize: this.PAGE_SIZE
+    pageSize: SystemConstants.PAGE_SIZE
   };
   constructor(private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isLoadData = false;
   }
   ngOnInit() {
-    this.id = 0;
     this.loadData();
     this.hubConnection = new HubConnection(SystemConstants.BASE_URL + "/hub");
 

@@ -2,7 +2,7 @@
   <div class="title_left">
     <h3>Welcome to PMS!</h3>
   </div>
-  
+
   <div class="title_right">
     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
       <div class="input-group">
@@ -16,476 +16,501 @@
 </div>
 
 <div class="clearfix"></div>
-<img *ngIf="!isLoading" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"/>
+<div *ngIf="isAdmin">
+  <img *ngIf="!isLoading" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
+  />
 
-<div class="row" *ngIf="isLoading">
-    
-
-  <!-- Zone Admin -->
-  <div *ngIf="isAdmin" class="row tile_count">
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-      <span class="count_top"><i class="fa fa-user"></i> Total Projects</span>
-      <div class="count">{{totalProjects}}</div>
-    </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-      <span class="count_top"><i class="fa fa-user"></i> Total Lecturers</span>
-      <div class="count">{{totalLecturers}}</div>
-    </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-      <span class="count_top"><i class="fa fa-user"></i> Total Students</span>
-      <div class="count">{{totalStudents}}</div>
-    </div>
+  <div class="row" *ngIf="isLoading">
+    <!-- Zone Admin -->
+    <div *ngIf="isAdmin" class="row tile_count">
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top">
+          <i class="fa fa-user"></i> Total Projects</span>
+        <div class="count">{{totalProjects}}</div>
+      </div>
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top">
+          <i class="fa fa-user"></i> Total Lecturers</span>
+        <div class="count">{{totalLecturers}}</div>
+      </div>
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top">
+          <i class="fa fa-user"></i> Total Students</span>
+        <div class="count">{{totalStudents}}</div>
+      </div>
+   </div>
+    <!-- End zone Admin -->
   </div>
 
-  <!-- End zone Admin -->
+  <div *ngIf="isStudent || is Lecturer">
+    <img *ngIf="!isLoadData" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
+    />
 
-  <!-- Zone student -->
-  <div *ngIf="isStudent" class="col-md-6 col-sm-6 col-xs-12">
-    <div class="x_panel">
-      <div class="x_title">
-        <h2>My Enrollments</h2>
-        <ul class="nav navbar-right panel_toolbox">
-          <button class="btn btn-success" (click)="createEnrollment()">
-            <i class="fa fa-plus"></i>
-          </button>
-        </ul>
-        <div class="clearfix"></div>
+    <div class="row" *ngIf="isLoadData">
+      <!-- Zone student -->
+      <div *ngIf="isStudent" class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>My Enrollments</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <button class="btn btn-success" (click)="createEnrollment()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Lecturer</th>
+                  <th>Quarter</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let enrollment of enrollments.items">
+                  <th scope="row">{{enrollment.enrollmentId}}</th>
+                  <td>{{enrollment.lecturer.name}}</td>
+                  <td>{{enrollment.quarter.quarterName}}</td>
+                  <td [ngClass]="enrollment.isConfirm == 'Pending' ? 'blue': 'green'">
+                    <b>{{enrollment.isConfirm}}</b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
       </div>
-      <div class="x_content">
 
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Lecturer</th>
-              <th>Quarter</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let enrollment of enrollments.items">
-              <th scope="row">{{enrollment.enrollmentId}}</th>
-              <td>{{enrollment.lecturer.name}}</td>
-              <td>{{enrollment.quarter.quarterName}}</td>
-              <td>{{enrollment.isConfirm}}</td>
-            </tr>
-          </tbody>
-        </table>
-
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="isStudent" class="col-md-6 col-sm-6 col-xs-12">
-    <div class="x_panel">
-      <div class="x_title">
-        <h2>My Groups</h2>
-        <ul class="nav navbar-right panel_toolbox">
-          <li>
-            <a class="collapse-link">
-              <i class="fa fa-chevron-up"></i>
-            </a>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-              <i class="fa fa-wrench"></i>
-            </a>
-            <ul class="dropdown-menu" role="menu">
+      <div *ngIf="isStudent" class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>My Groups</h2>
+            <ul class="nav navbar-right panel_toolbox">
               <li>
-                <a href="#">Settings 1</a>
+                <a class="collapse-link">
+                  <i class="fa fa-chevron-up"></i>
+                </a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                  <i class="fa fa-wrench"></i>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                  <li>
+                    <a href="#">Settings 1</a>
+                  </li>
+                  <li>
+                    <a href="#">Settings 2</a>
+                  </li>
+                </ul>
               </li>
               <li>
-                <a href="#">Settings 2</a>
+                <a class="close-link">
+                  <i class="fa fa-close"></i>
+                </a>
               </li>
             </ul>
-          </li>
-          <li>
-            <a class="close-link">
-              <i class="fa fa-close"></i>
-            </a>
-          </li>
-        </ul>
-        <div class="clearfix"></div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Group Name</th>
+                  <th>Project</th>
+                  <th>Supervisor</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let group of groupsStudent.items">
+                  <th scope="row">{{group.groupId}}</th>
+                  <td>{{group.groupName}}</td>
+                  <td>{{group.project.title}}</td>
+                  <td>{{group.lecturer.name}}</td>
+                  <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
+                    <b>{{group.isConfirm}}</b>
+                  </td>
+                  <td>
+                    <a [routerLink]="['/main/group-details/', group.groupId]">View</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div class="x_content">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Group Name</th>
-              <th>Project</th>
-              <th>Supervisor</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let group of groupsStudent.items">
-              <th scope="row">{{group.groupId}}</th>
-              <td>{{group.groupName}}</td>
-              <td>{{group.project.title}}</td>
-              <td>{{group.lecturer.name}}</td>
-              <td>{{group.isConfirm}}</td>
-              <td><a [routerLink]="['/main/group-details/', group.groupId]">View</a></td>  
-            </tr>
-          </tbody>
-        </table>
+      <!-- End zone student -->
+
+      <!-- Zone lecturer -->
+      <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>
+              <a href="main/enrollment/pending" alt="View all">My Enrollments is pending</a>
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li>
+                <a class="collapse-link">
+                  <i class="fa fa-chevron-up"></i>
+                </a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                  <i class="fa fa-wrench"></i>
+                </a>
+              </li>
+              <li>
+                <a class="close-link">
+                  <i class="fa fa-close"></i>
+                </a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Student</th>
+                  <th>Quarter</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let enrollment of enrollments.items">
+                  <th scope="row">{{enrollment.enrollmentId}}</th>
+                  <td>{{enrollment.studentEmail}}</td>
+                  <td>{{enrollment.quarter.quarterName}}</td>
+                  <td [ngClass]="enrollment.isConfirm == 'Pending' ? 'blue': 'green'">
+                    <b>{{enrollment.isConfirm}}</b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>
+              <a href="main/enrollment/accepted" alt="View all">My Enrollments is accepted</a>
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li>
+                <a class="collapse-link">
+                  <i class="fa fa-chevron-up"></i>
+                </a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                  <i class="fa fa-wrench"></i>
+                </a>
+              </li>
+              <li>
+                <a class="close-link">
+                  <i class="fa fa-close"></i>
+                </a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Student</th>
+                  <th>Quarter</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let enrollment of enrollmentsAccept.items">
+                  <th scope="row">{{enrollment.enrollmentId}}</th>
+                  <td>{{enrollment.studentEmail}}</td>
+                  <td>{{enrollment.quarter.quarterName}}</td>
+                  <td [ngClass]="enrollment.isConfirm == 'Pending' ? 'blue': 'green'">
+                    <b>{{enrollment.isConfirm}}</b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>
+              <a href="main/group/index" alt="View all">My Group is pending</a>
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li>
+                <a class="collapse-link">
+                  <i class="fa fa-chevron-up"></i>
+                </a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                  <i class="fa fa-wrench"></i>
+                </a>
+              </li>
+              <li>
+                <a class="close-link">
+                  <i class="fa fa-close"></i>
+                </a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Group Name</th>
+                  <th>Project</th>
+                  <th>Supervisor</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let group of groups.items">
+                  <th scope="row">{{group.groupId}}</th>
+                  <td>{{group.groupName}}</td>
+                  <td>{{group.project.title}}</td>
+                  <td>{{group.lecturer.name}}</td>
+                  <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
+                    <b>{{group.isConfirm}}</b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>
+              <a href="main/group/index" alt="View all">My Group is accepted</a>
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li>
+                <a class="collapse-link">
+                  <i class="fa fa-chevron-up"></i>
+                </a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                  <i class="fa fa-wrench"></i>
+                </a>
+              </li>
+              <li>
+                <a class="close-link">
+                  <i class="fa fa-close"></i>
+                </a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Group Name</th>
+                  <th>Project</th>
+                  <th>Supervisor</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let group of groupsAccepted.items">
+                  <th scope="row">{{group.groupId}}</th>
+                  <td>{{group.groupName}}</td>
+                  <td>{{group.project.title}}</td>
+                  <td>{{group.lecturer.name}}</td>
+                  <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
+                    <b>{{group.isConfirm}}</b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- End zone lecturer -->
+    </div>
+
+  </div>
+
+
+  <!--Modal add and edit Enrollment-->
+  <div bsModal #enrollmentModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">Create Enrollment</h4>
+          <span *ngIf="!isLoading" class="fa fa-refresh fa-spin"></span>
+          <button type="button" class="close pull-right" (click)="hideEnrollmentModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal form-label-left" novalidate #enrollmentForm="ngForm" (ngSubmit)="applyEnrollment(enrollmentForm.valid)"
+            *ngIf="enrollment && isLoading">
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Email</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <input type="hidden" [(ngModel)]="enrollment.enrollmentId" name="enrollmentId" />
+                <input disabled type="text" #studentEmail="ngModel" [(ngModel)]="enrollment.studentEmail" required minlength="10" name="studentEmail"
+                  class="form-control">
+              </div>
+            </div>
+            <div class="ln_solid"></div>
+
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <select class="form-control" [(ngModel)]="enrollment.lecturerId" name="lecturer" required #lecturer="ngModel">
+                  <option value=""></option>
+                  <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+                </select>
+                <small [hidden]="lecturer.valid || (lecturer.pristine && !enrollmentForm.submitted)" class="text-danger"> Please specify the lecturer </small>
+              </div>
+            </div>
+
+            <div class="ln_solid"></div>
+
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Quarter</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <select class="form-control" [(ngModel)]="enrollment.quarterId" name="quarter" required #quarter="ngModel">
+                  <option value=""></option>
+                  <option *ngFor="let q of quarters" value="{{q.quarterId}}">{{ q.quarterName }}</option>
+                </select>
+                <small [hidden]="quarter.valid || (quarter.pristine && !enrollmentForm.submitted)" class="text-danger"> Please specify the lecturer </small>
+              </div>
+            </div>
+            <div class="ln_solid"></div>
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+
+                <select id="type" class="form-control" [(ngModel)]="enrollment.type" name="type" required #type="ngModel">
+                  <option value=""></option>
+                  <option *ngFor="let t of types">{{ t }}</option>
+                </select>
+                <small [hidden]="type.valid || (type.pristine && !enrollmentForm.submitted)" class="text-danger">
+                  Please specify the project type
+                </small>
+              </div>
+
+            </div>
+            <div class="ln_solid"></div>
+
+            <div class="form-group">
+              <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                <button type="button" (click)="hideEnrollmentModal()" class="btn btn-primary">Cancel</button>
+                <button type="submit" class="btn btn-success" [disabled]="!enrollmentForm.form.valid || isClicked">Apply</button>
+                <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-  <!-- End zone student -->
 
-  <!-- Zone lecturer -->
-  <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
-    <div class="x_panel">
-      <div class="x_title">
-        <h2>
-          <a href="main/enrollment/pending" alt="View all">My Enrollments is pending</a>
-        </h2>
-        <ul class="nav navbar-right panel_toolbox">
-          <li>
-            <a class="collapse-link">
-              <i class="fa fa-chevron-up"></i>
-            </a>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-              <i class="fa fa-wrench"></i>
-            </a>
-          </li>
-          <li>
-            <a class="close-link">
-              <i class="fa fa-close"></i>
-            </a>
-          </li>
-        </ul>
-        <div class="clearfix"></div>
-      </div>
-      <div class="x_content">
 
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Student</th>
-              <th>Quarter</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let enrollment of enrollments.items">
-              <th scope="row">{{enrollment.enrollmentId}}</th>
-              <td>{{enrollment.studentEmail}}</td>
-              <td>{{enrollment.quarter.quarterName}}</td>
-              <td>{{enrollment.isConfirm}}</td>
-            </tr>
-          </tbody>
-        </table>
+  <!--Modal add and edit Group-->
+  <div bsModal #groupModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">Create Group</h4>
+          <span *ngIf="!isLoading" class="fa fa-refresh fa-spin"></span>
+          <button type="button" class="close pull-right" (click)="hideGroup()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal form-label-left" novalidate #groupForm="ngForm" (ngSubmit)="applyGroup(groupForm.valid)" *ngIf="group && isLoading">
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Email</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <input type="hidden" [(ngModel)]="enrollment.enrollmentId" name="enrollmentId" />
+                <input disabled type="text" #studentEmail="ngModel" [(ngModel)]="enrollment.studentEmail" required minlength="10" name="studentEmail"
+                  class="form-control">
+              </div>
+            </div>
+            <div class="ln_solid"></div>
+
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <select class="form-control" [(ngModel)]="enrollment.lecturerId" name="lecturer" required #lecturer="ngModel">
+                  <option value=""></option>
+                  <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+                </select>
+                <small [hidden]="lecturer.valid || (lecturer.pristine && !enrollmentForm.submitted)" class="text-danger"> Please specify the lecturer </small>
+              </div>
+            </div>
+
+            <div class="ln_solid"></div>
+
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Quarter</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <select class="form-control" [(ngModel)]="enrollment.quarterId" name="quarter" required #quarter="ngModel">
+                  <option value=""></option>
+                  <option *ngFor="let q of quarters" value="{{q.quarterId}}">{{ q.quarterName }}</option>
+                </select>
+                <small [hidden]="quarter.valid || (quarter.pristine && !enrollmentForm.submitted)" class="text-danger"> Please specify the lecturer </small>
+              </div>
+            </div>
+            <div class="ln_solid"></div>
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+
+                <select id="type" class="form-control" [(ngModel)]="enrollment.type" name="type" required #type="ngModel">
+                  <option value=""></option>
+                  <option *ngFor="let t of types">{{ t }}</option>
+                </select>
+                <small [hidden]="type.valid || (type.pristine && !enrollmentForm.submitted)" class="text-danger">
+                  Please specify the project type
+                </small>
+              </div>
+
+            </div>
+            <div class="ln_solid"></div>
+
+            <div class="form-group">
+              <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                <button type="button" (click)="hideEnrollmentModal()" class="btn btn-primary">Cancel</button>
+                <button type="submit" class="btn btn-success" [disabled]="!enrollmentForm.form.valid || isClicked">Apply</button>
+                <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-
-  <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
-    <div class="x_panel">
-      <div class="x_title">
-        <h2>
-          <a href="main/enrollment/accepted" alt="View all">My Enrollments is accepted</a>
-        </h2>
-        <ul class="nav navbar-right panel_toolbox">
-          <li>
-            <a class="collapse-link">
-              <i class="fa fa-chevron-up"></i>
-            </a>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-              <i class="fa fa-wrench"></i>
-            </a>
-          </li>
-          <li>
-            <a class="close-link">
-              <i class="fa fa-close"></i>
-            </a>
-          </li>
-        </ul>
-        <div class="clearfix"></div>
-      </div>
-      <div class="x_content">
-
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Student</th>
-              <th>Quarter</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let enrollment of enrollmentsAccept.items">
-              <th scope="row">{{enrollment.enrollmentId}}</th>
-              <td>{{enrollment.studentEmail}}</td>
-              <td>{{enrollment.quarter.quarterName}}</td>
-              <td>{{enrollment.isConfirm}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
-    <div class="x_panel">
-      <div class="x_title">
-        <h2>
-          <a href="main/group/index" alt="View all">My Group is pending</a>
-        </h2>
-        <ul class="nav navbar-right panel_toolbox">
-          <li>
-            <a class="collapse-link">
-              <i class="fa fa-chevron-up"></i>
-            </a>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-              <i class="fa fa-wrench"></i>
-            </a>
-          </li>
-          <li>
-            <a class="close-link">
-              <i class="fa fa-close"></i>
-            </a>
-          </li>
-        </ul>
-        <div class="clearfix"></div>
-      </div>
-      <div class="x_content">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Group Name</th>
-              <th>Project</th>
-              <th>Supervisor</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let group of groups.items">
-              <th scope="row">{{group.groupId}}</th>
-              <td>{{group.groupName}}</td>
-              <td>{{group.project.title}}</td>
-              <td>{{group.lecturer.name}}</td>
-              <td>{{group.isConfirm}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
-    <div class="x_panel">
-      <div class="x_title">
-        <h2>
-          <a href="main/group/index" alt="View all">My Group is accepted</a>
-        </h2>
-        <ul class="nav navbar-right panel_toolbox">
-          <li>
-            <a class="collapse-link">
-              <i class="fa fa-chevron-up"></i>
-            </a>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-              <i class="fa fa-wrench"></i>
-            </a>
-          </li>
-          <li>
-            <a class="close-link">
-              <i class="fa fa-close"></i>
-            </a>
-          </li>
-        </ul>
-        <div class="clearfix"></div>
-      </div>
-      <div class="x_content">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Group Name</th>
-              <th>Project</th>
-              <th>Supervisor</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let group of groupsAccepted.items">
-              <th scope="row">{{group.groupId}}</th>
-              <td>{{group.groupName}}</td>
-              <td>{{group.project.title}}</td>
-              <td>{{group.lecturer.name}}</td>
-              <td>{{group.isConfirm}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!--Modal add and edit Enrollment-->
-<div bsModal #enrollmentModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title pull-left">Create Enrollment</h4>
-        <span *ngIf="!isLoading" class="fa fa-refresh fa-spin"></span>
-        <button type="button" class="close pull-right" (click)="hideEnrollmentModal()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form class="form-horizontal form-label-left" novalidate #enrollmentForm="ngForm" (ngSubmit)="applyEnrollment(enrollmentForm.valid)"
-          *ngIf="enrollment && isLoading">
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Email</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-              <input type="hidden" [(ngModel)]="enrollment.enrollmentId" name="enrollmentId" />
-              <input disabled type="text" #studentEmail="ngModel" [(ngModel)]="enrollment.studentEmail" required minlength="10" name="studentEmail"
-                class="form-control">
-            </div>
-          </div>
-          <div class="ln_solid"></div>
-
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="enrollment.lecturerId" name="lecturer" required #lecturer="ngModel">
-                <option value=""></option>
-                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
-              </select>
-              <small [hidden]="lecturer.valid || (lecturer.pristine && !enrollmentForm.submitted)" class="text-danger"> Please specify the lecturer </small>
-            </div>
-          </div>
-
-          <div class="ln_solid"></div>
-
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Quarter</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="enrollment.quarterId" name="quarter" required #quarter="ngModel">
-                <option value=""></option>
-                <option *ngFor="let q of quarters" value="{{q.quarterId}}">{{ q.quarterName }}</option>
-              </select>
-              <small [hidden]="quarter.valid || (quarter.pristine && !enrollmentForm.submitted)" class="text-danger"> Please specify the lecturer </small>
-            </div>
-          </div>
-          <div class="ln_solid"></div>
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-
-              <select id="type" class="form-control" [(ngModel)]="enrollment.type" name="type" required #type="ngModel">
-                <option value=""></option>
-                <option *ngFor="let t of types">{{ t }}</option>
-              </select>
-              <small [hidden]="type.valid || (type.pristine && !enrollmentForm.submitted)" class="text-danger">
-                Please specify the project type
-              </small>
-            </div>
-
-          </div>
-          <div class="ln_solid"></div>
-
-          <div class="form-group">
-            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-              <button type="button" (click)="hideEnrollmentModal()" class="btn btn-primary">Cancel</button>
-              <button type="submit" class="btn btn-success" [disabled]="!enrollmentForm.form.valid || isClicked">Apply</button>
-              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!--Modal add and edit Group-->
-<div bsModal #groupModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title pull-left">Create Group</h4>
-        <span *ngIf="!isLoading" class="fa fa-refresh fa-spin"></span>
-        <button type="button" class="close pull-right" (click)="hideGroup()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form class="form-horizontal form-label-left" novalidate #groupForm="ngForm" (ngSubmit)="applyGroup(groupForm.valid)" *ngIf="group && isLoading">
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Email</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-              <input type="hidden" [(ngModel)]="enrollment.enrollmentId" name="enrollmentId" />
-              <input disabled type="text" #studentEmail="ngModel" [(ngModel)]="enrollment.studentEmail" required minlength="10" name="studentEmail"
-                class="form-control">
-            </div>
-          </div>
-          <div class="ln_solid"></div>
-
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="enrollment.lecturerId" name="lecturer" required #lecturer="ngModel">
-                <option value=""></option>
-                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
-              </select>
-              <small [hidden]="lecturer.valid || (lecturer.pristine && !enrollmentForm.submitted)" class="text-danger"> Please specify the lecturer </small>
-            </div>
-          </div>
-
-          <div class="ln_solid"></div>
-
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Quarter</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="enrollment.quarterId" name="quarter" required #quarter="ngModel">
-                <option value=""></option>
-                <option *ngFor="let q of quarters" value="{{q.quarterId}}">{{ q.quarterName }}</option>
-              </select>
-              <small [hidden]="quarter.valid || (quarter.pristine && !enrollmentForm.submitted)" class="text-danger"> Please specify the lecturer </small>
-            </div>
-          </div>
-          <div class="ln_solid"></div>
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-
-              <select id="type" class="form-control" [(ngModel)]="enrollment.type" name="type" required #type="ngModel">
-                <option value=""></option>
-                <option *ngFor="let t of types">{{ t }}</option>
-              </select>
-              <small [hidden]="type.valid || (type.pristine && !enrollmentForm.submitted)" class="text-danger">
-                Please specify the project type
-              </small>
-            </div>
-
-          </div>
-          <div class="ln_solid"></div>
-
-          <div class="form-group">
-            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-              <button type="button" (click)="hideEnrollmentModal()" class="btn btn-primary">Cancel</button>
-              <button type="submit" class="btn btn-success" [disabled]="!enrollmentForm.form.valid || isClicked">Apply</button>
-              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>

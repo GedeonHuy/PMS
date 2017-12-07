@@ -1,9 +1,11 @@
+import { SystemConstants } from './../../core/common/system.constants';
 import { ProjectTypesConstants } from './../../core/common/projectType.constants';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
@@ -18,11 +20,9 @@ export class ProjectComponent implements OnInit {
   public queryResult: any = {};
   
   isLoadData : boolean;
-
-  PAGE_SIZE = 3;
   
     query: any = {
-      pageSize: this.PAGE_SIZE
+      pageSize: SystemConstants.PAGE_SIZE
     };
 
   public types : any [] = [ProjectTypesConstants.A, ProjectTypesConstants.B, ProjectTypesConstants.C, ProjectTypesConstants.D];

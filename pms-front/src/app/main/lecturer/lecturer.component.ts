@@ -1,3 +1,4 @@
+import { SystemConstants } from './../../core/common/system.constants';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
@@ -20,10 +21,9 @@ export class LecturerComponent implements OnInit {
   isLoadData : boolean;
   isAdmin : boolean;
   majors : any[];
-  PAGE_SIZE = 3;
   
     query: any = {
-      pageSize: this.PAGE_SIZE
+      pageSize: SystemConstants.PAGE_SIZE
     };
 
   constructor(private _authenService : AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
