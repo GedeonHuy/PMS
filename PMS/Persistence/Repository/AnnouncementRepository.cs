@@ -48,6 +48,12 @@ namespace PMS.Persistence.Repository
                     .Include(g => g.AnnouncementUsers)
                     .AsQueryable();
 
+            //filter
+            if (queryObj.CreatedDate != null)
+            {
+                query = query.Where(q => q.CreatedDate == queryObj.CreatedDate);
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Announcement, object>>>()
             {

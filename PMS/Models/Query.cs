@@ -11,6 +11,8 @@ namespace PMS.Models
         public int? MajorId { get; set; }
         public int? ProjectId { get; set; }
         public int? LecturerId { get; set; }
+        public int? StudentId { get; set; }
+        public DateTime CreatedDate { get; set; }
         public string isConfirm { get; set; }
         public string Year { get; set; }
         public string Type { get; set; }
