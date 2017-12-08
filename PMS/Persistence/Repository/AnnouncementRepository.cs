@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PMS.Data;
+using PMS.Extensions;
 using PMS.Models;
 using PMS.Persistence.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PMS.Persistence.Repository
@@ -39,13 +41,33 @@ namespace PMS.Persistence.Repository
             context.Remove(Announcement);
         }
 
-        public async Task<IEnumerable<Announcement>> GetAnnouncements()
+        public async Task<QueryResult<Announcement>> GetAnnouncements(Query queryObj)
         {
-            return await context.Announcement
+            var result = new QueryResult<Announcement>();
+            var query = context.Announcement
                     .Include(g => g.AnnouncementUsers)
-                    .ToListAsync();
+                    .AsQueryable();
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Announcement, object>>>()
+            {
+                ["title"] = s => s.Title,
+                ["date"] = s => s.CreatedDate
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.AnnouncementId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
-
-
     }
 }

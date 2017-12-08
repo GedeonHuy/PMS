@@ -102,11 +102,12 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetAnnouncements()
+        public async Task<QueryResultResource<AnnouncementResource>> GetAnnouncements(QueryResource queryResource)
         {
-            var announcements = await repository.GetAnnouncements();
-            var announcementResource = mapper.Map<IEnumerable<Announcement>, IEnumerable<AnnouncementResource>>(announcements);
-            return Ok(announcementResource);
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await repository.GetAnnouncements(query);
+
+            return mapper.Map<QueryResult<Announcement>, QueryResultResource<AnnouncementResource>>(queryResult);
         }
     }
 }

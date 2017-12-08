@@ -11,6 +11,6 @@ namespace PMS.Persistence.IRepository
         Task<Announcement> GetAnnouncement(int? id, bool includeRelated = true);
         void AddAnnouncement(Announcement Announcement);
         void RemoveAnnouncement(Announcement Announcement);
-        Task<IEnumerable<Announcement>> GetAnnouncements();
+        Task<QueryResult<Announcement>> GetAnnouncements(Query filter);
     }
 }
