@@ -81,18 +81,19 @@ export class HomeComponent implements OnInit {
   loadDataStudent() {
     this.loadStudentEnrollment();
     this.loadStudentGroup();
-    this.isLoadData = true;
   }
 
   loadStudentEnrollment() {
     this._dataService.get("/api/students/getenrollments/" + this.user.email + "?pageSize=3").subscribe((response: any) => {
       this.enrollments = response;
+      this.isLoadData = true;      
     });
   }
 
   loadStudentGroup() {
     this._dataService.get("/api/students/getgroups/" + this.user.email + "?pageSize=3").subscribe((response: any) => {
       this.groupsStudent = response;
+      this.isLoadData = true;      
     });
   }
 
@@ -101,30 +102,33 @@ export class HomeComponent implements OnInit {
     this.loadLecturerEnrollmentAccepted();
     this.loadLecturerGroup();
     this.loadLecturerGroupAccepted();
-    this.isLoadData = true;
   }
 
   loadLecturerEnrollment() {
     this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?isConfirm=Pending&pageSize=3").subscribe((response: any) => {
       this.enrollments = response;
+      this.isLoadData = true;      
     });
   }
 
   loadLecturerEnrollmentAccepted() {
     this._dataService.get("/api/lecturers/getenrollments/" + this.user.email + "?isConfirm=Accepted&pageSize=3").subscribe((response: any) => {
       this.enrollmentsAccept = response;
+      this.isLoadData = true;      
     });
   }
 
   loadLecturerGroup() {
     this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Pending&pageSize=3").subscribe((response: any) => {
       this.groups = response;
+      this.isLoadData = true;      
     });
   }
 
   loadLecturerGroupAccepted() {
     this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Accepted&pageSize=3").subscribe((response: any) => {
       this.groupsAccepted = response;
+      this.isLoadData = true;      
     });
   }
 

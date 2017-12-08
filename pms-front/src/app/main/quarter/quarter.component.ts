@@ -21,7 +21,7 @@ export class QuarterComponent implements OnInit {
   public queryResult: any = {};
 
   isLoadData: boolean;
-
+  isLoading : boolean;
   query: any = {
     pageSize: SystemConstants.PAGE_SIZE
   };
@@ -29,12 +29,24 @@ export class QuarterComponent implements OnInit {
   constructor(private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isLoadData = false;
+    this.isLoading = false;
   }
 
-  majors: any[];
+  public dateOptions: any = {
+    locale: { format: 'DD/MM/YYYY' },
+    alwaysShowCalendars: false,
+    singleDatePicker: true
+  };
 
   ngOnInit() {
     this.loadData();
+  }
+
+  handler(type: string, $event: ModalDirective) {
+    if(type === "onHide" || type === "onHidden") {
+      this.quarter = [];
+      this.isLoading = false;
+    }
   }
 
   loadData() {
@@ -61,7 +73,7 @@ export class QuarterComponent implements OnInit {
     this._dataService.get('/api/quarters/getquarter/' + id)
       .subscribe((response: any) => {
         this.quarter = response;
-        console.log(this.quarter);
+        this.isLoading = true;
       });
   }
 

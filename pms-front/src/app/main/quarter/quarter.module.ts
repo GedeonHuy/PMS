@@ -7,6 +7,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { Daterangepicker } from 'ng2-daterangepicker';
 
 
 const QuarterRoutes: Routes = [
@@ -20,6 +21,7 @@ const QuarterRoutes: Routes = [
     CommonModule,
     FormsModule,
     PaginationModule,
+    Daterangepicker,    
     ModalModule.forRoot(),
     RouterModule.forChild(QuarterRoutes)
   ],

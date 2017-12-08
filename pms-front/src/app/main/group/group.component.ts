@@ -27,8 +27,8 @@ export class GroupComponent implements OnInit {
   public isClicked: boolean;
   public isLoading: boolean;
   isLoadData : boolean;
-  public isLoadEnrollment: boolean;
-
+  isExist : boolean;
+  
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
@@ -56,7 +56,7 @@ export class GroupComponent implements OnInit {
     this.isStudent = false;
     this.isLecturer = false;
     this.isLoadData = false;
-    this.isLoadEnrollment = false;
+    this.isExist = false;
   }
 
   ngOnInit() {
@@ -97,7 +97,6 @@ export class GroupComponent implements OnInit {
       if (value != null && value != undefined)
         parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
     }
-
     return parts.join('&');
   }
 
@@ -111,6 +110,7 @@ export class GroupComponent implements OnInit {
   handler(type: string, $event: ModalDirective) {
     if(type === "onHide" || type === "onHidden") {
       this.enrollments = [];
+      this.isExist = false;
     }
   }
 
@@ -134,6 +134,7 @@ export class GroupComponent implements OnInit {
         this.group = response;   
         for(let e of response.enrollments) {
           this.enrollments.push(e.studentEmail);
+          this.isExist = true;
         }
         this.isLoading = true;
       });

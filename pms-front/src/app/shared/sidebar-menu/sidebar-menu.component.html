@@ -45,7 +45,7 @@
             <a routerLink="/main/group/index" routerLinkActive="active">Pending</a>
           </li>
           <li>
-            <a routerLink="/main/confirm-group/index" routerLinkActive="active">Accepted</a>
+            <a *ngIf="isAdmin" routerLink="/main/confirm-group/index" routerLinkActive="active">Accepted</a>
           </li>
         </ul>
       </li>
