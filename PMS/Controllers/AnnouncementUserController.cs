@@ -11,7 +11,7 @@ using PMS.Persistence.IRepository;
 
 namespace PMS.Controllers
 {
-    [Route("/api/announcementuser")]
+    [Route("/api/announcementusers")]
     public class AnnouncementUserController : Controller
     {
         private IAnnouncementUserRepository repository;
