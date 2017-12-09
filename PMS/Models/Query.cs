@@ -12,7 +12,7 @@ namespace PMS.Models
         public int? ProjectId { get; set; }
         public int? LecturerId { get; set; }
         public int? StudentId { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public string CreatedDate { get; set; }
         public string isConfirm { get; set; }
         public string Year { get; set; }
         public string Type { get; set; }

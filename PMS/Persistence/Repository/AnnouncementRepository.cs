@@ -51,7 +51,7 @@ namespace PMS.Persistence.Repository
             //filter
             if (queryObj.CreatedDate != null)
             {
-                query = query.Where(q => q.CreatedDate == queryObj.CreatedDate);
+                query = query.Where(q => q.CreatedDate == DateTime.Parse(queryObj.CreatedDate));
             }
 
             //sort

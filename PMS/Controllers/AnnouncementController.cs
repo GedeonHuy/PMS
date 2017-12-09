@@ -11,7 +11,7 @@ using PMS.Models;
 
 namespace PMS.Controllers
 {
-    [Route("/api/announcement")]
+    [Route("/api/announcements")]
     public class AnnouncementController : Controller
     {
         private IAnnouncementRepository repository;
