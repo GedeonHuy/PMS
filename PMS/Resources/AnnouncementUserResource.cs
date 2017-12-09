@@ -12,6 +12,9 @@ namespace PMS.Resources
         public ApplicationUserResource AppUser { get; set; }
         public int AnnouncementId { get; set; }
         public AnnouncementUserResource Announcement { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
+
         public AnnouncementUserResource()
         {
             IsDeleted = false;
