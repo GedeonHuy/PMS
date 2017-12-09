@@ -17,12 +17,17 @@ namespace PMS.Controllers
         private IAnnouncementUserRepository repository;
         private IMapper mapper;
         private IUnitOfWork unitOfWork;
+        private IUserRepository userRepository;
+        private IAnnouncementRepository announcementRepository;
 
-        public AnnouncementUserController(IMapper mapper, IUnitOfWork unitOfWork, IAnnouncementUserRepository repository)
+        public AnnouncementUserController(IMapper mapper, IUnitOfWork unitOfWork, IAnnouncementUserRepository repository,
+            IUserRepository userRepository, IAnnouncementRepository announcementRepository)
         {
             this.repository = repository;
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
+            this.userRepository = userRepository;
+            this.announcementRepository = announcementRepository;
         }
 
         [HttpPost]
@@ -35,6 +40,8 @@ namespace PMS.Controllers
             }
 
             var announcementUser = mapper.Map<AnnouncementUserResource, AnnouncementUser>(announcementUserResource);
+            announcementUser.AppUser = userRepository.GetUserByEmail(announcementUserResource.To);
+            announcementUser.Announcement = await announcementRepository.GetAnnouncement(announcementUserResource.AnnouncementId);
 
             repository.AddAnnouncementUser(announcementUser);
             await unitOfWork.Complete();

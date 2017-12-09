@@ -18,30 +18,30 @@ namespace PMS.Mapping
             .ForMember(cr => cr.AnnouncementUsers, opt => opt.MapFrom(c => c.AnnouncementUsers.Select(cf => new AnnouncementUserResource
             {
                 AnnouncementUserId = cf.AnnouncementUserId,
-                IsDeleted = cf.IsDeleted,
-                AppUser = new ApplicationUserResource
-                {
-                    Avatar = cf.AppUser.Avatar,
-                    CreatedOn = cf.AppUser.CreatedOn,
-                    FullName = cf.AppUser.FullName,
-                    IsDeleted = cf.AppUser.IsDeleted,
-                    Major = cf.AppUser.Major,
-                    UpdatedOn = cf.AppUser.UpdatedOn
-                }
+                IsDeleted = cf.IsDeleted
+                //AppUser = new ApplicationUserResource
+                //{
+                //    Avatar = cf.AppUser.Avatar,
+                //    CreatedOn = cf.AppUser.CreatedOn,
+                //    FullName = cf.AppUser.FullName,
+                //    IsDeleted = cf.AppUser.IsDeleted,
+                //    Major = cf.AppUser.Major,
+                //    UpdatedOn = cf.AppUser.UpdatedOn
+                //}
             }
             )));
 
             CreateMap<AnnouncementUser, AnnouncementUserResource>()
-                .ForMember(cr => cr.AnnouncementId, opt => opt.MapFrom(c => c.Announcement.AnnouncementId))
-                .ForMember(cr => cr.AppUser, opt => opt.MapFrom(c => new ApplicationUserResource
-                {
-                    Avatar = c.AppUser.Avatar,
-                    CreatedOn = c.AppUser.CreatedOn,
-                    FullName = c.AppUser.FullName,
-                    IsDeleted = c.AppUser.IsDeleted,
-                    Major = c.AppUser.Major,
-                    UpdatedOn = c.AppUser.UpdatedOn
-                }));
+            .ForMember(cr => cr.AnnouncementId, opt => opt.MapFrom(c => c.Announcement.AnnouncementId))
+            .ForMember(cr => cr.AppUser, opt => opt.MapFrom(c => new ApplicationUserResource
+            {
+                Avatar = c.AppUser.Avatar,
+                CreatedOn = c.AppUser.CreatedOn,
+                FullName = c.AppUser.FullName,
+                IsDeleted = c.AppUser.IsDeleted,
+                Major = c.AppUser.Major,
+                UpdatedOn = c.AppUser.UpdatedOn
+            }));
 
 
             CreateMap<Council, CouncilResource>()

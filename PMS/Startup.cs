@@ -49,6 +49,7 @@ namespace PMS
             services.AddScoped<IMajorRepository, MajorRepository>();
             services.AddScoped<IQuarterRepository, QuarterRepository>();
             services.AddScoped<IExcelRepository, ExcelRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 

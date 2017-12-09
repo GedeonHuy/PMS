@@ -55,11 +55,11 @@ namespace PMS.Persistence.Repository
             student.PhoneNumber = worksheet.Cells[row, 10].Value.ToString().Trim();
             var majorName = worksheet.Cells[row, 11].Value.ToString().Trim().ToLower();
             var major = await context.Majors
-                .Include(m => m.Groups)
-                .Include(m => m.Lecturers)
-                .Include(m => m.Students)
-                .Include(m => m.Projects)
-                .SingleOrDefaultAsync(g => g.MajorName.ToLower() == majorName);
+                //.Include(m => m.Groups)
+                ////.Include(m => m.Lecturers)
+                //.Include(m => m.Students)
+                //.Include(m => m.Projects)
+                .FirstOrDefaultAsync(g => g.MajorName.ToLower() == majorName);
             student.Major = major;
         }
 
