@@ -4,7 +4,7 @@ import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { NgForm } from '@angular/forms';
-
+import { SystemConstants } from './../../core/common/system.constants';
 
 @Component({
   selector: 'app-announcement',
@@ -16,11 +16,15 @@ export class AnnouncementComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   public announcements: any[];
   public isClicked: boolean;
-
-  public entity: any;
-
+  isLoadData: boolean;
+  public announcement: any;
+  public queryResult: any = {};
+  query: any = {
+    pageSize: SystemConstants.PAGE_SIZE
+  };
   constructor(private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
+    this.isLoadData = false;
   }
 
   ngOnInit() {
@@ -28,35 +32,35 @@ export class AnnouncementComponent implements OnInit {
   }
 
   loadData() {
-    this._dataService.get("/api/announcement/getall").subscribe((response: any) => {
-      this.announcements = response;
-      console.log(response);
-    }, error => this._dataService.handleError(error));
+    this._dataService.get("/api/announcements/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+      this.queryResult = response;
+      this.isLoadData = true;
+    });
   }
 
   //Create method
   showAddModal() {
-    this.entity = {};
+    this.announcement = {};
     this.modalAddEdit.show();
   }
 
   saveChange(form: NgForm) {
     if (form.valid) {
       this.isClicked = true;
-      if (this.entity.id == undefined) {
-        this._dataService.post('/api/announcement/add', JSON.stringify(this.entity))
+      if (this.announcement.announcementId == undefined) {
+        this._dataService.post('/api/announcements/add', JSON.stringify(this.announcement))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
             form.resetForm();
             this.isClicked = false;
             this._notificationService.printSuccessMessage("Add Success");
-        }, error => this._dataService.handleError(error));
+          }, error => this._dataService.handleError(error));
       }
     }
   }
 
-  deleteRole(id: any) {
+  deleteAnnouncement(id: any) {
     this._notificationService.printConfirmationDialog("Delete confirm", () => this.deleteConfirm(id));
   }
 
@@ -66,5 +70,22 @@ export class AnnouncementComponent implements OnInit {
         this._notificationService.printSuccessMessage("Delete Success");
         this.loadData();
       });
+  }
+
+  toQueryString(obj) {
+    var parts = [];
+    for (var property in obj) {
+      var value = obj[property];
+      if (value != null && value != undefined)
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+    }
+
+    return parts.join('&');
+  }
+
+  onPageChange(page) {
+    this.isLoadData = false;
+    this.query.page = page;
+    this.loadData();
   }
 }

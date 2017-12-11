@@ -7,6 +7,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { DatePipe } from '@angular/common';
 
+declare var moment : any;
+
 @Component({
   selector: 'app-quarter',
   templateUrl: './quarter.component.html',
@@ -21,7 +23,7 @@ export class QuarterComponent implements OnInit {
   public queryResult: any = {};
 
   isLoadData: boolean;
-  isLoading : boolean;
+  isLoading: boolean;
   query: any = {
     pageSize: SystemConstants.PAGE_SIZE
   };
@@ -43,7 +45,7 @@ export class QuarterComponent implements OnInit {
   }
 
   handler(type: string, $event: ModalDirective) {
-    if(type === "onHide" || type === "onHidden") {
+    if (type === "onHide" || type === "onHidden") {
       this.quarter = [];
       this.isLoading = false;
     }
@@ -56,9 +58,17 @@ export class QuarterComponent implements OnInit {
     });
   }
 
+  public selectedStartDate(value: any) {
+    this.quarter.quarterStart = moment(value.end._d).format('YYYY/MM/DD');
+  }
+  public selectedEndDate(value: any) {
+    this.quarter.quarterEnd = moment(value.end._d).format('YYYY/MM/DD');
+  }
+
   //Create method
   showAddModal() {
     this.quarter = {};
+    this.isLoading = true;
     this.modalAddEdit.show();
   }
 
@@ -80,6 +90,7 @@ export class QuarterComponent implements OnInit {
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;
+      console.log(this.quarter);
       if (this.quarter.quarterId == undefined) {
         this._dataService.post('/api/quarters/add', JSON.stringify(this.quarter))
           .subscribe((response: any) => {
@@ -101,7 +112,7 @@ export class QuarterComponent implements OnInit {
     }
   }
 
-  deletequarter(id: any) {
+  deleteQuarter(id: any) {
     this._notificationService.printConfirmationDialog("Delete confirm", () => this.deleteConfirm(id));
   }
 

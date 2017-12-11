@@ -101,7 +101,6 @@ export class StudentComponent implements OnInit {
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
-          console.log(this.student);
       }
       else {
         this._dataService.put('/api/students/update/' + this.student.id, JSON.stringify(this.student))

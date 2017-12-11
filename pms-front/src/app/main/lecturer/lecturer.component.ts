@@ -11,22 +11,23 @@ import { AuthenService } from './../../core/services/authen.service';
   templateUrl: './lecturer.component.html',
   styleUrls: ['./lecturer.component.css']
 })
+
 export class LecturerComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   public lecturers: any[];
   public queryResult: any = {};
-  
+
   public lecturer: any;
   public isClicked: boolean;
-  isLoadData : boolean;
-  isAdmin : boolean;
-  majors : any[];
-  
-    query: any = {
-      pageSize: SystemConstants.PAGE_SIZE
-    };
+  isLoadData: boolean;
+  isAdmin: boolean;
+  majors: any[];
 
-  constructor(private _authenService : AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
+  query: any = {
+    pageSize: SystemConstants.PAGE_SIZE
+  };
+
+  constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isAdmin = false;
     this.isLoadData = false;
@@ -44,7 +45,7 @@ export class LecturerComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/lecturers/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-      this.isLoadData = true;      
+      this.isLoadData = true;
     });
   }
 
@@ -96,7 +97,7 @@ export class LecturerComponent implements OnInit {
     var parts = [];
     for (var property in obj) {
       var value = obj[property];
-      if (value != null && value != undefined) 
+      if (value != null && value != undefined)
         parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
     }
 
@@ -116,12 +117,12 @@ export class LecturerComponent implements OnInit {
 
   permissionAccess() {
     var user = this._authenService.getLoggedInUser();
-    if(user.role === "Admin") {
+    if (user.role === "Admin") {
       this.isAdmin = true;
     }
   }
   onPageChange(page) {
-    this.isLoadData = false;    
+    this.isLoadData = false;
     this.query.page = page;
     this.loadData();
   }

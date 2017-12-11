@@ -66,7 +66,7 @@ export class GroupDetailsComponent implements OnInit {
         this.linkDowload = response.linkGitHub + "/archive/master.zip";
         this.loadGithub(this.linkGithub);
         this.loadDataCommits(this.linkGithub + "/stats/participation");
-        this.loadCommitDetails(this.linkGithub + "/commits");
+        this.loadCommitComment(this.linkGithub + "/commits");
         this.isLoading = true;
       });
   }
@@ -80,7 +80,7 @@ export class GroupDetailsComponent implements OnInit {
       });
   }
 
-  loadCommitDetails(link : string) {
+  loadCommitComment(link : string) {
     this._dataService.getGithub(link)
     .subscribe((response: any) => {
       for (var i = 0; i < 3; i++) {
@@ -92,10 +92,9 @@ export class GroupDetailsComponent implements OnInit {
   loadDataCommits(link: string) {
     this._dataService.getGithub(link)
       .subscribe((response: any) => {
-        var tmpWeeks = response.all.reverse();
-        for (var i = 0; i < 10; i++) {
-          this.dataCommit.push(tmpWeeks[i]);
-          this.commits = this.commits + tmpWeeks[i];
+        for (var i = 52; i > 40; i--) {
+          this.dataCommit.push(response.all[i]);
+          this.commits = this.commits + response.all[i];
         }
         this.isLoadDataCommit = true;
       });      

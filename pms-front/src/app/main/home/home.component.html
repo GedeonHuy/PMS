@@ -138,7 +138,7 @@
                   <b>{{group.isConfirm}}</b>
                 </td>
                 <td>
-                  <a [routerLink]="['/main/group-details/', group.groupId]">View</a>
+                  <button class="btn btn-link" [routerLink]="['/main/group-details/', group.groupId]">View</button>
                 </td>
               </tr>
             </tbody>
@@ -347,6 +347,9 @@
                 <td>{{group.lecturer.name}}</td>
                 <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
                   <b>{{group.isConfirm}}</b>
+                </td>
+                <td>
+                  <button class="btn btn-link" [routerLink]="['/main/group-details/', group.groupId]">View</button>
                 </td>
               </tr>
             </tbody>

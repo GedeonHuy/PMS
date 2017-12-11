@@ -17,7 +17,7 @@
 />
 <div class="clearfix"></div>
 <div class="row" *ngIf="isLoadData">
-    <div class="col-md-12 col-sm-12 col-xs-12">
+  <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
         <ul class="nav navbar-right panel_toolbox">
@@ -43,7 +43,10 @@
               <td>{{group.project.title}}</td>
               <td>{{group.lecturer.name}}</td>
               <td>{{group.isConfirm}}</td>
+
               <td>
+                <button class="btn btn-link" [routerLink]="['/main/group-details/', group.groupId]">View</button>
+
                 <button class="btn btn-info" (click)="assignCouncil(group.groupId,group.lecturer.name)">
                   <i class="fa fa-users"></i>
                 </button>
@@ -95,7 +98,8 @@
                 <option value=""></option>
                 <option *ngFor="let s of scorePercents">{{ s }}</option>
               </select>
-              <small [hidden]="scorePercentPresident.valid || (scorePercentPresident.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the score percent </small>
+              <small [hidden]="scorePercentPresident.valid || (scorePercentPresident.pristine && !addEditForm.submitted)" class="text-danger">
+                Please specify the score percent </small>
             </div>
           </div>
           <div class="ln_solid"></div>
@@ -118,7 +122,8 @@
                 <option value=""></option>
                 <option *ngFor="let s of scorePercents">{{ s }}</option>
               </select>
-              <small [hidden]="scorePercentSecretary.valid || (scorePercentSecretary.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the score percent </small>
+              <small [hidden]="scorePercentSecretary.valid || (scorePercentSecretary.pristine && !addEditForm.submitted)" class="text-danger">
+                Please specify the score percent </small>
             </div>
           </div>
           <div class="ln_solid"></div>
@@ -140,7 +145,8 @@
                 <option value=""></option>
                 <option *ngFor="let s of scorePercents">{{ s }}</option>
               </select>
-              <small [hidden]="scorePercentSupervisor.valid || (scorePercentSupervisor.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the score percent </small>
+              <small [hidden]="scorePercentSupervisor.valid || (scorePercentSupervisor.pristine && !addEditForm.submitted)" class="text-danger">
+                Please specify the score percent </small>
             </div>
           </div>
           <div class="ln_solid"></div>
@@ -162,7 +168,8 @@
                 <option value=""></option>
                 <option *ngFor="let s of scorePercents">{{ s }}</option>
               </select>
-              <small [hidden]="scorePercentReviewer.valid || (scorePercentReviewer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the score percent </small>
+              <small [hidden]="scorePercentReviewer.valid || (scorePercentReviewer.pristine && !addEditForm.submitted)" class="text-danger">
+                Please specify the score percent </small>
             </div>
           </div>
           <div class="ln_solid"></div>
