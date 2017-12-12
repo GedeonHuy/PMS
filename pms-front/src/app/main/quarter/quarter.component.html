@@ -44,8 +44,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let quarter of queryResult.items">
-              <td>#</td>
+            <tr *ngFor="let quarter of queryResult.items; let rowIndex = index">
+              <td>{{rowIndex+1}}</td>
               <td>{{quarter.quarterName}}</td>
               <td>{{quarter.quarterStart | date }}</td>
               <td>{{quarter.quarterEnd | date }}</td>

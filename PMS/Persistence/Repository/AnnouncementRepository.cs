@@ -75,5 +75,10 @@ namespace PMS.Persistence.Repository
 
             return result;
         }
+
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsers()
+        {
+            return await context.ApplicationUser.ToListAsync();
+        }
     }
 }

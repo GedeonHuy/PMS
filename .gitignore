@@ -5,3 +5,4 @@
 /obj
 /pms-front/src/app/main/group_backup.rar
 /PMS/obj/Release/netcoreapp2.0
+pms-front/src/app/core/common/system.constants.ts

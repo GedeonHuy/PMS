@@ -129,8 +129,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let group of groupsStudent.items">
-                <th scope="row">{{group.groupId}}</th>
+              <tr *ngFor="let group of groupsStudent.items; let rowIndex = index">
+                <th scope="row">{{rowIndex+1}}</th>
                 <td>{{group.groupName}}</td>
                 <td>{{group.project.title}}</td>
                 <td>{{group.lecturer.name}}</td>
@@ -186,8 +186,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let enrollment of enrollments.items">
-                <th scope="row">{{enrollment.enrollmentId}}</th>
+              <tr *ngFor="let enrollment of enrollments.items; let rowIndex = index">
+                <th scope="row">{{rowIndex+1}}</th>
                 <td>{{enrollment.studentEmail}}</td>
                 <td>{{enrollment.quarter.quarterName}}</td>
                 <td [ngClass]="enrollment.isConfirm == 'Pending' ? 'blue': 'green'">
@@ -237,8 +237,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let enrollment of enrollmentsAccept.items">
-                <th scope="row">{{enrollment.enrollmentId}}</th>
+              <tr *ngFor="let enrollment of enrollmentsAccept.items; let rowIndex = index">
+                <th scope="row">{{rowIndex+1}}</th>
                 <td>{{enrollment.studentEmail}}</td>
                 <td>{{enrollment.quarter.quarterName}}</td>
                 <td [ngClass]="enrollment.isConfirm == 'Pending' ? 'blue': 'green'">
@@ -288,8 +288,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let group of groups.items">
-                <th scope="row">{{group.groupId}}</th>
+              <tr *ngFor="let group of groups.items; let rowIndex = index">
+                <th scope="row">{{rowIndex+1}}</th>
                 <td>{{group.groupName}}</td>
                 <td>{{group.project.title}}</td>
                 <td>{{group.lecturer.name}}</td>
@@ -307,7 +307,7 @@
       <div class="x_panel">
         <div class="x_title">
           <h2>
-            <a href="main/group/index" alt="View all">My Group is accepted</a>
+            My Group is accepted
           </h2>
           <ul class="nav navbar-right panel_toolbox">
             <li>
@@ -340,8 +340,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let group of groupsAccepted.items">
-                <th scope="row">{{group.groupId}}</th>
+              <tr *ngFor="let group of groupsAccepted.items; let rowIndex = index">
+                <th scope="row">{{rowIndex+1}}</th>
                 <td>{{group.groupName}}</td>
                 <td>{{group.project.title}}</td>
                 <td>{{group.lecturer.name}}</td>

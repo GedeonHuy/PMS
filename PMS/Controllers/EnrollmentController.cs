@@ -10,6 +10,9 @@ using PMS.Resources;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using PMS.Persistence.IRepository;
+using Microsoft.Extensions.Configuration;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -27,7 +30,9 @@ namespace PMS.Controllers
         private ILecturerRepository lecturerRepository;
         private IUnitOfWork unitOfWork;
 
-        public EnrollmentController(IMapper mapper, IUnitOfWork unitOfWork, IEnrollmentRepository enrollmentRepository,
+        private IConfiguration config;
+
+        public EnrollmentController(IConfiguration config, IMapper mapper, IUnitOfWork unitOfWork, IEnrollmentRepository enrollmentRepository,
             IStudentRepository studentRepository, IGroupRepository groupRepository,
             UserManager<ApplicationUser> userManager, IQuarterRepository quarterRepository,
             ILecturerRepository lecturerRepository)
@@ -40,6 +45,7 @@ namespace PMS.Controllers
             this.userManager = userManager;
             this.quarterRepository = quarterRepository;
             this.lecturerRepository = lecturerRepository;
+            this.config = config;
         }
 
 
@@ -58,7 +64,7 @@ namespace PMS.Controllers
 
             var lecturer = await lecturerRepository.GetLecturer(enrollmentResource.LecturerId);
             enrollment.Lecturer = lecturer;
-
+            SendMail(student.Name ,lecturer.Email);
             //case: enrollment's type and project's type is different and the student has been already in group
             var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
             if (group != null && group.Project.Type != enrollmentResource.Type)
@@ -112,8 +118,7 @@ namespace PMS.Controllers
 
             var lecturer = await lecturerRepository.GetLecturer(enrollmentResource.LecturerId);
             enrollment.Lecturer = lecturer;
-
-            ////case: enrollment's type and project's type is different
+            //case: enrollment's type and project's type is different
             //if (group.Project.Type != enrollmentResource.Type)
             //{
             //    ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
@@ -207,5 +212,52 @@ namespace PMS.Controllers
         //    var currentUser = await userManager.GetUserAsync(HttpContext.User);
         //    return currentUser.Email;
         //}
+
+        public void SendMail(string studentName,string email)
+        {
+            try
+            {
+                string FromAddress = "quanhmp@gmail.com";
+                string FromAdressTitle = "Email from PMS!";
+                //To Address  
+                string ToAddress = email;
+                string ToAdressTitle = "PMS!";
+                string Subject = "Notifications from PMS!";
+                string BodyContent = $"{studentName} registered to be supervised by you";
+                //Smtp Server  
+                string SmtpServer = this.config["EmailSettings:Server"];
+                //Smtp Port Number  
+                int SmtpPortNumber = Int32.Parse(this.config["EmailSettings:Port"]);
+
+                var mimeMessage = new MimeMessage();
+                mimeMessage.From.Add(new MailboxAddress(FromAdressTitle, FromAddress));
+                mimeMessage.To.Add(new MailboxAddress(ToAdressTitle, ToAddress));
+                mimeMessage.Subject = Subject;
+                mimeMessage.Body = new TextPart("plain")
+                {
+                    Text = BodyContent
+                };
+
+                using (var client = new SmtpClient())
+                {
+
+                    client.Connect(SmtpServer, SmtpPortNumber, false);
+                    // Note: only needed if the SMTP server requires authentication  
+                    // Error 5.5.1 Authentication   
+                    client.Authenticate(this.config["EmailSettings:Email"], this.config["EmailSettings:Password"]);
+                    client.Send(mimeMessage);
+                    client.Disconnect(true);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
+
+
+
+
 }
