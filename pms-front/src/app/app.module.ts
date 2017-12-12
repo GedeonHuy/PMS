@@ -6,6 +6,8 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AppRoutes } from './app.routes';
 import { AuthGuard } from './core/guards/auth.guard';
+import { BrowserXhr } from '@angular/http';
+import { BrowserXhrWithProgress, ProgressService } from './core/services/progress.service';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,11 @@ import { AuthGuard } from './core/guards/auth.guard';
     HttpModule,
     RouterModule.forRoot(AppRoutes)
   ],
-  providers: [AuthGuard],
+  providers: [
+    AuthGuard,
+    {provide: BrowserXhr, useClass: BrowserXhrWithProgress},
+    ProgressService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

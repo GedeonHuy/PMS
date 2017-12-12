@@ -50,6 +50,16 @@ export class DataService {
     return this._http.delete(SystemConstants.BASE_URL + url, { headers: this.headers });
   }
 
+  upload(url: string, file){
+    this.headers.delete("Authorization");
+    this.headers.append("Authorization", "Bearer " + this._authService.getLoggedInUser().access_token);
+    var formData= new FormData();
+    formData.append('file',file);
+    console.log(formData.get("file"))
+    return this._http.post(SystemConstants.BASE_URL + url, formData)
+      .map(res=>res.json());
+  }
+
   private extractData(res: Response) {
     let body = res.json();
     return body || {};
