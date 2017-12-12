@@ -82,8 +82,22 @@ namespace PMS.Mapping
                 IsDeleted = cf.IsDeleted,
                 Percentage = cf.Percentage,
                 Score = cf.Score,
-                isMarked = cf.isMarked
-
+                isMarked = cf.isMarked,
+                Lecturer = new Lecturer
+                {
+                    LecturerId = cf.Lecturer.LecturerId,
+                    Address = cf.Lecturer.Address,
+                    DateOfBirth = cf.Lecturer.DateOfBirth,
+                    Email = cf.Lecturer.Email,
+                    IsDeleted = cf.Lecturer.IsDeleted,
+                    Name = cf.Lecturer.Name,
+                    PhoneNumber = cf.Lecturer.PhoneNumber
+                },
+                CouncilRole = new CouncilRole
+                {
+                    CouncilRoleId = cf.CouncilRole.CouncilRoleId,
+                    CouncilRoleName = cf.CouncilRole.CouncilRoleName
+                }
             })));
 
             CreateMap<Major, MajorResource>()
@@ -315,6 +329,13 @@ namespace PMS.Mapping
                     IsCompleted = g.Project.IsCompleted
                 }));
             CreateMap<Excel, ExcelResource>();
+            //CreateMap<UploadedFile, UploadedFileResource>()
+            //    .ForMember(cr => cr.UploadedFileId, opt => opt.MapFrom(c => c.UploadedFileId))
+            //    .ForMember(cr => cr.Url, opt => opt.MapFrom(c => c.Url))
+            //    .ForMember(cr => cr.Title, opt => opt.MapFrom(c => c.Title))
+            //    .ForMember(cr => cr.Description, opt => opt.MapFrom(c => c.Description))
+            //    .ForMember(cr => cr.IsDeleted, opt => opt.MapFrom(c => c.IsDeleted))
+            //    .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId));
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
 
             //API Resource to domain
@@ -388,6 +409,9 @@ namespace PMS.Mapping
 
             CreateMap<CouncilEnrollmentResource, CouncilEnrollment>()
                 .ForMember(m => m.CouncilEnrollmentId, opt => opt.Ignore());
+
+            CreateMap<UploadedFileResource, UploadedFile>()
+                .ForMember(m => m.UploadedFileId, opt => opt.Ignore());
         }
     }
 }
