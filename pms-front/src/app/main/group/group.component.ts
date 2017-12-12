@@ -42,6 +42,7 @@ export class GroupComponent implements OnInit {
 
   query: any = {
     pageSize: SystemConstants.PAGE_SIZE,
+    isConfirm: "Pending"
   };
 
   public user : any;

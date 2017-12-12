@@ -20,7 +20,6 @@ namespace PMS.Controllers
         private IAnnouncementRepository repository;
         private IMapper mapper;
         private IUnitOfWork unitOfWork;
-
         private readonly IConfiguration config;
 
 
@@ -48,7 +47,7 @@ namespace PMS.Controllers
 
             announcement = await repository.GetAnnouncement(announcement.AnnouncementId);
 
-            SendMail(announcement.Content);
+            await SendMailAsync(announcement.Content);
 
             var result = mapper.Map<Announcement, AnnouncementResource>(announcement);
 
@@ -119,46 +118,51 @@ namespace PMS.Controllers
             return mapper.Map<QueryResult<Announcement>, QueryResultResource<AnnouncementResource>>(queryResult);
         }
 
-        public void SendMail(String bodyContent)
+        public async Task SendMailAsync(String bodyContent)
         {
-            try
+            var users = await repository.GetAllUsers();
+            
+            foreach (var user in users)
             {
-                string FromAddress = "quanhmp@gmail.com";
-                string FromAdressTitle = "Email from PMS!";
-                //To Address  
-                string ToAddress = "quan.huynh.k3set@eiu.edu.vn";
-                string ToAdressTitle = "Microsoft ASP.NET Core";
-                string Subject = "Notifications from Admin";
-                string BodyContent = bodyContent;
-                //Smtp Server  
-                string SmtpServer = this.config["EmailSettings:Server"];
-                //Smtp Port Number  
-                int SmtpPortNumber = Int32.Parse(this.config["EmailSettings:Port"]);
-
-                var mimeMessage = new MimeMessage();
-                mimeMessage.From.Add(new MailboxAddress(FromAdressTitle, FromAddress));
-                mimeMessage.To.Add(new MailboxAddress(ToAdressTitle, ToAddress));
-                mimeMessage.Subject = Subject;
-                mimeMessage.Body = new TextPart("plain")
+                try
                 {
-                    Text = BodyContent
-                };
+                    string FromAddress = "quanhmp@gmail.com";
+                    string FromAdressTitle = "Email from PMS!";
+                    //To Address  
+                    string ToAddress = user.Email;
+                    string ToAdressTitle = "PMS!";
+                    string Subject = "Notifications from Admin";
+                    string BodyContent = bodyContent;
+                    //Smtp Server  
+                    string SmtpServer = this.config["EmailSettings:Server"];
+                    //Smtp Port Number  
+                    int SmtpPortNumber = Int32.Parse(this.config["EmailSettings:Port"]);
 
-                using (var client = new SmtpClient())
-                {
+                    var mimeMessage = new MimeMessage();
+                    mimeMessage.From.Add(new MailboxAddress(FromAdressTitle, FromAddress));
+                    mimeMessage.To.Add(new MailboxAddress(ToAdressTitle, ToAddress));
+                    mimeMessage.Subject = Subject;
+                    mimeMessage.Body = new TextPart("plain")
+                    {
+                        Text = BodyContent
+                    };
 
-                    client.Connect(SmtpServer, SmtpPortNumber, false);
-                    // Note: only needed if the SMTP server requires authentication  
-                    // Error 5.5.1 Authentication   
-                    client.Authenticate(this.config["EmailSettings:Email"], this.config["EmailSettings:Password"]);
-                    client.Send(mimeMessage);
-                    client.Disconnect(true);
+                    using (var client = new SmtpClient())
+                    {
 
+                        client.Connect(SmtpServer, SmtpPortNumber, false);
+                        // Note: only needed if the SMTP server requires authentication  
+                        // Error 5.5.1 Authentication   
+                        client.Authenticate(this.config["EmailSettings:Email"], this.config["EmailSettings:Password"]);
+                        client.Send(mimeMessage);
+                        client.Disconnect(true);
+
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
     }

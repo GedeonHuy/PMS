@@ -12,5 +12,6 @@ namespace PMS.Persistence.IRepository
         void AddAnnouncement(Announcement Announcement);
         void RemoveAnnouncement(Announcement Announcement);
         Task<QueryResult<Announcement>> GetAnnouncements(Query filter);
+        Task<IEnumerable<ApplicationUser>> GetAllUsers();
     }
 }
