@@ -8,6 +8,7 @@ using PMS.Persistence;
 using PMS.Resources;
 using PMS.Models;
 using PMS.Persistence.IRepository;
+using PMS.Resources.SubResources;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -169,6 +170,33 @@ namespace PMS.Controllers
                 await unitOfWork.Complete();
             }
             var councilResource = mapper.Map<Council, CouncilResource>(council);
+
+            if (councilResource.LecturerInformations == null)
+            {
+                councilResource.LecturerInformations = new LecturerInformationResource()
+                {
+                    President = new PresidentResource()
+                    {
+                        ScorePercent = 25,
+                        Score = 0
+                    },
+                    Secretary = new SecretaryResource()
+                    {
+                        ScorePercent = 25,
+                        Score = 0
+                    },
+                    Supervisor = new SupervisorResource()
+                    {
+                        ScorePercent = 25,
+                        Score = 0
+                    },
+                    Reviewer = new ReviewerResource()
+                    {
+                        ScorePercent = 25,
+                        Score = 0
+                    },
+                };
+            }
 
             return Ok(councilResource);
         }

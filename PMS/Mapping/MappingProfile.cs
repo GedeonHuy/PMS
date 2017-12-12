@@ -59,9 +59,9 @@ namespace PMS.Mapping
                 },
                 Secretary = new SecretaryResource
                 {
-                    LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Serectory").Lecturer.LecturerId,
-                    ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Serectory").Percentage,
-                    Score = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Serectory").Score
+                    LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Secretary").Lecturer.LecturerId,
+                    ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Secretary").Percentage,
+                    Score = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Secretary").Score
                 },
                 Reviewer = new ReviewerResource
                 {

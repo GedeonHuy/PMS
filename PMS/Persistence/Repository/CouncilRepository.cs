@@ -35,6 +35,7 @@ namespace PMS.Persistence.Repository
                  .Include(c => c.CouncilEnrollments)
                     .ThenInclude(l => l.CouncilRole)
                 .Include(c => c.Group)
+                    .ThenInclude(p => p.Project)
                 .SingleOrDefaultAsync(s => s.CouncilId == id);
         }
 
@@ -104,7 +105,7 @@ namespace PMS.Persistence.Repository
                 IsDeleted = false,
                 isMarked = false,
                 Percentage = lecturerInformations.Secretary.ScorePercent,
-                CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Serectory"),
+                CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Secretary"),
                 Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Secretary.LecturerId)
             };
 
@@ -249,6 +250,11 @@ namespace PMS.Persistence.Repository
                 //poor you bro
                 council.ResultGrade = "F";
             }
+        }
+
+        public CouncilResource FillLecturersInformation(CouncilResource councilResource)
+        {
+            throw new NotImplementedException();
         }
     }
 }
