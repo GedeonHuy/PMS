@@ -258,10 +258,5 @@ namespace PMS.Persistence.Repository
         {
             throw new NotImplementedException();
         }
-
-        public CouncilResource FillLecturersInformation(CouncilResource councilResource)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
