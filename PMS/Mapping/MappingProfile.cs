@@ -75,16 +75,16 @@ namespace PMS.Mapping
                     ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Supervisor").Percentage,
                     Score = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Supervisor").Score
                 }
-            }))
-            .ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new CouncilEnrollment
-            {
-                CouncilEnrollmentId = cf.CouncilEnrollmentId,
-                IsDeleted = cf.IsDeleted,
-                Percentage = cf.Percentage,
-                Score = cf.Score,
-                isMarked = cf.isMarked
+            }));
+            //.ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new CouncilEnrollment
+            //{
+            //    CouncilEnrollmentId = cf.CouncilEnrollmentId,
+            //    IsDeleted = cf.IsDeleted,
+            //    Percentage = cf.Percentage,
+            //    Score = cf.Score,
+            //    isMarked = cf.isMarked
 
-            })));
+            //})));
 
             CreateMap<Major, MajorResource>()
                 .ForMember(gr => gr.Lecturers, opt => opt.MapFrom(g => g.Lecturers.Select(gf => new LecturerResource
@@ -315,6 +315,7 @@ namespace PMS.Mapping
                     IsCompleted = g.Project.IsCompleted
                 }));
             CreateMap<Excel, ExcelResource>();
+            CreateMap<UploadedFile, UploadedFileResource>();
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
 
             //API Resource to domain
@@ -388,6 +389,9 @@ namespace PMS.Mapping
 
             CreateMap<CouncilEnrollmentResource, CouncilEnrollment>()
                 .ForMember(m => m.CouncilEnrollmentId, opt => opt.Ignore());
+
+            CreateMap<UploadedFileResource, UploadedFile>()
+                .ForMember(m => m.UploadedFileId, opt => opt.Ignore());
         }
     }
 }
