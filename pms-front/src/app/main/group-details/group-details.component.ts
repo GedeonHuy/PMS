@@ -92,7 +92,7 @@ export class GroupDetailsComponent implements OnInit {
   loadDataCommits(link: string) {
     this._dataService.getGithub(link)
       .subscribe((response: any) => {
-        for (var i = 52; i > 40; i--) {
+        for (var i = 51; i > 40; i--) {
           this.dataCommit.push(response.all[i]);
           this.commits = this.commits + response.all[i];
         }

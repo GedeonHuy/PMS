@@ -40,8 +40,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let major of queryResult.items">
-              <td>#</td>
+            <tr *ngFor="let major of queryResult.items; let rowIndex = index">
+              <td>{{rowIndex+1}}</td>
               <td>{{major.majorName}}</td>
               <td>{{major.majorCode}}</td>
               <td>

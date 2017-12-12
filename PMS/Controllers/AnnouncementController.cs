@@ -8,6 +8,9 @@ using PMS.Persistence.IRepository;
 using PMS.Persistence;
 using PMS.Resources;
 using PMS.Models;
+using MailKit.Net.Smtp;
+using MimeKit;
+using Microsoft.Extensions.Configuration;
 
 namespace PMS.Controllers
 {
@@ -18,11 +21,15 @@ namespace PMS.Controllers
         private IMapper mapper;
         private IUnitOfWork unitOfWork;
 
-        public AnnouncementController(IMapper mapper, IUnitOfWork unitOfWork, IAnnouncementRepository repository)
+        private readonly IConfiguration config;
+
+
+        public AnnouncementController(IConfiguration config, IMapper mapper, IUnitOfWork unitOfWork, IAnnouncementRepository repository)
         {
             this.repository = repository;
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
+            this.config = config;
         }
 
         [HttpPost]
@@ -40,6 +47,8 @@ namespace PMS.Controllers
             await unitOfWork.Complete();
 
             announcement = await repository.GetAnnouncement(announcement.AnnouncementId);
+
+            SendMail(announcement.Content);
 
             var result = mapper.Map<Announcement, AnnouncementResource>(announcement);
 
@@ -108,6 +117,49 @@ namespace PMS.Controllers
             var queryResult = await repository.GetAnnouncements(query);
 
             return mapper.Map<QueryResult<Announcement>, QueryResultResource<AnnouncementResource>>(queryResult);
+        }
+
+        public void SendMail(String bodyContent)
+        {
+            try
+            {
+                string FromAddress = "quanhmp@gmail.com";
+                string FromAdressTitle = "Email from PMS!";
+                //To Address  
+                string ToAddress = "quan.huynh.k3set@eiu.edu.vn";
+                string ToAdressTitle = "Microsoft ASP.NET Core";
+                string Subject = "Notifications from Admin";
+                string BodyContent = bodyContent;
+                //Smtp Server  
+                string SmtpServer = this.config["EmailSettings:Server"];
+                //Smtp Port Number  
+                int SmtpPortNumber = Int32.Parse(this.config["EmailSettings:Port"]);
+
+                var mimeMessage = new MimeMessage();
+                mimeMessage.From.Add(new MailboxAddress(FromAdressTitle, FromAddress));
+                mimeMessage.To.Add(new MailboxAddress(ToAdressTitle, ToAddress));
+                mimeMessage.Subject = Subject;
+                mimeMessage.Body = new TextPart("plain")
+                {
+                    Text = BodyContent
+                };
+
+                using (var client = new SmtpClient())
+                {
+
+                    client.Connect(SmtpServer, SmtpPortNumber, false);
+                    // Note: only needed if the SMTP server requires authentication  
+                    // Error 5.5.1 Authentication   
+                    client.Authenticate(this.config["EmailSettings:Email"], this.config["EmailSettings:Password"]);
+                    client.Send(mimeMessage);
+                    client.Disconnect(true);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

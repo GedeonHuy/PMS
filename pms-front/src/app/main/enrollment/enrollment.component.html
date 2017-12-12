@@ -42,8 +42,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let enrollment of queryResult.items">
-              <td>{{enrollment.enrollmentId}}</td>
+            <tr *ngFor="let enrollment of queryResult.items; let rowIndex = index">
+              <td>{{rowIndex + 1}}</td>
               <td>{{enrollment.studentEmail}}</td>
               <td>{{enrollment.lecturer.name}}</td>
               <td>{{enrollment.isConfirm}}</td>

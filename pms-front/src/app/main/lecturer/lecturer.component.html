@@ -41,8 +41,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let lecturer of queryResult.items">
-              <td>{{lecturer.lecturerId}}</td>
+            <tr *ngFor="let lecturer of queryResult.items; let rowIndex = index">
+              <td>{{rowIndex+1}}</td>
               <td>{{lecturer.name}}</td>
               <td>{{lecturer.email}}</td>
               <td>{{lecturer.major.majorName}}</td>

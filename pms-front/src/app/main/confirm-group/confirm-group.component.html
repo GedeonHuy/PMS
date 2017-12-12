@@ -37,8 +37,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let group of queryResult.items">
-              <td>{{group.groupId}}</td>
+            <tr *ngFor="let group of queryResult.items; let rowIndex = index">
+              <td>{{rowIndex+1}}</td>
               <td>{{group.groupName}}</td>
               <td>{{group.project.title}}</td>
               <td>{{group.lecturer.name}}</td>
@@ -47,7 +47,7 @@
               <td>
                 <button class="btn btn-link" [routerLink]="['/main/group-details/', group.groupId]">View</button>
 
-                <button class="btn btn-info" (click)="assignCouncil(group.groupId,group.lecturer.name)">
+                <button class="btn btn-info" (click)="assignCouncil(group.groupId)">
                   <i class="fa fa-users"></i>
                 </button>
                 <button class="btn btn-primary" (click)="showEditModal(group.groupId)">

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, group } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AuthenService } from './../../core/services/authen.service';
 import "rxjs/add/Observable/forkJoin";
@@ -89,27 +89,20 @@ export class ConfirmGroupComponent implements OnInit {
     this.councilEnrollment = {};
     this.president = {};
     this.secretary = {};
-    this.supervisor = theSupervisor;
+    this.supervisor = {};
     this.reviewer = {};
 
     Observable.forkJoin(
       this._dataService.get('/api/groups/getgroup/' + id)
     ).subscribe(data => {
       this.group = data[0];
-      if (this.group.council === null) {
-        this.lecturers = this.lecturers.filter(l => l.majorId == this.group.majorId);
-        this.council.groupId = this.group.groupId;
-        this.council.lecturerInformations = this.councilEnrollment;
-        this.council.lecturerInformations.president = this.president;
-        this.council.lecturerInformations.secretary = this.secretary;
-        this.council.lecturerInformations.supervisor = this.supervisor;
-        this.council.lecturerInformations.reviewer = this.reviewer;
-      } else {
-        this._dataService.get("/api/councils/getcouncil/" + this.group.council.councilId).subscribe((response: any) => {
-          console.log(response);
-        });
-      }
-
+      this.lecturers = this.lecturers.filter(l => l.majorId == this.group.majorId);
+      this.council.groupId = this.group.groupId;
+      this.council.lecturerInformations = this.councilEnrollment;
+      this.council.lecturerInformations.president = this.president;
+      this.council.lecturerInformations.secretary = this.secretary;
+      this.council.lecturerInformations.supervisor = this.supervisor;
+      this.council.lecturerInformations.reviewer = this.reviewer;
       this.isLoading = true;
     });
   }
@@ -135,6 +128,7 @@ export class ConfirmGroupComponent implements OnInit {
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;
+      console.log(this.council)
       if (this.council.councilId == undefined) {
         this._dataService.post('/api/councils/add', JSON.stringify(this.council))
           .subscribe((response: any) => {

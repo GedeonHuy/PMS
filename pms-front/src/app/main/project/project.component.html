@@ -44,8 +44,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let project of queryResult.items">
-              <td>#</td>
+            <tr *ngFor="let project of queryResult.items; let rowIndex = index">
+              <td>{{rowIndex+1}}</td>
               <td>{{project.title}}</td>
               <td>{{project.type}}</td>
               <td>{{project.description}}</td>

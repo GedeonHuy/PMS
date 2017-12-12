@@ -40,8 +40,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let group of queryResult.items">
-              <td>{{group.groupId}}</td>
+            <tr *ngFor="let group of queryResult.items; let rowIndex = index">
+              <td>{{rowIndex+1}}</td>
               <td>{{group.groupName}}</td>
               <td>{{group.project.title}}</td>
               <td>{{group.lecturer.name}}</td>
