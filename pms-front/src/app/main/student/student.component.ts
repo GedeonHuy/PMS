@@ -9,6 +9,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { HubConnection } from '@aspnet/signalr-client';
 import { ProgressService } from '../../core/services/progress.service';
+import { NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-student',
@@ -35,7 +36,8 @@ export class StudentComponent implements OnInit {
   query: any = {
     pageSize: SystemConstants.PAGE_SIZE
   };
-  constructor(private _dataService: DataService, private _progressService:ProgressService, private _notificationService: NotificationService) {
+  constructor(private _dataService: DataService, private _progressService:ProgressService,
+     private _notificationService: NotificationService, private _zone:NgZone) {
     this.isClicked = false;
     this.isLoadData = false;
   }
@@ -157,8 +159,11 @@ export class StudentComponent implements OnInit {
     this._progressService.uploadProgress
       .subscribe(progress => {
         console.log(progress)
-        this.progress=progress;
-      });
+        this._zone.run(()=>{
+          this.progress=progress;
+        });
+      },null,
+      ()=> {this.progress=null;});
 
     this._dataService.upload('/api/students/upload/',nativeElement.files[0])
       .subscribe((response: any) => {
