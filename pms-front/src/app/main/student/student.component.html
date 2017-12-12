@@ -25,6 +25,7 @@
         <ul class="nav navbar-right panel_toolbox">
           <li>
             <button class="btn btn-success" (click)="showAddModal()">Add</button>
+            <button class="btn btn-primary" (click)="showImportModal()">Import</button>
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -150,4 +151,29 @@
       </div>
     </div>
   </div>
+</div>
+
+<!--Modal import-->
+<div bsModal #modalImport="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Import Excel file</h4>
+      <button type="button" class="close pull-right" (click)="modalImport.hide()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <h1>Duy</h1>
+      <input type="file" #fileInput>
+      <div class="progress" *ngIf="progress && progress.percentage < 100">
+        <div class="progress-bar" [style.width]="progress.percentage +'%'">
+          <span class="sr-only">{{progress.percentage}}% Complete</span>
+        </div>
+      </div>
+      <button type="button" (click)="uploadFile()" class="btn btn-primary">Import</button>
+    </div>
+  </div>
+</div>
 </div>

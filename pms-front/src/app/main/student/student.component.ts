@@ -8,6 +8,7 @@ import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { HubConnection } from '@aspnet/signalr-client';
+import { ProgressService } from '../../core/services/progress.service';
 
 @Component({
   selector: 'app-student',
@@ -17,12 +18,13 @@ import { HubConnection } from '@aspnet/signalr-client';
 export class StudentComponent implements OnInit {
 
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
-
+  @ViewChild('modalImport') public modalImport: ModalDirective;
+  @ViewChild('fileInput')  fileInput:ElementRef;
   public id: any;
 
   public students: any[];
   public queryResult: any = {};
-
+  public progress:any;
   public student: any;
   public isClicked: boolean;
   isLoadData : boolean;
@@ -33,7 +35,7 @@ export class StudentComponent implements OnInit {
   query: any = {
     pageSize: SystemConstants.PAGE_SIZE
   };
-  constructor(private _dataService: DataService, private _notificationService: NotificationService) {
+  constructor(private _dataService: DataService, private _progressService:ProgressService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isLoadData = false;
   }
@@ -78,6 +80,11 @@ export class StudentComponent implements OnInit {
   showEditModal(id: any) {
     this.loadStudent(id);
     this.modalAddEdit.show();
+  }
+
+  //Import method
+  showImportModal(id: any){
+    this.modalImport.show();
   }
 
   //Get Student with Id
@@ -142,5 +149,23 @@ export class StudentComponent implements OnInit {
     }
 
     return parts.join('&');
+  }
+
+  uploadFile(){
+    var nativeElement:HTMLInputElement= this.fileInput.nativeElement;
+
+    this._progressService.uploadProgress
+      .subscribe(progress => {
+        console.log(progress)
+        this.progress=progress;
+      });
+
+    this._dataService.upload('/api/students/upload/',nativeElement.files[0])
+      .subscribe((response: any) => {
+      this.loadData();
+      this.modalImport.hide();    
+      this._notificationService.printSuccessMessage("Import Success");
+      this.isClicked = false;
+      }, error => this._dataService.handleError(error));
   }
 }
