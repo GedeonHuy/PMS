@@ -75,16 +75,30 @@ namespace PMS.Mapping
                     ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Supervisor").Percentage,
                     Score = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Supervisor").Score
                 }
-            }));
-            //.ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new CouncilEnrollment
-            //{
-            //    CouncilEnrollmentId = cf.CouncilEnrollmentId,
-            //    IsDeleted = cf.IsDeleted,
-            //    Percentage = cf.Percentage,
-            //    Score = cf.Score,
-            //    isMarked = cf.isMarked
-
-            //})));
+            }))
+            .ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new CouncilEnrollment
+            {
+                CouncilEnrollmentId = cf.CouncilEnrollmentId,
+                IsDeleted = cf.IsDeleted,
+                Percentage = cf.Percentage,
+                Score = cf.Score,
+                isMarked = cf.isMarked,
+                Lecturer = new Lecturer
+                {
+                    LecturerId = cf.Lecturer.LecturerId,
+                    Address = cf.Lecturer.Address,
+                    DateOfBirth = cf.Lecturer.DateOfBirth,
+                    Email = cf.Lecturer.Email,
+                    IsDeleted = cf.Lecturer.IsDeleted,
+                    Name = cf.Lecturer.Name,
+                    PhoneNumber = cf.Lecturer.PhoneNumber
+                },
+                CouncilRole = new CouncilRole
+                {
+                    CouncilRoleId = cf.CouncilRole.CouncilRoleId,
+                    CouncilRoleName = cf.CouncilRole.CouncilRoleName
+                }
+            })));
 
             CreateMap<Major, MajorResource>()
                 .ForMember(gr => gr.Lecturers, opt => opt.MapFrom(g => g.Lecturers.Select(gf => new LecturerResource
@@ -315,7 +329,13 @@ namespace PMS.Mapping
                     IsCompleted = g.Project.IsCompleted
                 }));
             CreateMap<Excel, ExcelResource>();
-            CreateMap<UploadedFile, UploadedFileResource>();
+            CreateMap<UploadedFile, UploadedFileResource>()
+                .ForMember(cr => cr.UploadedFileId, opt => opt.MapFrom(c => c.UploadedFileId))
+                .ForMember(cr => cr.Url, opt => opt.MapFrom(c => c.Url))
+                .ForMember(cr => cr.Title, opt => opt.MapFrom(c => c.Title))
+                .ForMember(cr => cr.Description, opt => opt.MapFrom(c => c.Description))
+                .ForMember(cr => cr.IsDeleted, opt => opt.MapFrom(c => c.IsDeleted))
+                .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId));
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
 
             //API Resource to domain
