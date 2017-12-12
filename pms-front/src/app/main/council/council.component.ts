@@ -9,6 +9,8 @@ import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { HubConnection } from '@aspnet/signalr-client';
+import { LoggedInUser } from './../../core/models/loggedin.user';
+import { AuthenService } from './../../core/services/authen.service';
 
 @Component({
   selector: 'app-council',
@@ -17,7 +19,12 @@ import { HubConnection } from '@aspnet/signalr-client';
 })
 export class CouncilComponent implements OnInit {
 
+  public user : LoggedInUser;
+  isLecturer: boolean;
+  isAdmin: boolean;
+
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
+  @ViewChild('modalCouncilEdit') public councilAddEdit: ModalDirective;
 
   public id : any;
   
@@ -27,30 +34,53 @@ export class CouncilComponent implements OnInit {
   public queryResult: any = {};
   public council: any;
 
-  public councilEnrollments: any[];
+  councilEnrollments: any[];
 
   public isLoading: boolean;
   public isClicked: boolean;
   hubConnection: HubConnection;
-  groups: any[];
   
-  PAGE_SIZE = 10;
+  groups: any[];
+  lecturers: any[];
+  percentage: any[];
 
+  PAGE_SIZE = 10;
+  
   query: any = {
     pageSize: this.PAGE_SIZE
   };
-  constructor(private _dataService: DataService, private _notificationService: NotificationService) {
+
+  constructor(private _dataService: DataService, private _authService : AuthenService, private _notificationService: NotificationService) {
     this.isLoading = false;
     this.isClicked = false;
+    this.isAdmin = false;
+    this.isLecturer = false;
+    this.percentage = [25, 50, 75, 100];
   }
 
   ngOnInit() {
 
-    this._dataService.get("/api/groups/getall").subscribe((response: any) => {
-      this.groups = response.items;
+    this.user = this._authService.getLoggedInUser();    
+    this.checkAdmin();
+    this.checkLecturer();
+
+    Observable.forkJoin([
+      
+            this._dataService.get("/api/lecturers/getall"),
+            this._dataService.get("/api/groups/getall")
+      
+          ]).subscribe(data => {
+            this.lecturers = data[0].items;
+            this.groups = data[1].items;
+            console.log("These are lecturers\n");
+            console.log(this.lecturers);
+            console.log("These are groups\n");
+            console.log(this.groups);
     });
     
+
     this.loadData();
+    this.isLoading = true;
   }
 
   loadData() {
@@ -68,38 +98,50 @@ export class CouncilComponent implements OnInit {
   
   //Edit method
   showEditModal(id: any) {
-    this.loadCouncilEnrollments(id);
-    this.modalAddEdit.show();
+    this.loadCouncil(id);
+    this.councilAddEdit.show();
   }
 
   //Get council with Id
-  loadCouncilEnrollments(id: any) {
-    this._dataService.get('/api/councilenrollments/getcouncilenrollmentsbycouncilid/' + id)
+  loadCouncil(id: any) {
+    this._dataService.get('/api/councils/getcouncil/' + id)
       .subscribe((response: any) => {
-        this.councilEnrollments = response.items;
-
+        this.council = response;
+        this.isLoading = true;
         console.log(response);
       });
   }
+
+  loadCouncilEnrollment(id: any) {
+    this._dataService.get('/api/councilenrollments/getcouncilenrollmentsbycouncilid/' + id)
+      .subscribe((response: any) => {
+        this.councilEnrollments = response.items;
+        this.isLoading = true;
+        console.log(this.councilEnrollments);
+      });
+
+  }
+
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;
-      if (this.council.id == undefined) {
+      if (this.council.councilId == undefined) {
         this._dataService.post('/api/councils/add', JSON.stringify(this.council))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
-            this.hubConnection.invoke('LoadData');
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
           console.log(this.council);
       }
       else {
-        this._dataService.put('/api/councils/update/' + this.council.id, JSON.stringify(this.council))
+        console.log("____WAIT____");
+        console.log(this.council);
+        this._dataService.put('/api/councils/update/' + this.council.councilId, JSON.stringify(this.council))
           .subscribe((response: any) => {
             this.loadData();
-            this.modalAddEdit.hide();
+            this.councilAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
@@ -107,7 +149,7 @@ export class CouncilComponent implements OnInit {
     }
   }
 
-  deleteStudent(id: any) {
+  deletecouncil(id: any) {
     this._notificationService.printConfirmationDialog("Delete confirm", () => this.deleteConfirm(id));
   }
 
@@ -133,5 +175,18 @@ export class CouncilComponent implements OnInit {
     }
 
     return parts.join('&');
+  }
+
+  checkLecturer() {
+    if(this.user.role === "Lecturer") {
+      this.isLecturer = true;
+    }
+  }
+
+  checkAdmin() {
+    if(this.user.role === "Admin") {
+      this.isAdmin = true;
+      console.log(this.isAdmin);
+    }
   }
 }

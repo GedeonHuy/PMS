@@ -108,7 +108,7 @@ namespace PMS.Data
             var councilRoles = new CouncilRole[]
             {
                 new CouncilRole{CouncilRoleName="President"},
-                new CouncilRole{CouncilRoleName="Serectory"},
+                new CouncilRole{CouncilRoleName="Secretary"},
                 new CouncilRole{CouncilRoleName="Supervisor"},
                 new CouncilRole{CouncilRoleName="Reviewer"}
             };
