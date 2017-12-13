@@ -107,8 +107,8 @@ namespace PMS.Persistence.Repository
         public async Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByLecturerEmail(string email)
         {   
             return await context.CouncilEnrollments
-                                .Include(c => c.Lecturer)
                                 .Include(c => c.Council)
+                                .Include(c => c.Lecturer)
                                 .Include(c => c.CouncilRole)
                                 .Where(c => c.Lecturer.Email == (email + ""))
                                 .ToListAsync();

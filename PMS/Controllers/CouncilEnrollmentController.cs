@@ -129,8 +129,9 @@ namespace PMS.Controllers
             {
                 return NotFound();
             }
-
-            return Ok(councilEnrollments);
+            var councilEnrollmentResource = mapper.Map<IEnumerable<CouncilEnrollment>, IEnumerable<CouncilEnrollmentResource>>(councilEnrollments);
+            
+            return Ok(councilEnrollmentResource);
         }
 
         [HttpGet]
