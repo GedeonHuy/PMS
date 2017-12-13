@@ -76,8 +76,8 @@ namespace PMS.Persistence.Repository
             var result = new QueryResult<CouncilEnrollment>();
             var query = context.CouncilEnrollments
                                 .Include(c => c.Lecturer)
-                .Include(c => c.Council)
-                .AsQueryable();
+                                .Include(c => c.Council)
+                                .AsQueryable();
 
             //filter
             if (queryObj.LecturerId.HasValue)
@@ -132,5 +132,9 @@ namespace PMS.Persistence.Repository
                                 .ToListAsync();
         }
 
+        public void UpdateScore(CouncilEnrollment councilEnrollment)
+        {
+            context.Update(councilEnrollment);
+        }
     }
 }

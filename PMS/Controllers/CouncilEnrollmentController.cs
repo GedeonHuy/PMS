@@ -141,7 +141,15 @@ namespace PMS.Controllers
             var query = mapper.Map<QueryResource, Query>(queryResource);
 
             var queryResult = await councilEnrollmentRepository.GetCouncilEnrollments(query);
-            return mapper.Map<QueryResult<CouncilEnrollment>, QueryResultResource<CouncilEnrollmentResource>>(queryResult);
+
+            var a = mapper.Map<QueryResult<CouncilEnrollment>, QueryResultResource<CouncilEnrollmentResource>>(queryResult);
+
+            foreach (var item in a.Items)
+            {   
+                item.Council = mapper.Map<Council, CouncilResource>(await councilRepository.GetCouncil(item.CouncilID));
+            }
+
+            return a;
         }
 
         [HttpGet]
@@ -159,6 +167,21 @@ namespace PMS.Controllers
         {
             var councilEnrollments = await councilEnrollmentRepository.GetCouncilEnrollmentsByCouncilId(id);
             var councilEnrollmentResource = mapper.Map<IEnumerable<CouncilEnrollment>, IEnumerable<CouncilEnrollmentResource>>(councilEnrollments);
+            return Ok(councilEnrollmentResource);
+        }
+
+        [HttpPut]
+        [Route("savescore/{id}")]
+        public async Task<IActionResult> SaveScore(int id, int? score)
+        {
+            var councilEnrollment = await councilEnrollmentRepository.GetCouncilEnrollment(id);
+
+            councilEnrollment.Score = score;
+            councilEnrollment.isMarked = true;
+            councilEnrollmentRepository.UpdateScore(councilEnrollment);
+            await unitOfWork.Complete();
+
+            var councilEnrollmentResource = mapper.Map<CouncilEnrollment, CouncilEnrollmentResource>(councilEnrollment);
             return Ok(councilEnrollmentResource);
         }
     }

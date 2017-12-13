@@ -26,7 +26,7 @@ namespace PMS.Persistence
             {
                 return await context.Groups.FindAsync(id);
             }
-            return await context.Groups
+            return await context.Groups.Where(g => g.isDeleted == false)
                 .Include(p => p.Project)
                 .Include(p => p.Enrollments)
                     .ThenInclude(e => e.Student)
@@ -44,15 +44,16 @@ namespace PMS.Persistence
         }
 
         public void RemoveGroup(Group group)
-        {
-            context.Remove(group);
+        {   
+            group.isDeleted = true;
+            context.Update(group);
         }
 
         public async Task<QueryResult<Group>> GetGroups(Query queryObj)
         {
             var result = new QueryResult<Group>();
 
-            var query = context.Groups
+            var query = context.Groups.Where(g => g.isDeleted == false)
                 .Include(p => p.Project)
                 .Include(p => p.Enrollments)
                     .ThenInclude(e => e.Student)

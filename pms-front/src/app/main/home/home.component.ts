@@ -25,8 +25,6 @@ export class HomeComponent implements OnInit {
   public groupsAccepted: any = {};
   public user: any;
 
-  councilEnrollments: any[];
-
   public isClicked: boolean;
   public isLoading: boolean;
 
@@ -34,6 +32,8 @@ export class HomeComponent implements OnInit {
   isLecturer: boolean;
   isStudent: boolean;
   isLoadData: boolean;
+  isLoadLecturerCouncil : boolean;
+  public grade: number;
 
   constructor(private router: Router, private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isLoading = false;
@@ -42,11 +42,15 @@ export class HomeComponent implements OnInit {
     this.isStudent = false;
     this.isLecturer = false;
     this.isLoadData = false;
+    this.isLoadLecturerCouncil = false;
   }
   projects: any[];
   lecturers: any[];
   quarters: any[];
+  councilEnrollments: any[];
+  public thisCouncilEnrollment: any;
 
+  tmp: any;
   public totalProjects: any;
   public totalLecturers: any;
   public totalStudents: any;
@@ -81,6 +85,40 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  saveScore(valid: boolean, score:number) {
+    if (valid) {
+      this.isClicked = true;
+      if (this.thisCouncilEnrollment != undefined) {
+        this._dataService.put("/api/councilenrollments/savescore/"+this.thisCouncilEnrollment.councilEnrollmentId+"?score="+score, JSON.stringify(this.thisCouncilEnrollment))
+          .subscribe((response: any) => {
+            this.gradingModal.hide();
+            this._notificationService.printSuccessMessage("Score Save Success");
+            this.loadLecturerCouncilEnrollments();
+            this.isClicked = false;
+            this.isLoading = false;
+          }, error => this._dataService.handleError(error));
+      }
+    }
+  }
+
+  showGradeModal(id: any) {
+    this.loadThisCouncilEnrollment(id);
+    
+    this.gradingModal.show();
+  }
+
+  loadThisCouncilEnrollment(id: any) {
+    this._dataService.get("/api/councilenrollments/getcouncilenrollment/" + id).subscribe((response: any) => {
+      this.thisCouncilEnrollment = response;
+      console.log(this.thisCouncilEnrollment);
+      this.isLoadLecturerCouncil = true;
+    });
+  }
+
+  hideGradeModal(id: any) {
+    this.gradingModal.hide();
+  }
+
   loadDataStudent() {
     this.loadStudentEnrollment();
     this.loadStudentGroup();
@@ -109,10 +147,11 @@ export class HomeComponent implements OnInit {
   }
 
   loadLecturerCouncilEnrollments() {
-    this._dataService.get("/api/councilenrollments/getcouncilenrollmentsbylectureremail/" + this.user.email + "?pageSize=3").subscribe((response: any) => {
+    this._dataService.get("/api/councilenrollments/getall?email=" + this.user.email).subscribe((response: any) => {
       this.councilEnrollments = response.items;
-      this.isLoadData = true;      
+      this.isLoadLecturerCouncil = true;      
     });
+  
   }
 
   loadLecturerEnrollment() {
@@ -155,6 +194,11 @@ export class HomeComponent implements OnInit {
 
   hideEnrollmentModal() {
     this.enrollmentModal.hide();
+    this.isLoading = false;
+  }
+
+  hideGradingModal() {
+    this.gradingModal.hide();
     this.isLoading = false;
   }
 

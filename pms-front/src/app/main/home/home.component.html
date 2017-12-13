@@ -357,10 +357,101 @@
         </div>
       </div>
     </div>
-    <!-- End zone lecturer -->
   </div>
-
 </div>
+
+<div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+  <div class="x_panel">
+    <div class="x_title">
+      <h2>
+        My groups waiting to be marked
+      </h2>
+      <ul class="nav navbar-right panel_toolbox">
+        <li>
+          <a class="collapse-link">
+            <i class="fa fa-chevron-up"></i>
+          </a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <i class="fa fa-wrench"></i>
+          </a>
+        </li>
+        <li>
+          <a class="close-link">
+            <i class="fa fa-close"></i>
+          </a>
+        </li>
+      </ul>
+      <div class="clearfix"></div>
+    </div>
+    <div class="x_content" *ngIf="isLoadLecturerCouncil">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Group Name</th>
+            <th>Project</th>
+            <th>My score</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of councilEnrollments; let rowIndex = index">
+            <!-- <th scope="row">{{rowIndex+1}}</th> -->
+            <th>{{rowIndex}}</th>
+            <td>{{c.council.gr}}</td>
+            <td>{{c.council.projectName}}</td>
+            <td>{{c.score}}</td>
+            <td>
+              <button class="btn btn-primary" (click)="showGradeModal(c.councilEnrollmentId)">
+              <i class="fa fa-pencil-square-o"></i>
+            </button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!--Modal Add Score-->
+<div bsModal #gradingModal="bs-modal" class="modal fade" tabindex="-1" council="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Scoring</h4>
+      <button type="button" class="close pull-right" (click)="hideGradeModel()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveScore(addEditForm.valid, score.value)"
+        *ngIf="thisCouncilEnrollment && isLoadLecturerCouncil">
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score</label>            
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input class="form-control" [(ngModel)]="thisCouncilEnrollment.score" required name="score" required #score/>
+              <small [hidden]="score.valid || (score.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the score </small>
+            </div>
+          </div>
+          
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+              <button type="button" (click)="hideGradeModal()" class="btn btn-primary">Cancel</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid || isClicked">Save</button>
+              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+            </div>
+          </div>
+
+      </form>
+  </div>
+</div>
+</div>
+</div>
+<!-- End zone lecturer -->
 
 
 <!--Modal add and edit Enrollment-->

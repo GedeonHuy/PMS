@@ -14,7 +14,7 @@ using PMS.Resources.SubResources;
 
 namespace PMS.Controllers
 {
-    [Route("/api/councils")]
+    [Route("/api/councils/")]
     public class CouncilController : Controller
     {
         private IMapper mapper;

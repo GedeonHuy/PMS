@@ -16,5 +16,6 @@ namespace PMS.Persistence.IRepository
         Task<CouncilEnrollment> GetCouncilEnrollmentByLecturerEmail(string email, CouncilResource councilResource);
         Task<QueryResult<CouncilEnrollment>> GetCouncilEnrollmentsByLecturerEmail(string email);
         Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByCouncilId(int id);
+        void UpdateScore(CouncilEnrollment councilEnrollment);
     }
 }

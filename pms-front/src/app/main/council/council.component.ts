@@ -181,25 +181,25 @@ export class CouncilComponent implements OnInit {
             this.isLoading = false;
           }, error => this._dataService.handleError(error));
       }
-      // else {
-      //   console.log("____WAIT____");
-      //   console.log(this.council);
-      //   this.lecturerInformations = this.council.lecturerInformations;        
-      //   this.updateCouncil = {
-      //       "councilId" : this.council.councilId,
-      //       "isDeleted": false,
-      //       "groupId": this.council.groupId,
-      //       "lecturerInformations": this.lecturerInformations,
-      //   };
-      //   console.log(this.updateCouncil)
-      //   this._dataService.put('/api/councils/update/' + this.council.councilId, JSON.stringify(this.updateCouncil))
-      //     .subscribe((response: any) => {
-      //       this.loadData();
-      //       this.councilAddEdit.hide();
-      //       this._notificationService.printSuccessMessage("Update Success");
-      //       this.isClicked = false;
-      //     }, error => this._dataService.handleError(error));
-      // }
+      else {
+        console.log("____WAIT____");
+        console.log(this.council);
+        this.lecturerInformations = this.council.lecturerInformations;        
+        this.updateCouncil = {
+            "councilId" : this.council.councilId,
+            "isDeleted": false,
+            "groupId": this.council.groupId,
+            "lecturerInformations": this.lecturerInformations,
+        };
+        console.log(this.updateCouncil)
+        this._dataService.put('/api/councils/update/' + this.council.councilId, JSON.stringify(this.updateCouncil))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.councilAddEdit.hide();
+            this._notificationService.printSuccessMessage("Update Success");
+            this.isClicked = false;
+          }, error => this._dataService.handleError(error));
+      }
     }
   }
 
