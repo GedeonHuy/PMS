@@ -42,7 +42,7 @@
               <td>{{group.groupName}}</td>
               <td>{{group.project.title}}</td>
               <td>{{group.lecturer.name}}</td>
-              <td>{{group.isConfirm}}</td>
+              <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">{{group.isConfirm}}</td>
 
               <td>
                 <button class="btn btn-link" [routerLink]="['/main/group-details/', group.groupId]">View</button>
@@ -173,6 +173,8 @@
             </div>
           </div>
           <div class="ln_solid"></div>
+
+          
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="hideAddEditModal()" class="btn btn-primary">Cancel</button>
