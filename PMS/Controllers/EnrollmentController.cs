@@ -64,7 +64,7 @@ namespace PMS.Controllers
 
             var lecturer = await lecturerRepository.GetLecturer(enrollmentResource.LecturerId);
             enrollment.Lecturer = lecturer;
-            //SendMail(student.Name ,lecturer.Email);
+            SendMail(student.Name, lecturer.Email);
             //case: enrollment's type and project's type is different and the student has been already in group
             var group = await groupRepository.GetGroup(enrollmentResource.GroupId);
             if (group != null && group.Project.Type != enrollmentResource.Type)
@@ -213,7 +213,7 @@ namespace PMS.Controllers
         //    return currentUser.Email;
         //}
 
-        public void SendMail(string studentName,string email)
+        public void SendMail(string studentName, string email)
         {
             try
             {
