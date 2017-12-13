@@ -43,6 +43,34 @@ namespace PMS.Persistence.Repository
             context.Remove(CouncilEnrollment);
         }
 
+        public async Task<QueryResult<CouncilEnrollment>> GetCouncilEnrollmentsByLecturerEmail(string email)
+        {
+            var result = new QueryResult<CouncilEnrollment>();
+            var query = context.CouncilEnrollments
+                                .Include(c => c.Lecturer)
+                .Include(c => c.Council)
+                .AsQueryable();
+
+            //filter
+
+            query = query.Where(q => q.Lecturer.Email == email);
+
+            //sort
+
+            query = query.OrderByDescending(s => s.CouncilEnrollmentId);
+
+
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+
+            result.Items = await query.ToListAsync();
+
+            return result;
+
+        }
+
         public async Task<QueryResult<CouncilEnrollment>> GetCouncilEnrollments(Query queryObj)
         {
             var result = new QueryResult<CouncilEnrollment>();
