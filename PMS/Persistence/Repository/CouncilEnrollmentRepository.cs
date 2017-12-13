@@ -132,26 +132,5 @@ namespace PMS.Persistence.Repository
                                 .ToListAsync();
         }
 
-<<<<<<< HEAD
-        // public async Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByLecturerEmail(string email)
-        // {   
-        //     return await context.CouncilEnrollments
-        //                         .Include(c => c.Council)
-        //                         .Include(c => c.Lecturer)
-        //                         .Include(c => c.CouncilRole)
-        //                         .Where(c => c.Lecturer.Email == (email + ""))
-        //                         .ToListAsync();
-        // }
-=======
-        //public async Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByLecturerEmail(string email)
-        //{   
-        //    return await context.CouncilEnrollments
-        //                        .Include(c => c.Lecturer)
-        //                        .Include(c => c.Council)
-        //                        .Include(c => c.CouncilRole)
-        //                        .Where(c => c.Lecturer.Email == (email + ""))
-        //                        .ToListAsync();
-        //}
->>>>>>> 775d087d19cea6ab7547c1d3b1a4bc371085bfad
     }
 }

@@ -158,7 +158,7 @@ namespace PMS.Controllers
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-            return File(memory, contentType, Path.GetFileName(downloadPath));
+            return File(memory, contentType, uploadedFile.Title + Path.GetExtension(downloadPath));
         }
 
 
