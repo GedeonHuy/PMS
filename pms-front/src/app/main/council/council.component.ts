@@ -39,6 +39,7 @@ export class CouncilComponent implements OnInit {
   public updateResult: any = {};
 
   public isLoading: boolean;
+  public isLoadData: boolean;
   public isClicked: boolean;
   public isLoadGroup: boolean;
   public isShowGroup: boolean;
@@ -63,6 +64,7 @@ export class CouncilComponent implements OnInit {
   constructor(private _dataService: DataService, private _authService: AuthenService, private _notificationService: NotificationService) {
     this.isLoading = false;
     this.isClicked = false;
+    this.isLoadData = false;
     this.isLoadGroup = false;
     this.isShowGroup = false;
     this.isAdmin = false;
@@ -106,6 +108,7 @@ export class CouncilComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/councils/getall").subscribe((response: any) => {
       this.councils = response.items;
+      this.isLoadData = true;
     });
   }
 
@@ -121,7 +124,6 @@ export class CouncilComponent implements OnInit {
     this.president = {};
     this.secretary = {};
     this.supervisor = {};
-    this.reviewer = {};
     this.isLoadGroup = true;
     
     Observable.forkJoin(
@@ -134,7 +136,6 @@ export class CouncilComponent implements OnInit {
       this.council.lecturerInformations.president = this.president;
       this.council.lecturerInformations.secretary = this.secretary;
       this.council.lecturerInformations.supervisor = this.supervisor;
-      this.council.lecturerInformations.reviewer = this.reviewer;
       this.isLoadGroup = false;
       
       this.isShowGroup = true;
@@ -152,8 +153,7 @@ export class CouncilComponent implements OnInit {
     this._dataService.get('/api/councils/getcouncil/' + id)
       .subscribe((response: any) => {
         this.council = response;
-        this.isLoading = true;
-        console.log(response);
+        console.log(this.council);
       });
   }
 
@@ -170,7 +170,6 @@ export class CouncilComponent implements OnInit {
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;
-      console.log(this.council);
       if (this.council.councilId == undefined) {
         this._dataService.post('/api/councils/add', JSON.stringify(this.council))
           .subscribe((response: any) => {
@@ -181,25 +180,40 @@ export class CouncilComponent implements OnInit {
             this.isLoading = false;
           }, error => this._dataService.handleError(error));
       }
-      // else {
-      //   console.log("____WAIT____");
-      //   console.log(this.council);
-      //   this.lecturerInformations = this.council.lecturerInformations;        
-      //   this.updateCouncil = {
-      //       "councilId" : this.council.councilId,
-      //       "isDeleted": false,
-      //       "groupId": this.council.groupId,
-      //       "lecturerInformations": this.lecturerInformations,
-      //   };
-      //   console.log(this.updateCouncil)
-      //   this._dataService.put('/api/councils/update/' + this.council.councilId, JSON.stringify(this.updateCouncil))
-      //     .subscribe((response: any) => {
-      //       this.loadData();
-      //       this.councilAddEdit.hide();
-      //       this._notificationService.printSuccessMessage("Update Success");
-      //       this.isClicked = false;
-      //     }, error => this._dataService.handleError(error));
-      // }
+      else {
+        this.lecturerInformations = {};
+        this.lecturerInformations = this.council.lecturerInformations;  
+        
+        this.updateCouncil = {
+            "groupId": this.council.groupId,
+            "lecturerInformations": {
+              "president": {
+                "lecturerId" : this.lecturerInformations.president.lecturerId,
+                "scorePercent": this.lecturerInformations.president.scorePercent
+              },
+              "reviewer": {
+                "lecturerId" : this.lecturerInformations.reviewer.lecturerId,
+                "scorePercent": this.lecturerInformations.reviewer.scorePercent
+              },
+              "secretary": {
+                "lecturerId" : this.lecturerInformations.secretary.lecturerId,
+                "scorePercent": this.lecturerInformations.secretary.scorePercent
+              },
+              "supervisor": {
+                "lecturerId" : this.lecturerInformations.supervisor.lecturerId,
+                "scorePercent": this.lecturerInformations.supervisor.scorePercent
+              }
+            },
+        };
+        console.log(this.updateCouncil)
+        this._dataService.put('/api/councils/update/' + this.council.councilId, JSON.stringify(this.updateCouncil))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.councilAddEdit.hide();
+            this._notificationService.printSuccessMessage("Update Success");
+            this.isClicked = false;
+          }, error => this._dataService.handleError(error));
+       }
     }
   }
 
