@@ -47,6 +47,7 @@ export class CouncilComponent implements OnInit {
   percentage: any[];
 
   public lecturerInformations: any = {};
+  public president: any = {};
   public supervisor: any = {};
   public secretary: any = {};
   public reviewer: any = {};
@@ -90,14 +91,16 @@ export class CouncilComponent implements OnInit {
   }
 
   assignScore(id: any) {
-    this._dataService.get("/api/councils/calculatescore" + id).subscribe((response: any) => {
-      this.councils = response;
+    this._dataService.get("/api/councils/calculatescore/" + id).subscribe((response: any) => {
+      this._notificationService.printSuccessMessage("Calculation Success");
+      this.isClicked = false;
     });
   }
 
   assignGrade(id: any) {
-    this._dataService.get("/api/councils/calculategrade" + id).subscribe((response: any) => {
-      this.councils = response;
+    this._dataService.get("/api/councils/calculategrade/" + id).subscribe((response: any) => {
+      this._notificationService.printSuccessMessage("Assign Success");
+      this.isClicked = false;
     });
   }
 
@@ -110,7 +113,7 @@ export class CouncilComponent implements OnInit {
   //Create method
   showAddModal() {
     this.council = {};
-
+    
     this.modalAddEdit.show();
   }
   

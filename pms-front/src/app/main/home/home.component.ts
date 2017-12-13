@@ -16,6 +16,7 @@ import "rxjs/add/Observable/forkJoin";
 })
 export class HomeComponent implements OnInit {
   @ViewChild('enrollmentModal') public enrollmentModal: ModalDirective;
+  @ViewChild('gradingModal') public gradingModal: ModalDirective;
   public enrollment: any;
   public enrollments: any = {};
   public enrollmentsAccept: any = {};
@@ -23,6 +24,8 @@ export class HomeComponent implements OnInit {
   public groupsStudent: any = {};
   public groupsAccepted: any = {};
   public user: any;
+
+  councilEnrollments: any[];
 
   public isClicked: boolean;
   public isLoading: boolean;
@@ -63,7 +66,7 @@ export class HomeComponent implements OnInit {
         this.totalProjects = data[1].totalItems,
         this.lecturers = data[2].items,
         this.totalLecturers = data[2].totalItems,
-        this.totalStudents = data[3].totalItems
+        this.totalStudents = data[3].totalItems,
       this.isLoading = true;
     });
     this.user = this._authenService.getLoggedInUser();
@@ -102,6 +105,14 @@ export class HomeComponent implements OnInit {
     this.loadLecturerEnrollmentAccepted();
     this.loadLecturerGroup();
     this.loadLecturerGroupAccepted();
+    this.loadLecturerCouncilEnrollments();
+  }
+
+  loadLecturerCouncilEnrollments() {
+    this._dataService.get("/api/councilenrollments/getcouncilenrollmentsbylectureremail/" + this.user.email + "?pageSize=3").subscribe((response: any) => {
+      this.councilEnrollments = response.items;
+      this.isLoadData = true;      
+    });
   }
 
   loadLecturerEnrollment() {

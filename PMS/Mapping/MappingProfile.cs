@@ -164,7 +164,7 @@ namespace PMS.Mapping
             CreateMap<CouncilEnrollment, CouncilEnrollmentResource>()
                 .ForMember(cr => cr.LecturerID, opt => opt.MapFrom(c => c.Lecturer.LecturerId))
                 .ForMember(cr => cr.Lecturer, opt => opt.MapFrom(c => new LecturerResource
-                {
+                {   
                     LecturerId = c.Lecturer.LecturerId,
                     Name = c.Lecturer.Name,
                     Address = c.Lecturer.Address,

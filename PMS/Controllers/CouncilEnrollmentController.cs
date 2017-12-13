@@ -121,6 +121,19 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
+        [Route("getcouncilenrollmentsbylectureremail/{email}")]
+        public async Task<IActionResult> GetcouncilenrollmentsByLecturerEmail(string email)
+        {
+            var councilEnrollments = await councilEnrollmentRepository.GetCouncilEnrollmentsByLecturerEmail(email);
+            if (councilEnrollments == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(councilEnrollments);
+        }
+
+        [HttpGet]
         [Route("getcouncilenrollmentbylectureremail/{email}")]
         public async Task<IActionResult> GetCouncilEnrollmentByLecturerEmail(string email, [FromBody]CouncilResource councilResource)
         {
