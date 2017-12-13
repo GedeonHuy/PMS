@@ -139,7 +139,7 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("downloadfile/{id}")]
         public async Task<IActionResult> DownloadFile(int id)
         {

@@ -120,6 +120,10 @@ namespace PMS.Controllers
             return Ok(councilEnrollmentResource);
         }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 775d087d19cea6ab7547c1d3b1a4bc371085bfad
         [HttpGet]
         [Route("getcouncilenrollmentbylectureremail/{email}")]
         public async Task<IActionResult> GetCouncilEnrollmentByLecturerEmail(string email, [FromBody]CouncilResource councilResource)
