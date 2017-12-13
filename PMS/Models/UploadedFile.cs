@@ -11,8 +11,8 @@ namespace PMS.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string Url { get; set; }
+        public string FileName { get; set; }
         public bool IsDeleted { get; set; }
-        public int EnrollmentId { get; set; }
-        public Enrollment Enrollment { get; set; }
+        public Group Group { get; set; }
     }
 }

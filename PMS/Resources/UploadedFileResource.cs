@@ -11,8 +11,9 @@ namespace PMS.Resources
         public string Title { get; set; }
         public string Description { get; set; }
         public string Url { get; set; }
+        public string FileName { get; set; }
         public bool IsDeleted { get; set; }
-        public int? EnrollmentId { get; set; }
-        public EnrollmentResource Enrollment { get; set; }
+        public int? GroupId { get; set; }
+        public GroupResource Group { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace PMS.Persistence.IRepository
         Task<CouncilEnrollment> GetCouncilEnrollment(int? id, bool includeRelated = true);
         void AddCouncilEnrollment(CouncilEnrollment CouncilEnrollment);
         void RemoveCouncilEnrollment(CouncilEnrollment CouncilEnrollment);
-        Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollments();
+        Task<QueryResult<CouncilEnrollment>> GetCouncilEnrollments(Query queryObj);
         Task<CouncilEnrollment> GetCouncilEnrollmentByLecturerEmail(string email, CouncilResource councilResource);
         Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByCouncilId(int id);
     }

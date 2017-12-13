@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PMS.Data;
+using PMS.Extensions;
 using PMS.Models;
 using PMS.Persistence.IRepository;
 using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PMS.Persistence.Repository
@@ -41,12 +43,40 @@ namespace PMS.Persistence.Repository
             context.Remove(CouncilEnrollment);
         }
 
-        public async Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollments()
+        public async Task<QueryResult<CouncilEnrollment>> GetCouncilEnrollments(Query queryObj)
         {
-            return await context.CouncilEnrollments
+            var result = new QueryResult<CouncilEnrollment>();
+            var query = context.CouncilEnrollments
                                 .Include(c => c.Lecturer)
                 .Include(c => c.Council)
-                .ToListAsync();
+                .AsQueryable();
+
+            //filter
+            if (queryObj.LecturerId.HasValue)
+            {
+                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+            }
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<CouncilEnrollment, object>>>()
+            {
+                ["lecturer"] = s => s.Lecturer.Name,
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.CouncilEnrollmentId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
+
         }
 
         public async Task<CouncilEnrollment> GetCouncilEnrollmentByLecturerEmail(string email, CouncilResource councilResource)

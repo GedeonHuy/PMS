@@ -329,13 +329,13 @@ namespace PMS.Mapping
                     IsCompleted = g.Project.IsCompleted
                 }));
             CreateMap<Excel, ExcelResource>();
-            //CreateMap<UploadedFile, UploadedFileResource>()
-            //    .ForMember(cr => cr.UploadedFileId, opt => opt.MapFrom(c => c.UploadedFileId))
-            //    .ForMember(cr => cr.Url, opt => opt.MapFrom(c => c.Url))
-            //    .ForMember(cr => cr.Title, opt => opt.MapFrom(c => c.Title))
-            //    .ForMember(cr => cr.Description, opt => opt.MapFrom(c => c.Description))
-            //    .ForMember(cr => cr.IsDeleted, opt => opt.MapFrom(c => c.IsDeleted))
-            //    .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId));
+            CreateMap<UploadedFile, UploadedFileResource>()
+                .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId))
+                .ForMember(sr => sr.Group, opt => opt.MapFrom(s => new GroupResource
+                {
+                    GroupId = s.Group.GroupId,
+                    GroupName = s.Group.GroupName
+                }));
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
 
             //API Resource to domain
