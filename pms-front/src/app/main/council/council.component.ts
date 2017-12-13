@@ -33,8 +33,10 @@ export class CouncilComponent implements OnInit {
   public councils: any[];  
   public queryResult: any = {};
   public council: any;
+  public updateCouncil: any;
 
   councilEnrollments: any[];
+  public updateResult: any = {};
 
   public isLoading: boolean;
   public isClicked: boolean;
@@ -43,6 +45,11 @@ export class CouncilComponent implements OnInit {
   groups: any[];
   lecturers: any[];
   percentage: any[];
+
+  public lecturerInformations: any = {};
+  public supervisor: any = {};
+  public secretary: any = {};
+  public reviewer: any = {};
 
   PAGE_SIZE = 10;
   
@@ -55,7 +62,7 @@ export class CouncilComponent implements OnInit {
     this.isClicked = false;
     this.isAdmin = false;
     this.isLecturer = false;
-    this.percentage = [25, 50, 75, 100];
+    this.percentage = [0, 25, 50, 75, 100];
   }
 
   ngOnInit() {
@@ -77,10 +84,21 @@ export class CouncilComponent implements OnInit {
             console.log("These are groups\n");
             console.log(this.groups);
     });
-    
 
     this.loadData();
     this.isLoading = true;
+  }
+
+  assignScore(id: any) {
+    this._dataService.get("/api/councils/calculatescore" + id).subscribe((response: any) => {
+      this.councils = response;
+    });
+  }
+
+  assignGrade(id: any) {
+    this._dataService.get("/api/councils/calculategrade" + id).subscribe((response: any) => {
+      this.councils = response;
+    });
   }
 
   loadData() {
@@ -133,12 +151,21 @@ export class CouncilComponent implements OnInit {
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
+          console.log("Here are JSON like stuff");
           console.log(this.council);
       }
       else {
         console.log("____WAIT____");
         console.log(this.council);
-        this._dataService.put('/api/councils/update/' + this.council.councilId, JSON.stringify(this.council))
+        this.lecturerInformations = this.council.lecturerInformations;        
+        this.updateCouncil = {
+            "councilId" : this.council.councilId,
+            "isDeleted": false,
+            "groupId": this.council.groupId,
+            "lecturerInformations": this.lecturerInformations,
+        };
+        console.log(this.updateCouncil)
+        this._dataService.put('/api/councils/update/' + this.council.councilId, JSON.stringify(this.updateCouncil))
           .subscribe((response: any) => {
             this.loadData();
             this.councilAddEdit.hide();

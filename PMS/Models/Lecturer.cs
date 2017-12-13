@@ -11,8 +11,6 @@ namespace PMS.Models
     {
         public int LecturerId { get; set; }
         [Required]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Enter alphabets only, please !")]
-        [MaxLength(40, ErrorMessage = "Maximum length for the name is 40 characters.")]
         public string Name { get; set; }
         [Required]
         public DateTime DateOfBirth { get; set; }
@@ -23,7 +21,6 @@ namespace PMS.Models
         [EmailAddress]
         public string Email { get; set; }
         [Required]
-        [RegularExpression("(\\+84|0)\\d{9,10}", ErrorMessage = "Please, enter a phone number.")]
         public string PhoneNumber { get; set; }
         public bool IsDeleted { get; set; }
         public Major Major { get; set; }

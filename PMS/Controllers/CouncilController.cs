@@ -93,8 +93,8 @@ namespace PMS.Controllers
 
             var checkLecturerInformations = councilRepository.CheckLecturerInformations(councilResource.LecturerInformations);
 
-            ////case: one percent of score is equal 0 or null          
-            if (checkLecturerInformations == "nullOrZeroScorePercent")
+            //case: one percent of score is equal 0 or null          
+            if (checkLecturerInformations == "nullOrScorePercent")
             {
                 ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0 or null");
                 return BadRequest(ModelState);
@@ -122,6 +122,8 @@ namespace PMS.Controllers
             councilRepository.RemoveOldLecturer(council);
             await unitOfWork.Complete();
 
+            // councilResource.ResultScore = calculateGrade(councilResource.LecturerInformations);
+
             await councilRepository.AddLecturers(council, councilResource.LecturerInformations);
             await unitOfWork.Complete();
 
@@ -134,6 +136,16 @@ namespace PMS.Controllers
             var result = mapper.Map<Council, CouncilResource>(council);
             return Ok(result);
         }
+
+        // private string calculateGrade(LecturerInformationResource lI)
+        // {   
+        //     double? pre = (lI.President.Score * 100) / lI.President.ScorePercent;
+        //     double? sup = (lI.Supervisor.Score * 100) / lI.Supervisor.ScorePercent;
+        //     double? sec = (lI.Secretary.Score * 100) / lI.Secretary.ScorePercent;
+        //     double? rev = (lI.Reviewer.Score * 100) / lI.Reviewer.ScorePercent;
+
+        //     return (pre + sup + sec + rev) + "";
+        // }
 
         [HttpDelete]
         [Route("delete/{id}")]
@@ -228,8 +240,6 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var score = councilRepository.CalculateScore(council);
-            council.ResultScore = score.ToString();
             await unitOfWork.Complete();
 
             var result = mapper.Map<Council, CouncilResource>(council);

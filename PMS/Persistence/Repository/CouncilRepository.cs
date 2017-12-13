@@ -149,27 +149,27 @@ namespace PMS.Persistence.Repository
         public string CheckLecturerInformations(LecturerInformationResource lecturerInformations)
         {
             var president = lecturerInformations.President;
-            if (president.ScorePercent == null || president.ScorePercent == 0)
+            if (president.ScorePercent == null)
             {
-                return "nullOrZeroScorePercent";
+                return "nullScorePercent";
             }
 
             var secretary = lecturerInformations.Secretary;
-            if (secretary.ScorePercent == null || secretary.ScorePercent == 0)
+            if (secretary.ScorePercent == null)
             {
-                return "nullOrZeroScorePercent";
+                return "nullScorePercent";
             }
 
             var reviewer = lecturerInformations.Reviewer;
-            if (reviewer.ScorePercent == null || reviewer.ScorePercent == 0)
+            if (reviewer.ScorePercent == null)
             {
-                return "nullOrZeroScorePercent";
+                return "nullScorePercent";
             }
 
             var supervisor = lecturerInformations.Supervisor;
-            if (supervisor.ScorePercent == null || supervisor.ScorePercent == 0)
+            if (supervisor.ScorePercent == null)
             {
-                return "nullOrZeroScorePercent";
+                return "nullScorePercent";
             }
 
             if (president.ScorePercent + secretary.ScorePercent + reviewer.ScorePercent + supervisor.ScorePercent != 100)
@@ -252,11 +252,6 @@ namespace PMS.Persistence.Repository
                 //poor you bro
                 council.ResultGrade = "F";
             }
-        }
-
-        public CouncilResource FillLecturersInformation(CouncilResource councilResource)
-        {
-            throw new NotImplementedException();
         }
     }
 }
