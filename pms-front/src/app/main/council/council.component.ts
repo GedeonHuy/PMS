@@ -39,6 +39,7 @@ export class CouncilComponent implements OnInit {
   public updateResult: any = {};
 
   public isLoading: boolean;
+  public isLoadData: boolean;
   public isClicked: boolean;
   public isLoadGroup: boolean;
   public isShowGroup: boolean;
@@ -63,6 +64,7 @@ export class CouncilComponent implements OnInit {
   constructor(private _dataService: DataService, private _authService: AuthenService, private _notificationService: NotificationService) {
     this.isLoading = false;
     this.isClicked = false;
+    this.isLoadData = false;
     this.isLoadGroup = false;
     this.isShowGroup = false;
     this.isAdmin = false;
@@ -106,6 +108,7 @@ export class CouncilComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/councils/getall").subscribe((response: any) => {
       this.councils = response.items;
+      this.isLoadData = true;
     });
   }
 
@@ -121,7 +124,6 @@ export class CouncilComponent implements OnInit {
     this.president = {};
     this.secretary = {};
     this.supervisor = {};
-    this.reviewer = {};
     this.isLoadGroup = true;
     
     Observable.forkJoin(
@@ -134,7 +136,6 @@ export class CouncilComponent implements OnInit {
       this.council.lecturerInformations.president = this.president;
       this.council.lecturerInformations.secretary = this.secretary;
       this.council.lecturerInformations.supervisor = this.supervisor;
-      this.council.lecturerInformations.reviewer = this.reviewer;
       this.isLoadGroup = false;
       
       this.isShowGroup = true;
@@ -152,8 +153,7 @@ export class CouncilComponent implements OnInit {
     this._dataService.get('/api/councils/getcouncil/' + id)
       .subscribe((response: any) => {
         this.council = response;
-        this.isLoading = true;
-        console.log(response);
+        console.log(this.council);
       });
   }
 
@@ -170,7 +170,6 @@ export class CouncilComponent implements OnInit {
   saveChange(valid: boolean) {
     if (valid) {
       this.isClicked = true;
-      console.log(this.council);
       if (this.council.councilId == undefined) {
         this._dataService.post('/api/councils/add', JSON.stringify(this.council))
           .subscribe((response: any) => {
@@ -199,7 +198,11 @@ export class CouncilComponent implements OnInit {
             this._notificationService.printSuccessMessage("Update Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
+<<<<<<< HEAD
       }
+=======
+       }
+>>>>>>> 717ec4d50c030d1a519dd9b079f7dceb9c301a74
     }
   }
 
