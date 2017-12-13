@@ -56,6 +56,10 @@ namespace PMS.Persistence.Repository
             {
                 query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
             }
+            if (queryObj.Email != null)
+            {
+                query = query.Where(q => q.Lecturer.Email == queryObj.Email);
+            }
 
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<CouncilEnrollment, object>>>()
