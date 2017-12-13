@@ -93,19 +93,20 @@ namespace PMS.Persistence.Repository
         public async Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByCouncilId(int id)
         {
             return await context.CouncilEnrollments
-                                .Where(c => c.Council.CouncilId == id)
+                                .Include(c => c.Council)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.CouncilRole)
+                                .Where(c => c.Council.CouncilId == id)
                                 .ToListAsync();
         }
 
         public async Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByLecturerEmail(string email)
-        {
+        {   
             return await context.CouncilEnrollments
                                 .Include(c => c.Lecturer)
-                                    .ThenInclude(c => c.Major)
+                                .Include(c => c.Council)
                                 .Include(c => c.CouncilRole)
-                                .Where(c => c.Lecturer.Email == email)
+                                .Where(c => c.Lecturer.Email == (email + ""))
                                 .ToListAsync();
         }
     }
