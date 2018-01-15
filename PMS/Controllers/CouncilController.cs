@@ -240,6 +240,7 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
+            councilRepository.CalculateScore(council);
             await unitOfWork.Complete();
 
             var result = mapper.Map<Council, CouncilResource>(council);

@@ -25,7 +25,8 @@ namespace PMS.Models
         public Project()
         {
             Groups = new Collection<Group>();
-            IsCompleted = true;
+            IsCompleted = false;
+            IsDeleted = false;
         }
     }
 }

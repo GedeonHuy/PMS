@@ -37,7 +37,7 @@ namespace PMS.Persistence.Repository
                 .Include(c => c.Group)
                     .ThenInclude(p => p.Project)
                 .Include(c => c.Group)
-                    .ThenInclude(p => p.Lecturer)    
+                    .ThenInclude(p => p.Lecturer)
                 .SingleOrDefaultAsync(s => s.CouncilId == id);
         }
 
@@ -48,7 +48,8 @@ namespace PMS.Persistence.Repository
 
         public void RemoveCouncil(Council council)
         {
-            context.Remove(council);
+            council.IsDeleted = true;
+            //context.Remove(council);
         }
 
         public async Task<QueryResult<Council>> GetCouncils(Query queryObj)
@@ -56,6 +57,7 @@ namespace PMS.Persistence.Repository
             var result = new QueryResult<Council>();
 
             var query = context.Councils
+                         .Where(c => c.IsDeleted == false)
                          .Include(c => c.CouncilEnrollments)
                             .ThenInclude(l => l.Lecturer)
                          .Include(c => c.CouncilEnrollments)

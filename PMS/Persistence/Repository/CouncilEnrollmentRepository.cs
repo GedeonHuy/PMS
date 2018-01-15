@@ -40,13 +40,15 @@ namespace PMS.Persistence.Repository
 
         public void RemoveCouncilEnrollment(CouncilEnrollment CouncilEnrollment)
         {
-            context.Remove(CouncilEnrollment);
+            CouncilEnrollment.IsDeleted = true;
+            //context.Remove(CouncilEnrollment);
         }
 
         public async Task<QueryResult<CouncilEnrollment>> GetCouncilEnrollmentsByLecturerEmail(string email)
         {
             var result = new QueryResult<CouncilEnrollment>();
             var query = context.CouncilEnrollments
+                                .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.Council)
                                 .AsQueryable();
@@ -75,6 +77,7 @@ namespace PMS.Persistence.Repository
         {
             var result = new QueryResult<CouncilEnrollment>();
             var query = context.CouncilEnrollments
+                                .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.Council)
                                 .AsQueryable();
@@ -114,6 +117,7 @@ namespace PMS.Persistence.Repository
         public async Task<CouncilEnrollment> GetCouncilEnrollmentByLecturerEmail(string email, CouncilResource councilResource)
         {
             var councilEnrollment = await context.CouncilEnrollments
+                                    .Where(c => c.IsDeleted == false)
                                     .Include(c => c.Lecturer)
                                     .Include(c => c.Council)
                                     .SingleOrDefaultAsync(c => c.Council.CouncilId == councilResource.CouncilId
@@ -125,6 +129,7 @@ namespace PMS.Persistence.Repository
         public async Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByCouncilId(int id)
         {
             return await context.CouncilEnrollments
+                                .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Council)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.CouncilRole)

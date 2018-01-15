@@ -14,15 +14,15 @@ namespace PMS.Models
         [Required]
         public string Title { set; get; }
         public string Content { set; get; }
-        public DateTime CreatedDate { get; set; }
+        public bool IsDeleted { get; set; }
         [StringLength(128)]
         public string UserId { set; get; }
+        public DateTime CreatedDate { get; set; }
         public ICollection<AnnouncementUser> AnnouncementUsers { get; set; }
-        public bool IsDeleted { get; set; }
         public Announcement()
         {
             AnnouncementUsers = new Collection<AnnouncementUser>();
-            IsDeleted = true;
+            IsDeleted = false;
             CreatedDate = DateTime.Now;
         }
     }

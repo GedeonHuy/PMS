@@ -129,7 +129,9 @@ namespace PMS.Mapping
                     GroupName = gf.GroupName,
                     LinkGitHub = gf.LinkGitHub,
                     isDeleted = gf.isDeleted,
-                    isConfirm = gf.isConfirm
+                    isConfirm = gf.isConfirm,
+                    ResultGrade = gf.ResultGrade,
+                    ResultScore = gf.ResultScore,
                 })))
                 .ForMember(gr => gr.Projects, opt => opt.MapFrom(g => g.Projects.Select(gf => new ProjectResource
                 {
@@ -150,7 +152,9 @@ namespace PMS.Mapping
                     GroupName = sf.GroupName,
                     LinkGitHub = sf.LinkGitHub,
                     isDeleted = sf.isDeleted,
-                    isConfirm = sf.isConfirm
+                    isConfirm = sf.isConfirm,
+                    ResultGrade = sf.ResultGrade,
+                    ResultScore = sf.ResultScore,
                 })))
                 .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(s => s.Enrollments.Select(sf => new EnrollmentResource
                 {
@@ -164,7 +168,7 @@ namespace PMS.Mapping
             CreateMap<CouncilEnrollment, CouncilEnrollmentResource>()
                 .ForMember(cr => cr.LecturerID, opt => opt.MapFrom(c => c.Lecturer.LecturerId))
                 .ForMember(cr => cr.Lecturer, opt => opt.MapFrom(c => new LecturerResource
-                {   
+                {
                     LecturerId = c.Lecturer.LecturerId,
                     Name = c.Lecturer.Name,
                     Address = c.Lecturer.Address,
@@ -193,7 +197,8 @@ namespace PMS.Mapping
                 {
                     MajorId = s.Major.MajorId,
                     MajorName = s.Major.MajorName,
-                    MajorCode = s.Major.MajorCode
+                    MajorCode = s.Major.MajorCode,
+                    isDeleted = s.Major.isDeleted
                 }));
             //.ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => new EnrollmentResource
             //{
@@ -228,7 +233,8 @@ namespace PMS.Mapping
                     {
                         MajorId = e.Student.Major.MajorId,
                         MajorCode = e.Student.Major.MajorCode,
-                        MajorName = e.Student.Major.MajorName
+                        MajorName = e.Student.Major.MajorName,
+                        isDeleted = e.Student.Major.isDeleted
                     }
                 }))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
@@ -237,7 +243,8 @@ namespace PMS.Mapping
                     QuarterId = e.Quarter.QuarterId,
                     QuarterName = e.Quarter.QuarterName,
                     QuarterEnd = e.Quarter.QuarterEnd,
-                    QuarterStart = e.Quarter.QuarterStart
+                    QuarterStart = e.Quarter.QuarterStart,
+                    isDeleted = e.Quarter.isDeleted
                 }))
                 .ForMember(er => er.GroupId, opt => opt.MapFrom(e => e.Group.GroupId))
                 .ForMember(er => er.Group, opt => opt.MapFrom(e => new GroupResource
@@ -246,7 +253,9 @@ namespace PMS.Mapping
                     GroupName = e.Group.GroupName,
                     LinkGitHub = e.Group.LinkGitHub,
                     isDeleted = e.Group.isDeleted,
-                    isConfirm = e.Group.isConfirm
+                    isConfirm = e.Group.isConfirm,
+                    ResultGrade = e.Group.ResultGrade,
+                    ResultScore = e.Group.ResultScore,
                 }))
                 .ForMember(er => er.LecturerId, opt => opt.MapFrom(e => e.Lecturer.LecturerId))
                 .ForMember(er => er.Lecturer, opt => opt.MapFrom(e => new LecturerResource
@@ -268,7 +277,8 @@ namespace PMS.Mapping
                 {
                     MajorId = p.Major.MajorId,
                     MajorName = p.Major.MajorName,
-                    MajorCode = p.Major.MajorCode
+                    MajorCode = p.Major.MajorCode,
+                    isDeleted = p.Major.isDeleted
                 }))
                 .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups));
 
@@ -278,7 +288,8 @@ namespace PMS.Mapping
                 {
                     MajorId = l.Major.MajorId,
                     MajorName = l.Major.MajorName,
-                    MajorCode = l.Major.MajorCode
+                    MajorCode = l.Major.MajorCode,
+                    isDeleted = l.Major.isDeleted
                 }))
                 .ForMember(lr => lr.Groups, opt => opt.MapFrom(l => l.Groups.Select(lf => new GroupResource
                 {
@@ -286,7 +297,9 @@ namespace PMS.Mapping
                     GroupName = lf.GroupName,
                     LinkGitHub = lf.LinkGitHub,
                     isDeleted = lf.isDeleted,
-                    isConfirm = lf.isConfirm
+                    isConfirm = lf.isConfirm,
+                    ResultGrade = lf.ResultGrade,
+                    ResultScore = lf.ResultScore,
                 })))
                 .ForMember(lr => lr.CouncilEnrollments, opt => opt.MapFrom(l => l.CouncilEnrollments));
 
@@ -297,14 +310,16 @@ namespace PMS.Mapping
                     QuarterId = e.Quarter.QuarterId,
                     QuarterName = e.Quarter.QuarterName,
                     QuarterEnd = e.Quarter.QuarterEnd,
-                    QuarterStart = e.Quarter.QuarterStart
+                    QuarterStart = e.Quarter.QuarterStart,
+                    isDeleted = e.Quarter.isDeleted
                 }))
                 .ForMember(gr => gr.MajorId, opt => opt.MapFrom(g => g.Major.MajorId))
                 .ForMember(gr => gr.Major, opt => opt.MapFrom(g => new MajorResource
                 {
                     MajorId = g.Major.MajorId,
                     MajorName = g.Major.MajorName,
-                    MajorCode = g.Major.MajorCode
+                    MajorCode = g.Major.MajorCode,
+                    isDeleted = g.Major.isDeleted
                 }))
                 .ForMember(gr => gr.LecturerId, opt => opt.MapFrom(g => g.Lecturer.LecturerId))
                 .ForMember(gr => gr.Lecturer, opt => opt.MapFrom(g => new LecturerResource
@@ -334,7 +349,12 @@ namespace PMS.Mapping
                 .ForMember(sr => sr.Group, opt => opt.MapFrom(s => new GroupResource
                 {
                     GroupId = s.Group.GroupId,
-                    GroupName = s.Group.GroupName
+                    GroupName = s.Group.GroupName,
+                    LinkGitHub = s.Group.LinkGitHub,
+                    isDeleted = s.Group.isDeleted,
+                    isConfirm = s.Group.isConfirm,
+                    ResultGrade = s.Group.ResultGrade,
+                    ResultScore = s.Group.ResultScore,
                 }));
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
 

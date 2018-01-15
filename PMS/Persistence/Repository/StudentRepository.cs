@@ -49,7 +49,8 @@ namespace PMS.Persistence
 
         public void RemoveStudent(Student student)
         {
-            context.Remove(student);
+            student.IsDeleted = true;
+            //context.Remove(student);
         }
 
         public async Task<QueryResult<Student>> GetStudents(Query queryObj)
@@ -57,6 +58,7 @@ namespace PMS.Persistence
             var result = new QueryResult<Student>();
 
             var query = context.Students
+                .Where(c => c.IsDeleted == false)
                 .Include(p => p.Major)
                 .Include(s => s.Enrollments)
                 .AsQueryable();
@@ -101,6 +103,7 @@ namespace PMS.Persistence
             var result = new QueryResult<Enrollment>();
 
             var query = context.Enrollments
+                .Where(c => c.IsDeleted == false)
                 .Include(p => p.Quarter)
                 .Include(p => p.Group)
                 .Include(p => p.Grade)
@@ -163,6 +166,7 @@ namespace PMS.Persistence
             var result = new QueryResult<Group>();
             var student = await context.Students.FirstOrDefaultAsync(s => s.Email == email);
             var query = context.Groups
+                .Where(c => c.isDeleted == false)
                 .Include(p => p.Lecturer)
                 .Include(p => p.Project)
                 .Include(p => p.Enrollments)

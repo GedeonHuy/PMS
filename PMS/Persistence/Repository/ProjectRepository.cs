@@ -37,7 +37,8 @@ namespace PMS.Persistence
 
         public void RemoveProject(Project project)
         {
-            context.Remove(project);
+            project.IsDeleted = true;
+            //context.Remove(project);
         }
 
         public async Task<QueryResult<Project>> GetProjects(Query queryObj)
@@ -45,6 +46,7 @@ namespace PMS.Persistence
             var result = new QueryResult<Project>();
 
             var query = context.Projects
+                .Where(c => c.IsDeleted == false)
                 .Include(p => p.Groups)
                 .Include(p => p.Major)
                 .AsQueryable();

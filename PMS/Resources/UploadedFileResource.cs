@@ -15,5 +15,9 @@ namespace PMS.Resources
         public bool IsDeleted { get; set; }
         public int? GroupId { get; set; }
         public GroupResource Group { get; set; }
+        public UploadedFileResource()
+        {
+            IsDeleted = false;
+        }
     }
 }

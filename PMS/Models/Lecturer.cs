@@ -13,8 +13,6 @@ namespace PMS.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public DateTime DateOfBirth { get; set; }
-        [Required]
         [MaxLength(255, ErrorMessage = "Maximum length for the address is 255 characters.")]
         public string Address { get; set; }
         [Required]
@@ -23,6 +21,8 @@ namespace PMS.Models
         [Required]
         public string PhoneNumber { get; set; }
         public bool IsDeleted { get; set; }
+        [Required]
+        public DateTime DateOfBirth { get; set; }
         public Major Major { get; set; }
         public IEnumerable<CouncilEnrollment> CouncilEnrollments { get; set; }
         public ICollection<Group> Groups { get; set; }
@@ -32,6 +32,7 @@ namespace PMS.Models
             CouncilEnrollments = new Collection<CouncilEnrollment>();
             Groups = new Collection<Group>();
             projectRepository = new Collection<Project>();
+            IsDeleted = false;
         }
     }
 }

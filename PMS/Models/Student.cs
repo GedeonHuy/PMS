@@ -17,8 +17,6 @@ namespace PMS.Models
         [MaxLength(40, ErrorMessage = "Maximum length for the name is 40 characters.")]
         public string Name { get; set; }
         [Required]
-        public DateTime DateOfBirth { get; set; }
-        [Required]
         [MaxLength(255, ErrorMessage = "Maximum length for the address is 255 characters.")]
         public string Address { get; set; }
         [Required]
@@ -27,13 +25,16 @@ namespace PMS.Models
         [Required]
         [RegularExpression("(\\+84|0)\\d{9,10}", ErrorMessage = "Please, enter a phone number.")]
         public string PhoneNumber { get; set; }
-        public Major Major { get; set; }
         public string Year { get; set; }
         public bool IsDeleted { get; set; }
+        [Required]
+        public DateTime DateOfBirth { get; set; }
+        public Major Major { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
         public Student()
         {
             Enrollments = new Collection<Enrollment>();
+            IsDeleted = false;
         }
 
     }

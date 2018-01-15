@@ -42,6 +42,7 @@ namespace PMS.Persistence.Repository
         public async Task<IEnumerable<AnnouncementUser>> GetAnnouncementUsers()
         {
             return await context.AnnouncementUser
+                .Where(a => a.IsDeleted == false)
                 .Include(g => g.Announcement)
                 .Include(g => g.AppUser)
                     .ToListAsync();
@@ -50,7 +51,8 @@ namespace PMS.Persistence.Repository
 
         public void RemoveAnnouncementUser(AnnouncementUser AnnouncementUser)
         {
-            context.Remove(AnnouncementUser);
+            AnnouncementUser.IsDeleted = true;
+            //context.Remove(AnnouncementUser);
         }
     }
 }

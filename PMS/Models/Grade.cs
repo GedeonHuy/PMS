@@ -9,7 +9,12 @@ namespace PMS.Models
     {
         public int GradeId { get; set; }
         public string GradeType { get; set; }
-        public string IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         public Enrollment Enrollment { get; set; }
+        public Grade()
+        {
+            IsDeleted = false;
+
+        }
     }
 }

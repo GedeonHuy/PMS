@@ -21,10 +21,11 @@ namespace PMS.Resources
         public LecturerInformationResource LecturerInformations { get; set; }
         public ICollection<CouncilEnrollment> CouncilEnrollments { get; set; }
         public CouncilResource()
-        {   
+        {
             LecturerInformations = new LecturerInformationResource();
             CouncilEnrollments = new Collection<CouncilEnrollment>();
             isAllScored = false;
+            IsDeleted = false;
         }
     }
 }

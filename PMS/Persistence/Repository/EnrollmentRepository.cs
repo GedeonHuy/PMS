@@ -38,6 +38,7 @@ namespace PMS.Persistence
         public async Task<Enrollment> GetEnrollmentByEmail(string email)
         {
             return await context.Enrollments
+                .Where(c => c.IsDeleted == false)
                 .Include(p => p.Quarter)
                 .Include(p => p.Group)
                 .Include(p => p.Grade)
@@ -53,7 +54,8 @@ namespace PMS.Persistence
 
         public void RemoveEnrollment(Enrollment enrollment)
         {
-            context.Remove(enrollment);
+            enrollment.IsDeleted = true;
+            //context.Remove(enrollment);
         }
 
         public async Task<QueryResult<Enrollment>> GetEnrollments(Query queryObj)
@@ -61,6 +63,7 @@ namespace PMS.Persistence
             var result = new QueryResult<Enrollment>();
 
             var query = context.Enrollments
+                .Where(c => c.IsDeleted == false)
                 .Include(p => p.Quarter)
                 .Include(p => p.Group)
                 .Include(p => p.Grade)

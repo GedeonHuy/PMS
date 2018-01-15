@@ -36,12 +36,14 @@ namespace PMS.Persistence.Repository
 
         public void RemoveGrade(Grade Grade)
         {
-            context.Remove(Grade);
+            Grade.IsDeleted = true;
+            //context.Remove(Grade);
         }
 
         public async Task<IEnumerable<Grade>> GetGrades()
         {
             return await context.Grades
+                    .Where(c => c.IsDeleted == false)
                     .Include(g => g.Enrollment)
                     .ToListAsync();
         }

@@ -38,13 +38,15 @@ namespace PMS.Persistence.Repository
 
         public void RemoveAnnouncement(Announcement Announcement)
         {
-            context.Remove(Announcement);
+            Announcement.IsDeleted = true;
+            //context.Remove(Announcement);
         }
 
         public async Task<QueryResult<Announcement>> GetAnnouncements(Query queryObj)
         {
             var result = new QueryResult<Announcement>();
             var query = context.Announcement
+                    .Where(a => a.IsDeleted == false)
                     .Include(g => g.AnnouncementUsers)
                     .AsQueryable();
 

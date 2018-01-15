@@ -8,11 +8,11 @@ namespace PMS.Models
     public class Enrollment
     {
         public int EnrollmentId { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
         public string Type { get; set; }
         public bool IsDeleted { get; set; }
         public string isConfirm { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public Grade Grade { get; set; }
         public Quarter Quarter { get; set; }
         public Student Student { get; set; }
@@ -21,6 +21,7 @@ namespace PMS.Models
         public Enrollment()
         {
             isConfirm = "Pending";
+            IsDeleted = false;
         }
     }
 

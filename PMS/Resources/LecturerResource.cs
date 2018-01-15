@@ -10,12 +10,12 @@ namespace PMS.Resources
     {
         public int LecturerId { get; set; }
         public string Name { get; set; }
-        public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsDeleted { get; set; }
         public int? MajorId { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public MajorResource Major { get; set; }
         public IEnumerable<CouncilEnrollmentResource> CouncilEnrollments { get; set; }
         public ICollection<GroupResource> Groups { get; set; }
@@ -23,6 +23,7 @@ namespace PMS.Resources
         {
             CouncilEnrollments = new Collection<CouncilEnrollmentResource>();
             Groups = new Collection<GroupResource>();
+            IsDeleted = false;
         }
     }
 }

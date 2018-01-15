@@ -10,17 +10,17 @@ namespace PMS.Resources
         public int CouncilEnrollmentId { get; set; }
         public bool IsDeleted { get; set; }
         public int? LecturerID { get; set; }
-        public LecturerResource Lecturer { get; set; }
         public int? CouncilID { get; set; }
-        public CouncilResource Council { get; set; }
         public int Percentage { get; set; }
         public double? Score { get; set; }
         public bool isMarked { get; set; }
-
+        public CouncilResource Council { get; set; }
+        public LecturerResource Lecturer { get; set; }
         public CouncilEnrollmentResource()
         {
             Lecturer = new LecturerResource();
             Council = new CouncilResource();
+            IsDeleted = false;
         }
     }
 }

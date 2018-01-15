@@ -44,9 +44,9 @@ namespace PMS.Persistence
         }
 
         public void RemoveGroup(Group group)
-        {   
+        {
             group.isDeleted = true;
-            context.Update(group);
+            //context.Update(group);
         }
 
         public async Task<QueryResult<Group>> GetGroups(Query queryObj)

@@ -9,7 +9,11 @@ namespace PMS.Resources
     {
         public int GradeId { get; set; }
         public string GradeType { get; set; }
-        public string IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         public EnrollmentResource Enrollment { get; set; }
+        public GradeResource()
+        {
+            IsDeleted = false;
+        }
     }
 }

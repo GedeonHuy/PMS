@@ -14,5 +14,9 @@ namespace PMS.Models
         public string FileName { get; set; }
         public bool IsDeleted { get; set; }
         public Group Group { get; set; }
+        public UploadedFile()
+        {
+            IsDeleted = false;
+        }
     }
 }

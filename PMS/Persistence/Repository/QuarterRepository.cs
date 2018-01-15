@@ -39,7 +39,8 @@ namespace PMS.Persistence.Repository
 
         public void RemoveQuarter(Quarter Quarter)
         {
-            context.Remove(Quarter);
+            Quarter.isDeleted = true;
+            //context.Remove(Quarter);
         }
 
         public async Task<QueryResult<Quarter>> GetQuarters(Query queryObj)
@@ -47,6 +48,7 @@ namespace PMS.Persistence.Repository
             var result = new QueryResult<Quarter>();
 
             var query = context.Quarters
+                .Where(c => c.isDeleted == false)
                 .Include(s => s.Groups)
                 .Include(s => s.Enrollments)
                 .AsQueryable();

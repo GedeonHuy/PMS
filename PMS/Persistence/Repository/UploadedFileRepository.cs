@@ -36,12 +36,14 @@ namespace PMS.Persistence.Repository
 
         public void RemoveUploadedFile(UploadedFile uploadedFile)
         {
-            context.Remove(uploadedFile);
+            uploadedFile.IsDeleted = true;
+            //context.Remove(uploadedFile);
         }
 
         public async Task<IEnumerable<UploadedFile>> GetUploadedFiles()
         {
             return await context.UploadedFiles
+                    .Where(c => c.IsDeleted == false)
                     .Include(g => g.Group)
                     .ToListAsync();
         }

@@ -11,6 +11,7 @@ namespace PMS.Resources
         public int MajorId { get; set; }
         public string MajorName { get; set; }
         public string MajorCode { get; set; }
+        public bool isDeleted { get; set; }
         public ICollection<LecturerResource> Lecturers { get; set; }
         public ICollection<ProjectResource> Projects { get; set; }
         public ICollection<GroupResource> Groups { get; set; }
@@ -21,6 +22,7 @@ namespace PMS.Resources
             Projects = new Collection<ProjectResource>();
             Groups = new Collection<GroupResource>();
             Students = new Collection<StudentResource>();
+            isDeleted = false;
         }
     }
 }

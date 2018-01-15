@@ -10,6 +10,7 @@ namespace PMS.Resources
     {
         public int QuarterId { get; set; }
         public string QuarterName { get; set; }
+        public bool isDeleted { get; set; }
         public DateTime QuarterStart { get; set; }
         public DateTime QuarterEnd { get; set; }
         public ICollection<GroupResource> Groups { get; set; }
@@ -18,6 +19,7 @@ namespace PMS.Resources
         {
             Groups = new Collection<GroupResource>();
             Enrollments = new Collection<EnrollmentResource>();
+            isDeleted = false;
         }
     }
 }

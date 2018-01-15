@@ -9,10 +9,10 @@ namespace PMS.Models
     {
         public int AnnouncementUserId { get; set; }
         public bool IsDeleted { get; set; }
-        public ApplicationUser AppUser { get; set; }
-        public Announcement Announcement { get; set; }
         public string From { get; set; }
         public string To { get; set; }
+        public ApplicationUser AppUser { get; set; }
+        public Announcement Announcement { get; set; }
         public AnnouncementUser()
         {
             IsDeleted = false;

@@ -41,7 +41,8 @@ namespace PMS.Persistence.Repository
 
         public void RemoveMajor(Major major)
         {
-            context.Remove(major);
+            major.isDeleted = true;
+            //context.Remove(major);
         }
 
         public async Task<QueryResult<Major>> GetMajors(Query queryObj)
@@ -49,6 +50,7 @@ namespace PMS.Persistence.Repository
             var result = new QueryResult<Major>();
 
             var query = context.Majors
+                .Where(c => c.isDeleted == false)
                 .Include(m => m.Groups)
                 .Include(m => m.Lecturers)
                 .Include(m => m.Students)

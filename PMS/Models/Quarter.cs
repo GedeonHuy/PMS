@@ -12,6 +12,7 @@ namespace PMS.Models
         public int QuarterId { get; set; }
         [Required]
         public string QuarterName { get; set; }
+        public bool isDeleted { get; set; }
         public DateTime QuarterStart { get; set; }
         public DateTime QuarterEnd { get; set; }
         public ICollection<Group> Groups { get; set; }
@@ -20,6 +21,7 @@ namespace PMS.Models
         {
             Groups = new Collection<Group>();
             Enrollments = new Collection<Enrollment>();
+            isDeleted = false;
         }
     }
 }

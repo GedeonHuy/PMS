@@ -39,12 +39,14 @@ namespace PMS.Persistence
 
         public void RemoveLecturer(Lecturer lecturer)
         {
-            context.Remove(lecturer);
+            lecturer.IsDeleted = true;
+            //context.Remove(lecturer);
         }
 
         public async Task<IEnumerable<Enrollment>> FinishGroupingAsync(string email, int QuarterId)
         {
             var enrollments = await context.Enrollments
+                                .Where(c => c.IsDeleted == false)
                                 .Include(e => e.Grade)
                                 .Include(e => e.Group)
                                 .Include(e => e.Lecturer)
@@ -64,6 +66,7 @@ namespace PMS.Persistence
             var result = new QueryResult<Lecturer>();
 
             var query = context.Lecturers
+                .Where(c => c.IsDeleted == false)
                 .Include(l => l.Groups)
                 .Include(l => l.CouncilEnrollments)
                 .Include(p => p.Major)
@@ -102,6 +105,7 @@ namespace PMS.Persistence
             var result = new QueryResult<Enrollment>();
 
             var query = context.Enrollments
+                .Where(c => c.IsDeleted == false)
                 .Include(p => p.Quarter)
                 .Include(p => p.Group)
                 .Include(p => p.Grade)
@@ -164,6 +168,7 @@ namespace PMS.Persistence
             var result = new QueryResult<Group>();
             var lecturer = await context.Lecturers.FirstOrDefaultAsync(s => s.Email == email);
             var query = context.Groups
+                .Where(c => c.isDeleted == false)
                 .Include(p => p.Lecturer)
                 .Include(p => p.Project)
                 .Include(p => p.Enrollments)
