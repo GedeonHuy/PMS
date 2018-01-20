@@ -17,12 +17,14 @@ namespace PMS.Resources
         public int? MajorId { get; set; }
         public DateTime DateOfBirth { get; set; }
         public MajorResource Major { get; set; }
-        public IEnumerable<CouncilEnrollmentResource> CouncilEnrollments { get; set; }
-        public ICollection<GroupResource> Groups { get; set; }
+        public ICollection<int> CouncilEnrollments { get; set; }
+        public ICollection<int> Groups { get; set; }
+        public ICollection<int> Projects { get; set; }
         public LecturerResource()
         {
-            CouncilEnrollments = new Collection<CouncilEnrollmentResource>();
-            Groups = new Collection<GroupResource>();
+            CouncilEnrollments = new Collection<int>();
+            Groups = new Collection<int>();
+            Projects = new Collection<int>();
             IsDeleted = false;
         }
     }

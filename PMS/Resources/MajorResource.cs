@@ -12,16 +12,16 @@ namespace PMS.Resources
         public string MajorName { get; set; }
         public string MajorCode { get; set; }
         public bool isDeleted { get; set; }
-        public ICollection<LecturerResource> Lecturers { get; set; }
-        public ICollection<ProjectResource> Projects { get; set; }
-        public ICollection<GroupResource> Groups { get; set; }
-        public ICollection<StudentResource> Students { get; set; }
+        public ICollection<int> Lecturers { get; set; }
+        public ICollection<int> Projects { get; set; }
+        public ICollection<int> Groups { get; set; }
+        public ICollection<int> Students { get; set; }
         public MajorResource()
         {
-            Lecturers = new Collection<LecturerResource>();
-            Projects = new Collection<ProjectResource>();
-            Groups = new Collection<GroupResource>();
-            Students = new Collection<StudentResource>();
+            Lecturers = new Collection<int>();
+            Projects = new Collection<int>();
+            Groups = new Collection<int>();
+            Students = new Collection<int>();
             isDeleted = false;
         }
     }

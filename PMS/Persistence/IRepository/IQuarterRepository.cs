@@ -1,4 +1,5 @@
 ﻿using PMS.Models;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace PMS.Persistence.IRepository
         void RemoveQuarter(Quarter semester);
         Task<QueryResult<Quarter>> GetQuarters(Query queryObj);
         Task<Quarter> GetCurrentQuarter();
+        void UpdateGroups(Quarter quarter, QuarterResource quarterResource);
+        void UpdateEnrollments(Quarter quarter, QuarterResource quarterResource);
     }
 }

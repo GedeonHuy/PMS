@@ -3,6 +3,7 @@ using PMS.Data;
 using PMS.Extensions;
 using PMS.Models;
 using PMS.Persistence.IRepository;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,6 +84,36 @@ namespace PMS.Persistence.Repository
                 .Include(s => s.Groups)
                 .Include(s => s.Enrollments)
                 .FirstOrDefaultAsync(s => s.QuarterStart < currentDate && s.QuarterEnd > currentDate);
+        }
+
+        public void UpdateGroups(Quarter quarter, QuarterResource quarterResource)
+        {
+            if (quarterResource.Groups != null && quarterResource.Groups.Count >= 0)
+            {
+                quarter.Groups.Clear();
+
+                //add new groups
+                var newGroups = context.Groups.Where(e => quarterResource.Groups.Any(id => id == e.GroupId)).ToList();
+                foreach (var a in newGroups)
+                {
+                    quarter.Groups.Add(a);
+                }
+            }
+        }
+
+        public void UpdateEnrollments(Quarter quarter, QuarterResource quarterResource)
+        {
+            if (quarterResource.Enrollments != null && quarterResource.Enrollments.Count >= 0)
+            {
+                quarter.Enrollments.Clear();
+
+                //add new groups
+                var newEnrollments = context.Enrollments.Where(e => quarterResource.Enrollments.Any(id => id == e.EnrollmentId)).ToList();
+                foreach (var a in newEnrollments)
+                {
+                    quarter.Enrollments.Add(a);
+                }
+            }
         }
     }
 }

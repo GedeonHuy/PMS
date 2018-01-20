@@ -59,14 +59,14 @@ namespace PMS.Controllers
 
         [HttpPost]
         [Route("add")]
-        public async Task<IActionResult> CreateStudent([FromBody]SaveStudentResource studentResource)
+        public async Task<IActionResult> CreateStudent([FromBody]StudentResource studentResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var student = mapper.Map<SaveStudentResource, Student>(studentResource);
+            var student = mapper.Map<StudentResource, Student>(studentResource);
 
             var major = await majorRepository.GetMajor(studentResource.MajorId);
             student.Major = major;
@@ -103,7 +103,7 @@ namespace PMS.Controllers
 
         [HttpPut] /*/api/students/update/id*/
         [Route("update/{id}")]
-        public async Task<IActionResult> UpdateStudent(int id, [FromBody]SaveStudentResource studentResource)
+        public async Task<IActionResult> UpdateStudent(int id, [FromBody]StudentResource studentResource)
         {
             if (!ModelState.IsValid)
             {
@@ -115,7 +115,9 @@ namespace PMS.Controllers
             if (student == null)
                 return NotFound();
 
-            mapper.Map<SaveStudentResource, Student>(studentResource, student);
+            mapper.Map<StudentResource, Student>(studentResource, student);
+
+            studentRepository.UpdateEnrollments(student, studentResource);
 
             var major = await majorRepository.GetMajor(studentResource.MajorId);
             student.Major = major;

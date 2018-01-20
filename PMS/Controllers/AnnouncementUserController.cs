@@ -68,6 +68,7 @@ namespace PMS.Controllers
                 return NotFound();
 
             mapper.Map<AnnouncementUserResource, AnnouncementUser>(announcementUserResource, announcementUser);
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<AnnouncementUser, AnnouncementUserResource>(announcementUser);

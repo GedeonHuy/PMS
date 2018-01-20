@@ -15,5 +15,7 @@ namespace PMS.Persistence
         Task<QueryResult<Group>> GetGroups(Query filter);
         bool CheckEnrollment(Group group, Enrollment enrollment);
         Task<bool> CheckGroup(GroupResource group);
+        void UpdateEnrollments(Group group, GroupResource groupResource);
+        void UpdateUploadedFiles(Group group, GroupResource groupResource);
     }
 }

@@ -63,6 +63,10 @@ namespace PMS.Controllers
                 return NotFound();
 
             mapper.Map<QuarterResource, Quarter>(QuarterResource, Quarter);
+
+            repository.UpdateGroups(Quarter, QuarterResource);
+            repository.UpdateEnrollments(Quarter, QuarterResource);
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Quarter, QuarterResource>(Quarter);

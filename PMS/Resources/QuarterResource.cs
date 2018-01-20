@@ -13,12 +13,12 @@ namespace PMS.Resources
         public bool isDeleted { get; set; }
         public DateTime QuarterStart { get; set; }
         public DateTime QuarterEnd { get; set; }
-        public ICollection<GroupResource> Groups { get; set; }
-        public ICollection<EnrollmentResource> Enrollments { get; set; }
+        public ICollection<int> Groups { get; set; }
+        public ICollection<int> Enrollments { get; set; }
         public QuarterResource()
         {
-            Groups = new Collection<GroupResource>();
-            Enrollments = new Collection<EnrollmentResource>();
+            Groups = new Collection<int>();
+            Enrollments = new Collection<int>();
             isDeleted = false;
         }
     }

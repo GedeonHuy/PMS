@@ -2,6 +2,7 @@
 using PMS.Data;
 using PMS.Extensions;
 using PMS.Models;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -222,6 +223,54 @@ namespace PMS.Persistence
             result.Items = await query.ToListAsync();
 
             return result;
+        }
+
+        public void UpdateCouncilEnrollments(Lecturer lecturer, LecturerResource lecturerResource)
+        {
+            if (lecturerResource.CouncilEnrollments != null && lecturerResource.CouncilEnrollments.Count >= 0)
+            {
+                //remove old councilEnrollments
+                lecturer.CouncilEnrollments.Clear();
+
+                //add new enrollments
+                var newCouncilEnrollments = context.CouncilEnrollments.Where(e => lecturerResource.CouncilEnrollments.Any(id => id == e.CouncilEnrollmentId)).ToList();
+                foreach (var a in newCouncilEnrollments)
+                {
+                    lecturer.CouncilEnrollments.Add(a);
+                }
+            }
+        }
+
+        public void UpdateGroups(Lecturer lecturer, LecturerResource lecturerResource)
+        {
+            if (lecturerResource.Groups != null && lecturerResource.Groups.Count >= 0)
+            {
+                //remove old groups
+                lecturer.Groups.Clear();
+
+                //add new groups
+                var newCouncils = context.Groups.Where(e => lecturerResource.Groups.Any(id => id == e.GroupId)).ToList();
+                foreach (var a in newCouncils)
+                {
+                    lecturer.Groups.Add(a);
+                }
+            }
+        }
+
+        public void UpdateProjects(Lecturer lecturer, LecturerResource lecturerResource)
+        {
+            if (lecturerResource.Projects != null && lecturerResource.Projects.Count >= 0)
+            {
+                //remove old projects
+                lecturer.Projects.Clear();
+
+                //add new projects
+                var newProjects = context.Projects.Where(e => lecturerResource.Projects.Any(id => id == e.ProjectId)).ToList();
+                foreach (var a in newProjects)
+                {
+                    lecturer.Projects.Add(a);
+                }
+            }
         }
     }
 }

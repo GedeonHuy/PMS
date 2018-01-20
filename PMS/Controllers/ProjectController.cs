@@ -82,6 +82,8 @@ namespace PMS.Controllers
 
             mapper.Map<ProjectResource, Project>(projectResource, project);
 
+            projectRepository.UpdateGroups(project, projectResource);
+
             var major = await majorRepository.GetMajor(projectResource.MajorId);
             project.Major = major;
 

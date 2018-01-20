@@ -143,5 +143,37 @@ namespace PMS.Persistence
             }
             return true;
         }
+
+        public void UpdateEnrollments(Group group, GroupResource groupResource)
+        {
+            if (groupResource.Enrollments != null && groupResource.Enrollments.Count >= 0)
+            {
+                //remove old councilEnrollments
+                group.Enrollments.Clear();
+
+                //add new enrollments
+                var newEnrollments = context.Enrollments.Where(e => groupResource.Enrollments.Any(id => id == e.EnrollmentId)).ToList();
+                foreach (var a in newEnrollments)
+                {
+                    group.Enrollments.Add(a);
+                }
+            }
+        }
+
+        public void UpdateUploadedFiles(Group group, GroupResource groupResource)
+        {
+            if (groupResource.UploadedFiles != null && groupResource.UploadedFiles.Count >= 0)
+            {
+                //remove old councilEnrollments
+                group.UploadedFiles.Clear();
+
+                //add new enrollments
+                var newUploadFiles = context.UploadedFiles.Where(e => groupResource.UploadedFiles.Any(id => id == e.UploadedFileId)).ToList();
+                foreach (var a in newUploadFiles)
+                {
+                    group.UploadedFiles.Add(a);
+                }
+            }
+        }
     }
 }

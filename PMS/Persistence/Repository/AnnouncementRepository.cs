@@ -3,6 +3,7 @@ using PMS.Data;
 using PMS.Extensions;
 using PMS.Models;
 using PMS.Persistence.IRepository;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +82,22 @@ namespace PMS.Persistence.Repository
         public async Task<IEnumerable<ApplicationUser>> GetAllUsers()
         {
             return await context.ApplicationUser.ToListAsync();
+        }
+
+        void IAnnouncementRepository.UpdateAnnouncementUsers(Announcement announcement, AnnouncementResource announcementResource)
+        {
+            if (announcementResource.AnnouncementUsers != null && announcementResource.AnnouncementUsers.Count >= 0)
+            {
+                //remove old announcementUsers
+                announcement.AnnouncementUsers.Clear();
+
+                //add new enrollments
+                var newAnnouncementUsers = context.AnnouncementUser.Where(e => announcementResource.AnnouncementUsers.Any(id => id == e.AnnouncementUserId)).ToList();
+                foreach (var a in newAnnouncementUsers)
+                {
+                    announcement.AnnouncementUsers.Add(a);
+                }
+            }
         }
     }
 }

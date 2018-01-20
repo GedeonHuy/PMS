@@ -15,21 +15,7 @@ namespace PMS.Mapping
         {
             //Domain to API Resource
             CreateMap<Announcement, AnnouncementResource>()
-            .ForMember(cr => cr.AnnouncementUsers, opt => opt.MapFrom(c => c.AnnouncementUsers.Select(cf => new AnnouncementUserResource
-            {
-                AnnouncementUserId = cf.AnnouncementUserId,
-                IsDeleted = cf.IsDeleted
-                //AppUser = new ApplicationUserResource
-                //{
-                //    Avatar = cf.AppUser.Avatar,
-                //    CreatedOn = cf.AppUser.CreatedOn,
-                //    FullName = cf.AppUser.FullName,
-                //    IsDeleted = cf.AppUser.IsDeleted,
-                //    Major = cf.AppUser.Major,
-                //    UpdatedOn = cf.AppUser.UpdatedOn
-                //}
-            }
-            )));
+                .ForMember(cr => cr.AnnouncementUsers, opt => opt.MapFrom(c => c.AnnouncementUsers.Select(cf => cf.AnnouncementUserId)));
 
             CreateMap<AnnouncementUser, AnnouncementUserResource>()
             .ForMember(cr => cr.AnnouncementId, opt => opt.MapFrom(c => c.Announcement.AnnouncementId))
@@ -40,7 +26,8 @@ namespace PMS.Mapping
                 FullName = c.AppUser.FullName,
                 IsDeleted = c.AppUser.IsDeleted,
                 Major = c.AppUser.Major,
-                UpdatedOn = c.AppUser.UpdatedOn
+                UpdatedOn = c.AppUser.UpdatedOn,
+                AnnouncementUsers = c.AppUser.AnnouncementUsers.Select(a => a.AnnouncementUserId).ToList()
             }));
 
 
@@ -76,93 +63,17 @@ namespace PMS.Mapping
                     Score = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Supervisor").Score
                 }
             }))
-            .ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => new CouncilEnrollment
-            {
-                CouncilEnrollmentId = cf.CouncilEnrollmentId,
-                IsDeleted = cf.IsDeleted,
-                Percentage = cf.Percentage,
-                Score = cf.Score,
-                isMarked = cf.isMarked,
-                Lecturer = new Lecturer
-                {
-                    LecturerId = cf.Lecturer.LecturerId,
-                    Address = cf.Lecturer.Address,
-                    DateOfBirth = cf.Lecturer.DateOfBirth,
-                    Email = cf.Lecturer.Email,
-                    IsDeleted = cf.Lecturer.IsDeleted,
-                    Name = cf.Lecturer.Name,
-                    PhoneNumber = cf.Lecturer.PhoneNumber
-                },
-                CouncilRole = new CouncilRole
-                {
-                    CouncilRoleId = cf.CouncilRole.CouncilRoleId,
-                    CouncilRoleName = cf.CouncilRole.CouncilRoleName
-                }
-            })));
+            .ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId)));
 
             CreateMap<Major, MajorResource>()
-                .ForMember(gr => gr.Lecturers, opt => opt.MapFrom(g => g.Lecturers.Select(gf => new LecturerResource
-                {
-                    LecturerId = gf.LecturerId,
-                    Name = gf.Name,
-                    Address = gf.Address,
-                    DateOfBirth = gf.DateOfBirth,
-                    Email = gf.Email,
-                    IsDeleted = gf.IsDeleted,
-                    PhoneNumber = gf.PhoneNumber
-                })))
-                .ForMember(gr => gr.Students, opt => opt.MapFrom(g => g.Students.Select(gf => new StudentResource
-                {
-                    Email = gf.Email,
-                    Address = gf.Address,
-                    DateOfBirth = gf.DateOfBirth,
-                    Id = gf.Id,
-                    IsDeleted = gf.IsDeleted,
-                    Name = gf.Name,
-                    PhoneNumber = gf.PhoneNumber,
-                    StudentCode = gf.StudentCode,
-                    Year = gf.Year
-                })))
-                .ForMember(gr => gr.Groups, opt => opt.MapFrom(g => g.Groups.Select(gf => new GroupResource
-                {
-                    GroupId = gf.GroupId,
-                    GroupName = gf.GroupName,
-                    LinkGitHub = gf.LinkGitHub,
-                    isDeleted = gf.isDeleted,
-                    isConfirm = gf.isConfirm,
-                    ResultGrade = gf.ResultGrade,
-                    ResultScore = gf.ResultScore,
-                })))
-                .ForMember(gr => gr.Projects, opt => opt.MapFrom(g => g.Projects.Select(gf => new ProjectResource
-                {
-                    ProjectId = gf.ProjectId,
-                    Description = gf.Description,
-                    ProjectCode = gf.ProjectCode,
-                    Title = gf.Title,
-                    Type = gf.Type,
-                    IsCompleted = gf.IsCompleted,
-                    IsDeleted = gf.IsDeleted
-
-                })));
+                .ForMember(gr => gr.Lecturers, opt => opt.MapFrom(g => g.Lecturers.Select(gf => gf.LecturerId)))
+                .ForMember(gr => gr.Students, opt => opt.MapFrom(g => g.Students.Select(gf => gf.Id)))
+                .ForMember(gr => gr.Groups, opt => opt.MapFrom(g => g.Groups.Select(gf => gf.GroupId)))
+                .ForMember(gr => gr.Projects, opt => opt.MapFrom(g => g.Projects.Select(gf => gf.ProjectId)));
 
             CreateMap<Quarter, QuarterResource>()
-                .ForMember(sr => sr.Groups, opt => opt.MapFrom(s => s.Groups.Select(sf => new GroupResource
-                {
-                    GroupId = sf.GroupId,
-                    GroupName = sf.GroupName,
-                    LinkGitHub = sf.LinkGitHub,
-                    isDeleted = sf.isDeleted,
-                    isConfirm = sf.isConfirm,
-                    ResultGrade = sf.ResultGrade,
-                    ResultScore = sf.ResultScore,
-                })))
-                .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(s => s.Enrollments.Select(sf => new EnrollmentResource
-                {
-                    EnrollmentId = sf.EnrollmentId,
-                    EndDate = sf.EndDate,
-                    StartDate = sf.StartDate,
-                    Type = sf.Type
-                })));
+                .ForMember(sr => sr.Groups, opt => opt.MapFrom(s => s.Groups.Select(sf => sf.GroupId)))
+                .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(s => s.Enrollments.Select(sf => sf.EnrollmentId)));
 
 
             CreateMap<CouncilEnrollment, CouncilEnrollmentResource>()
@@ -175,7 +86,11 @@ namespace PMS.Mapping
                     DateOfBirth = c.Lecturer.DateOfBirth,
                     Email = c.Lecturer.Email,
                     IsDeleted = c.Lecturer.IsDeleted,
-                    PhoneNumber = c.Lecturer.PhoneNumber
+                    PhoneNumber = c.Lecturer.PhoneNumber,
+                    CouncilEnrollments = c.Lecturer.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId).ToList(),
+                    Groups = c.Lecturer.Groups.Select(cf => cf.GroupId).ToList(),
+                    Projects = c.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
+
                 }))
                 .ForMember(cr => cr.CouncilID, opt => opt.MapFrom(c => c.Council.CouncilId))
                 .ForMember(cr => cr.Council, opt => opt.MapFrom(c => new CouncilResource
@@ -184,8 +99,8 @@ namespace PMS.Mapping
                     ResultGrade = c.Council.ResultGrade,
                     ResultScore = c.Council.ResultScore,
                     IsDeleted = c.Council.IsDeleted,
-                    isAllScored = c.Council.isAllScored
-
+                    isAllScored = c.Council.isAllScored,
+                    CouncilEnrollments = c.Council.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId).ToList()
                 }));
 
             CreateMap<Grade, GradeResource>()
@@ -198,45 +113,42 @@ namespace PMS.Mapping
                     MajorId = s.Major.MajorId,
                     MajorName = s.Major.MajorName,
                     MajorCode = s.Major.MajorCode,
-                    isDeleted = s.Major.isDeleted
-                }));
-            //.ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => new EnrollmentResource
-            //{
-            //    EnrollmentId = e.EnrollmentId,
-            //    EndDate = e.EndDate,
-            //    StartDate = e.StartDate,
-            //    Type = e.Type,
-            //    GradeId = e.Grade.GradeId,
-            //    isConfirm = e.isConfirm,
-            //    IsDeleted = e.IsDeleted,
-            //    QuarterId = e.Quarter.QuarterId,
-            //    GroupId = e.Group.GroupId,
-            //    LecturerId = e.Lecturer.LecturerId,
-            //    StudentEmail = e.Student.Email
-            //})));
+                    isDeleted = s.Major.isDeleted,
+                    Groups = s.Major.Groups.Select(sf => sf.GroupId).ToList(),
+                    Students = s.Major.Students.Select(sf => sf.Id).ToList(),
+                    Projects = s.Major.Projects.Select(sf => sf.ProjectId).ToList(),
+                    Lecturers = s.Major.Lecturers.Select(sf => sf.LecturerId).ToList(),
+                }))
+                .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(v => v.Enrollments.Select(e => e.EnrollmentId)));
 
             CreateMap<Enrollment, EnrollmentResource>()
                 .ForMember(er => er.StudentEmail, opt => opt.MapFrom(e => e.Student.Email))
+                .ForMember(er => er.StudentId, opt => opt.MapFrom(e => e.Student.Id))
                 .ForMember(er => er.Grade, opt => opt.MapFrom(e => e.Grade))
-                .ForMember(er => er.Student, opt => opt.MapFrom(e => new StudentResource
-                {
-                    Id = e.Student.Id,
-                    Address = e.Student.Address,
-                    DateOfBirth = e.Student.DateOfBirth,
-                    Email = e.Student.Email,
-                    IsDeleted = e.Student.IsDeleted,
-                    Name = e.Student.Name,
-                    PhoneNumber = e.Student.PhoneNumber,
-                    Year = e.Student.Year,
-                    StudentCode = e.Student.StudentCode,
-                    Major = new MajorResource
-                    {
-                        MajorId = e.Student.Major.MajorId,
-                        MajorCode = e.Student.Major.MajorCode,
-                        MajorName = e.Student.Major.MajorName,
-                        isDeleted = e.Student.Major.isDeleted
-                    }
-                }))
+                //.ForMember(er => er.Student, opt => opt.MapFrom(e => new StudentResource
+                //{
+                //    Id = e.Student.Id,
+                //    Address = e.Student.Address,
+                //    DateOfBirth = e.Student.DateOfBirth,
+                //    Email = e.Student.Email,
+                //    IsDeleted = e.Student.IsDeleted,
+                //    Name = e.Student.Name,
+                //    PhoneNumber = e.Student.PhoneNumber,
+                //    Year = e.Student.Year,
+                //    StudentCode = e.Student.StudentCode,
+                //    Enrollments = e.Student.Enrollments.Select(ef => ef.EnrollmentId).ToList(),
+                //    Major = new MajorResource
+                //    {
+                //        MajorId = e.Student.Major.MajorId,
+                //        MajorCode = e.Student.Major.MajorCode,
+                //        MajorName = e.Student.Major.MajorName,
+                //        isDeleted = e.Student.Major.isDeleted,
+                //        Groups = e.Student.Major.Groups.Select(sf => sf.GroupId).ToList(),
+                //        Students = e.Student.Major.Students.Select(sf => sf.Id).ToList(),
+                //        Projects = e.Student.Major.Projects.Select(sf => sf.ProjectId).ToList(),
+                //        Lecturers = e.Student.Major.Lecturers.Select(sf => sf.LecturerId).ToList(),
+                //    }
+                //}))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
                 .ForMember(er => er.Quarter, opt => opt.MapFrom(e => new Quarter
                 {
@@ -256,6 +168,8 @@ namespace PMS.Mapping
                     isConfirm = e.Group.isConfirm,
                     ResultGrade = e.Group.ResultGrade,
                     ResultScore = e.Group.ResultScore,
+                    Enrollments = e.Group.Enrollments.Select(ef => ef.EnrollmentId).ToList(),
+                    UploadedFiles = e.Group.UploadedFiles.Select(ef => ef.UploadedFileId).ToList()
                 }))
                 .ForMember(er => er.LecturerId, opt => opt.MapFrom(e => e.Lecturer.LecturerId))
                 .ForMember(er => er.Lecturer, opt => opt.MapFrom(e => new LecturerResource
@@ -266,7 +180,10 @@ namespace PMS.Mapping
                     DateOfBirth = e.Lecturer.DateOfBirth,
                     Email = e.Lecturer.Email,
                     IsDeleted = e.Lecturer.IsDeleted,
-                    PhoneNumber = e.Lecturer.PhoneNumber
+                    PhoneNumber = e.Lecturer.PhoneNumber,
+                    CouncilEnrollments = e.Lecturer.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId).ToList(),
+                    Groups = e.Lecturer.Groups.Select(cf => cf.GroupId).ToList(),
+                    Projects = e.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
                 }));
 
             CreateMap<ApplicationRole, RoleResource>();
@@ -278,9 +195,13 @@ namespace PMS.Mapping
                     MajorId = p.Major.MajorId,
                     MajorName = p.Major.MajorName,
                     MajorCode = p.Major.MajorCode,
-                    isDeleted = p.Major.isDeleted
+                    isDeleted = p.Major.isDeleted,
+                    Groups = p.Major.Groups.Select(sf => sf.GroupId).ToList(),
+                    Students = p.Major.Students.Select(sf => sf.Id).ToList(),
+                    Projects = p.Major.Projects.Select(sf => sf.ProjectId).ToList(),
+                    Lecturers = p.Major.Lecturers.Select(sf => sf.LecturerId).ToList(),
                 }))
-                .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups));
+                .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)));
 
             CreateMap<Lecturer, LecturerResource>()
                 .ForMember(lr => lr.MajorId, opt => opt.MapFrom(l => l.Major.MajorId))
@@ -289,21 +210,19 @@ namespace PMS.Mapping
                     MajorId = l.Major.MajorId,
                     MajorName = l.Major.MajorName,
                     MajorCode = l.Major.MajorCode,
-                    isDeleted = l.Major.isDeleted
+                    isDeleted = l.Major.isDeleted,
+                    Groups = l.Major.Groups.Select(sf => sf.GroupId).ToList(),
+                    Students = l.Major.Students.Select(sf => sf.Id).ToList(),
+                    Projects = l.Major.Projects.Select(sf => sf.ProjectId).ToList(),
+                    Lecturers = l.Major.Lecturers.Select(sf => sf.LecturerId).ToList(),
                 }))
-                .ForMember(lr => lr.Groups, opt => opt.MapFrom(l => l.Groups.Select(lf => new GroupResource
-                {
-                    GroupId = lf.GroupId,
-                    GroupName = lf.GroupName,
-                    LinkGitHub = lf.LinkGitHub,
-                    isDeleted = lf.isDeleted,
-                    isConfirm = lf.isConfirm,
-                    ResultGrade = lf.ResultGrade,
-                    ResultScore = lf.ResultScore,
-                })))
-                .ForMember(lr => lr.CouncilEnrollments, opt => opt.MapFrom(l => l.CouncilEnrollments));
+                .ForMember(lr => lr.Groups, opt => opt.MapFrom(l => l.Groups.Select(lf => lf.GroupId)))
+                .ForMember(lr => lr.Projects, opt => opt.MapFrom(l => l.Projects.Select(lf => lf.ProjectId)))
+                .ForMember(lr => lr.CouncilEnrollments, opt => opt.MapFrom(l => l.CouncilEnrollments.Select(lf => lf.CouncilEnrollmentId)));
 
             CreateMap<Group, GroupResource>()
+                .ForMember(gr => gr.Enrollments, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.EnrollmentId)))
+                .ForMember(gr => gr.UploadedFiles, opt => opt.MapFrom(g => g.UploadedFiles.Select(gf => gf.UploadedFileId)))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
                 .ForMember(er => er.Quarter, opt => opt.MapFrom(e => new QuarterResource
                 {
@@ -311,7 +230,9 @@ namespace PMS.Mapping
                     QuarterName = e.Quarter.QuarterName,
                     QuarterEnd = e.Quarter.QuarterEnd,
                     QuarterStart = e.Quarter.QuarterStart,
-                    isDeleted = e.Quarter.isDeleted
+                    isDeleted = e.Quarter.isDeleted,
+                    Groups = e.Quarter.Groups.Select(gf => gf.GroupId).ToList(),
+                    Enrollments = e.Quarter.Enrollments.Select(ef => ef.EnrollmentId).ToList()
                 }))
                 .ForMember(gr => gr.MajorId, opt => opt.MapFrom(g => g.Major.MajorId))
                 .ForMember(gr => gr.Major, opt => opt.MapFrom(g => new MajorResource
@@ -319,7 +240,11 @@ namespace PMS.Mapping
                     MajorId = g.Major.MajorId,
                     MajorName = g.Major.MajorName,
                     MajorCode = g.Major.MajorCode,
-                    isDeleted = g.Major.isDeleted
+                    isDeleted = g.Major.isDeleted,
+                    Groups = g.Major.Groups.Select(sf => sf.GroupId).ToList(),
+                    Students = g.Major.Students.Select(sf => sf.Id).ToList(),
+                    Projects = g.Major.Projects.Select(sf => sf.ProjectId).ToList(),
+                    Lecturers = g.Major.Lecturers.Select(sf => sf.LecturerId).ToList(),
                 }))
                 .ForMember(gr => gr.LecturerId, opt => opt.MapFrom(g => g.Lecturer.LecturerId))
                 .ForMember(gr => gr.Lecturer, opt => opt.MapFrom(g => new LecturerResource
@@ -330,7 +255,10 @@ namespace PMS.Mapping
                     DateOfBirth = g.Lecturer.DateOfBirth,
                     Email = g.Lecturer.Email,
                     IsDeleted = g.Lecturer.IsDeleted,
-                    PhoneNumber = g.Lecturer.PhoneNumber
+                    PhoneNumber = g.Lecturer.PhoneNumber,
+                    CouncilEnrollments = g.Lecturer.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId).ToList(),
+                    Groups = g.Lecturer.Groups.Select(cf => cf.GroupId).ToList(),
+                    Projects = g.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
                 }))
                 .ForMember(gr => gr.ProjectId, opt => opt.MapFrom(g => g.Project.ProjectId))
                 .ForMember(gr => gr.Project, opt => opt.MapFrom(g => new ProjectResource
@@ -341,7 +269,8 @@ namespace PMS.Mapping
                     Title = g.Project.Title,
                     Type = g.Project.Type,
                     IsDeleted = g.Project.IsDeleted,
-                    IsCompleted = g.Project.IsCompleted
+                    IsCompleted = g.Project.IsCompleted,
+                    Groups = g.Project.Groups.Select(gf => gf.GroupId).ToList()
                 }));
             CreateMap<Excel, ExcelResource>();
             CreateMap<UploadedFile, UploadedFileResource>()
@@ -355,40 +284,39 @@ namespace PMS.Mapping
                     isConfirm = s.Group.isConfirm,
                     ResultGrade = s.Group.ResultGrade,
                     ResultScore = s.Group.ResultScore,
+                    Enrollments = s.Group.Enrollments.Select(sf => sf.EnrollmentId).ToList(),
+                    UploadedFiles = s.Group.UploadedFiles.Select(sf => sf.UploadedFileId).ToList()
                 }));
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
 
             //API Resource to domain
             CreateMap<QueryResource, Query>();
 
-            CreateMap<SaveStudentResource, Student>()
+            CreateMap<StudentResource, Student>()
             .ForMember(s => s.Id, opt => opt.Ignore())
-            .ForMember(s => s.Enrollments, opt => opt.Ignore())
-            .AfterMap((sr, s) =>
-            {
-                //remove unselected enrollments
-                var removedEnrollments = s.Enrollments.Where(e => !sr.Enrollments.Contains(e.EnrollmentId));
-                foreach (var e in removedEnrollments)
-                {
-                    s.Enrollments.Remove(e);
-                }
+            .ForMember(s => s.Enrollments, opt => opt.Ignore());
+            //.AfterMap((sr, s) =>
+            //{
+            //    //remove unselected enrollments
+            //    var removedEnrollments = s.Enrollments.Where(e => !sr.Enrollments.Contains(e.EnrollmentId));
+            //    foreach (var e in removedEnrollments)
+            //    {
+            //        s.Enrollments.Remove(e);
+            //    }
 
-                //add new enrollments
-                var addedEnrollments = sr.Enrollments.Where(id => !s.Enrollments.Any(e => e.EnrollmentId == id)).Select(id => new Enrollment { EnrollmentId = id });
-                foreach (var e in addedEnrollments)
-                {
-                    s.Enrollments.Add(e);
-                }
-            });
+            //    //add new enrollments
+            //    var addedEnrollments = sr.Enrollments.Where(id => !s.Enrollments.Any(e => e.EnrollmentId == id)).Select(id => new Enrollment { EnrollmentId = id });
+            //    foreach (var e in addedEnrollments)
+            //    {
+            //        s.Enrollments.Add(e);
+            //    }
+            //});
 
             CreateMap<AnnouncementResource, Announcement>()
                 .ForMember(c => c.AnnouncementId, opt => opt.Ignore());
 
             CreateMap<AnnouncementUserResource, AnnouncementUser>()
                 .ForMember(c => c.AnnouncementUserId, opt => opt.Ignore());
-
-            CreateMap<StudentResource, Student>()
-                .ForMember(c => c.Id, opt => opt.Ignore());
 
             CreateMap<CouncilResource, Council>()
                 .ForMember(c => c.CouncilId, opt => opt.Ignore());

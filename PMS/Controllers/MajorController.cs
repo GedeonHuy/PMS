@@ -63,6 +63,12 @@ namespace PMS.Controllers
                 return NotFound();
 
             mapper.Map<MajorResource, Major>(majorResource, major);
+
+            repository.UpdateLecturers(major, majorResource);
+            repository.UpdateProjects(major, majorResource);
+            repository.UpdateGroups(major, majorResource);
+            repository.UpdateStudents(major, majorResource);
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Major, MajorResource>(major);

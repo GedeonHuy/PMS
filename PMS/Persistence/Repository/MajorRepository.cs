@@ -3,6 +3,7 @@ using PMS.Data;
 using PMS.Extensions;
 using PMS.Models;
 using PMS.Persistence.IRepository;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,6 +78,70 @@ namespace PMS.Persistence.Repository
             result.Items = await query.ToListAsync();
 
             return result;
+        }
+
+        public void UpdateLecturers(Major major, MajorResource majorResource)
+        {
+            if (majorResource.Lecturers != null && majorResource.Lecturers.Count >= 0)
+            {
+                //remove old lecturers
+                major.Lecturers.Clear();
+
+                //add new lecturers
+                var newLecturers = context.Lecturers.Where(e => majorResource.Lecturers.Any(id => id == e.LecturerId)).ToList();
+                foreach (var a in newLecturers)
+                {
+                    major.Lecturers.Add(a);
+                }
+            }
+        }
+
+        public void UpdateProjects(Major major, MajorResource majorResource)
+        {
+            if (majorResource.Projects != null && majorResource.Projects.Count >= 0)
+            {
+                //remove old projects
+                major.Projects.Clear();
+
+                //add new projects
+                var newProjects = context.Projects.Where(e => majorResource.Projects.Any(id => id == e.ProjectId)).ToList();
+                foreach (var a in newProjects)
+                {
+                    major.Projects.Add(a);
+                }
+            }
+        }
+
+        public void UpdateGroups(Major major, MajorResource majorResource)
+        {
+            if (majorResource.Groups != null && majorResource.Groups.Count >= 0)
+            {
+                //remove old groups
+                major.Groups.Clear();
+
+                //add new groups
+                var newGroups = context.Groups.Where(e => majorResource.Groups.Any(id => id == e.GroupId)).ToList();
+                foreach (var a in newGroups)
+                {
+                    major.Groups.Add(a);
+                }
+            }
+        }
+
+        public void UpdateStudents(Major major, MajorResource majorResource)
+        {
+            if (majorResource.Students != null && majorResource.Students.Count >= 0)
+            {
+                //remove old students
+                major.Students.Clear();
+
+                //add new students
+                var newStudents = context.Students.Where(e => majorResource.Students.Any(id => id == e.Id)).ToList();
+                foreach (var a in newStudents)
+                {
+                    major.Students.Add(a);
+                }
+            }
         }
     }
 }

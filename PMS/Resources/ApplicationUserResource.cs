@@ -14,12 +14,12 @@ namespace PMS.Resources
         public bool IsDeleted { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
-        public ICollection<AnnouncementUserResource> AnnouncementUsers { get; set; }
+        public ICollection<int> AnnouncementUsers { get; set; }
         public ApplicationUserResource()
         {
             CreatedOn = DateTime.Now;
             UpdatedOn = DateTime.Now;
-            AnnouncementUsers = new Collection<AnnouncementUserResource>();
+            AnnouncementUsers = new Collection<int>();
             IsDeleted = false;
         }
     }

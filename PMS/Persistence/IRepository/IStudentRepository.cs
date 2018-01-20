@@ -1,4 +1,5 @@
 ﻿using PMS.Models;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace PMS.Persistence
         Task<Student> GetStudentByEmail(string email);
         void AddStudent(Student student);
         void RemoveStudent(Student student);
+        void UpdateEnrollments(Student student, StudentResource studentResource);
         Task<QueryResult<Student>> GetStudents(Query filter);
         bool CheckStudentEnrollments(Student student, string Type);
         Task<QueryResult<Enrollment>> GetEnrollments(Query queryObj, string email);

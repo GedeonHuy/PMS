@@ -2,6 +2,7 @@
 using PMS.Data;
 using PMS.Extensions;
 using PMS.Models;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,6 +91,22 @@ namespace PMS.Persistence
             result.Items = await query.ToListAsync();
 
             return result;
+        }
+
+        public void UpdateGroups(Project project, ProjectResource projectResource)
+        {
+            if (projectResource.Groups != null && projectResource.Groups.Count >= 0)
+            {
+                //remove old groups
+                project.Groups.Clear();
+
+                //add new groups
+                var newGroups = context.Groups.Where(e => projectResource.Groups.Any(id => id == e.GroupId)).ToList();
+                foreach (var a in newGroups)
+                {
+                    project.Groups.Add(a);
+                }
+            }
         }
     }
 }

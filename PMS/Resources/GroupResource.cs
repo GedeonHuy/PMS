@@ -24,17 +24,17 @@ namespace PMS.Resources
         public int? QuarterId { get; set; }
         /// <other project selection>
         public ProjectResource OtherProject { get; set; }
-        public ICollection<EnrollmentResource> Enrollments { get; set; }
         public ProjectResource Project { get; set; }
         public LecturerResource Lecturer { get; set; }
         public MajorResource Major { get; set; }
         public QuarterResource Quarter { get; set; }
         public CouncilResource Council { get; set; }
-        public ICollection<UploadedFileResource> UploadedFiles { get; set; }
+        public ICollection<int> UploadedFiles { get; set; }
+        public ICollection<int> Enrollments { get; set; }
         public GroupResource()
         {
-            Enrollments = new Collection<EnrollmentResource>();
-            UploadedFiles = new Collection<UploadedFileResource>();
+            Enrollments = new Collection<int>();
+            UploadedFiles = new Collection<int>();
             isConfirm = "Pending";
             isDeleted = false;
         }

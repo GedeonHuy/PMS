@@ -113,6 +113,9 @@ namespace PMS.Controllers
                 return NotFound();
 
             mapper.Map<CouncilResource, Council>(councilResource, council);
+
+            councilRepository.UpdateCouncilEnrollments(council, councilResource);
+
             await unitOfWork.Complete();
 
             var group = await groupRepository.GetGroup(councilResource.GroupId);

@@ -24,14 +24,14 @@ namespace PMS.Models
         [Required]
         public DateTime DateOfBirth { get; set; }
         public Major Major { get; set; }
-        public IEnumerable<CouncilEnrollment> CouncilEnrollments { get; set; }
+        public ICollection<CouncilEnrollment> CouncilEnrollments { get; set; }
         public ICollection<Group> Groups { get; set; }
-        public ICollection<Project> projectRepository { get; set; }
+        public ICollection<Project> Projects { get; set; }
         public Lecturer()
         {
             CouncilEnrollments = new Collection<CouncilEnrollment>();
             Groups = new Collection<Group>();
-            projectRepository = new Collection<Project>();
+            Projects = new Collection<Project>();
             IsDeleted = false;
         }
     }

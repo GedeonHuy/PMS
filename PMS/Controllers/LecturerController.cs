@@ -116,6 +116,11 @@ namespace PMS.Controllers
 
             mapper.Map<LecturerResource, Lecturer>(lecturerResource, lecturer);
 
+            lecturerRepository.UpdateCouncilEnrollments(lecturer, lecturerResource);
+            lecturerRepository.UpdateGroups(lecturer, lecturerResource);
+            lecturerRepository.UpdateProjects(lecturer, lecturerResource);
+
+
             var major = await majorRepository.GetMajor(lecturerResource.MajorId);
             lecturer.Major = major;
 

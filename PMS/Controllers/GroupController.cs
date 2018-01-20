@@ -82,33 +82,33 @@ namespace PMS.Controllers
             group = await groupRepository.GetGroup(group.GroupId);
             group.Enrollments.Clear();
 
-            foreach (var enrollmentResource in groupResource.Enrollments)
-            {
-                var enrollment = await enrollmentRepository.GetEnrollment(enrollmentResource.EnrollmentId);
-                //case: enrollment's type and project's type is different and the student has been already in group
+            //foreach (var enrollmentResource in groupResource.Enrollments)
+            //{
+            //    var enrollment = await enrollmentRepository.GetEnrollment(enrollmentResource.EnrollmentId);
+            //    //case: enrollment's type and project's type is different and the student has been already in group
 
-                if (group != null && group.Project.Type != enrollment.Type)
-                {
-                    ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
-                    groupRepository.RemoveGroup(group);
-                    await unitOfWork.Complete();
-                    return BadRequest(ModelState);
-                }
-                else if (group != null && !groupRepository.CheckEnrollment(group, enrollment))
-                {
-                    ModelState.AddModelError("Warning", "This group already has this student.");
-                    groupRepository.RemoveGroup(group);
-                    await unitOfWork.Complete();
-                    return BadRequest(ModelState);
-                }
-                else
-                {
-                    enrollment.Group = group;
-                    group.Enrollments.Add(enrollment);
-                    await unitOfWork.Complete();
-                }
+            //    if (group != null && group.Project.Type != enrollment.Type)
+            //    {
+            //        ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
+            //        groupRepository.RemoveGroup(group);
+            //        await unitOfWork.Complete();
+            //        return BadRequest(ModelState);
+            //    }
+            //    else if (group != null && !groupRepository.CheckEnrollment(group, enrollment))
+            //    {
+            //        ModelState.AddModelError("Warning", "This group already has this student.");
+            //        groupRepository.RemoveGroup(group);
+            //        await unitOfWork.Complete();
+            //        return BadRequest(ModelState);
+            //    }
+            //    else
+            //    {
+            //        enrollment.Group = group;
+            //        group.Enrollments.Add(enrollment);
+            //        await unitOfWork.Complete();
+            //    }
 
-            }
+            //}
 
             var result = mapper.Map<Group, GroupResource>(group);
 
@@ -130,6 +130,10 @@ namespace PMS.Controllers
                 return NotFound();
 
             mapper.Map<GroupResource, Group>(groupResource, group);
+
+            groupRepository.UpdateEnrollments(group, groupResource);
+            groupRepository.UpdateUploadedFiles(group, groupResource);
+
             group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId.Value);
             if (groupResource.ProjectId == null)
             {
@@ -148,31 +152,29 @@ namespace PMS.Controllers
             group.Quarter = quarter;
             await unitOfWork.Complete();
 
-            group.Enrollments.Clear();
+            //foreach (var enrollmentResource in groupResource.Enrollments)
+            //{
+            //    var enrollment = await enrollmentRepository.GetEnrollment(enrollmentResource.EnrollmentId);
+            //    //case: enrollment's type and project's type is different and the student has been already in group
 
-            foreach (var enrollmentResource in groupResource.Enrollments)
-            {
-                var enrollment = await enrollmentRepository.GetEnrollment(enrollmentResource.EnrollmentId);
-                //case: enrollment's type and project's type is different and the student has been already in group
+            //    if (group != null && group.Project.Type != enrollment.Type)
+            //    {
+            //        ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
+            //        return BadRequest(ModelState);
+            //    }
+            //    else if (group != null && !groupRepository.CheckEnrollment(group, enrollment))
+            //    {
+            //        ModelState.AddModelError("Warning", "This group already has this student.");
+            //        return BadRequest(ModelState);
+            //    }
+            //    else
+            //    {
+            //        enrollment.Group = group;
+            //        group.Enrollments.Add(enrollment);
+            //        await unitOfWork.Complete();
+            //    }
 
-                if (group != null && group.Project.Type != enrollment.Type)
-                {
-                    ModelState.AddModelError("Error", "Enrollment's type and Project Type of Group are not the same.");
-                    return BadRequest(ModelState);
-                }
-                else if (group != null && !groupRepository.CheckEnrollment(group, enrollment))
-                {
-                    ModelState.AddModelError("Warning", "This group already has this student.");
-                    return BadRequest(ModelState);
-                }
-                else
-                {
-                    enrollment.Group = group;
-                    group.Enrollments.Add(enrollment);
-                    await unitOfWork.Complete();
-                }
-
-            }
+            //}
 
             var result = mapper.Map<Group, GroupResource>(group);
             return Ok(result);

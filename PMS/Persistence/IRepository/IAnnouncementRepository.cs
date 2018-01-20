@@ -1,4 +1,5 @@
 ﻿using PMS.Models;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace PMS.Persistence.IRepository
         void RemoveAnnouncement(Announcement Announcement);
         Task<QueryResult<Announcement>> GetAnnouncements(Query filter);
         Task<IEnumerable<ApplicationUser>> GetAllUsers();
+        void UpdateAnnouncementUsers(Announcement announcement, AnnouncementResource announcementResource);
     }
 }

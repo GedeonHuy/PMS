@@ -1,4 +1,5 @@
 ﻿using PMS.Models;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace PMS.Persistence
         void AddProject(Project project);
         void RemoveProject(Project project);
         Task<QueryResult<Project>> GetProjects(Query filter);
+        void UpdateGroups(Project project, ProjectResource projectResource);
     }
 }

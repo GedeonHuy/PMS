@@ -19,11 +19,11 @@ namespace PMS.Resources
         public string ProjectName { get; set; }
         public bool isAllScored { get; set; }
         public LecturerInformationResource LecturerInformations { get; set; }
-        public ICollection<CouncilEnrollment> CouncilEnrollments { get; set; }
+        public ICollection<int> CouncilEnrollments { get; set; }
         public CouncilResource()
         {
             LecturerInformations = new LecturerInformationResource();
-            CouncilEnrollments = new Collection<CouncilEnrollment>();
+            CouncilEnrollments = new Collection<int>();
             isAllScored = false;
             IsDeleted = false;
         }

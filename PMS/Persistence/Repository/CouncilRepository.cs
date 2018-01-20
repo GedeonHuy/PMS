@@ -255,5 +255,21 @@ namespace PMS.Persistence.Repository
                 council.ResultGrade = "F";
             }
         }
+
+        public void UpdateCouncilEnrollments(Council council, CouncilResource councilResource)
+        {
+            if (councilResource.CouncilEnrollments != null && councilResource.CouncilEnrollments.Count >= 0)
+            {
+                //remove old councilEnrollments
+                council.CouncilEnrollments.Clear();
+
+                //add new enrollments
+                var newCouncilEnrollments = context.CouncilEnrollments.Where(e => councilResource.CouncilEnrollments.Any(id => id == e.CouncilEnrollmentId)).ToList();
+                foreach (var a in newCouncilEnrollments)
+                {
+                    council.CouncilEnrollments.Add(a);
+                }
+            }
+        }
     }
 }

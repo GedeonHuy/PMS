@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using PMS.Extensions;
+using PMS.Resources;
 
 namespace PMS.Persistence
 {
@@ -247,6 +248,23 @@ namespace PMS.Persistence
         private bool StudentExists(string email)
         {
             return context.Students.Any(e => e.Email == email);
+        }
+
+        public void UpdateEnrollments(Student student, StudentResource studentResource)
+        {
+            if (studentResource.Enrollments != null && studentResource.Enrollments.Count >= 0)
+            {
+                //remove old enrollments
+                student.Enrollments.Clear();
+
+                //add new enrollments
+                var newEnrollments = context.Enrollments.Where(e => studentResource.Enrollments.Any(id => id == e.EnrollmentId)).ToList();
+                foreach (var e in newEnrollments)
+                {
+                    student.Enrollments.Add(e);
+                    e.Student = student;
+                }
+            }
         }
     }
 }

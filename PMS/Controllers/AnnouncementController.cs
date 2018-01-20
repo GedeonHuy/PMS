@@ -69,6 +69,9 @@ namespace PMS.Controllers
                 return NotFound();
 
             mapper.Map<AnnouncementResource, Announcement>(announcementResource, announcement);
+
+            repository.UpdateAnnouncementUsers(announcement, announcementResource);
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Announcement, AnnouncementResource>(announcement);
@@ -121,7 +124,7 @@ namespace PMS.Controllers
         public async Task SendMailAsync(String bodyContent)
         {
             var users = await repository.GetAllUsers();
-            
+
             foreach (var user in users)
             {
                 try

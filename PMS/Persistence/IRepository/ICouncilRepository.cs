@@ -20,5 +20,6 @@ namespace PMS.Persistence.IRepository
         string CheckLecturerInformations(LecturerInformationResource lecturerInformations);
         double CalculateScore(Council council);
         void CalculateGrade(Council council);
+        void UpdateCouncilEnrollments(Council council, CouncilResource councilResource);
     }
 }
