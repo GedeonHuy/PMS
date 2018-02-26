@@ -93,7 +93,7 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
-        [Route("getgrade/{id}")]
+        [Route("getmajor/{id}")]
         public async Task<IActionResult> GetMajor(int id)
         {
             var major = await repository.GetMajor(id);
