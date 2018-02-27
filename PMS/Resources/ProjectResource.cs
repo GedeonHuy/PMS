@@ -16,8 +16,10 @@ namespace PMS.Resources
         public bool IsDeleted { get; set; }
         public bool IsCompleted { get; set; }
         public int? MajorId { get; set; }
+        public int? LecturerId { get; set; }
         public ICollection<int> Groups { get; set; }
         public MajorResource Major { get; set; }
+        public LecturerResource Lecturer { get; set; }
         public ProjectResource()
         {
             Groups = new Collection<int>();

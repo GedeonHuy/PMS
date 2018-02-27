@@ -201,6 +201,20 @@ namespace PMS.Mapping
                     Projects = p.Major.Projects.Select(sf => sf.ProjectId).ToList(),
                     Lecturers = p.Major.Lecturers.Select(sf => sf.LecturerId).ToList(),
                 }))
+                .ForMember(pr => pr.LecturerId, opt => opt.MapFrom(p => p.Lecturer.LecturerId))
+                .ForMember(pr => pr.Lecturer, opt => opt.MapFrom(p => new LecturerResource
+                {
+                    LecturerId = p.Lecturer.LecturerId,
+                    Name = p.Lecturer.Name,
+                    Address = p.Lecturer.Address,
+                    DateOfBirth = p.Lecturer.DateOfBirth,
+                    Email = p.Lecturer.Email,
+                    IsDeleted = p.Lecturer.IsDeleted,
+                    PhoneNumber = p.Lecturer.PhoneNumber,
+                    CouncilEnrollments = p.Lecturer.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId).ToList(),
+                    Groups = p.Lecturer.Groups.Select(cf => cf.GroupId).ToList(),
+                    Projects = p.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
+                }))
                 .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)));
 
             CreateMap<Lecturer, LecturerResource>()

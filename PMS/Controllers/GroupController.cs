@@ -58,6 +58,9 @@ namespace PMS.Controllers
 
             var group = mapper.Map<GroupResource, Group>(groupResource);
 
+            groupRepository.UpdateEnrollments(group, groupResource);
+            groupRepository.UpdateUploadedFiles(group, groupResource);
+
             group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId);
 
             if (groupResource.ProjectId == null)
@@ -80,7 +83,6 @@ namespace PMS.Controllers
             await unitOfWork.Complete();
 
             group = await groupRepository.GetGroup(group.GroupId);
-            group.Enrollments.Clear();
 
             //foreach (var enrollmentResource in groupResource.Enrollments)
             //{

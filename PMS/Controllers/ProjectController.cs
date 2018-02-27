@@ -29,10 +29,11 @@ namespace PMS.Controllers
         private IHostingEnvironment host;
         private IUnitOfWork unitOfWork;
         private IExcelRepository excelRepository;
+        private ILecturerRepository lecturerRepository;
 
         public ProjectController(IMapper mapper, IUnitOfWork unitOfWork,
             IProjectRepository projectRepository, IMajorRepository majorRepository,
-            IHostingEnvironment host, IExcelRepository excelRepository)
+            IHostingEnvironment host, IExcelRepository excelRepository, ILecturerRepository lecturerRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
@@ -40,6 +41,7 @@ namespace PMS.Controllers
             this.majorRepository = majorRepository;
             this.host = host;
             this.excelRepository = excelRepository;
+            this.lecturerRepository = lecturerRepository;
         }
 
         [HttpPost]
@@ -55,6 +57,9 @@ namespace PMS.Controllers
 
             var major = await majorRepository.GetMajor(projectResource.MajorId);
             project.Major = major;
+
+            var lecturer = await lecturerRepository.GetLecturer(projectResource.LecturerId);
+            project.Lecturer = lecturer;
 
             projectRepository.AddProject(project);
             await unitOfWork.Complete();
@@ -86,6 +91,9 @@ namespace PMS.Controllers
 
             var major = await majorRepository.GetMajor(projectResource.MajorId);
             project.Major = major;
+
+            var lecturer = await lecturerRepository.GetLecturer(projectResource.LecturerId);
+            project.Lecturer = lecturer;
 
             await unitOfWork.Complete();
 
