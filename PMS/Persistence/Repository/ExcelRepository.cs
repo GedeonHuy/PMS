@@ -101,7 +101,7 @@ namespace PMS.Persistence.Repository
             var lecturerName = worksheet.Cells[row, 5].Value.ToString().Trim().ToLower();
             var lecturer = await context.Lecturers
                 .Include(l => l.Groups)
-                .Include(l => l.CouncilEnrollments)
+                .Include(l => l.BoardEnrollments)
                 .Include(p => p.Major)
                 .SingleOrDefaultAsync(s => s.Name.ToLower() == lecturerName);
             project.Lecturer = lecturer;

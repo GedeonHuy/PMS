@@ -116,7 +116,7 @@ namespace PMS.Controllers
 
             mapper.Map<LecturerResource, Lecturer>(lecturerResource, lecturer);
 
-            lecturerRepository.UpdateCouncilEnrollments(lecturer, lecturerResource);
+            lecturerRepository.UpdateBoardEnrollments(lecturer, lecturerResource);
             lecturerRepository.UpdateGroups(lecturer, lecturerResource);
             lecturerRepository.UpdateProjects(lecturer, lecturerResource);
 

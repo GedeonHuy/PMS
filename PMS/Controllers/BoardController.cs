@@ -14,36 +14,36 @@ using PMS.Resources.SubResources;
 
 namespace PMS.Controllers
 {
-    [Route("/api/councils/")]
-    public class CouncilController : Controller
+    [Route("/api/boards/")]
+    public class BoardController : Controller
     {
         private IMapper mapper;
-        private ICouncilRepository councilRepository;
+        private IBoardRepository boardRepository;
         private IGroupRepository groupRepository;
-        private ICouncilEnrollmentRepository councilEnrollmentRepository;
+        private IBoardEnrollmentRepository boardEnrollmentRepository;
         private IUnitOfWork unitOfWork;
 
-        public CouncilController(IMapper mapper, IUnitOfWork unitOfWork,
-            ICouncilRepository councilRepository, IGroupRepository groupRepository,
-            ICouncilEnrollmentRepository councilEnrollmentRepository)
+        public BoardController(IMapper mapper, IUnitOfWork unitOfWork,
+            IBoardRepository boardRepository, IGroupRepository groupRepository,
+            IBoardEnrollmentRepository boardEnrollmentRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.councilRepository = councilRepository;
+            this.boardRepository = boardRepository;
             this.groupRepository = groupRepository;
-            this.councilEnrollmentRepository = councilEnrollmentRepository;
+            this.boardEnrollmentRepository = boardEnrollmentRepository;
         }
 
         [HttpPost]
         [Route("add")]
-        public async Task<IActionResult> CreateCouncil([FromBody]CouncilResource councilResource)
+        public async Task<IActionResult> CreateBoard([FromBody]BoardResource boardResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // var checkLecturerInformations = councilRepository.CheckLecturerInformations(councilResource.LecturerInformations);
+            // var checkLecturerInformations = boardRepository.CheckLecturerInformations(boardResource.LecturerInformations);
 
             // //case: one percent of score is equal 0 or null          
             // if (checkLecturerInformations == "nullOrZeroScorePercent")
@@ -59,39 +59,39 @@ namespace PMS.Controllers
             //     return BadRequest(ModelState);
             // }
 
-            var council = mapper.Map<CouncilResource, Council>(councilResource);
-            var group = await groupRepository.GetGroup(councilResource.GroupId);
-            council.Group = group;
+            var board = mapper.Map<BoardResource, Board>(boardResource);
+            var group = await groupRepository.GetGroup(boardResource.GroupId);
+            board.Group = group;
 
-            councilRepository.AddCouncil(council);
+            boardRepository.AddBoard(board);
             await unitOfWork.Complete();
 
-            council = await councilRepository.GetCouncil(council.CouncilId);
+            board = await boardRepository.GetBoard(board.BoardId);
 
-            await councilRepository.AddLecturers(council, councilResource.LecturerInformations);
+            await boardRepository.AddLecturers(board, boardResource.LecturerInformations);
             await unitOfWork.Complete();
 
-            if (council.CouncilEnrollments.Count(c => c.isMarked == true) == council.CouncilEnrollments.Count)
+            if (board.BoardEnrollments.Count(c => c.isMarked == true) == board.BoardEnrollments.Count)
             {
-                council.isAllScored = true;
+                board.isAllScored = true;
                 await unitOfWork.Complete();
             }
 
-            var result = mapper.Map<Council, CouncilResource>(council);
+            var result = mapper.Map<Board, BoardResource>(board);
 
             return Ok(result);
         }
 
         [HttpPut]
         [Route("update/{id}")]
-        public async Task<IActionResult> UpdateCouncil(int id, [FromBody]CouncilResource councilResource)
+        public async Task<IActionResult> UpdateBoard(int id, [FromBody]BoardResource boardResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var checkLecturerInformations = councilRepository.CheckLecturerInformations(councilResource.LecturerInformations);
+            var checkLecturerInformations = boardRepository.CheckLecturerInformations(boardResource.LecturerInformations);
 
             //case: one percent of score is equal 0 or null          
             if (checkLecturerInformations == "nullOrScorePercent")
@@ -107,36 +107,36 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var council = await councilRepository.GetCouncil(id);
+            var board = await boardRepository.GetBoard(id);
 
-            if (council == null)
+            if (board == null)
                 return NotFound();
 
-            mapper.Map<CouncilResource, Council>(councilResource, council);
+            mapper.Map<BoardResource, Board>(boardResource, board);
 
-            councilRepository.UpdateCouncilEnrollments(council, councilResource);
+            boardRepository.UpdateBoardEnrollments(board, boardResource);
 
             await unitOfWork.Complete();
 
-            var group = await groupRepository.GetGroup(councilResource.GroupId);
-            council.Group = group;
+            var group = await groupRepository.GetGroup(boardResource.GroupId);
+            board.Group = group;
             await unitOfWork.Complete();
 
-            councilRepository.RemoveOldLecturer(council);
+            boardRepository.RemoveOldLecturer(board);
             await unitOfWork.Complete();
 
-            // councilResource.ResultScore = calculateGrade(councilResource.LecturerInformations);
+            // boardResource.ResultScore = calculateGrade(boardResource.LecturerInformations);
 
-            await councilRepository.AddLecturers(council, councilResource.LecturerInformations);
+            await boardRepository.AddLecturers(board, boardResource.LecturerInformations);
             await unitOfWork.Complete();
 
-            if (council.CouncilEnrollments.Count(c => c.isMarked == true) == council.CouncilEnrollments.Count)
+            if (board.BoardEnrollments.Count(c => c.isMarked == true) == board.BoardEnrollments.Count)
             {
-                council.isAllScored = true;
+                board.isAllScored = true;
                 await unitOfWork.Complete();
             }
 
-            var result = mapper.Map<Council, CouncilResource>(council);
+            var result = mapper.Map<Board, BoardResource>(board);
             return Ok(result);
         }
 
@@ -152,45 +152,45 @@ namespace PMS.Controllers
 
         [HttpDelete]
         [Route("delete/{id}")]
-        public async Task<IActionResult> DeleteCouncil(int id)
+        public async Task<IActionResult> DeleteBoard(int id)
         {
-            var council = await councilRepository.GetCouncil(id, includeRelated: false);
+            var board = await boardRepository.GetBoard(id, includeRelated: false);
 
-            if (council == null)
+            if (board == null)
             {
                 return NotFound();
             }
 
-            councilRepository.RemoveCouncil(council);
+            boardRepository.RemoveBoard(board);
             await unitOfWork.Complete();
 
             return Ok(id);
         }
 
         [HttpGet]
-        [Route("getcouncil/{id}")]
-        public async Task<IActionResult> GetCouncil(int id)
+        [Route("getboard/{id}")]
+        public async Task<IActionResult> GetBoard(int id)
         {
-            var council = await councilRepository.GetCouncil(id);
+            var board = await boardRepository.GetBoard(id);
 
-            if (council == null)
+            if (board == null)
             {
                 return NotFound();
             }
 
             //check number of Lecturer marked, and set isAllScored
-            if (council.CouncilEnrollments.Count(c => c.isMarked == true) == council.CouncilEnrollments.Count)
+            if (board.BoardEnrollments.Count(c => c.isMarked == true) == board.BoardEnrollments.Count)
             {
-                council.isAllScored = true;
+                board.isAllScored = true;
                 await unitOfWork.Complete();
             }
-            var councilResource = mapper.Map<Council, CouncilResource>(council);
+            var boardResource = mapper.Map<Board, BoardResource>(board);
 
-            if (councilResource.LecturerInformations == null)
+            if (boardResource.LecturerInformations == null)
             {
-                councilResource.LecturerInformations = new LecturerInformationResource()
+                boardResource.LecturerInformations = new LecturerInformationResource()
                 {
-                    President = new PresidentResource()
+                    President = new ChairResource()
                     {
                         ScorePercent = 25,
                         Score = 0
@@ -213,17 +213,17 @@ namespace PMS.Controllers
                 };
             }
 
-            return Ok(councilResource);
+            return Ok(boardResource);
         }
 
         [HttpGet]
         [Route("getall")]
-        public async Task<QueryResultResource<CouncilResource>> GetCouncils(QueryResource queryResource)
+        public async Task<QueryResultResource<BoardResource>> GetBoards(QueryResource queryResource)
         {
             var query = mapper.Map<QueryResource, Query>(queryResource);
 
-            var queryResult = await councilRepository.GetCouncils(query);
-            return mapper.Map<QueryResult<Council>, QueryResultResource<CouncilResource>>(queryResult);
+            var queryResult = await boardRepository.GetBoards(query);
+            return mapper.Map<QueryResult<Board>, QueryResultResource<BoardResource>>(queryResult);
         }
 
         [HttpGet]
@@ -235,18 +235,18 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var council = await councilRepository.GetCouncil(id);
+            var board = await boardRepository.GetBoard(id);
 
-            if (council.isAllScored == false)
+            if (board.isAllScored == false)
             {
                 ModelState.AddModelError("Error", "One or a few lecturers have not marked yet");
                 return BadRequest(ModelState);
             }
 
-            councilRepository.CalculateScore(council);
+            boardRepository.CalculateScore(board);
             await unitOfWork.Complete();
 
-            var result = mapper.Map<Council, CouncilResource>(council);
+            var result = mapper.Map<Board, BoardResource>(board);
             return Ok(result);
         }
 
@@ -259,18 +259,18 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var council = await councilRepository.GetCouncil(id);
+            var board = await boardRepository.GetBoard(id);
 
-            if (String.IsNullOrEmpty(council.ResultScore))
+            if (String.IsNullOrEmpty(board.ResultScore))
             {
                 ModelState.AddModelError("Error", "Please calcualte the score before calcualate the grade.");
                 return BadRequest(ModelState);
             }
 
-            councilRepository.CalculateGrade(council);
+            boardRepository.CalculateGrade(board);
             await unitOfWork.Complete();
 
-            var result = mapper.Map<Council, CouncilResource>(council);
+            var result = mapper.Map<Board, BoardResource>(board);
             return Ok(result);
         }
     }

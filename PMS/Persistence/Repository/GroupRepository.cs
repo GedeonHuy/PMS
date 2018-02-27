@@ -34,7 +34,7 @@ namespace PMS.Persistence
                 .Include(p => p.Lecturer)
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
-                .Include(p => p.Council)
+                .Include(p => p.Board)
                 .SingleOrDefaultAsync(s => s.GroupId == id);
         }
 
@@ -61,7 +61,7 @@ namespace PMS.Persistence
                 .Include(p => p.Lecturer)
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
-                .Include(p => p.Council)
+                .Include(p => p.Board)
                 .AsQueryable();
 
             //filter
@@ -148,7 +148,7 @@ namespace PMS.Persistence
         {
             if (groupResource.Enrollments != null && groupResource.Enrollments.Count >= 0)
             {
-                //remove old councilEnrollments
+                //remove old boardEnrollments
                 group.Enrollments.Clear();
 
                 //add new enrollments
@@ -164,7 +164,7 @@ namespace PMS.Persistence
         {
             if (groupResource.UploadedFiles != null && groupResource.UploadedFiles.Count >= 0)
             {
-                //remove old councilEnrollments
+                //remove old boardEnrollments
                 group.UploadedFiles.Clear();
 
                 //add new enrollments

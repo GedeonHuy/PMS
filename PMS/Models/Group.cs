@@ -19,7 +19,7 @@ namespace PMS.Models
         public Project Project { get; set; }
         public Major Major { get; set; }
         public Lecturer Lecturer { get; set; }
-        public Council Council { get; set; }
+        public Board Board { get; set; }
         public Quarter Quarter { get; set; }
         public ICollection<UploadedFile> UploadedFiles { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }

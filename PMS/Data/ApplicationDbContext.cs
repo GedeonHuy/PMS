@@ -23,8 +23,8 @@ namespace PMS.Data
             builder.Entity<ApplicationUser>().ToTable("ApplicationUser");
             builder.Entity<Announcement>().ToTable("Announcement");
             builder.Entity<AnnouncementUser>().ToTable("AnnouncementUser");
-            builder.Entity<Council>().ToTable("Council");
-            builder.Entity<CouncilEnrollment>().ToTable("CouncilErollment");
+            builder.Entity<Board>().ToTable("Board");
+            builder.Entity<BoardEnrollment>().ToTable("BoardErollment");
             builder.Entity<Enrollment>().ToTable("Enrollment");
             builder.Entity<Grade>().ToTable("Grade");
             builder.Entity<Group>().ToTable("Group");
@@ -34,7 +34,7 @@ namespace PMS.Data
             builder.Entity<UploadedFile>().ToTable("UploadedFile");
             builder.Entity<Major>().ToTable("Major");
             builder.Entity<Quarter>().ToTable("Quarter");
-            builder.Entity<CouncilRole>().ToTable("CouncilRole");
+            builder.Entity<BoardRole>().ToTable("BoardRole");
             builder.Entity<Excel>().ToTable("Excel");
         }
 
@@ -42,8 +42,8 @@ namespace PMS.Data
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Announcement> Announcement { get; set; }
         public DbSet<AnnouncementUser> AnnouncementUser { get; set; }
-        public DbSet<Council> Councils { get; set; }
-        public DbSet<CouncilEnrollment> CouncilEnrollments { get; set; }
+        public DbSet<Board> Boards { get; set; }
+        public DbSet<BoardEnrollment> BoardEnrollments { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Group> Groups { get; set; }
@@ -53,7 +53,7 @@ namespace PMS.Data
         public DbSet<UploadedFile> UploadedFiles { get; set; }
         public DbSet<Major> Majors { get; set; }
         public DbSet<Quarter> Quarters { get; set; }
-        public DbSet<CouncilRole> CouncilRoles { get; set; }
+        public DbSet<BoardRole> BoardRoles { get; set; }
         public DbSet<Excel> Excels { get; set; }
     }
 }

@@ -12,45 +12,45 @@ using System.Threading.Tasks;
 
 namespace PMS.Persistence.Repository
 {
-    public class CouncilEnrollmentRepository : ICouncilEnrollmentRepository
+    public class BoardEnrollmentRepository : IBoardEnrollmentRepository
     {
         private ApplicationDbContext context;
 
-        public CouncilEnrollmentRepository(ApplicationDbContext context)
+        public BoardEnrollmentRepository(ApplicationDbContext context)
         {
             this.context = context;
         }
 
-        public async Task<CouncilEnrollment> GetCouncilEnrollment(int? id, bool includeRelated = true)
+        public async Task<BoardEnrollment> GetBoardEnrollment(int? id, bool includeRelated = true)
         {
             if (!includeRelated)
             {
-                return await context.CouncilEnrollments.FindAsync(id);
+                return await context.BoardEnrollments.FindAsync(id);
             }
-            return await context.CouncilEnrollments
+            return await context.BoardEnrollments
                 .Include(c => c.Lecturer)
-                .Include(c => c.Council)
-                .SingleOrDefaultAsync(s => s.CouncilEnrollmentId == id);
+                .Include(c => c.Board)
+                .SingleOrDefaultAsync(s => s.BoardEnrollmentId == id);
         }
 
-        public void AddCouncilEnrollment(CouncilEnrollment CouncilEnrollment)
+        public void AddBoardEnrollment(BoardEnrollment boardEnrollment)
         {
-            context.CouncilEnrollments.Add(CouncilEnrollment);
+            context.BoardEnrollments.Add(boardEnrollment);
         }
 
-        public void RemoveCouncilEnrollment(CouncilEnrollment CouncilEnrollment)
+        public void RemoveBoardEnrollment(BoardEnrollment boardEnrollment)
         {
-            CouncilEnrollment.IsDeleted = true;
-            //context.Remove(CouncilEnrollment);
+            boardEnrollment.IsDeleted = true;
+            //context.Remove(boardEnrollment);
         }
 
-        public async Task<QueryResult<CouncilEnrollment>> GetCouncilEnrollmentsByLecturerEmail(string email)
+        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByLecturerEmail(string email)
         {
-            var result = new QueryResult<CouncilEnrollment>();
-            var query = context.CouncilEnrollments
+            var result = new QueryResult<BoardEnrollment>();
+            var query = context.BoardEnrollments
                                 .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Lecturer)
-                                .Include(c => c.Council)
+                                .Include(c => c.Board)
                                 .AsQueryable();
 
             //filter
@@ -59,7 +59,7 @@ namespace PMS.Persistence.Repository
 
             //sort
 
-            query = query.OrderByDescending(s => s.CouncilEnrollmentId);
+            query = query.OrderByDescending(s => s.BoardEnrollmentId);
 
 
 
@@ -73,13 +73,13 @@ namespace PMS.Persistence.Repository
 
         }
 
-        public async Task<QueryResult<CouncilEnrollment>> GetCouncilEnrollments(Query queryObj)
+        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollments(Query queryObj)
         {
-            var result = new QueryResult<CouncilEnrollment>();
-            var query = context.CouncilEnrollments
+            var result = new QueryResult<BoardEnrollment>();
+            var query = context.BoardEnrollments
                                 .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Lecturer)
-                                .Include(c => c.Council)
+                                .Include(c => c.Board)
                                 .AsQueryable();
 
             //filter
@@ -93,13 +93,13 @@ namespace PMS.Persistence.Repository
             }
 
             //sort
-            var columnsMap = new Dictionary<string, Expression<Func<CouncilEnrollment, object>>>()
+            var columnsMap = new Dictionary<string, Expression<Func<BoardEnrollment, object>>>()
             {
                 ["lecturer"] = s => s.Lecturer.Name,
             };
             if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
             {
-                query = query.OrderByDescending(s => s.CouncilEnrollmentId);
+                query = query.OrderByDescending(s => s.BoardEnrollmentId);
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
@@ -114,32 +114,32 @@ namespace PMS.Persistence.Repository
 
         }
 
-        public async Task<CouncilEnrollment> GetCouncilEnrollmentByLecturerEmail(string email, CouncilResource councilResource)
+        public async Task<BoardEnrollment> GetBoardEnrollmentByLecturerEmail(string email, BoardResource boardResource)
         {
-            var councilEnrollment = await context.CouncilEnrollments
+            var boardEnrollment = await context.BoardEnrollments
                                     .Where(c => c.IsDeleted == false)
                                     .Include(c => c.Lecturer)
-                                    .Include(c => c.Council)
-                                    .SingleOrDefaultAsync(c => c.Council.CouncilId == councilResource.CouncilId
+                                    .Include(c => c.Board)
+                                    .SingleOrDefaultAsync(c => c.Board.BoardId == boardResource.BoardId
                                     && c.Lecturer.Email == email);
 
-            return councilEnrollment;
+            return boardEnrollment;
         }
 
-        public async Task<IEnumerable<CouncilEnrollment>> GetCouncilEnrollmentsByCouncilId(int id)
+        public async Task<IEnumerable<BoardEnrollment>> GetBoardEnrollmentsByBoardId(int id)
         {
-            return await context.CouncilEnrollments
+            return await context.BoardEnrollments
                                 .Where(c => c.IsDeleted == false)
-                                .Include(c => c.Council)
+                                .Include(c => c.Board)
                                 .Include(c => c.Lecturer)
-                                .Include(c => c.CouncilRole)
-                                .Where(c => c.Council.CouncilId == id)
+                                .Include(c => c.BoardRole)
+                                .Where(c => c.Board.BoardId == id)
                                 .ToListAsync();
         }
 
-        public void UpdateScore(CouncilEnrollment councilEnrollment)
+        public void UpdateScore(BoardEnrollment boardEnrollment)
         {
-            context.Update(councilEnrollment);
+            context.Update(boardEnrollment);
         }
     }
 }

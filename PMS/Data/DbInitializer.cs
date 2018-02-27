@@ -106,16 +106,16 @@ namespace PMS.Data
             }
             context.SaveChanges();
 
-            var councilRoles = new CouncilRole[]
+            var BoardRoles = new BoardRole[]
             {
-                new CouncilRole{CouncilRoleName="President"},
-                new CouncilRole{CouncilRoleName="Secretary"},
-                new CouncilRole{CouncilRoleName="Supervisor"},
-                new CouncilRole{CouncilRoleName="Reviewer"}
+                new BoardRole{BoardRoleName="President"},
+                new BoardRole{BoardRoleName="Secretary"},
+                new BoardRole{BoardRoleName="Supervisor"},
+                new BoardRole{BoardRoleName="Reviewer"}
             };
-            foreach (CouncilRole c in councilRoles)
+            foreach (BoardRole c in BoardRoles)
             {
-                context.CouncilRoles.Add(c);
+                context.BoardRoles.Add(c);
             }
             context.SaveChanges();
 
@@ -142,23 +142,23 @@ namespace PMS.Data
             // }
             // context.SaveChanges();
 
-            //var councils = new Council[]
+            //var Boards = new Board[]
             //{
-            //    new Council{ResultGrade="A" ,ResultScore="92"},
-            //    new Council{ResultGrade="B" ,ResultScore="80"},
-            //    new Council{ResultGrade="C" ,ResultScore="70"},
+            //    new Board{ResultGrade="A" ,ResultScore="92"},
+            //    new Board{ResultGrade="B" ,ResultScore="80"},
+            //    new Board{ResultGrade="C" ,ResultScore="70"},
             //};
-            //foreach (Council s in councils)
+            //foreach (Board s in Boards)
             //{
-            //    context.Councils.Add(s);
+            //    context.Boards.Add(s);
             //}
             //context.SaveChanges();
 
             //var groups = new Group[]
             //{
-            //    new Group{GroupName = "Group1",ProjectId=1,Lecturer=context.Lecturers.SingleOrDefault(lecturer=> lecturer.LecturerId==1),Council=context.Councils.SingleOrDefault(council=>council.CouncilId==1)},
-            //    new Group{GroupName = "Group1",ProjectId=2,Lecturer=context.Lecturers.SingleOrDefault(lecturer=> lecturer.LecturerId==2),Council=context.Councils.SingleOrDefault(council=>council.CouncilId==2)},
-            //    new Group{GroupName = "Group1",ProjectId=3,Lecturer=context.Lecturers.SingleOrDefault(lecturer=> lecturer.LecturerId==3),Council=context.Councils.SingleOrDefault(council=>council.CouncilId==3)},
+            //    new Group{GroupName = "Group1",ProjectId=1,Lecturer=context.Lecturers.SingleOrDefault(lecturer=> lecturer.LecturerId==1),Board=context.Boards.SingleOrDefault(Board=>Board.BoardId==1)},
+            //    new Group{GroupName = "Group1",ProjectId=2,Lecturer=context.Lecturers.SingleOrDefault(lecturer=> lecturer.LecturerId==2),Board=context.Boards.SingleOrDefault(Board=>Board.BoardId==2)},
+            //    new Group{GroupName = "Group1",ProjectId=3,Lecturer=context.Lecturers.SingleOrDefault(lecturer=> lecturer.LecturerId==3),Board=context.Boards.SingleOrDefault(Board=>Board.BoardId==3)},
             //};
             //foreach (Group s in groups)
             //{

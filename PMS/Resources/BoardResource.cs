@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace PMS.Resources
 {
-    public class CouncilResource
+    public class BoardResource
     {
-        public int CouncilId { get; set; }
+        public int BoardId { get; set; }
         public string ResultGrade { get; set; }
         public string ResultScore { get; set; }
         public bool IsDeleted { get; set; }
@@ -19,11 +19,11 @@ namespace PMS.Resources
         public string ProjectName { get; set; }
         public bool isAllScored { get; set; }
         public LecturerInformationResource LecturerInformations { get; set; }
-        public ICollection<int> CouncilEnrollments { get; set; }
-        public CouncilResource()
+        public ICollection<int> BoardEnrollments { get; set; }
+        public BoardResource()
         {
             LecturerInformations = new LecturerInformationResource();
-            CouncilEnrollments = new Collection<int>();
+            BoardEnrollments = new Collection<int>();
             isAllScored = false;
             IsDeleted = false;
         }

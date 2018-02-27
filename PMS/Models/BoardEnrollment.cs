@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 
 namespace PMS.Models
 {
-    public class CouncilEnrollment
+    public class BoardEnrollment
     {
-        public int CouncilEnrollmentId { get; set; }
+        public int BoardEnrollmentId { get; set; }
         public bool IsDeleted { get; set; }
         public double? Percentage { get; set; }
         public double? Score { get; set; }
         public bool isMarked { get; set; }
         public Lecturer Lecturer { get; set; }
-        public Council Council { get; set; }
-        public CouncilRole CouncilRole { get; set; }
-        public CouncilEnrollment()
+        public Board Board { get; set; }
+        public BoardRole BoardRole { get; set; }
+        public BoardEnrollment()
         {
             IsDeleted = false;
             isMarked = false;

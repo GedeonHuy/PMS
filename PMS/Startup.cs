@@ -40,8 +40,8 @@ namespace PMS
         {
             services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
             services.AddScoped<IAnnouncementUserRepository, AnnouncementUserRepository>();
-            services.AddScoped<ICouncilRepository, CouncilRepository>();
-            services.AddScoped<ICouncilEnrollmentRepository, CouncilEnrollmentRepository>();
+            services.AddScoped<IBoardRepository, BoardRepository>();
+            services.AddScoped<IBoardEnrollmentRepository, BoardEnrollmentRepository>();
             services.AddScoped<IGradeRepository, GradeRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();

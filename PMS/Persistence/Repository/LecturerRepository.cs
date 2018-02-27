@@ -28,7 +28,7 @@ namespace PMS.Persistence
             }
             return await context.Lecturers
                 .Include(l => l.Groups)
-                .Include(l => l.CouncilEnrollments)
+                .Include(l => l.BoardEnrollments)
                 .Include(p => p.Major)
                 .SingleOrDefaultAsync(s => s.LecturerId == id);
         }
@@ -69,7 +69,7 @@ namespace PMS.Persistence
             var query = context.Lecturers
                 .Where(c => c.IsDeleted == false)
                 .Include(l => l.Groups)
-                .Include(l => l.CouncilEnrollments)
+                .Include(l => l.BoardEnrollments)
                 .Include(p => p.Major)
                 .AsQueryable();
 
@@ -225,18 +225,18 @@ namespace PMS.Persistence
             return result;
         }
 
-        public void UpdateCouncilEnrollments(Lecturer lecturer, LecturerResource lecturerResource)
+        public void UpdateBoardEnrollments(Lecturer lecturer, LecturerResource lecturerResource)
         {
-            if (lecturerResource.CouncilEnrollments != null && lecturerResource.CouncilEnrollments.Count >= 0)
+            if (lecturerResource.BoardEnrollments != null && lecturerResource.BoardEnrollments.Count >= 0)
             {
-                //remove old councilEnrollments
-                lecturer.CouncilEnrollments.Clear();
+                //remove old boardEnrollments
+                lecturer.BoardEnrollments.Clear();
 
                 //add new enrollments
-                var newCouncilEnrollments = context.CouncilEnrollments.Where(e => lecturerResource.CouncilEnrollments.Any(id => id == e.CouncilEnrollmentId)).ToList();
-                foreach (var a in newCouncilEnrollments)
+                var newBoardEnrollments = context.BoardEnrollments.Where(e => lecturerResource.BoardEnrollments.Any(id => id == e.BoardEnrollmentId)).ToList();
+                foreach (var a in newBoardEnrollments)
                 {
-                    lecturer.CouncilEnrollments.Add(a);
+                    lecturer.BoardEnrollments.Add(a);
                 }
             }
         }
@@ -249,8 +249,8 @@ namespace PMS.Persistence
                 lecturer.Groups.Clear();
 
                 //add new groups
-                var newCouncils = context.Groups.Where(e => lecturerResource.Groups.Any(id => id == e.GroupId)).ToList();
-                foreach (var a in newCouncils)
+                var newBoards = context.Groups.Where(e => lecturerResource.Groups.Any(id => id == e.GroupId)).ToList();
+                foreach (var a in newBoards)
                 {
                     lecturer.Groups.Add(a);
                 }

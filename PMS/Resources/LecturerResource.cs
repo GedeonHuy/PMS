@@ -17,12 +17,12 @@ namespace PMS.Resources
         public int? MajorId { get; set; }
         public DateTime DateOfBirth { get; set; }
         public MajorResource Major { get; set; }
-        public ICollection<int> CouncilEnrollments { get; set; }
+        public ICollection<int> BoardEnrollments { get; set; }
         public ICollection<int> Groups { get; set; }
         public ICollection<int> Projects { get; set; }
         public LecturerResource()
         {
-            CouncilEnrollments = new Collection<int>();
+            BoardEnrollments = new Collection<int>();
             Groups = new Collection<int>();
             Projects = new Collection<int>();
             IsDeleted = false;

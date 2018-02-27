@@ -31,39 +31,39 @@ namespace PMS.Mapping
             }));
 
 
-            CreateMap<Council, CouncilResource>()
+            CreateMap<Board, BoardResource>()
             //.ForMember(cr => cr.Group, opt => opt.MapFrom(c => c.Group))
             .ForMember(cr => cr.ProjectName, opt => opt.MapFrom(c => c.Group.Project.Title))
             .ForMember(cr => cr.GroupName, opt => opt.MapFrom(c => c.Group.GroupName))
             .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId))
             .ForMember(cr => cr.LecturerInformations, opt => opt.MapFrom(c => new LecturerInformationResource
             {
-                President = new PresidentResource
+                President = new ChairResource
                 {
-                    LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "President").Lecturer.LecturerId,
-                    ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "President").Percentage,
-                    Score = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "President").Score
+                    LecturerId = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Lecturer.LecturerId,
+                    ScorePercent = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Percentage,
+                    Score = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Score
                 },
                 Secretary = new SecretaryResource
                 {
-                    LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Secretary").Lecturer.LecturerId,
-                    ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Secretary").Percentage,
-                    Score = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Secretary").Score
+                    LecturerId = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Secretary").Lecturer.LecturerId,
+                    ScorePercent = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Secretary").Percentage,
+                    Score = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Secretary").Score
                 },
                 Reviewer = new ReviewerResource
                 {
-                    LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Reviewer").Lecturer.LecturerId,
-                    ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Reviewer").Percentage,
-                    Score = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Reviewer").Score
+                    LecturerId = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Reviewer").Lecturer.LecturerId,
+                    ScorePercent = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Reviewer").Percentage,
+                    Score = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Reviewer").Score
                 },
                 Supervisor = new SupervisorResource
                 {
-                    LecturerId = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Supervisor").Lecturer.LecturerId,
-                    ScorePercent = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Supervisor").Percentage,
-                    Score = c.CouncilEnrollments.FirstOrDefault(cf => cf.CouncilRole.CouncilRoleName == "Supervisor").Score
+                    LecturerId = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Supervisor").Lecturer.LecturerId,
+                    ScorePercent = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Supervisor").Percentage,
+                    Score = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Supervisor").Score
                 }
             }))
-            .ForMember(cr => cr.CouncilEnrollments, opt => opt.MapFrom(c => c.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId)));
+            .ForMember(cr => cr.BoardEnrollments, opt => opt.MapFrom(c => c.BoardEnrollments.Select(cf => cf.BoardEnrollmentId)));
 
             CreateMap<Major, MajorResource>()
                 .ForMember(gr => gr.Lecturers, opt => opt.MapFrom(g => g.Lecturers.Select(gf => gf.LecturerId)))
@@ -76,7 +76,7 @@ namespace PMS.Mapping
                 .ForMember(sr => sr.Enrollments, opt => opt.MapFrom(s => s.Enrollments.Select(sf => sf.EnrollmentId)));
 
 
-            CreateMap<CouncilEnrollment, CouncilEnrollmentResource>()
+            CreateMap<BoardEnrollment, BoardEnrollmentResource>()
                 .ForMember(cr => cr.LecturerID, opt => opt.MapFrom(c => c.Lecturer.LecturerId))
                 .ForMember(cr => cr.Lecturer, opt => opt.MapFrom(c => new LecturerResource
                 {
@@ -87,20 +87,20 @@ namespace PMS.Mapping
                     Email = c.Lecturer.Email,
                     IsDeleted = c.Lecturer.IsDeleted,
                     PhoneNumber = c.Lecturer.PhoneNumber,
-                    CouncilEnrollments = c.Lecturer.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId).ToList(),
+                    BoardEnrollments = c.Lecturer.BoardEnrollments.Select(cf => cf.BoardEnrollmentId).ToList(),
                     Groups = c.Lecturer.Groups.Select(cf => cf.GroupId).ToList(),
                     Projects = c.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
 
                 }))
-                .ForMember(cr => cr.CouncilID, opt => opt.MapFrom(c => c.Council.CouncilId))
-                .ForMember(cr => cr.Council, opt => opt.MapFrom(c => new CouncilResource
+                .ForMember(cr => cr.BoardID, opt => opt.MapFrom(c => c.Board.BoardId))
+                .ForMember(cr => cr.Board, opt => opt.MapFrom(c => new BoardResource
                 {
-                    CouncilId = c.Council.CouncilId,
-                    ResultGrade = c.Council.ResultGrade,
-                    ResultScore = c.Council.ResultScore,
-                    IsDeleted = c.Council.IsDeleted,
-                    isAllScored = c.Council.isAllScored,
-                    CouncilEnrollments = c.Council.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId).ToList()
+                    BoardId = c.Board.BoardId,
+                    ResultGrade = c.Board.ResultGrade,
+                    ResultScore = c.Board.ResultScore,
+                    IsDeleted = c.Board.IsDeleted,
+                    isAllScored = c.Board.isAllScored,
+                    BoardEnrollments = c.Board.BoardEnrollments.Select(cf => cf.BoardEnrollmentId).ToList()
                 }));
 
             CreateMap<Grade, GradeResource>()
@@ -181,7 +181,7 @@ namespace PMS.Mapping
                     Email = e.Lecturer.Email,
                     IsDeleted = e.Lecturer.IsDeleted,
                     PhoneNumber = e.Lecturer.PhoneNumber,
-                    CouncilEnrollments = e.Lecturer.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId).ToList(),
+                    BoardEnrollments = e.Lecturer.BoardEnrollments.Select(cf => cf.BoardEnrollmentId).ToList(),
                     Groups = e.Lecturer.Groups.Select(cf => cf.GroupId).ToList(),
                     Projects = e.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
                 }));
@@ -211,7 +211,7 @@ namespace PMS.Mapping
                     Email = p.Lecturer.Email,
                     IsDeleted = p.Lecturer.IsDeleted,
                     PhoneNumber = p.Lecturer.PhoneNumber,
-                    CouncilEnrollments = p.Lecturer.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId).ToList(),
+                    BoardEnrollments = p.Lecturer.BoardEnrollments.Select(cf => cf.BoardEnrollmentId).ToList(),
                     Groups = p.Lecturer.Groups.Select(cf => cf.GroupId).ToList(),
                     Projects = p.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
                 }))
@@ -232,7 +232,7 @@ namespace PMS.Mapping
                 }))
                 .ForMember(lr => lr.Groups, opt => opt.MapFrom(l => l.Groups.Select(lf => lf.GroupId)))
                 .ForMember(lr => lr.Projects, opt => opt.MapFrom(l => l.Projects.Select(lf => lf.ProjectId)))
-                .ForMember(lr => lr.CouncilEnrollments, opt => opt.MapFrom(l => l.CouncilEnrollments.Select(lf => lf.CouncilEnrollmentId)));
+                .ForMember(lr => lr.BoardEnrollments, opt => opt.MapFrom(l => l.BoardEnrollments.Select(lf => lf.BoardEnrollmentId)));
 
             CreateMap<Group, GroupResource>()
                 .ForMember(gr => gr.Enrollments, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.EnrollmentId)))
@@ -270,7 +270,7 @@ namespace PMS.Mapping
                     Email = g.Lecturer.Email,
                     IsDeleted = g.Lecturer.IsDeleted,
                     PhoneNumber = g.Lecturer.PhoneNumber,
-                    CouncilEnrollments = g.Lecturer.CouncilEnrollments.Select(cf => cf.CouncilEnrollmentId).ToList(),
+                    BoardEnrollments = g.Lecturer.BoardEnrollments.Select(cf => cf.BoardEnrollmentId).ToList(),
                     Groups = g.Lecturer.Groups.Select(cf => cf.GroupId).ToList(),
                     Projects = g.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
                 }))
@@ -332,11 +332,11 @@ namespace PMS.Mapping
             CreateMap<AnnouncementUserResource, AnnouncementUser>()
                 .ForMember(c => c.AnnouncementUserId, opt => opt.Ignore());
 
-            CreateMap<CouncilResource, Council>()
-                .ForMember(c => c.CouncilId, opt => opt.Ignore());
+            CreateMap<BoardResource, Board>()
+                .ForMember(c => c.BoardId, opt => opt.Ignore());
 
-            CreateMap<CouncilEnrollmentResource, CouncilEnrollment>()
-                .ForMember(c => c.CouncilEnrollmentId, opt => opt.Ignore());
+            CreateMap<BoardEnrollmentResource, BoardEnrollment>()
+                .ForMember(c => c.BoardEnrollmentId, opt => opt.Ignore());
 
             CreateMap<GradeResource, Grade>()
                 .ForMember(g => g.GradeId, opt => opt.Ignore());
@@ -351,7 +351,7 @@ namespace PMS.Mapping
                 .ForMember(g => g.GroupId, opt => opt.Ignore())
                 .ForMember(g => g.Enrollments, opt => opt.Ignore())
                 .ForMember(g => g.Project, opt => opt.Ignore())
-                .ForMember(g => g.Council, opt => opt.Ignore())
+                .ForMember(g => g.Board, opt => opt.Ignore())
                 .ForMember(g => g.Lecturer, opt => opt.Ignore())
                 .ForMember(g => g.GroupId, opt => opt.Ignore());
 
@@ -369,8 +369,8 @@ namespace PMS.Mapping
             CreateMap<ExcelResource, Excel>()
                 .ForMember(m => m.ExcelId, opt => opt.Ignore());
 
-            CreateMap<CouncilEnrollmentResource, CouncilEnrollment>()
-                .ForMember(m => m.CouncilEnrollmentId, opt => opt.Ignore());
+            CreateMap<BoardEnrollmentResource, BoardEnrollment>()
+                .ForMember(m => m.BoardEnrollmentId, opt => opt.Ignore());
 
             CreateMap<UploadedFileResource, UploadedFile>()
                 .ForMember(m => m.UploadedFileId, opt => opt.Ignore());

@@ -7,14 +7,14 @@ namespace PMS.Resources.SubResources
 {
     public class LecturerInformationResource
     {
-        public PresidentResource President { get; set; }
+        public ChairResource President { get; set; }
         public SecretaryResource Secretary { get; set; }
         public ReviewerResource Reviewer { get; set; }
         public SupervisorResource Supervisor { get; set; }
 
         public LecturerInformationResource()
         {
-            President = new PresidentResource();
+            President = new ChairResource();
             Secretary = new SecretaryResource();
             Reviewer = new ReviewerResource();
             Supervisor = new SupervisorResource();

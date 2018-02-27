@@ -18,9 +18,9 @@ namespace PMS.Controllers
 
     public class ExcelController : Controller
     {
-        private readonly int MAX_BYTES = 10 * 1024 * 1024;
-        private readonly string[] ACCEPTED_FILE_TYPES = new[] { ".xlsx", ".xlsm", ".xlsb", ".xltx",
-        ".xltm",".xls",".xlt",".xls",".xml",".xlam",".xla",".xlw",".xlr"};
+        //private readonly int MAX_BYTES = 10 * 1024 * 1024;
+        //private readonly string[] ACCEPTED_FILE_TYPES = new[] { ".xlsx", ".xlsm", ".xlsb", ".xltx",
+        //".xltm",".xls",".xlt",".xls",".xml",".xlam",".xla",".xlw",".xlr"};
         private IHostingEnvironment host;
         private IMapper mapper;
         private IUnitOfWork unitOfWork;

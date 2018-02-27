@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace PMS.Models
 {
-    public class Council
+    public class Board
     {
-        public int CouncilId { get; set; }
+        public int BoardId { get; set; }
         public string ResultGrade { get; set; }
         public string ResultScore { get; set; }
         public bool IsDeleted { get; set; }
         public bool isAllScored { get; set; }
         public Group Group { get; set; }
-        public ICollection<CouncilEnrollment> CouncilEnrollments { get; set; }
-        public Council()
+        public ICollection<BoardEnrollment> BoardEnrollments { get; set; }
+        public Board()
         {
-            CouncilEnrollments = new Collection<CouncilEnrollment>();
+            BoardEnrollments = new Collection<BoardEnrollment>();
             isAllScored = false;
             IsDeleted = false;
         }

@@ -14,60 +14,60 @@ using System.Threading.Tasks;
 
 namespace PMS.Persistence.Repository
 {
-    public class CouncilRepository : ICouncilRepository
+    public class BoardRepository : IBoardRepository
     {
         private ApplicationDbContext context;
 
-        public CouncilRepository(ApplicationDbContext context)
+        public BoardRepository(ApplicationDbContext context)
         {
             this.context = context;
         }
 
-        public async Task<Council> GetCouncil(int? id, bool includeRelated = true)
+        public async Task<Board> GetBoard(int? id, bool includeRelated = true)
         {
             if (!includeRelated)
             {
-                return await context.Councils.FindAsync(id);
+                return await context.Boards.FindAsync(id);
             }
-            return await context.Councils
-                .Include(c => c.CouncilEnrollments)
+            return await context.Boards
+                .Include(c => c.BoardEnrollments)
                     .ThenInclude(l => l.Lecturer)
-                 .Include(c => c.CouncilEnrollments)
-                    .ThenInclude(l => l.CouncilRole)
+                 .Include(c => c.BoardEnrollments)
+                    .ThenInclude(l => l.BoardRole)
                 .Include(c => c.Group)
                     .ThenInclude(p => p.Project)
                 .Include(c => c.Group)
                     .ThenInclude(p => p.Lecturer)
-                .SingleOrDefaultAsync(s => s.CouncilId == id);
+                .SingleOrDefaultAsync(s => s.BoardId == id);
         }
 
-        public void AddCouncil(Council council)
+        public void AddBoard(Board board)
         {
-            context.Councils.Add(council);
+            context.Boards.Add(board);
         }
 
-        public void RemoveCouncil(Council council)
+        public void RemoveBoard(Board board)
         {
-            council.IsDeleted = true;
-            //context.Remove(council);
+            board.IsDeleted = true;
+            //context.Remove(Board);
         }
 
-        public async Task<QueryResult<Council>> GetCouncils(Query queryObj)
+        public async Task<QueryResult<Board>> GetBoards(Query queryObj)
         {
-            var result = new QueryResult<Council>();
+            var result = new QueryResult<Board>();
 
-            var query = context.Councils
+            var query = context.Boards
                          .Where(c => c.IsDeleted == false)
-                         .Include(c => c.CouncilEnrollments)
+                         .Include(c => c.BoardEnrollments)
                             .ThenInclude(l => l.Lecturer)
-                         .Include(c => c.CouncilEnrollments)
-                            .ThenInclude(l => l.CouncilRole)
+                         .Include(c => c.BoardEnrollments)
+                            .ThenInclude(l => l.BoardRole)
                          .Include(c => c.Group)
                             .ThenInclude(p => p.Project)
                           .AsQueryable();
 
             //sort
-            var columnsMap = new Dictionary<string, Expression<Func<Council, object>>>()
+            var columnsMap = new Dictionary<string, Expression<Func<Board, object>>>()
             {
                 ["grade"] = s => s.ResultGrade,
                 ["code"] = s => s.ResultScore,
@@ -75,7 +75,7 @@ namespace PMS.Persistence.Repository
             };
             if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
             {
-                query = query.OrderByDescending(s => s.CouncilId);
+                query = query.OrderByDescending(s => s.BoardId);
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
@@ -90,61 +90,61 @@ namespace PMS.Persistence.Repository
 
         }
 
-        public async Task AddLecturers(Council council, LecturerInformationResource lecturerInformations)
+        public async Task AddLecturers(Board board, LecturerInformationResource lecturerInformations)
         {
-            var presidentCouncilEnrollment = new CouncilEnrollment
+            var presidentBoardEnrollment = new BoardEnrollment
             {
-                Council = council,
+                Board = board,
                 IsDeleted = false,
                 isMarked = false,
                 Percentage = lecturerInformations.President.ScorePercent,
-                CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "President"),
+                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "President"),
                 Lecturer = await context.Lecturers.FindAsync(lecturerInformations.President.LecturerId)
 
             };
 
-            var secretaryCouncilEnrollment = new CouncilEnrollment
+            var secretaryBoardEnrollment = new BoardEnrollment
             {
-                Council = council,
+                Board = board,
                 IsDeleted = false,
                 isMarked = false,
                 Percentage = lecturerInformations.Secretary.ScorePercent,
-                CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Secretary"),
+                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Secretary"),
                 Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Secretary.LecturerId)
             };
 
-            var reviewerCouncilEnrollment = new CouncilEnrollment
+            var reviewerBoardEnrollment = new BoardEnrollment
             {
-                Council = council,
+                Board = board,
                 IsDeleted = false,
                 isMarked = false,
                 Percentage = lecturerInformations.Reviewer.ScorePercent,
-                CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Reviewer"),
+                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Reviewer"),
                 Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Reviewer.LecturerId)
             };
 
-            var supervisorCouncilEnrollment = new CouncilEnrollment
+            var supervisorBoardEnrollment = new BoardEnrollment
             {
-                Council = council,
+                Board = board,
                 IsDeleted = false,
                 isMarked = false,
                 Percentage = lecturerInformations.Supervisor.ScorePercent,
-                CouncilRole = await context.CouncilRoles.FirstOrDefaultAsync(c => c.CouncilRoleName == "Supervisor"),
-                Lecturer = council.Group.Lecturer
+                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Supervisor"),
+                Lecturer = board.Group.Lecturer
             };
 
-            context.CouncilEnrollments.Add(presidentCouncilEnrollment);
-            context.CouncilEnrollments.Add(secretaryCouncilEnrollment);
-            context.CouncilEnrollments.Add(reviewerCouncilEnrollment);
-            context.CouncilEnrollments.Add(supervisorCouncilEnrollment);
+            context.BoardEnrollments.Add(presidentBoardEnrollment);
+            context.BoardEnrollments.Add(secretaryBoardEnrollment);
+            context.BoardEnrollments.Add(reviewerBoardEnrollment);
+            context.BoardEnrollments.Add(supervisorBoardEnrollment);
         }
 
-        public void RemoveOldLecturer(Council council)
+        public void RemoveOldLecturer(Board board)
         {
-            var councilEnrollments = council.CouncilEnrollments.ToList();
-            foreach (var councilEnrollment in councilEnrollments)
+            var boardEnrollments = board.BoardEnrollments.ToList();
+            foreach (var BoardEnrollment in boardEnrollments)
             {
-                context.Remove(councilEnrollment);
+                context.Remove(BoardEnrollment);
             }
         }
 
@@ -182,92 +182,92 @@ namespace PMS.Persistence.Repository
             return "correct";
         }
 
-        public double CalculateScore(Council council)
+        public double CalculateScore(Board board)
         {
             double score = 0;
-            foreach (var councilenrollment in council.CouncilEnrollments)
+            foreach (var boardenrollment in board.BoardEnrollments)
             {
-                score += councilenrollment.Score.Value * (councilenrollment.Percentage.Value / 100);
+                score += boardenrollment.Score.Value * (boardenrollment.Percentage.Value / 100);
             }
             return score;
         }
-        public void CalculateGrade(Council council)
+        public void CalculateGrade(Board board)
         {
-            var score = Double.Parse(council.ResultScore);
+            var score = Double.Parse(board.ResultScore);
             if (score >= 90 && score <= 100)
             {
                 //well done
-                council.ResultGrade = "A";
+                board.ResultGrade = "A";
             }
             else if (score >= 85)
             {
                 //good
-                council.ResultGrade = "A-";
+                board.ResultGrade = "A-";
             }
             else if (score >= 80)
             {
                 //unlucky
-                council.ResultGrade = "B+";
+                board.ResultGrade = "B+";
             }
             else if (score >= 75)
             {
                 //keep fighting
-                council.ResultGrade = "B";
+                board.ResultGrade = "B";
             }
             else if (score >= 70)
             {
                 //care
-                council.ResultGrade = "B-";
+                board.ResultGrade = "B-";
             }
             else if (score >= 65)
             {
                 //need more try
-                council.ResultGrade = "C+";
+                board.ResultGrade = "C+";
             }
             else if (score >= 60)
             {
                 //noob
-                council.ResultGrade = "C";
+                board.ResultGrade = "C";
             }
             else if (score >= 55)
             {
                 //chicken
-                council.ResultGrade = "C-";
+                board.ResultGrade = "C-";
             }
             else if (score >= 53)
             {
                 //quit
-                council.ResultGrade = "D+";
+                board.ResultGrade = "D+";
             }
             else if (score >= 52)
             {
                 //no word
-                council.ResultGrade = "D";
+                board.ResultGrade = "D";
             }
             else if (score >= 50)
             {
                 // lucky
-                council.ResultGrade = "D-";
+                board.ResultGrade = "D-";
             }
             else
             {
                 //poor you bro
-                council.ResultGrade = "F";
+                board.ResultGrade = "F";
             }
         }
 
-        public void UpdateCouncilEnrollments(Council council, CouncilResource councilResource)
+        public void UpdateBoardEnrollments(Board board, BoardResource BoardResource)
         {
-            if (councilResource.CouncilEnrollments != null && councilResource.CouncilEnrollments.Count >= 0)
+            if (BoardResource.BoardEnrollments != null && BoardResource.BoardEnrollments.Count >= 0)
             {
-                //remove old councilEnrollments
-                council.CouncilEnrollments.Clear();
+                //remove old BoardEnrollments
+                board.BoardEnrollments.Clear();
 
                 //add new enrollments
-                var newCouncilEnrollments = context.CouncilEnrollments.Where(e => councilResource.CouncilEnrollments.Any(id => id == e.CouncilEnrollmentId)).ToList();
-                foreach (var a in newCouncilEnrollments)
+                var newBoardEnrollments = context.BoardEnrollments.Where(e => BoardResource.BoardEnrollments.Any(id => id == e.BoardEnrollmentId)).ToList();
+                foreach (var a in newBoardEnrollments)
                 {
-                    council.CouncilEnrollments.Add(a);
+                    board.BoardEnrollments.Add(a);
                 }
             }
         }

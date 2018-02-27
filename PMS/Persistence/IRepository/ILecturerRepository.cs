@@ -16,7 +16,7 @@ namespace PMS.Persistence
         Task<IEnumerable<Enrollment>> FinishGroupingAsync(string email, int QuarterId);
         Task<QueryResult<Enrollment>> GetEnrollments(Query queryObj, string email);
         Task<QueryResult<Group>> GetGroups(Query queryObj, string email);
-        void UpdateCouncilEnrollments(Lecturer lecturer, LecturerResource lecturerResource);
+        void UpdateBoardEnrollments(Lecturer lecturer, LecturerResource lecturerResource);
         void UpdateGroups(Lecturer lecturer, LecturerResource lecturerResource);
         void UpdateProjects(Lecturer lecturer, LecturerResource lecturerResource);
     }

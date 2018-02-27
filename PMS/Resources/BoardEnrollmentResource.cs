@@ -5,21 +5,21 @@ using System.Threading.Tasks;
 
 namespace PMS.Resources
 {
-    public class CouncilEnrollmentResource
+    public class BoardEnrollmentResource
     {
-        public int CouncilEnrollmentId { get; set; }
+        public int BoardEnrollmentId { get; set; }
         public bool IsDeleted { get; set; }
         public int? LecturerID { get; set; }
-        public int? CouncilID { get; set; }
+        public int? BoardID { get; set; }
         public int Percentage { get; set; }
         public double? Score { get; set; }
         public bool isMarked { get; set; }
-        public CouncilResource Council { get; set; }
+        public BoardResource Board { get; set; }
         public LecturerResource Lecturer { get; set; }
-        public CouncilEnrollmentResource()
+        public BoardEnrollmentResource()
         {
             Lecturer = new LecturerResource();
-            Council = new CouncilResource();
+            Board = new BoardResource();
             IsDeleted = false;
         }
     }

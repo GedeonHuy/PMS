@@ -13,176 +13,176 @@ using PMS.Models;
 
 namespace PMS.Controllers
 {
-    [Route("/api/councilenrollments")]
-    public class CouncilEnrollmentController : Controller
+    [Route("/api/boardenrollments")]
+    public class boardEnrollmentController : Controller
     {
         private IMapper mapper;
-        private ICouncilEnrollmentRepository councilEnrollmentRepository;
+        private IBoardEnrollmentRepository boardEnrollmentRepository;
         private ILecturerRepository lecturerRepository;
-        private ICouncilRepository councilRepository;
+        private IBoardRepository boardRepository;
         private IUnitOfWork unitOfWork;
 
-        public CouncilEnrollmentController(IMapper mapper, IUnitOfWork unitOfWork,
-            ICouncilEnrollmentRepository councilEnrollmentRepository,
-            ILecturerRepository lecturerRepository, ICouncilRepository councilRepository)
+        public boardEnrollmentController(IMapper mapper, IUnitOfWork unitOfWork,
+            IBoardEnrollmentRepository boardEnrollmentRepository,
+            ILecturerRepository lecturerRepository, IBoardRepository boardRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.councilEnrollmentRepository = councilEnrollmentRepository;
+            this.boardEnrollmentRepository = boardEnrollmentRepository;
             this.lecturerRepository = lecturerRepository;
-            this.councilRepository = councilRepository;
+            this.boardRepository = boardRepository;
         }
 
         [HttpPost]
         [Route("add")]
-        public async Task<IActionResult> CreateCouncilEnrollment([FromBody]CouncilEnrollmentResource councilEnrollmentResource)
+        public async Task<IActionResult> CreateboardEnrollment([FromBody]BoardEnrollmentResource boardEnrollmentResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var councilEnrollment = mapper.Map<CouncilEnrollmentResource, CouncilEnrollment>(councilEnrollmentResource);
-            councilEnrollment.Lecturer = await lecturerRepository.GetLecturer(councilEnrollmentResource.LecturerID);
-            councilEnrollment.Council = await councilRepository.GetCouncil(councilEnrollmentResource.CouncilID);
-            if (councilEnrollment.Score != null)
+            var boardEnrollment = mapper.Map<BoardEnrollmentResource, BoardEnrollment>(boardEnrollmentResource);
+            boardEnrollment.Lecturer = await lecturerRepository.GetLecturer(boardEnrollmentResource.LecturerID);
+            boardEnrollment.Board = await boardRepository.GetBoard(boardEnrollmentResource.BoardID);
+            if (boardEnrollment.Score != null)
             {
-                councilEnrollment.isMarked = true;
+                boardEnrollment.isMarked = true;
             }
 
-            councilEnrollmentRepository.AddCouncilEnrollment(councilEnrollment);
+            boardEnrollmentRepository.AddBoardEnrollment(boardEnrollment);
             await unitOfWork.Complete();
 
-            councilEnrollment = await councilEnrollmentRepository.GetCouncilEnrollment(councilEnrollment.CouncilEnrollmentId);
+            boardEnrollment = await boardEnrollmentRepository.GetBoardEnrollment(boardEnrollment.BoardEnrollmentId);
 
-            var result = mapper.Map<CouncilEnrollment, CouncilEnrollmentResource>(councilEnrollment);
+            var result = mapper.Map<BoardEnrollment, BoardEnrollmentResource>(boardEnrollment);
 
             return Ok(result);
         }
 
         [HttpPut]
         [Route("update/{id}")]
-        public async Task<IActionResult> UpdateCouncilEnrollment(int id, [FromBody]CouncilEnrollmentResource councilEnrollmentResource)
+        public async Task<IActionResult> UpdateboardEnrollment(int id, [FromBody]BoardEnrollmentResource boardEnrollmentResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var councilEnrollment = await councilEnrollmentRepository.GetCouncilEnrollment(id);
+            var boardEnrollment = await boardEnrollmentRepository.GetBoardEnrollment(id);
 
-            if (councilEnrollment == null)
+            if (boardEnrollment == null)
                 return NotFound();
 
-            mapper.Map<CouncilEnrollmentResource, CouncilEnrollment>(councilEnrollmentResource, councilEnrollment);
-            councilEnrollment.Lecturer = await lecturerRepository.GetLecturer(councilEnrollmentResource.LecturerID);
-            councilEnrollment.Council = await councilRepository.GetCouncil(councilEnrollmentResource.CouncilID);
-            if (councilEnrollment.Score != null)
+            mapper.Map<BoardEnrollmentResource, BoardEnrollment>(boardEnrollmentResource, boardEnrollment);
+            boardEnrollment.Lecturer = await lecturerRepository.GetLecturer(boardEnrollmentResource.LecturerID);
+            boardEnrollment.Board = await boardRepository.GetBoard(boardEnrollmentResource.BoardID);
+            if (boardEnrollment.Score != null)
             {
-                councilEnrollment.isMarked = true;
+                boardEnrollment.isMarked = true;
             }
             await unitOfWork.Complete();
 
-            var result = mapper.Map<CouncilEnrollment, CouncilEnrollmentResource>(councilEnrollment);
+            var result = mapper.Map<BoardEnrollment, BoardEnrollmentResource>(boardEnrollment);
             return Ok(result);
         }
 
         [HttpDelete]
         [Route("delete/{id}")]
-        public async Task<IActionResult> DeleteCouncilEnrollment(int id)
+        public async Task<IActionResult> DeleteboardEnrollment(int id)
         {
-            var councilEnrollment = await councilEnrollmentRepository.GetCouncilEnrollment(id, includeRelated: false);
+            var boardEnrollment = await boardEnrollmentRepository.GetBoardEnrollment(id, includeRelated: false);
 
-            if (councilEnrollment == null)
+            if (boardEnrollment == null)
             {
                 return NotFound();
             }
 
-            councilEnrollmentRepository.RemoveCouncilEnrollment(councilEnrollment);
+            boardEnrollmentRepository.RemoveBoardEnrollment(boardEnrollment);
             await unitOfWork.Complete();
 
             return Ok(id);
         }
 
         [HttpGet]
-        [Route("getcouncilenrollment/{id}")]
-        public async Task<IActionResult> GetCouncilEnrollment(int id)
+        [Route("getboardenrollment/{id}")]
+        public async Task<IActionResult> GetboardEnrollment(int id)
         {
-            var councilEnrollment = await councilEnrollmentRepository.GetCouncilEnrollment(id);
+            var boardEnrollment = await boardEnrollmentRepository.GetBoardEnrollment(id);
 
-            if (councilEnrollment == null)
+            if (boardEnrollment == null)
             {
                 return NotFound();
             }
 
-            var councilEnrollmentResource = mapper.Map<CouncilEnrollment, CouncilEnrollmentResource>(councilEnrollment);
+            var boardEnrollmentResource = mapper.Map<BoardEnrollment, BoardEnrollmentResource>(boardEnrollment);
 
-            return Ok(councilEnrollmentResource);
+            return Ok(boardEnrollmentResource);
         }
 
         [HttpGet]
-        [Route("getcouncilenrollmentbylectureremail/{email}")]
-        public async Task<IActionResult> GetCouncilEnrollmentByLecturerEmail(string email, [FromBody]CouncilResource councilResource)
+        [Route("getboardenrollmentbylectureremail/{email}")]
+        public async Task<IActionResult> GetboardEnrollmentByLecturerEmail(string email, [FromBody]BoardResource boardResource)
         {
-            var councilEnrollment = await councilEnrollmentRepository.GetCouncilEnrollmentByLecturerEmail(email, councilResource);
-            if (councilEnrollment == null)
+            var boardEnrollment = await boardEnrollmentRepository.GetBoardEnrollmentByLecturerEmail(email, boardResource);
+            if (boardEnrollment == null)
             {
                 return NotFound();
             }
-            var councilEnrollmentResource = mapper.Map<CouncilEnrollment, CouncilEnrollmentResource>(councilEnrollment);
+            var boardEnrollmentResource = mapper.Map<BoardEnrollment, BoardEnrollmentResource>(boardEnrollment);
 
-            return Ok(councilEnrollmentResource);
+            return Ok(boardEnrollmentResource);
         }
 
         [HttpGet]
         [Route("getall")]
-        public async Task<QueryResultResource<CouncilEnrollmentResource>> GetCouncilEnrollments(QueryResource queryResource)
+        public async Task<QueryResultResource<BoardEnrollmentResource>> GetboardEnrollments(QueryResource queryResource)
         {
             var query = mapper.Map<QueryResource, Query>(queryResource);
 
-            var queryResult = await councilEnrollmentRepository.GetCouncilEnrollments(query);
+            var queryResult = await boardEnrollmentRepository.GetBoardEnrollments(query);
 
-            var a = mapper.Map<QueryResult<CouncilEnrollment>, QueryResultResource<CouncilEnrollmentResource>>(queryResult);
+            var a = mapper.Map<QueryResult<BoardEnrollment>, QueryResultResource<BoardEnrollmentResource>>(queryResult);
 
             foreach (var item in a.Items)
-            {   
-                item.Council = mapper.Map<Council, CouncilResource>(await councilRepository.GetCouncil(item.CouncilID));
+            {
+                item.Board = mapper.Map<Board, BoardResource>(await boardRepository.GetBoard(item.BoardID));
             }
 
             return a;
         }
 
         [HttpGet]
-        [Route("getcouncilenrollmentsbylectureremail/{email}")]
-        public async Task<QueryResultResource<CouncilEnrollmentResource>> GetCouncilEnrollments(string email)
+        [Route("getboardenrollmentsbylectureremail/{email}")]
+        public async Task<QueryResultResource<BoardEnrollmentResource>> GetboardEnrollments(string email)
         {
 
-            var queryResult = await councilEnrollmentRepository.GetCouncilEnrollmentsByLecturerEmail(email);
-            return mapper.Map<QueryResult<CouncilEnrollment>, QueryResultResource<CouncilEnrollmentResource>>(queryResult);
+            var queryResult = await boardEnrollmentRepository.GetBoardEnrollmentsByLecturerEmail(email);
+            return mapper.Map<QueryResult<BoardEnrollment>, QueryResultResource<BoardEnrollmentResource>>(queryResult);
         }
 
         [HttpGet]
-        [Route("getcouncilenrollmentsbycouncilid/{id}")]
-        public async Task<IActionResult> GetCouncilEnrollmentsByCouncilId(int id)
+        [Route("getboardenrollmentsbyboardid/{id}")]
+        public async Task<IActionResult> GetboardEnrollmentsByboardId(int id)
         {
-            var councilEnrollments = await councilEnrollmentRepository.GetCouncilEnrollmentsByCouncilId(id);
-            var councilEnrollmentResource = mapper.Map<IEnumerable<CouncilEnrollment>, IEnumerable<CouncilEnrollmentResource>>(councilEnrollments);
-            return Ok(councilEnrollmentResource);
+            var boardEnrollments = await boardEnrollmentRepository.GetBoardEnrollmentsByBoardId(id);
+            var boardEnrollmentResource = mapper.Map<IEnumerable<BoardEnrollment>, IEnumerable<BoardEnrollmentResource>>(boardEnrollments);
+            return Ok(boardEnrollmentResource);
         }
 
         [HttpPut]
         [Route("savescore/{id}")]
         public async Task<IActionResult> SaveScore(int id, int? score)
         {
-            var councilEnrollment = await councilEnrollmentRepository.GetCouncilEnrollment(id);
+            var boardEnrollment = await boardEnrollmentRepository.GetBoardEnrollment(id);
 
-            councilEnrollment.Score = score;
-            councilEnrollment.isMarked = true;
-            councilEnrollmentRepository.UpdateScore(councilEnrollment);
+            boardEnrollment.Score = score;
+            boardEnrollment.isMarked = true;
+            boardEnrollmentRepository.UpdateScore(boardEnrollment);
             await unitOfWork.Complete();
 
-            var councilEnrollmentResource = mapper.Map<CouncilEnrollment, CouncilEnrollmentResource>(councilEnrollment);
-            return Ok(councilEnrollmentResource);
+            var boardEnrollmentResource = mapper.Map<BoardEnrollment, BoardEnrollmentResource>(boardEnrollment);
+            return Ok(boardEnrollmentResource);
         }
     }
 }

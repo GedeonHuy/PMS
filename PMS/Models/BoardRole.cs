@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace PMS.Models
 {
-    public class CouncilRole
+    public class BoardRole
     {
-        public int CouncilRoleId { get; set; }
+        public int BoardRoleId { get; set; }
         [Required]
         [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Enter alphabets only, please !")]
         [MaxLength(30, ErrorMessage = "Maximum length for the name is 30 characters.")]
-        public string CouncilRoleName { get; set; }
+        public string BoardRoleName { get; set; }
     }
 }
