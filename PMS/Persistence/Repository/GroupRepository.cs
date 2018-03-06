@@ -149,13 +149,37 @@ namespace PMS.Persistence
             if (groupResource.Enrollments != null && groupResource.Enrollments.Count >= 0)
             {
                 //remove old boardEnrollments
-                group.Enrollments.Clear();
+                var oldEnrollments = context.Enrollments.Where(e => !groupResource.Students.Any(id => id == e.EnrollmentId)).ToList();
+                foreach (var enrollment in oldEnrollments)
+                {
+                    enrollment.IsDeleted = true;
+                    group.Enrollments.Remove(enrollment);
+                }
+                //group.Enrollments.Clear();
 
                 //add new enrollments
-                var newEnrollments = context.Enrollments.Where(e => groupResource.Enrollments.Any(id => id == e.EnrollmentId)).ToList();
-                foreach (var a in newEnrollments)
+
+                //var newEnrollments = context.Enrollments.Where(e => groupResource.Enrollments.Any(id => id == e.EnrollmentId)).ToList();
+                //foreach (var a in newEnrollments)
+                //{
+                //    group.Enrollments.Add(a);
+                //}
+                var newStudentIds = groupResource.Students.Where(s => !group.Enrollments.Any(e => e.Student.Id == s)).ToList();
+                foreach (var StudentId in newStudentIds)
                 {
-                    group.Enrollments.Add(a);
+                    var enrollment = new Enrollment
+                    {
+                        StartDate = group.Quarter.QuarterStart,
+                        EndDate = group.Quarter.QuarterEnd,
+                        isConfirm = "Accepted",
+                        IsDeleted = false,
+                        Lecturer = group.Lecturer,
+                        Quarter = group.Quarter,
+                        Student = context.Students.FirstOrDefault(s => s.Id == StudentId),
+                        Type = group.Project.Type,
+                        Grade = null,
+                    };
+                    group.Enrollments.Add(enrollment);
                 }
             }
         }

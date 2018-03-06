@@ -58,9 +58,6 @@ namespace PMS.Controllers
 
             var group = mapper.Map<GroupResource, Group>(groupResource);
 
-            groupRepository.UpdateEnrollments(group, groupResource);
-            groupRepository.UpdateUploadedFiles(group, groupResource);
-
             group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId);
 
             if (groupResource.ProjectId == null)
@@ -78,6 +75,9 @@ namespace PMS.Controllers
 
             var quarter = await quarterRepository.GetQuarter(groupResource.QuarterId);
             group.Quarter = quarter;
+
+            groupRepository.UpdateEnrollments(group, groupResource);
+            groupRepository.UpdateUploadedFiles(group, groupResource);
 
             groupRepository.AddGroup(group);
             await unitOfWork.Complete();
@@ -133,9 +133,6 @@ namespace PMS.Controllers
 
             mapper.Map<GroupResource, Group>(groupResource, group);
 
-            groupRepository.UpdateEnrollments(group, groupResource);
-            groupRepository.UpdateUploadedFiles(group, groupResource);
-
             group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId.Value);
             if (groupResource.ProjectId == null)
             {
@@ -152,6 +149,10 @@ namespace PMS.Controllers
 
             var quarter = await quarterRepository.GetQuarter(groupResource.QuarterId);
             group.Quarter = quarter;
+
+            groupRepository.UpdateEnrollments(group, groupResource);
+            groupRepository.UpdateUploadedFiles(group, groupResource);
+
             await unitOfWork.Complete();
 
             //foreach (var enrollmentResource in groupResource.Enrollments)

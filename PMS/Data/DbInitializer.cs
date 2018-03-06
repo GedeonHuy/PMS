@@ -21,7 +21,9 @@ namespace PMS.Data
             var majors = new Major[]
             {
                 new Major{MajorName = "Kỹ Thuật Phần Mềm",MajorCode="CSE1"},
-                new Major{MajorName = "Truyền Thông Và Mạng Máy Tính",MajorCode="CSE2"}
+                new Major{MajorName = "Truyền Thông Và Mạng Máy Tính",MajorCode="CSE2"},
+                new Major{MajorName = "Điều Dưỡng",MajorCode="CSE3"},
+                new Major{MajorName = "Quản Trị Kinh Doanh",MajorCode="CSE4"}
             };
             foreach (Major m in majors)
             {

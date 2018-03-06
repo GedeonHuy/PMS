@@ -31,8 +31,11 @@ namespace PMS.Resources
         public BoardResource Board { get; set; }
         public ICollection<int> UploadedFiles { get; set; }
         public ICollection<int> Enrollments { get; set; }
+        public ICollection<int> Students { get; set; } //Students không tồn tại trong Group.cs
+
         public GroupResource()
         {
+            Students = new Collection<int>();
             Enrollments = new Collection<int>();
             UploadedFiles = new Collection<int>();
             isConfirm = "Pending";
