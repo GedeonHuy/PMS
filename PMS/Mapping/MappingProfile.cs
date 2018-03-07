@@ -38,7 +38,7 @@ namespace PMS.Mapping
             .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId))
             .ForMember(cr => cr.LecturerInformations, opt => opt.MapFrom(c => new LecturerInformationResource
             {
-                President = new ChairResource
+                Chair = new ChairResource
                 {
                     LecturerId = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Lecturer.LecturerId,
                     ScorePercent = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Percentage,
@@ -336,6 +336,8 @@ namespace PMS.Mapping
                 .ForMember(c => c.BoardId, opt => opt.Ignore());
 
             CreateMap<BoardEnrollmentResource, BoardEnrollment>()
+                .ForMember(c => c.Lecturer, opt => opt.Ignore())
+                .ForMember(c => c.Board, opt => opt.Ignore())
                 .ForMember(c => c.BoardEnrollmentId, opt => opt.Ignore());
 
             CreateMap<GradeResource, Grade>()

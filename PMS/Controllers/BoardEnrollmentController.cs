@@ -14,7 +14,7 @@ using PMS.Models;
 namespace PMS.Controllers
 {
     [Route("/api/boardenrollments")]
-    public class boardEnrollmentController : Controller
+    public class BoardEnrollmentController : Controller
     {
         private IMapper mapper;
         private IBoardEnrollmentRepository boardEnrollmentRepository;
@@ -22,7 +22,7 @@ namespace PMS.Controllers
         private IBoardRepository boardRepository;
         private IUnitOfWork unitOfWork;
 
-        public boardEnrollmentController(IMapper mapper, IUnitOfWork unitOfWork,
+        public BoardEnrollmentController(IMapper mapper, IUnitOfWork unitOfWork,
             IBoardEnrollmentRepository boardEnrollmentRepository,
             ILecturerRepository lecturerRepository, IBoardRepository boardRepository)
         {
@@ -74,9 +74,19 @@ namespace PMS.Controllers
             if (boardEnrollment == null)
                 return NotFound();
 
+            var lecturer = await lecturerRepository.GetLecturer(boardEnrollmentResource.LecturerID);
+            var board = await boardRepository.GetBoard(boardEnrollmentResource.BoardID);
+
+            //some bug cannot explain, cannot ignore lecturer and board when map BEResource -> BE
+            //so we must change these into null
+            boardEnrollmentResource.Lecturer = null;
+            boardEnrollmentResource.Board = null;
+
             mapper.Map<BoardEnrollmentResource, BoardEnrollment>(boardEnrollmentResource, boardEnrollment);
-            boardEnrollment.Lecturer = await lecturerRepository.GetLecturer(boardEnrollmentResource.LecturerID);
-            boardEnrollment.Board = await boardRepository.GetBoard(boardEnrollmentResource.BoardID);
+            boardEnrollment.Board = board;
+            boardEnrollment.Lecturer = lecturer;
+
+
             if (boardEnrollment.Score != null)
             {
                 boardEnrollment.isMarked = true;

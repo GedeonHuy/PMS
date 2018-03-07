@@ -97,9 +97,9 @@ namespace PMS.Persistence.Repository
                 Board = board,
                 IsDeleted = false,
                 isMarked = false,
-                Percentage = lecturerInformations.President.ScorePercent,
-                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "President"),
-                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.President.LecturerId)
+                Percentage = lecturerInformations.Chair.ScorePercent,
+                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Chair"),
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Chair.LecturerId)
 
             };
 
@@ -150,7 +150,7 @@ namespace PMS.Persistence.Repository
 
         public string CheckLecturerInformations(LecturerInformationResource lecturerInformations)
         {
-            var president = lecturerInformations.President;
+            var president = lecturerInformations.Chair;
             if (president.ScorePercent == null)
             {
                 return "nullScorePercent";

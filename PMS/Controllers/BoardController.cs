@@ -190,7 +190,7 @@ namespace PMS.Controllers
             {
                 boardResource.LecturerInformations = new LecturerInformationResource()
                 {
-                    President = new ChairResource()
+                    Chair = new ChairResource()
                     {
                         ScorePercent = 25,
                         Score = 0
@@ -237,13 +237,19 @@ namespace PMS.Controllers
 
             var board = await boardRepository.GetBoard(id);
 
+            //check number of Lecturer marked, and set isAllScored
+            if (board.BoardEnrollments.Count(c => c.isMarked == true) == board.BoardEnrollments.Count)
+            {
+                board.isAllScored = true;
+                await unitOfWork.Complete();
+            }
             if (board.isAllScored == false)
             {
                 ModelState.AddModelError("Error", "One or a few lecturers have not marked yet");
                 return BadRequest(ModelState);
             }
 
-            boardRepository.CalculateScore(board);
+            board.ResultScore = boardRepository.CalculateScore(board).ToString();
             await unitOfWork.Complete();
 
             var result = mapper.Map<Board, BoardResource>(board);
