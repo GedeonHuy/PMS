@@ -1,0 +1,47 @@
+<div class="widgets">
+  <img *ngIf="!isLoadData" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
+  />
+  <div class="row" *ngIf="isLoadData">
+    <div class="col-lg-12 col-md-12">
+      <button class="btn btn-success" style="float: right;" (click)="showAddModal()" translate>Add</button>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+
+    <div class="col-lg-12 col-md-12">
+      <ba-card cardTitle="quarters" isAddButton=true baCardClass="with-scroll table-panel">
+        <div class="horizontal-scroll">
+          <table class="table table-hover">
+            <thead>
+              <tr class="black-muted-bg">
+                <th>Id</th>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let project of queryResult.items; let rowIndex = index">
+                <td>{{rowIndex+1}}</td>
+                <td>{{project.title}}</td>
+                <td>{{project.type}}</td>
+                <td>{{project.description}}</td>
+                <td>
+                  <button class="btn btn-primary" (click)="showEditModal(project.projectId)">
+                    <i class="fa fa-pencil-square-o"></i>
+                  </button>
+                  <button class="btn btn-danger" (click)="deleteproject(project.projectId)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ba-card>
+    </div>
+  </div>
+</div>
