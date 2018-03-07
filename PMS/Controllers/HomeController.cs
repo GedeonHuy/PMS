@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace PMS.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return File("index.html", "text/html");
+            //return View();
         }
 
         public IActionResult About()
