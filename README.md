@@ -1,5 +1,5 @@
 # PMS 
-Capstone project for casptone prject
+Capstone project
 
 Use back-end: cd PMS and run "dotnet watch run"
 
