@@ -81,7 +81,7 @@ namespace PMS.Data
 
             var lecturers = new Lecturer[]
             {
-                new Lecturer{Name="Lý Mạnh Hùng",DateOfBirth=DateTime.Parse("1980-02-05"),Email="hung.ly@eiu.edu.vn",PhoneNumber="0918843826",Address="Bình DƯơng",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                //new Lecturer{Name="Lý Mạnh Hùng",DateOfBirth=DateTime.Parse("1980-02-05"),Email="hung.ly@eiu.edu.vn",PhoneNumber="0918843826",Address="Bình DƯơng",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
                 new Lecturer{Name="Nguyễn Tuấn Kiệt",DateOfBirth=DateTime.Parse("1985-11-12"),Email="kiet.nguyen@eiu.edu.vn",PhoneNumber="0934843856",Address="Bình Dương",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
                 new Lecturer{Name="Trần Nguyện Sơn Quân",DateOfBirth=DateTime.Parse("1980-12-29"),Email="quan.tran@eiu.edu.vn",PhoneNumber="0123843834",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
                 new Lecturer{Name="Lê Nhân Văn",DateOfBirth=DateTime.Parse("1986-11-10"),Email="van.le@eiu.edu.vn",PhoneNumber="0969843879",Address="Bình Dương",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
@@ -110,7 +110,7 @@ namespace PMS.Data
 
             var BoardRoles = new BoardRole[]
             {
-                new BoardRole{BoardRoleName="President"},
+                new BoardRole{BoardRoleName="Chair"},
                 new BoardRole{BoardRoleName="Secretary"},
                 new BoardRole{BoardRoleName="Supervisor"},
                 new BoardRole{BoardRoleName="Reviewer"}
