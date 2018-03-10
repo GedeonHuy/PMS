@@ -44,6 +44,7 @@ export class RoleComponent implements OnInit {
   //Create method
   showAddModal() {
     this.role = {};
+    this.isLoadRole = true;
     this.modalAddEdit.show();
   }
 

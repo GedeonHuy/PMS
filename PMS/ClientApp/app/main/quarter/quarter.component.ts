@@ -5,6 +5,8 @@ import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Response } from '@angular/http';
+import { DatePipe } from '@angular/common';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-quarter',
@@ -16,10 +18,11 @@ export class QuarterComponent implements OnInit {
   public quarters: any[];
   public quarter: any;
   public isClicked: boolean;
+  public isLoadQuarter: boolean;
   public queryResult: any = {};
 
   isLoadData: boolean;
-  isLoading: boolean;
+
   query: any = {
     pageSize: SystemConstants.PAGE_SIZE
   };
@@ -27,16 +30,22 @@ export class QuarterComponent implements OnInit {
   constructor(private _dataService: DataService, private _notificationService: NotificationService) {
     this.isClicked = false;
     this.isLoadData = false;
-    this.isLoading = false;
   }
 
   ngOnInit() {
     this.loadData();
   }
 
+  public dateOptions: any = {
+    locale: { format: 'DD/MM/YYYY' },
+    alwaysShowCalendars: false,
+    singleDatePicker: true
+  };
+
   loadData() {
     this._dataService.get("/api/quarters/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
+      console.log(this.queryResult);  
       this.isLoadData = true;
     });
   }
@@ -44,14 +53,14 @@ export class QuarterComponent implements OnInit {
   handler(type: string, $event: ModalDirective) {
     if (type === "onHide" || type === "onHidden") {
       this.quarter = [];
-      this.isLoading = false;
+      this.isLoadQuarter = false;
     }
   }
 
   //Create method
   showAddModal() {
     this.quarter = {};
-    this.isLoading = true;
+    this.isLoadQuarter = true;
     this.modalAddEdit.show();
   }
 
@@ -66,19 +75,19 @@ export class QuarterComponent implements OnInit {
     this._dataService.get('/api/quarters/getquarter/' + id)
       .subscribe((response: any) => {
         this.quarter = response;
-        this.isLoading = true;
+        this.isLoadQuarter = true;
       });
   }
 
-  saveChange(valid: boolean) {
-    if (valid) {
+  saveChange(form: NgForm) {
+    if (form.valid) {
       this.isClicked = true;
-      console.log(this.quarter);
       if (this.quarter.quarterId == undefined) {
         this._dataService.post('/api/quarters/add', JSON.stringify(this.quarter))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
+            form.resetForm();
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
@@ -88,6 +97,7 @@ export class QuarterComponent implements OnInit {
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
+            form.resetForm();
             this._notificationService.printSuccessMessage("Update Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));

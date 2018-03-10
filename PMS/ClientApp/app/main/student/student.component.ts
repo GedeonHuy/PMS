@@ -47,6 +47,7 @@ export class StudentComponent implements OnInit {
   //Create method
   showAddModal() {
     this.student = {};
+    this.isLoadStudent = true;
     this.modalAddEdit.show();
   }
 

@@ -49,6 +49,7 @@ export class ProjectComponent implements OnInit {
   //Create method
   showAddModal() {
     this.project = {};
+    this.isLoadProject = true;
     this.modalAddEdit.show();
   }
 

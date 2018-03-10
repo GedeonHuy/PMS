@@ -52,6 +52,7 @@ export class MajorComponent implements OnInit {
   //Create method
   showAddModal() {
     this.major = {};
+    this.isLoadMajor = true;
     this.modalAddEdit.show();
   }
 

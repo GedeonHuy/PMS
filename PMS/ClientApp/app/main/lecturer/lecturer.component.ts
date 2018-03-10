@@ -49,6 +49,7 @@ export class LecturerComponent implements OnInit {
   //Create method
   showAddModal() {
     this.lecturer = {};
+    this.isLoadLecturer = true;
     this.modalAddEdit.show();
   }
 
