@@ -2,11 +2,11 @@
 Capstone project
 
 Use back-end: 
-1.cd PMS and run "dotnet watch run"
+1. cd PMS and run "dotnet watch run"
 
 Use font-end: 
-1.run "npm install"
-2.cd PMS/ClientApp and run "ng serve"
+1. run "npm install"
+2. cd PMS/ClientApp and run "ng serve"
 
 -------------------------------------------------
 Run project like real product, fllowing 3 steps: \n
