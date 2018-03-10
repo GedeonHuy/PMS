@@ -1,10 +1,11 @@
 import { SystemConstants } from './../../core/common/system.constants';
 import { ProgressService } from './../../core/services/progress.service';
-import { NotificationService } from 'app/core/services/notification.service';
+import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Response } from '@angular/http';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-role',
@@ -19,6 +20,7 @@ export class RoleComponent implements OnInit {
   public role: any;
   public isClicked: boolean = false;
   public isLoadData: boolean = false;
+  public isLoadRole: boolean = false;
 
   query: any = {
     pageSize: SystemConstants.PAGE_SIZE
@@ -56,16 +58,19 @@ export class RoleComponent implements OnInit {
     this._dataService.get('/api/roles/getrole/' + id)
       .subscribe((response: any) => {
         this.role = response;
+        this.isLoadRole = true;
       });
   }
 
-  saveChange(valid: boolean) {
-    if (valid) {
+  saveChange(form: NgForm) {
+    if (form.valid) {
       if (this.role.id == undefined) {
         this._dataService.post('/api/roles/add', JSON.stringify(this.role))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
+            form.resetForm();
+            this.isClicked = false;
             this._notificationService.printSuccessMessage("Add Success");
           }, error => this._dataService.handleError(error));
       }
@@ -74,21 +79,30 @@ export class RoleComponent implements OnInit {
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
+            form.resetForm();
+            this.isClicked = false;
             this._notificationService.printSuccessMessage("Update Success");
           }, error => this._dataService.handleError(error));
       }
     }
   }
 
-  deleteRole(id : any) {
+  deleteRole(id: any) {
     this._notificationService.printConfirmationDialog("Delete confirm", () => this.deleteConfirm(id));
   }
 
-  deleteConfirm(id : any) {
+  deleteConfirm(id: any) {
     this._dataService.delete('/api/roles/delete/' + id)
-      .subscribe((response : Response) => {
+      .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");
         this.loadData();
       });
+  }
+
+  handler(type: string, $event: ModalDirective) {
+    if (type === "onHide" || type === "onHidden") {
+      this.role = [];
+      this.isLoadRole = false;
+    }
   }
 }

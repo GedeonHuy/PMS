@@ -1,9 +1,11 @@
 import { SystemConstants } from './../../core/common/system.constants';
 import { ProgressService } from './../../core/services/progress.service';
-import { NotificationService } from 'app/core/services/notification.service';
+import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { NgForm } from '@angular/forms';
+import { Response } from '@angular/http';
 
 @Component({
   selector: 'app-student',
@@ -19,6 +21,9 @@ export class StudentComponent implements OnInit {
   public student: any;
   public isClicked: boolean = false;
   public isLoadData: boolean = false;
+  public isLoadStudent: boolean = false;
+  majors: any[];
+
 
   query: any = {
     pageSize: SystemConstants.PAGE_SIZE
@@ -45,6 +50,50 @@ export class StudentComponent implements OnInit {
     this.modalAddEdit.show();
   }
 
+  //Edit method
+  showEditModal(id: any) {
+    this.loadStudent(id);
+    this.modalAddEdit.show();
+  }
+
+  //Get Student with Id
+  loadStudent(id: any) {
+    this._dataService.get('/api/students/getstudent/' + id)
+      .subscribe((response: any) => {
+        this.student = response;
+        this._dataService.get("/api/majors/getall").subscribe((response: any) => {
+          this.majors = response.items;
+          this.isLoadStudent = true;
+        });
+      });
+  }
+
+  saveChange(form: NgForm) {
+    if (form.valid) {
+      this.isClicked = true;
+      if (this.student.id == undefined) {
+        this._dataService.post('/api/students/add', JSON.stringify(this.student))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            form.resetForm();
+            this._notificationService.printSuccessMessage("Add Success");
+            this.isClicked = false;
+          }, error => this._dataService.handleError(error));
+      }
+      else {
+        this._dataService.put('/api/students/update/' + this.student.id, JSON.stringify(this.student))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            form.resetForm();
+            this._notificationService.printSuccessMessage("Update Success");
+            this.isClicked = false;
+          }, error => this._dataService.handleError(error));
+      }
+    }
+  }
+
 
   toQueryString(obj) {
     var parts = [];
@@ -54,5 +103,24 @@ export class StudentComponent implements OnInit {
         parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
     }
     return parts.join('&');
+  }
+
+  deleteStudent(id: any) {
+    this._notificationService.printConfirmationDialog("Delete confirm", () => this.deleteConfirm(id));
+  }
+
+  deleteConfirm(id: any) {
+    this._dataService.delete('/api/students/delete/' + id)
+      .subscribe((response: Response) => {
+        this._notificationService.printSuccessMessage("Delete Success");
+        this.loadData();
+      });
+  }
+
+  handler(type: string, $event: ModalDirective) {
+    if (type === "onHide" || type === "onHidden") {
+      this.student = [];
+      this.isLoadStudent = false;
+    }
   }
 }

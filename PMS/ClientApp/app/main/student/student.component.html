@@ -27,6 +27,14 @@
                 <td ngClass="nowrap">{{student.studentCode}}</td>
                 <td>{{student.name}}</td>
                 <td>{{student.email}}</td>
+                <td>
+                  <button class="btn btn-primary" (click)="showEditModal(student.id)">
+                    <i class="fa fa-pencil-square-o"></i>
+                  </button>
+                  <button class="btn btn-danger" (click)="deleteStudent(student.id)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -38,16 +46,18 @@
 
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-  aria-hidden="true">
+  aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)"
+  (onHidden)="handler('onHidden', $event)">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="background: pink">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Add/Edit Student</h4>
+        <span *ngIf="!isLoadStudent" class="fa fa-refresh fa-spin"></span>      
         <button type="button" class="close pull-right" (click)="modalAddEdit.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" *ngIf="isLoadStudent">
         <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm)" *ngIf="student">
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Student Code</label>

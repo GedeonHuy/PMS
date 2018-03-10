@@ -45,17 +45,19 @@
 
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-  aria-hidden="true">
+  aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)"
+  (onHidden)="handler('onHidden', $event)">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="background: pink">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Add/Edit Role</h4>
+        <span *ngIf="!isLoadRole" class="fa fa-refresh fa-spin"></span>      
         <button type="button" class="close pull-right" (click)="modalAddEdit.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)"
+      <div class="modal-body" *ngIf="isLoadRole">
+        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm)"
           *ngIf="role">
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
@@ -80,7 +82,8 @@
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="modalAddEdit.hide()" class="btn btn-primary">Cancel</button>
-              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid">Save</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid || isClicked">Save</button>
+              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
             </div>
           </div>
         </form>

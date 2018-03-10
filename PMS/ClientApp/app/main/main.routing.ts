@@ -1,7 +1,7 @@
+import { AuthGuard } from './../core/guards/auth.guard';
 import { Routes, RouterModule }  from '@angular/router';
 import { Main } from './main.component';
 import { ModuleWithProviders } from '@angular/core';
-import { AuthGuard } from 'app/core/guards/auth.guard';
 
 // noinspection TypeScriptValidateTypes
 

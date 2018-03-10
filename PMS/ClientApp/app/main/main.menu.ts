@@ -73,6 +73,18 @@ export const PAGES_MENU = [
             order: 0
           }
         }
+      },
+      {
+        path: 'quarter',
+        data: {
+          menu: {
+            title: 'Quarter',
+            icon: 'ion-android-home',
+            selected: false,
+            expanded: false,
+            order: 0
+          }
+        }
       }
     ]
   }

@@ -5,6 +5,7 @@ import { NotificationService } from './../../core/services/notification.service'
 import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-project',
@@ -17,9 +18,11 @@ export class ProjectComponent implements OnInit {
   public projects: any[];
   public project: any;
   public isClicked: boolean;
-  public queryResult: any = {};
+  public isLoadData: boolean;
+  public isLoadProject: boolean;
+  majors : any[];
 
-  isLoadData: boolean;
+  public queryResult: any = {};
 
   query: any = {
     pageSize: SystemConstants.PAGE_SIZE
@@ -39,7 +42,6 @@ export class ProjectComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/projects/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log(response);
       this.isLoadData = true;
     });
   }
@@ -61,18 +63,22 @@ export class ProjectComponent implements OnInit {
     this._dataService.get('/api/projects/getproject/' + id)
       .subscribe((response: any) => {
         this.project = response;
-        console.log(this.project);
+        this._dataService.get("/api/majors/getall").subscribe((response: any) => {
+          this.majors = response.items;
+          this.isLoadProject = true;
+        });
       });
   }
 
-  saveChange(valid: boolean) {
-    if (valid) {
+  saveChange(form: NgForm) {
+    if (form.valid) {
       this.isClicked = true;
       if (this.project.projectId == undefined) {
         this._dataService.post('/api/projects/add', JSON.stringify(this.project))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
+            form.resetForm();
             this._notificationService.printSuccessMessage("Add Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
@@ -82,6 +88,7 @@ export class ProjectComponent implements OnInit {
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
+            form.resetForm();
             this._notificationService.printSuccessMessage("Update Success");
             this.isClicked = false;
           }, error => this._dataService.handleError(error));
@@ -115,6 +122,13 @@ export class ProjectComponent implements OnInit {
     this.isLoadData = false;
     this.query.page = page;
     this.loadData();
+  }
+
+  handler(type: string, $event: ModalDirective) {
+    if (type === "onHide" || type === "onHidden") {
+      this.project = [];
+      this.isLoadProject = false;
+    }
   }
 
 }

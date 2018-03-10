@@ -1,6 +1,6 @@
 import { SystemConstants } from './../../core/common/system.constants';
 import { ProgressService } from './../../core/services/progress.service';
-import { NotificationService } from 'app/core/services/notification.service';
+import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -39,6 +39,13 @@ export class QuarterComponent implements OnInit {
       this.queryResult = response;
       this.isLoadData = true;
     });
+  }
+
+  handler(type: string, $event: ModalDirective) {
+    if (type === "onHide" || type === "onHidden") {
+      this.quarter = [];
+      this.isLoading = false;
+    }
   }
 
   //Create method
