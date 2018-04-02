@@ -1,4 +1,5 @@
 ﻿using PMS.Models;
+using PMS.Models.TaskingModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,6 +119,18 @@ namespace PMS.Data
             foreach (BoardRole c in BoardRoles)
             {
                 context.BoardRoles.Add(c);
+            }
+            context.SaveChanges();
+
+            var Statuses = new Status[]
+            {
+                new Status{Title="ToDo"},
+                new Status{Title="Doing"},
+                new Status{Title="Done"}
+            };
+            foreach (Status s in Statuses)
+            {
+                context.Statuses.Add(s);
             }
             context.SaveChanges();
 

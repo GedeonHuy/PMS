@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PMS.Models;
+using PMS.Models.TaskingModels;
 
 namespace PMS.Data
 {
@@ -36,6 +37,13 @@ namespace PMS.Data
             builder.Entity<Quarter>().ToTable("Quarter");
             builder.Entity<BoardRole>().ToTable("BoardRole");
             builder.Entity<Excel>().ToTable("Excel");
+
+            //TaskingModels
+            builder.Entity<Activity>().ToTable("Activity");
+            builder.Entity<Comment>().ToTable("Comment");
+            builder.Entity<Status>().ToTable("Status");
+            builder.Entity<Models.TaskingModels.Task>().ToTable("Task");
+            builder.Entity<TaskItem>().ToTable("TaskItem");
         }
 
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
@@ -55,5 +63,13 @@ namespace PMS.Data
         public DbSet<Quarter> Quarters { get; set; }
         public DbSet<BoardRole> BoardRoles { get; set; }
         public DbSet<Excel> Excels { get; set; }
+
+        //TaskingModels
+        public DbSet<Activity> Activities { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Status> Statuses { get; set; }
+        public DbSet<Models.TaskingModels.Task> Tasks { get; set; }
+        public DbSet<TaskItem> TaskItems { get; set; }
+
     }
 }
