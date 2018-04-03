@@ -5,7 +5,7 @@ namespace PMS.Models.TaskingModels
     public class TaskItem
     {
         public int TaskItemId { get; set; }
-        public String Name { get; set; }
+        public string Name { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsDone { get; set; }
         public Task Task { get; set; }

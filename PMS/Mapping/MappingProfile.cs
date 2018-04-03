@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using PMS.Models;
+using PMS.Models.TaskingModels;
 using PMS.Resources;
 using PMS.Resources.SubResources;
+using PMS.Resources.TaskResources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +31,6 @@ namespace PMS.Mapping
                 UpdatedOn = c.AppUser.UpdatedOn,
                 AnnouncementUsers = c.AppUser.AnnouncementUsers.Select(a => a.AnnouncementUserId).ToList()
             }));
-
 
             CreateMap<Board, BoardResource>()
             //.ForMember(cr => cr.Group, opt => opt.MapFrom(c => c.Group))
@@ -169,7 +170,8 @@ namespace PMS.Mapping
                     ResultGrade = e.Group.ResultGrade,
                     ResultScore = e.Group.ResultScore,
                     Enrollments = e.Group.Enrollments.Select(ef => ef.EnrollmentId).ToList(),
-                    UploadedFiles = e.Group.UploadedFiles.Select(ef => ef.UploadedFileId).ToList()
+                    UploadedFiles = e.Group.UploadedFiles.Select(ef => ef.UploadedFileId).ToList(),
+                    Tasks = e.Group.Tasks.Select(ef => ef.TaskId).ToList()
                 }))
                 .ForMember(er => er.LecturerId, opt => opt.MapFrom(e => e.Lecturer.LecturerId))
                 .ForMember(er => er.Lecturer, opt => opt.MapFrom(e => new LecturerResource
@@ -237,6 +239,7 @@ namespace PMS.Mapping
             CreateMap<Group, GroupResource>()
                 .ForMember(gr => gr.Enrollments, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.EnrollmentId)))
                 .ForMember(gr => gr.UploadedFiles, opt => opt.MapFrom(g => g.UploadedFiles.Select(gf => gf.UploadedFileId)))
+                .ForMember(gr => gr.Tasks, opt => opt.MapFrom(g => g.Tasks.Select(gf => gf.TaskId)))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
                 .ForMember(er => er.Quarter, opt => opt.MapFrom(e => new QuarterResource
                 {
@@ -299,9 +302,32 @@ namespace PMS.Mapping
                     ResultGrade = s.Group.ResultGrade,
                     ResultScore = s.Group.ResultScore,
                     Enrollments = s.Group.Enrollments.Select(sf => sf.EnrollmentId).ToList(),
-                    UploadedFiles = s.Group.UploadedFiles.Select(sf => sf.UploadedFileId).ToList()
+                    UploadedFiles = s.Group.UploadedFiles.Select(sf => sf.UploadedFileId).ToList(),
+                    Tasks = s.Group.Tasks.Select(sf => sf.TaskId).ToList()
                 }));
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
+
+            /*///////////////////////// Tasking Feature///////////////////////////////////// */
+            CreateMap<Activity, ActivityResource>()
+            .ForMember(ar => ar.TaskId, opt => opt.MapFrom(a => a.Task.TaskId));
+
+            CreateMap<Comment, CommentResource>()
+            .ForMember(cr => cr.TaskId, opt => opt.MapFrom(c => c.Task.TaskId));
+
+            CreateMap<Status, StatusResource>()
+             .ForMember(sr => sr.Tasks, opt => opt.MapFrom(s => s.Tasks.Select(sf => sf.TaskId)));
+
+            CreateMap<Models.TaskingModels.Task, TaskResource>()
+            .ForMember(tr => tr.GroupId, opt => opt.MapFrom(t => t.Group.GroupId))
+            .ForMember(tr => tr.StatusId, opt => opt.MapFrom(t => t.Status.StatusId))
+            .ForMember(tr => tr.Attachments, opt => opt.MapFrom(t => t.Attachments.Select(tf => tf.UploadedFileId)))
+            .ForMember(tr => tr.CheckList, opt => opt.MapFrom(t => t.CheckList.Select(tf => tf.TaskItemId)))
+            .ForMember(tr => tr.Commnets, opt => opt.MapFrom(t => t.Commnets.Select(tf => tf.CommentId)))
+            .ForMember(tr => tr.Activities, opt => opt.MapFrom(t => t.Activities.Select(tf => tf.ActivityId)))
+            .ForMember(tr => tr.Members, opt => opt.MapFrom(t => t.Members.Select(tf => tf.Id)));
+
+            CreateMap<TaskItem, TaskItemResource>()
+            .ForMember(tr => tr.TaskId, opt => opt.MapFrom(t => t.Task.TaskId));
 
             //API Resource to domain
             CreateMap<QueryResource, Query>();
@@ -376,6 +402,23 @@ namespace PMS.Mapping
 
             CreateMap<UploadedFileResource, UploadedFile>()
                 .ForMember(m => m.UploadedFileId, opt => opt.Ignore());
+
+            /*///////////////////////// Tasking Feature///////////////////////////////////// */
+            CreateMap<ActivityResource, Activity>()
+                .ForMember(m => m.ActivityId, opt => opt.Ignore());
+
+            CreateMap<CommentResource, Comment>()
+                .ForMember(m => m.CommentId, opt => opt.Ignore());
+
+            CreateMap<StatusResource, Status>()
+                .ForMember(m => m.StatusId, opt => opt.Ignore());
+
+            CreateMap<TaskResource, Models.TaskingModels.Task>()
+                .ForMember(m => m.TaskId, opt => opt.Ignore());
+
+            CreateMap<TaskItemResource, TaskItem>()
+                .ForMember(m => m.TaskItemId, opt => opt.Ignore());
+
         }
     }
 }

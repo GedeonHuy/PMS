@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
@@ -17,12 +13,9 @@ using AutoMapper;
 using PMS.Persistence;
 using PMS.Persistence.IRepository;
 using PMS.Persistence.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using PMS.Hubs;
 using Microsoft.AspNetCore.ResponseCompression;
-using NETCore.MailKit.Extensions;
-using NETCore.MailKit.Infrastructure.Internal;
 
 namespace PMS
 {
@@ -54,7 +47,12 @@ namespace PMS
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUploadedFileRepository, UploadedFileRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+            //Tasking Features
+            services.AddScoped<ITaskItemRepository, TaskItemRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<IStatusRepository, StatusRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IActivityRepository, ActivityRepository>();
 
             services.AddAutoMapper();
             services.AddDbContext<ApplicationDbContext>(options =>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace PMS.Models
 {
@@ -23,10 +23,12 @@ namespace PMS.Models
         public Quarter Quarter { get; set; }
         public ICollection<UploadedFile> UploadedFiles { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
+        public ICollection<TaskingModels.Task> Tasks { get; set; }
         public Group()
         {
             Enrollments = new Collection<Enrollment>();
             UploadedFiles = new Collection<UploadedFile>();
+            Tasks = new Collection<TaskingModels.Task>();
             isConfirm = "Pending";
             isDeleted = false;
         }

@@ -13,6 +13,7 @@ namespace PMS.Models.TaskingModels
         public string Title { get; set; }
         public string Description { get; set; }
         public Status Status { get; set; }
+        public Group Group { get; set; }
         public ICollection<UploadedFile> Attachments { get; set; }
         public ICollection<TaskItem> CheckList { get; set; }
         public ICollection<Comment> Commnets { get; set; }
