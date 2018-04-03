@@ -14,13 +14,18 @@ namespace PMS.Controllers
     {
         private IMapper mapper;
         private IUnitOfWork unitOfWork;
-        private ITaskRepository repository;
+        private ITaskRepository taskRepository;
+        private IGroupRepository groupRepository;
+        private IStatusRepository statusRepository;
 
-        public TaskController(IMapper mapper, IUnitOfWork unitOfWork, ITaskRepository repository)
+        public TaskController(IMapper mapper, IUnitOfWork unitOfWork, ITaskRepository taskRepository,
+         IGroupRepository groupRepository, IStatusRepository statusRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.repository = repository;
+            this.taskRepository = taskRepository;
+            this.groupRepository = groupRepository;
+            this.statusRepository = statusRepository;
         }
 
         [HttpPost]
@@ -34,10 +39,20 @@ namespace PMS.Controllers
 
             var task = mapper.Map<TaskResource, Models.TaskingModels.Task>(taskResource);
 
-            repository.AddTask(task);
+            taskRepository.AddTask(task);
+
+            task.Group = await groupRepository.GetGroup(taskResource.GroupId);
+            task.Status = await statusRepository.GetStatus(taskResource.StatusId);
+
+            taskRepository.UpdateAttachments(task, taskResource);
+            taskRepository.UpdateCheckList(task, taskResource);
+            taskRepository.UpdateComments(task, taskResource);
+            taskRepository.UpdateActivities(task, taskResource);
+            taskRepository.UpdateMembers(task, taskResource);
+
             await unitOfWork.Complete();
 
-            task = await repository.GetTask(task.TaskId);
+            task = await taskRepository.GetTask(task.TaskId);
 
             var result = mapper.Map<Models.TaskingModels.Task, TaskResource>(task);
 
@@ -53,12 +68,22 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var task = await repository.GetTask(id);
+            var task = await taskRepository.GetTask(id);
 
             if (task == null)
                 return NotFound();
 
             mapper.Map<TaskResource, Models.TaskingModels.Task>(taskResource, task);
+
+            task.Group = await groupRepository.GetGroup(taskResource.GroupId);
+            task.Status = await statusRepository.GetStatus(taskResource.StatusId);
+
+            taskRepository.UpdateAttachments(task, taskResource);
+            taskRepository.UpdateCheckList(task, taskResource);
+            taskRepository.UpdateComments(task, taskResource);
+            taskRepository.UpdateActivities(task, taskResource);
+            taskRepository.UpdateMembers(task, taskResource);
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Models.TaskingModels.Task, TaskResource>(task);
@@ -69,14 +94,14 @@ namespace PMS.Controllers
         [Route("delete/{id}")]
         public async Task<IActionResult> DeleteTask(int id)
         {
-            var task = await repository.GetTask(id, includeRelated: false);
+            var task = await taskRepository.GetTask(id, includeRelated: false);
 
             if (task == null)
             {
                 return NotFound();
             }
 
-            repository.RemoveTask(task);
+            taskRepository.RemoveTask(task);
             await unitOfWork.Complete();
 
             return Ok(id);
@@ -86,7 +111,7 @@ namespace PMS.Controllers
         [Route("getTask/{id}")]
         public async Task<IActionResult> GetTask(int id)
         {
-            var task = await repository.GetTask(id);
+            var task = await taskRepository.GetTask(id);
 
             if (task == null)
             {
@@ -102,7 +127,7 @@ namespace PMS.Controllers
         [Route("getall")]
         public async Task<IActionResult> GetTaskes()
         {
-            var taskes = await repository.GetTasks();
+            var taskes = await taskRepository.GetTasks();
             var taskResource = mapper.Map<IEnumerable<Models.TaskingModels.Task>, IEnumerable<TaskResource>>(taskes);
             return Ok(taskResource);
         }

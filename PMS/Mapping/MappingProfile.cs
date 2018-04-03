@@ -238,6 +238,7 @@ namespace PMS.Mapping
 
             CreateMap<Group, GroupResource>()
                 .ForMember(gr => gr.Enrollments, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.EnrollmentId)))
+                .ForMember(gr => gr.Students, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.Student.Id)))
                 .ForMember(gr => gr.UploadedFiles, opt => opt.MapFrom(g => g.UploadedFiles.Select(gf => gf.UploadedFileId)))
                 .ForMember(gr => gr.Tasks, opt => opt.MapFrom(g => g.Tasks.Select(gf => gf.TaskId)))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
@@ -291,6 +292,7 @@ namespace PMS.Mapping
                 }));
             CreateMap<Excel, ExcelResource>();
             CreateMap<UploadedFile, UploadedFileResource>()
+                .ForMember(cr => cr.TaskId, opt => opt.MapFrom(c => c.Task.TaskId))
                 .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId))
                 .ForMember(sr => sr.Group, opt => opt.MapFrom(s => new GroupResource
                 {
@@ -312,6 +314,7 @@ namespace PMS.Mapping
             .ForMember(ar => ar.TaskId, opt => opt.MapFrom(a => a.Task.TaskId));
 
             CreateMap<Comment, CommentResource>()
+            .ForMember(cr => cr.Email, opt => opt.MapFrom(c => c.User.Email))
             .ForMember(cr => cr.TaskId, opt => opt.MapFrom(c => c.Task.TaskId));
 
             CreateMap<Status, StatusResource>()
@@ -414,7 +417,12 @@ namespace PMS.Mapping
                 .ForMember(m => m.StatusId, opt => opt.Ignore());
 
             CreateMap<TaskResource, Models.TaskingModels.Task>()
-                .ForMember(m => m.TaskId, opt => opt.Ignore());
+                .ForMember(m => m.TaskId, opt => opt.Ignore())
+                .ForMember(m => m.CheckList, opt => opt.Ignore())
+                .ForMember(m => m.Commnets, opt => opt.Ignore())
+                .ForMember(m => m.Status, opt => opt.Ignore())
+                .ForMember(m => m.Activities, opt => opt.Ignore())
+                .ForMember(m => m.Members, opt => opt.Ignore());
 
             CreateMap<TaskItemResource, TaskItem>()
                 .ForMember(m => m.TaskItemId, opt => opt.Ignore());

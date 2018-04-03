@@ -14,13 +14,18 @@ namespace PMS.Controllers
     {
         private IMapper mapper;
         private IUnitOfWork unitOfWork;
-        private ICommentRepository repository;
+        private ICommentRepository commentRepository;
+        private ITaskRepository taskRepository;
+        private IUserRepository userRepository;
 
-        public CommentController(IMapper mapper, IUnitOfWork unitOfWork, ICommentRepository repository)
+        public CommentController(IMapper mapper, IUnitOfWork unitOfWork, ICommentRepository commentRepository,
+         ITaskRepository taskRepository, IUserRepository userRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.repository = repository;
+            this.commentRepository = commentRepository;
+            this.taskRepository = taskRepository;
+            this.userRepository = userRepository;
         }
 
         [HttpPost]
@@ -34,10 +39,13 @@ namespace PMS.Controllers
 
             var comment = mapper.Map<CommentResource, Comment>(commentResource);
 
-            repository.AddComment(comment);
+            comment.Task = await taskRepository.GetTask(commentResource.TaskId);
+            comment.User = userRepository.GetUserByEmail(commentResource.Email);
+
+            commentRepository.AddComment(comment);
             await unitOfWork.Complete();
 
-            comment = await repository.GetComment(comment.CommentId);
+            comment = await commentRepository.GetComment(comment.CommentId);
 
             var result = mapper.Map<Comment, CommentResource>(comment);
 
@@ -53,12 +61,16 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var comment = await repository.GetComment(id);
+            var comment = await commentRepository.GetComment(id);
 
             if (comment == null)
                 return NotFound();
 
             mapper.Map<CommentResource, Comment>(commentResource, comment);
+
+            comment.Task = await taskRepository.GetTask(commentResource.TaskId);
+            comment.User = userRepository.GetUserByEmail(commentResource.Email);
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Comment, CommentResource>(comment);
@@ -69,14 +81,14 @@ namespace PMS.Controllers
         [Route("delete/{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
-            var comment = await repository.GetComment(id, includeRelated: false);
+            var comment = await commentRepository.GetComment(id, includeRelated: false);
 
             if (comment == null)
             {
                 return NotFound();
             }
 
-            repository.RemoveComment(comment);
+            commentRepository.RemoveComment(comment);
             await unitOfWork.Complete();
 
             return Ok(id);
@@ -86,7 +98,7 @@ namespace PMS.Controllers
         [Route("getComment/{id}")]
         public async Task<IActionResult> GetComment(int id)
         {
-            var comment = await repository.GetComment(id);
+            var comment = await commentRepository.GetComment(id);
 
             if (comment == null)
             {
@@ -102,7 +114,7 @@ namespace PMS.Controllers
         [Route("getall")]
         public async Task<IActionResult> GetCommentes()
         {
-            var commentes = await repository.GetComments();
+            var commentes = await commentRepository.GetComments();
             var commentResource = mapper.Map<IEnumerable<Comment>, IEnumerable<CommentResource>>(commentes);
             return Ok(commentResource);
         }

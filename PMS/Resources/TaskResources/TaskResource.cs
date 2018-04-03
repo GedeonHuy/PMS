@@ -6,7 +6,7 @@ namespace PMS.Resources.TaskResources
 {
     public class TaskResource
     {
-        public int TaskResourceId { get; set; }
+        public int TaskId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public int? GroupId { get; set; }
@@ -27,6 +27,8 @@ namespace PMS.Resources.TaskResources
             CheckList = new Collection<int>();
             Commnets = new Collection<int>();
             Members = new Collection<int>();
+            Activities = new Collection<int>();
+            Attachments = new Collection<int>();
         }
     }
 }

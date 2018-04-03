@@ -28,6 +28,8 @@ namespace PMS.Models.TaskingModels
             CheckList = new Collection<TaskItem>();
             Commnets = new Collection<Comment>();
             Members = new Collection<Student>();
+            Activities = new Collection<Activity>();
+            Attachments = new Collection<UploadedFile>();
         }
     }
 }

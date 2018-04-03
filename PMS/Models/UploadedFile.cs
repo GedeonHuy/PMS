@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PMS.Models
 {
@@ -14,6 +13,7 @@ namespace PMS.Models
         public string FileName { get; set; }
         public bool IsDeleted { get; set; }
         public Group Group { get; set; }
+        public TaskingModels.Task Task { get; set; }
         public UploadedFile()
         {
             IsDeleted = false;
