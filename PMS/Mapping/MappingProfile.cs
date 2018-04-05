@@ -321,6 +321,8 @@ namespace PMS.Mapping
              .ForMember(sr => sr.Tasks, opt => opt.MapFrom(s => s.Tasks.Select(sf => sf.TaskId)));
 
             CreateMap<Models.TaskingModels.Task, TaskResource>()
+            //.ForMember(tr => tr.IsLate, opt => opt.MapFrom(t => DateTime.Compare(t.DueDate, DateTime.Now) >= 1 ? false : true))
+            .ForMember(tr => tr.IsLate, opt => opt.MapFrom(t => DateTime.Compare(t.DueDate.Date, DateTime.Now.Date)))
             .ForMember(tr => tr.GroupId, opt => opt.MapFrom(t => t.Group.GroupId))
             .ForMember(tr => tr.StatusId, opt => opt.MapFrom(t => t.Status.StatusId))
             .ForMember(tr => tr.Attachments, opt => opt.MapFrom(t => t.Attachments.Select(tf => tf.UploadedFileId)))

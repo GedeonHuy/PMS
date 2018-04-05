@@ -27,8 +27,12 @@ namespace PMS.Persistence.Repository
                 return await context.Tasks.FindAsync(id);
             }
             return await context.Tasks
-                .Include(g => g.Status)
-                .Include(g => g.Group)
+                    .Include(g => g.Status)
+                    .Include(g => g.Group)
+                    .Include(g => g.Activities)
+                    .Include(g => g.Commnets)
+                    .Include(g => g.CheckList)
+                    .Include(g => g.Attachments)
                 .SingleOrDefaultAsync(g => g.TaskId == id);
         }
 
@@ -48,6 +52,10 @@ namespace PMS.Persistence.Repository
             return await context.Tasks
                     .Include(g => g.Status)
                     .Include(g => g.Group)
+                    .Include(g => g.Activities)
+                    .Include(g => g.Commnets)
+                    .Include(g => g.CheckList)
+                    .Include(g => g.Attachments)
                     .Where(c => c.IsDeleted == false)
                     .ToListAsync();
         }

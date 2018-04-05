@@ -12,6 +12,8 @@ namespace PMS.Models.TaskingModels
         public int TaskId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public DateTime DueDate { get; set; }
+        public bool IsDeleted { get; set; }
         public Status Status { get; set; }
         public Group Group { get; set; }
         public ICollection<UploadedFile> Attachments { get; set; }
@@ -19,8 +21,6 @@ namespace PMS.Models.TaskingModels
         public ICollection<Comment> Commnets { get; set; }
         public ICollection<Activity> Activities { get; set; }
         public ICollection<Student> Members { get; set; }
-        public DateTime DueDate { get; set; }
-        public bool IsDeleted { get; set; }
 
         public Task()
         {

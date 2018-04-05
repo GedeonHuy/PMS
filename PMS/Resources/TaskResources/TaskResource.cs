@@ -11,6 +11,9 @@ namespace PMS.Resources.TaskResources
         public string Description { get; set; }
         public int? GroupId { get; set; }
         public int? StatusId { get; set; }
+        public DateTime DueDate { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool IsLate { get; set; }
         public GroupResource Group { get; set; }
         public StatusResource Status { get; set; }
         public ICollection<int> Attachments { get; set; }
@@ -18,12 +21,10 @@ namespace PMS.Resources.TaskResources
         public ICollection<int> Commnets { get; set; }
         public ICollection<int> Activities { get; set; }
         public ICollection<int> Members { get; set; }
-        public DateTime DueDate { get; set; }
-        public bool IsDeleted { get; set; }
-
         public TaskResource()
         {
             IsDeleted = false;
+            IsLate = false;
             CheckList = new Collection<int>();
             Commnets = new Collection<int>();
             Members = new Collection<int>();

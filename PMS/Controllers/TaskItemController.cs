@@ -14,13 +14,16 @@ namespace PMS.Controllers
     {
         private IMapper mapper;
         private IUnitOfWork unitOfWork;
-        private ITaskItemRepository repository;
+        private ITaskItemRepository taskItemRepository;
+        private ITaskRepository taskRepository;
 
-        public TaskItemController(IMapper mapper, IUnitOfWork unitOfWork, ITaskItemRepository repository)
+        public TaskItemController(IMapper mapper, IUnitOfWork unitOfWork, ITaskItemRepository taskItemRepository,
+         ITaskRepository taskRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.repository = repository;
+            this.taskItemRepository = taskItemRepository;
+            this.taskRepository = taskRepository;
         }
 
         [HttpPost]
@@ -34,10 +37,13 @@ namespace PMS.Controllers
 
             var taskItem = mapper.Map<TaskItemResource, TaskItem>(taskItemResource);
 
-            repository.AddTaskItem(taskItem);
+            taskItemRepository.AddTaskItem(taskItem);
+
+            taskItem.Task = await taskRepository.GetTask(taskItemResource.TaskId);
+
             await unitOfWork.Complete();
 
-            taskItem = await repository.GetTaskItem(taskItem.TaskItemId);
+            taskItem = await taskItemRepository.GetTaskItem(taskItem.TaskItemId);
 
             var result = mapper.Map<TaskItem, TaskItemResource>(taskItem);
 
@@ -53,12 +59,15 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var taskItem = await repository.GetTaskItem(id);
+            var taskItem = await taskItemRepository.GetTaskItem(id);
 
             if (taskItem == null)
                 return NotFound();
 
             mapper.Map<TaskItemResource, TaskItem>(taskItemResource, taskItem);
+
+            taskItem.Task = await taskRepository.GetTask(taskItemResource.TaskId);
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<TaskItem, TaskItemResource>(taskItem);
@@ -69,14 +78,14 @@ namespace PMS.Controllers
         [Route("delete/{id}")]
         public async Task<IActionResult> DeleteTaskItem(int id)
         {
-            var taskItem = await repository.GetTaskItem(id, includeRelated: false);
+            var taskItem = await taskItemRepository.GetTaskItem(id, includeRelated: false);
 
             if (taskItem == null)
             {
                 return NotFound();
             }
 
-            repository.RemoveTaskItem(taskItem);
+            taskItemRepository.RemoveTaskItem(taskItem);
             await unitOfWork.Complete();
 
             return Ok(id);
@@ -86,7 +95,7 @@ namespace PMS.Controllers
         [Route("getTaskItem/{id}")]
         public async Task<IActionResult> GetTaskItem(int id)
         {
-            var taskItem = await repository.GetTaskItem(id);
+            var taskItem = await taskItemRepository.GetTaskItem(id);
 
             if (taskItem == null)
             {
@@ -102,9 +111,10 @@ namespace PMS.Controllers
         [Route("getall")]
         public async Task<IActionResult> GetTaskItems()
         {
-            var taskItemes = await repository.GetTaskItems();
+            var taskItemes = await taskItemRepository.GetTaskItems();
             var taskItemResource = mapper.Map<IEnumerable<TaskItem>, IEnumerable<TaskItemResource>>(taskItemes);
             return Ok(taskItemResource);
         }
+
     }
 }

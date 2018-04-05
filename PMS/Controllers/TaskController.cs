@@ -108,7 +108,7 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
-        [Route("getTask/{id}")]
+        [Route("gettask/{id}")]
         public async Task<IActionResult> GetTask(int id)
         {
             var task = await taskRepository.GetTask(id);
