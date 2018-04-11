@@ -217,6 +217,7 @@ namespace PMS.Mapping
                     Groups = p.Lecturer.Groups.Select(cf => cf.GroupId).ToList(),
                     Projects = p.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
                 }))
+                .ForMember(pr => pr.TagProjects, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.TagProjectId)))
                 .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)));
 
             CreateMap<Lecturer, LecturerResource>()
@@ -291,6 +292,7 @@ namespace PMS.Mapping
                     Groups = g.Project.Groups.Select(gf => gf.GroupId).ToList()
                 }));
             CreateMap<Excel, ExcelResource>();
+
             CreateMap<UploadedFile, UploadedFileResource>()
                 .ForMember(cr => cr.TaskId, opt => opt.MapFrom(c => c.Task.TaskId))
                 .ForMember(cr => cr.GroupId, opt => opt.MapFrom(c => c.Group.GroupId))
@@ -307,7 +309,15 @@ namespace PMS.Mapping
                     UploadedFiles = s.Group.UploadedFiles.Select(sf => sf.UploadedFileId).ToList(),
                     Tasks = s.Group.Tasks.Select(sf => sf.TaskId).ToList()
                 }));
+
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
+
+            CreateMap<Tag, TagResource>()
+                .ForMember(tr => tr.TagProjects, opt => opt.MapFrom(t => t.TagProjects.Select(tf => tf.TagProjectId)));
+
+            CreateMap<TagProject, TagProjectResource>()
+                .ForMember(tr => tr.TagId, opt => opt.MapFrom(t => t.Tag.TagId))
+                .ForMember(tr => tr.ProjectId, opt => opt.MapFrom(t => t.Project.ProjectId));
 
             /*///////////////////////// Tasking Feature///////////////////////////////////// */
             CreateMap<Activity, ActivityResource>()
@@ -407,6 +417,12 @@ namespace PMS.Mapping
 
             CreateMap<UploadedFileResource, UploadedFile>()
                 .ForMember(m => m.UploadedFileId, opt => opt.Ignore());
+
+            CreateMap<TagProjectResource, TagProject>()
+                .ForMember(m => m.TagProjectId, opt => opt.Ignore());
+
+            CreateMap<TagResource, Tag>()
+                .ForMember(m => m.TagId, opt => opt.Ignore());
 
             /*///////////////////////// Tasking Feature///////////////////////////////////// */
             CreateMap<ActivityResource, Activity>()

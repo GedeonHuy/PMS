@@ -134,6 +134,22 @@ namespace PMS.Data
             }
             context.SaveChanges();
 
+            var Tags = new Tag[]
+            {
+                new Tag{TagName="javascript",TagInfo="JavaScript (not to be confused with Java) is a high-level, dynamic, multi-paradigm, weakly-typed language used for both client-side and server-side scripting. Use this tag for questions regarding ECMAScript and its various dialects/implementations (excluding ActionScript and Google-Apps-Script)."},
+                new Tag{TagName="java",TagInfo="JavaScript (not to be confused with Java) is a high-level, dynamic, multi-paradigm, weakly-typed language used for both client-side and server-side scripting. Use this tag for questions regarding ECMAScript and its various dialects/implementations (excluding ActionScript and Google-Apps-Script)."},
+                new Tag{TagName="c#",TagInfo="C# (pronounced \"C sharp\") is a high level, object-oriented programming language that is designed for building a variety of applications that run on the .NET Framework (or .NET Core). C# is simple, powerful, type-safe, and object-oriented."},
+                new Tag{TagName="android",TagInfo="Android is Google's mobile operating system, used for programming or developing digital devices (Smartphones, Tablets, Automobiles, TVs, Wear, Glass, IoT). For topics related to Android, use Android-specific tags such as android-intent, not intent, android-activity, not activity, android-adapter, not adapter etc. For questions other than development or programming, but related to Android framework, use the link: https://android.stackexchange.com."},
+                new Tag{TagName="asp.net",TagInfo="ASP.NET is a Microsoft web application development framework that allows programmers to build dynamic web sites, web applications and web services. It is useful to use this tag in conjunction with the project type tag e.g. [asp.net-mvc], [asp.net-webforms], or [asp.net-web-api]. Do NOT use this tag for questions about ASP.NET Core - use [asp.net-core] instead."},
+                new Tag{TagName="node.js",TagInfo="Node.js is an event-based, non-blocking, asynchronous I/O framework that uses Google's V8 JavaScript engine and libuv library. It is used for developing applications that make heavy use of the ability to run JavaScript both on the client, as well as on server side and therefore benefit from the re-usability of code and the lack of context switching."},
+                new Tag{TagName="ios",TagInfo="iOS is the mobile operating system running on the Apple iPhone, iPod touch, and iPad. Use this tag [ios] for questions related to programming on the iOS platform. Use the related tags [objective-c] and [swift] for issues specific to those programming languages."},
+                new Tag{TagName="html5",TagInfo="HTML5 (Hyper Text Markup Language, version 5) is an umbrella term for recent web technologies. It is also the latest iteration of HTML. It became a W3C Recommendation in October 2014, introducing new elements and APIs."}
+            };
+            foreach (Tag t in Tags)
+            {
+                context.Tags.Add(t);
+            }
+            context.SaveChanges();
             // var roles = new ApplicationRole[] {
             //     new ApplicationRole{Name="Admin", Description="Highest authority with few specifically restricted actions."},
             //     new ApplicationRole{Name="Lecturer", Description="Can create Project and upload files."},

@@ -46,6 +46,8 @@ namespace PMS
             services.AddScoped<IExcelRepository, ExcelRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUploadedFileRepository, UploadedFileRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
+            services.AddScoped<ITagProjectRepository, TagProjectRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             //Tasking Features
             services.AddScoped<ITaskItemRepository, TaskItemRepository>();

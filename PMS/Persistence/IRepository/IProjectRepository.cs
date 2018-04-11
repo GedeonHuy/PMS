@@ -14,5 +14,6 @@ namespace PMS.Persistence
         void RemoveProject(Project project);
         Task<QueryResult<Project>> GetProjects(Query filter);
         void UpdateGroups(Project project, ProjectResource projectResource);
+        void UpdateTagProjects(Project project, ProjectResource projectResource);
     }
 }

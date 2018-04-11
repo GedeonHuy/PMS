@@ -22,9 +22,11 @@ namespace PMS.Models
         public Major Major { get; set; }
         public Lecturer Lecturer { get; set; }
         public ICollection<Group> Groups { get; set; }
+        public ICollection<TagProject> TagProjects { get; set; }
         public Project()
         {
             Groups = new Collection<Group>();
+            TagProjects = new Collection<TagProject>();
             IsCompleted = false;
             IsDeleted = false;
         }

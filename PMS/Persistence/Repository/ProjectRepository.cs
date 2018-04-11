@@ -27,6 +27,8 @@ namespace PMS.Persistence
             }
             return await context.Projects
                 .Include(p => p.Groups)
+                .Include(p => p.TagProjects)
+                    .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
                 .SingleOrDefaultAsync(s => s.ProjectId == id);
         }
@@ -49,6 +51,8 @@ namespace PMS.Persistence
             var query = context.Projects
                 .Where(c => c.IsDeleted == false)
                 .Include(p => p.Groups)
+                .Include(p => p.TagProjects)
+                    .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
                 .AsQueryable();
 
@@ -105,6 +109,22 @@ namespace PMS.Persistence
                 foreach (var a in newGroups)
                 {
                     project.Groups.Add(a);
+                }
+            }
+        }
+
+        public void UpdateTagProjects(Project project, ProjectResource projectResource)
+        {
+            if (projectResource.TagProjects != null && projectResource.TagProjects.Count >= 0)
+            {
+                //remove old tagprojects
+                project.TagProjects.Clear();
+
+                //add new tagprojects
+                var newTagProjects = context.TagProjects.Where(e => projectResource.TagProjects.Any(id => id == e.TagProjectId)).ToList();
+                foreach (var a in newTagProjects)
+                {
+                    project.TagProjects.Add(a);
                 }
             }
         }

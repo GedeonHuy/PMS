@@ -18,11 +18,14 @@ namespace PMS.Resources
         public int? MajorId { get; set; }
         public int? LecturerId { get; set; }
         public ICollection<int> Groups { get; set; }
+        public ICollection<int> TagProjects { get; set; }
         public MajorResource Major { get; set; }
         public LecturerResource Lecturer { get; set; }
+
         public ProjectResource()
         {
             Groups = new Collection<int>();
+            TagProjects = new Collection<int>();
             IsCompleted = false;
             IsDeleted = false;
         }

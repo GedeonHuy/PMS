@@ -37,6 +37,8 @@ namespace PMS.Data
             builder.Entity<Quarter>().ToTable("Quarter");
             builder.Entity<BoardRole>().ToTable("BoardRole");
             builder.Entity<Excel>().ToTable("Excel");
+            builder.Entity<Tag>().ToTable("Tag");
+            builder.Entity<TagProject>().ToTable("TagProject");
 
             //TaskingModels
             builder.Entity<Activity>().ToTable("Activity");
@@ -63,6 +65,8 @@ namespace PMS.Data
         public DbSet<Quarter> Quarters { get; set; }
         public DbSet<BoardRole> BoardRoles { get; set; }
         public DbSet<Excel> Excels { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<TagProject> TagProjects { get; set; }
 
         //TaskingModels
         public DbSet<Activity> Activities { get; set; }

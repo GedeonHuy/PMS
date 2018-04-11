@@ -62,6 +62,10 @@ namespace PMS.Controllers
             project.Lecturer = lecturer;
 
             projectRepository.AddProject(project);
+
+            projectRepository.UpdateGroups(project, projectResource);
+            projectRepository.UpdateTagProjects(project, projectResource);
+
             await unitOfWork.Complete();
 
             project = await projectRepository.GetProject(project.ProjectId);
@@ -94,6 +98,9 @@ namespace PMS.Controllers
 
             var lecturer = await lecturerRepository.GetLecturer(projectResource.LecturerId);
             project.Lecturer = lecturer;
+
+            projectRepository.UpdateGroups(project, projectResource);
+            projectRepository.UpdateTagProjects(project, projectResource);
 
             await unitOfWork.Complete();
 
