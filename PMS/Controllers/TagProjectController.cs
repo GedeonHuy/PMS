@@ -17,14 +17,20 @@ namespace PMS.Controllers
     public class TagProjectController : Controller
     {
         private IMapper mapper;
-        private ITagProjectRepository repository;
+        private ITagProjectRepository tagProjectrepository;
+        private IProjectRepository projectRepository;
+        private ITagRepository tagRepository;
         private IUnitOfWork unitOfWork;
 
-        public TagProjectController(IMapper mapper, IUnitOfWork unitOfWork, ITagProjectRepository repository)
+        public TagProjectController(IMapper mapper, IUnitOfWork unitOfWork,
+         ITagProjectRepository tagProjectrepository, IProjectRepository projectRepository,
+         ITagRepository tagRepository)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
-            this.repository = repository;
+            this.tagProjectrepository = tagProjectrepository;
+            this.projectRepository = projectRepository;
+            this.tagRepository = tagRepository;
         }
 
         [HttpPost]
@@ -38,10 +44,14 @@ namespace PMS.Controllers
 
             var tagProject = mapper.Map<TagProjectResource, TagProject>(tagProjectResource);
 
-            repository.AddTagProject(tagProject);
+            tagProjectrepository.AddTagProject(tagProject);
+
+            tagProject.Tag = await tagRepository.GetTag(tagProjectResource.TagId);
+            tagProject.Project = await projectRepository.GetProject(tagProjectResource.ProjectId);
+
             await unitOfWork.Complete();
 
-            tagProject = await repository.GetTagProject(tagProject.TagProjectId);
+            tagProject = await tagProjectrepository.GetTagProject(tagProject.TagProjectId);
 
             var result = mapper.Map<TagProject, TagProjectResource>(tagProject);
 
@@ -57,12 +67,16 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var tagProject = await repository.GetTagProject(id);
+            var tagProject = await tagProjectrepository.GetTagProject(id);
 
             if (tagProject == null)
                 return NotFound();
 
             mapper.Map<TagProjectResource, TagProject>(tagProjectResource, tagProject);
+
+            tagProject.Tag = await tagRepository.GetTag(tagProjectResource.TagId);
+            tagProject.Project = await projectRepository.GetProject(tagProjectResource.ProjectId);
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<TagProject, TagProjectResource>(tagProject);
@@ -73,14 +87,14 @@ namespace PMS.Controllers
         [Route("delete/{id}")]
         public async Task<IActionResult> DeleteTagProject(int id)
         {
-            var tagProject = await repository.GetTagProject(id, includeRelated: false);
+            var tagProject = await tagProjectrepository.GetTagProject(id, includeRelated: false);
 
             if (tagProject == null)
             {
                 return NotFound();
             }
 
-            repository.RemoveTagProject(tagProject);
+            tagProjectrepository.RemoveTagProject(tagProject);
             await unitOfWork.Complete();
 
             return Ok(id);
@@ -90,7 +104,7 @@ namespace PMS.Controllers
         [Route("getTagProject/{id}")]
         public async Task<IActionResult> GetTagProject(int id)
         {
-            var tagProject = await repository.GetTagProject(id);
+            var tagProject = await tagProjectrepository.GetTagProject(id);
 
             if (tagProject == null)
             {
@@ -106,7 +120,7 @@ namespace PMS.Controllers
         [Route("getall")]
         public async Task<IActionResult> GetTagProjects()
         {
-            var tagProjects = await repository.GetTagProjects();
+            var tagProjects = await tagProjectrepository.GetTagProjects();
             var tagProjectResource = mapper.Map<IEnumerable<TagProject>, IEnumerable<TagProjectResource>>(tagProjects);
             return Ok(tagProjectResource);
         }

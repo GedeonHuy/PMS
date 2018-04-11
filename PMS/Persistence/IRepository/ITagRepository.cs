@@ -13,5 +13,6 @@ namespace PMS.Persistence
         void AddTag(Tag tag);
         void RemoveTag(Tag tag);
         Task<IEnumerable<Tag>> GetTags();
+        void UpdateTagProjects(Tag tag, TagResource tagResource);
     }
 }

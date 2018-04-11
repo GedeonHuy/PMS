@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PMS.Data;
 using PMS.Models;
 using PMS.Persistence.IRepository;
+using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,22 @@ namespace PMS.Persistence.Repository
                 .Include(g => g.TagProjects)
                     .ThenInclude(tp => tp.Project)
                 .ToListAsync();
+        }
+
+        public void UpdateTagProjects(Tag tag, TagResource tagResource)
+        {
+            if (tagResource.TagProjects != null && tagResource.TagProjects.Count >= 0)
+            {
+                //remove old tagprojects
+                tag.TagProjects.Clear();
+
+                //add new tagprojects
+                var newTagProjects = context.TagProjects.Where(e => tagResource.TagProjects.Any(id => id == e.TagProjectId)).ToList();
+                foreach (var a in newTagProjects)
+                {
+                    tag.TagProjects.Add(a);
+                }
+            }
         }
     }
 }

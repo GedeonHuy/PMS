@@ -39,6 +39,9 @@ namespace PMS.Controllers
             var tag = mapper.Map<TagResource, Tag>(tagResource);
 
             repository.AddTag(tag);
+
+            repository.UpdateTagProjects(tag, tagResource);
+
             await unitOfWork.Complete();
 
             tag = await repository.GetTag(tag.TagId);
@@ -63,6 +66,9 @@ namespace PMS.Controllers
                 return NotFound();
 
             mapper.Map<TagResource, Tag>(tagResource, tag);
+
+            repository.UpdateTagProjects(tag, tagResource);
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<Tag, TagResource>(tag);
