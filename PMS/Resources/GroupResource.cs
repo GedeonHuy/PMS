@@ -22,6 +22,7 @@ namespace PMS.Resources
         public int? LecturerId { get; set; }
         public int? MajorId { get; set; }
         public int? QuarterId { get; set; }
+        public int? BoardId { get; set; }
         /// <other project selection>
         public ProjectResource OtherProject { get; set; }
         public ProjectResource Project { get; set; }
