@@ -4,7 +4,7 @@ import { StudentAuthGuard } from './../core/guards/auth-student.guard';
 import { LecturerAuthGuard } from './../core/guards/auth-lecturer.guard';
 import { AdminAuthGuard } from './../core/guards/auth-admin.guard';
 import { UtilityService } from './../core/services/utility.service';
-import { AuthenService } from 'app/core/services/authen.service';
+import { AuthenService } from './../core/services/authen.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { routing } from './main.routing';

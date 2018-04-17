@@ -34,7 +34,8 @@ export const routes: Routes = [
       { path: 'lecturer', loadChildren: './lecturer/lecturer.module#LecturerModule' },
       { path: 'quarter', loadChildren: './quarter/quarter.module#QuarterModule' },
       { path: 'project', loadChildren: './project/project.module#ProjectModule' },
-      { path: 'major', loadChildren: './major/major.module#MajorModule' }
+      { path: 'major', loadChildren: './major/major.module#MajorModule' },
+      { path: 'group', loadChildren: './group/group.module#GroupModule' }
     ],
     canActivate: [AuthGuard]
   }

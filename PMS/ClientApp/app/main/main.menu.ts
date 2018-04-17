@@ -85,6 +85,18 @@ export const PAGES_MENU = [
             order: 0
           }
         }
+      },
+      {
+        path: 'group',
+        data: {
+          menu: {
+            title: 'Group',
+            icon: 'ion-android-home',
+            selected: false,
+            expanded: false,
+            order: 0
+          }
+        }
       }
     ]
   }
