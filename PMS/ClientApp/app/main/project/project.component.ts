@@ -50,6 +50,10 @@ export class ProjectComponent implements OnInit {
   showAddModal() {
     this.project = {};
     this.isLoadProject = true;
+    this._dataService.get("/api/majors/getall").subscribe((response: any) => {
+      this.majors = response.items;
+      this.isLoadProject = true;
+    });
     this.modalAddEdit.show();
   }
 

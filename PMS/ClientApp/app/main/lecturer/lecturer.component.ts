@@ -50,6 +50,10 @@ export class LecturerComponent implements OnInit {
   showAddModal() {
     this.lecturer = {};
     this.isLoadLecturer = true;
+    this._dataService.get("/api/majors/getall").subscribe((response: any) => {
+      this.majors = response.items;
+      this.isLoadLecturer = true;
+    });
     this.modalAddEdit.show();
   }
 

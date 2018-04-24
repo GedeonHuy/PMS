@@ -23,6 +23,7 @@ export class GroupComponent implements OnInit {
   public queryResult: any = {};
 
   public group: any = {};
+  public groupJson: any = {};
   public enrollment: any;
 
   public isClicked: boolean;
@@ -73,14 +74,17 @@ export class GroupComponent implements OnInit {
         this.majors = data[1].items,
         this.projects = data[2].items,
         this.lecturers = data[3].items
-    });
+      });
 
+      
   }
 
   onMajorChange() {
     var selectedMajor = this.majors.find(m => m.majorId == this.group.majorId);
-    this.lecturers = selectedMajor ? selectedMajor.lecturers : [];
-    this.projects = selectedMajor ? selectedMajor.projects : [];
+    var thisMajorLecturers =
+      this._dataService.get("/api/lecturers/getlecturersbymajor/" + selectedMajor.majorId)[0].items;
+    this.lecturers = selectedMajor.majorId ? thisMajorLecturers : [];
+    this.projects = selectedMajor.majorId ? selectedMajor.projects : [];
   }
 
   onLecturerChange() {
@@ -123,6 +127,7 @@ export class GroupComponent implements OnInit {
   //Edit method
   showEditModal(id: any) {
     this.loadGroup(id);
+    this.isLoadGroup = true;
     this.modalAddEdit.show();
   }
 
@@ -160,7 +165,17 @@ export class GroupComponent implements OnInit {
           }, error => this._dataService.handleError(error));
       }
       else {
-        this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.group))
+        this.groupJson = {
+          groupName: this.group.groupName,
+          isConfirm: this.group.isConfirm,
+          projectId: this.group.projectId,
+          lecturerId: this.group.lecturerId,
+          majorId: this.group.majorId,
+          quarterId: this.group.quarterId,
+          students: this.group.students
+        };
+        console.log(JSON.stringify(this.groupJson));
+        this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();

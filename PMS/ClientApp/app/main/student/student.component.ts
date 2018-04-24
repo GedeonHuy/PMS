@@ -47,7 +47,11 @@ export class StudentComponent implements OnInit {
   //Create method
   showAddModal() {
     this.student = {};
-    this.isLoadStudent = true;
+    this._dataService.get("/api/majors/getall").subscribe((response: any) => {
+      this.majors = response.items;
+      console.log(this.majors);
+      this.isLoadStudent = true;
+    });
     this.modalAddEdit.show();
   }
 
@@ -64,6 +68,7 @@ export class StudentComponent implements OnInit {
         this.student = response;
         this._dataService.get("/api/majors/getall").subscribe((response: any) => {
           this.majors = response.items;
+          console.log(this.majors);
           this.isLoadStudent = true;
         });
       });

@@ -6,3 +6,12 @@
 /pms-front/src/app/main/group_backup.rar
 /PMS/obj/Release/netcoreapp2.0
 pms-front/src/app/core/common/system.constants.ts
+PMS/obj/Debug/netcoreapp2.0/PMS.csproj.FileListAbsolute.txt
+PMS/bin/Debug/netcoreapp2.0/PMS.dll
+PMS/bin/Debug/netcoreapp2.0/PMS.pdb
+PMS/bin/Debug/netcoreapp2.0/PMS.deps.json
+PMS/bin/Debug/netcoreapp2.0/PMS.runtimeconfig.dev.json
+PMS/obj/Debug/netcoreapp2.0/PMS.dll
+PMS/obj/Debug/netcoreapp2.0/PMS.pdb
+PMS/obj/Debug/netcoreapp2.0/PMS.AssemblyInfo.cs
+PMS/obj/Debug/netcoreapp2.0/PMS.csproj.CoreCompileInputs.cache

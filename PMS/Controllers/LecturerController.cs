@@ -164,6 +164,18 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
+        [Route("getlecturersbymajor/{id}")]
+        public async Task<QueryResultResource<LecturerResource>> GetLecturersByMajor(int id)
+        {   
+            QueryResource queryResource = new QueryResource();
+
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await lecturerRepository.GetLecturersByMajor(id, query);
+
+            return mapper.Map<QueryResult<Lecturer>, QueryResultResource<LecturerResource>>(queryResult);
+        }
+
+        [HttpGet]
         [Route("getall")]
         public async Task<QueryResultResource<LecturerResource>> GetLecturers(QueryResource queryResource)
         {

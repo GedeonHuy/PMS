@@ -224,6 +224,45 @@ namespace PMS.Persistence
 
             return result;
         }
+        public async Task<QueryResult<Lecturer>> GetLecturersByMajor(int? majorId, Query queryObj)
+        {
+            var result = new QueryResult<Lecturer>();
+
+            var query = context.Lecturers
+                .Where(c => c.IsDeleted == false)
+                .Include(l => l.Groups)
+                .Include(l => l.BoardEnrollments)
+                .Include(p => p.Major)
+                .AsQueryable();
+
+            //filter
+            if (queryObj.MajorId.HasValue)
+            {
+                query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value)
+                            .Where(q => q.Major.MajorId == majorId);
+            }
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Lecturer, object>>>()
+            {
+                ["name"] = s => s.Name,
+                ["major"] = s => s.Major.MajorName,
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.LecturerId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
+        }
 
         public void UpdateBoardEnrollments(Lecturer lecturer, LecturerResource lecturerResource)
         {
@@ -241,6 +280,8 @@ namespace PMS.Persistence
             }
         }
 
+        
+        
         public void UpdateGroups(Lecturer lecturer, LecturerResource lecturerResource)
         {
             if (lecturerResource.Groups != null && lecturerResource.Groups.Count >= 0)
