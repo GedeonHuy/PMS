@@ -118,13 +118,21 @@ namespace PMS.Persistence
             if (projectResource.TagProjects != null && projectResource.TagProjects.Count >= 0)
             {
                 //remove old tagprojects
-                project.TagProjects.Clear();
+                var oldTagProjects = project.TagProjects.Where(p => !projectResource.Tags.Any(id => id == p.Tag.TagId)).ToList();
+                foreach (TagProject tagprojects in oldTagProjects)
+                {
+                    tagprojects.IsDeleted = true;
+                    project.TagProjects.Remove(tagprojects);
+                }
+                //project.TagProjects.Clear();
 
                 //add new tagprojects
-                var newTagProjects = context.TagProjects.Where(e => projectResource.TagProjects.Any(id => id == e.TagProjectId)).ToList();
-                foreach (var a in newTagProjects)
+                var newTags = projectResource.Tags.Where(t => !project.TagProjects.Any(id => id.Tag.TagId == t));
+                foreach (var t in newTags)
                 {
-                    project.TagProjects.Add(a);
+                    var tag = context.Tags.Find(t);
+                    project.TagProjects.Add(new TagProject { IsDeleted = false, Project = project, Tag = tag });
+                    //project.TagProjects.Add(a);
                 }
             }
         }

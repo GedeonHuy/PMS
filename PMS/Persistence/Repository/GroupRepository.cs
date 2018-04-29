@@ -148,12 +148,13 @@ namespace PMS.Persistence
         {
             if (groupResource.Enrollments != null && groupResource.Enrollments.Count >= 0)
             {
-                //remove old boardEnrollments
-                var oldEnrollments = context.Enrollments.Where(e => !groupResource.Students.Any(id => id == e.EnrollmentId)).ToList();
+                //remove old Enrollments
+                var oldEnrollments = group.Enrollments
+                                    .Where(e => !groupResource.StudentCodes.Any(code => code == e.Student.StudentCode)).ToList();
                 foreach (var enrollment in oldEnrollments)
                 {
                     enrollment.IsDeleted = true;
-                    group.Enrollments.Remove(enrollment);
+                    enrollment.Group = null;
                 }
                 //group.Enrollments.Clear();
 
@@ -164,8 +165,8 @@ namespace PMS.Persistence
                 //{
                 //    group.Enrollments.Add(a);
                 //}
-                var newStudentIds = groupResource.Students.Where(s => !group.Enrollments.Any(e => e.Student.Id == s)).ToList();
-                foreach (var StudentId in newStudentIds)
+                var newStudentIds = groupResource.StudentCodes.Where(s => !group.Enrollments.Any(e => e.Student.StudentCode == s)).ToList();
+                foreach (var StudentCode in newStudentIds)
                 {
                     var enrollment = new Enrollment
                     {
@@ -175,7 +176,7 @@ namespace PMS.Persistence
                         IsDeleted = false,
                         Lecturer = group.Lecturer,
                         Quarter = group.Quarter,
-                        Student = context.Students.FirstOrDefault(s => s.Id == StudentId),
+                        Student = context.Students.FirstOrDefault(s => s.StudentCode == StudentCode),
                         Type = group.Project.Type,
                         Grade = null,
                     };

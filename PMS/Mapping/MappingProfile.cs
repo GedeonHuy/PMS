@@ -218,6 +218,7 @@ namespace PMS.Mapping
                     Projects = p.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
                 }))
                 .ForMember(pr => pr.TagProjects, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.TagProjectId)))
+                .ForMember(pr => pr.Tags, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.Tag.TagId)))
                 .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)));
 
             CreateMap<Lecturer, LecturerResource>()
@@ -239,7 +240,7 @@ namespace PMS.Mapping
 
             CreateMap<Group, GroupResource>()
                 .ForMember(gr => gr.Enrollments, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.EnrollmentId)))
-                .ForMember(gr => gr.Students, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.Student.Id)))
+                .ForMember(gr => gr.StudentCodes, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.Student.StudentCode)))
                 .ForMember(gr => gr.UploadedFiles, opt => opt.MapFrom(g => g.UploadedFiles.Select(gf => gf.UploadedFileId)))
                 .ForMember(gr => gr.Tasks, opt => opt.MapFrom(g => g.Tasks.Select(gf => gf.TaskId)))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
