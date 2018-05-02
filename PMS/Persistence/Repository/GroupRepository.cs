@@ -150,7 +150,7 @@ namespace PMS.Persistence
             {
                 //remove old Enrollments
                 var oldEnrollments = group.Enrollments
-                                    .Where(e => !groupResource.StudentCodes.Any(code => code == e.Student.StudentCode)).ToList();
+                                    .Where(e => !groupResource.StudentCodes.Any(email => email == e.Student.Email)).ToList();
                 foreach (var enrollment in oldEnrollments)
                 {
                     enrollment.IsDeleted = true;
@@ -165,8 +165,8 @@ namespace PMS.Persistence
                 //{
                 //    group.Enrollments.Add(a);
                 //}
-                var newStudentIds = groupResource.StudentCodes.Where(s => !group.Enrollments.Any(e => e.Student.StudentCode == s)).ToList();
-                foreach (var StudentCode in newStudentIds)
+                var newStudentEmails = groupResource.StudentCodes.Where(s => !group.Enrollments.Any(e => e.Student.Email == s)).ToList();
+                foreach (var Email in newStudentEmails)
                 {
                     var enrollment = new Enrollment
                     {
@@ -176,7 +176,7 @@ namespace PMS.Persistence
                         IsDeleted = false,
                         Lecturer = group.Lecturer,
                         Quarter = group.Quarter,
-                        Student = context.Students.FirstOrDefault(s => s.StudentCode == StudentCode),
+                        Student = context.Students.FirstOrDefault(s => s.Email == Email),
                         Type = group.Project.Type,
                         Grade = null,
                     };
