@@ -240,7 +240,7 @@ namespace PMS.Mapping
 
             CreateMap<Group, GroupResource>()
                 .ForMember(gr => gr.Enrollments, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.EnrollmentId)))
-                .ForMember(gr => gr.StudentCodes, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.Student.StudentCode)))
+                .ForMember(gr => gr.StudentEmails, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.Student.Email)))
                 .ForMember(gr => gr.UploadedFiles, opt => opt.MapFrom(g => g.UploadedFiles.Select(gf => gf.UploadedFileId)))
                 .ForMember(gr => gr.Tasks, opt => opt.MapFrom(g => g.Tasks.Select(gf => gf.TaskId)))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))

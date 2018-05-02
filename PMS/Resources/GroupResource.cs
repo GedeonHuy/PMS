@@ -37,7 +37,7 @@ namespace PMS.Resources
 
         public GroupResource()
         {
-            StudentCodes = new Collection<string>();
+            StudentEmails = new Collection<string>();
             Enrollments = new Collection<int>();
             UploadedFiles = new Collection<int>();
             Tasks = new Collection<int>();
