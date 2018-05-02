@@ -90,6 +90,7 @@ export class QuarterComponent implements OnInit {
             form.resetForm();
             this._notificationService.printSuccessMessage("Add Success");
             this.isSaved = false;
+            this.isLoadData = false;
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -100,6 +101,7 @@ export class QuarterComponent implements OnInit {
             form.resetForm();
             this._notificationService.printSuccessMessage("Update Success");
             this.isSaved = false;
+            this.isLoadData = false;
           }, error => this._dataService.handleError(error));
       }
     }
@@ -110,6 +112,7 @@ export class QuarterComponent implements OnInit {
   }
 
   deleteConfirm(id: any) {
+    this.isLoadData = false;
     this._dataService.delete('/api/quarters/delete/' + id)
       .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");

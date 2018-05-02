@@ -86,6 +86,7 @@ export class LecturerComponent implements OnInit {
             form.resetForm();
             this._notificationService.printSuccessMessage("Add Success");
             this.isSaved = false;
+            this.isLoadData = false;
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -96,6 +97,7 @@ export class LecturerComponent implements OnInit {
             form.resetForm();
             this._notificationService.printSuccessMessage("Update Success");
             this.isSaved = false;
+            this.isLoadData = false;
           }, error => this._dataService.handleError(error));
       }
     }
@@ -116,6 +118,7 @@ export class LecturerComponent implements OnInit {
   }
 
   deleteConfirm(id: any) {
+    this.isLoadData = false;
     this._dataService.delete('/api/lecturers/delete/' + id)
       .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");

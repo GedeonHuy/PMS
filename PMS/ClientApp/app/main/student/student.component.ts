@@ -116,6 +116,7 @@ export class StudentComponent implements OnInit {
   }
 
   deleteConfirm(id: any) {
+    this.isLoadData = false;
     this._dataService.delete('/api/students/delete/' + id)
       .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");

@@ -17,7 +17,6 @@ import { NgForm } from '@angular/forms';
 
 export class GroupComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
-  @ViewChild('enrollmentModal') public enrollmentModal: ModalDirective;
 
   public groups: any[];
   public queryResult: any = {};
@@ -31,6 +30,9 @@ export class GroupComponent implements OnInit {
   public isLoadData: boolean;
   public isLoadStudent: boolean;
   isExist : boolean;
+
+  isLoadLecturer : boolean;
+  isLoadProject: boolean;
 
   isAdmin: boolean;
   isLecturer: boolean;
@@ -69,9 +71,9 @@ export class GroupComponent implements OnInit {
       this._dataService.get("/api/lecturers/getall"),
 
     ]).subscribe(data => {
-      this.quarters = data[0].items,
+        this.quarters = data[0].items,
         this.majors = data[1].items,
-        this.projects = data[2].items,
+        this.projects = data[2].items
         this.lecturers = data[3].items
       });
 
@@ -79,18 +81,19 @@ export class GroupComponent implements OnInit {
   }
 
   onMajorChange() {
-    var selectedMajor = this.majors.find(m => m.majorId == this.group.majorId);
-    var thisMajorLecturers =
-      this._dataService.get("/api/lecturers/getlecturersbymajor/" + selectedMajor.majorId)[0].items;
-    this.lecturers = selectedMajor.majorId ? thisMajorLecturers : [];
-    this.projects = selectedMajor.majorId ? selectedMajor.projects : [];
-  }
+    var selectedMajor = this.majors.find(m => m.majorId == this.group.majorId).majorId;
+    this._dataService.get('/api/lecturers/getlecturersbymajor/' + selectedMajor)
+      .subscribe((response: any) => {
+        this.lecturers = response.items;
+        this.isLoadLecturer = true;
+    });
 
-  onLecturerChange() {
-    var selectedLecturer = this.lecturers.find(l => l.lecturerId == this.group.lecturerId);
-    this.group.majorId = selectedLecturer.majorId;
+    this._dataService.get('/api/projects/getprojectsbymajor/' + selectedMajor)
+    .subscribe((response: any) => {
+      this.projects = response.items;
+      this.isLoadProject = true;
+    });
   }
-
 
   loadData() {
     this._dataService.get("/api/groups/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
@@ -112,19 +115,22 @@ export class GroupComponent implements OnInit {
 
   //Create method
   showAddModal() {
+    this.isExist = true;
     this.group = {};
     this.loadStudents();
-    this.isLoadGroup = true;
     this.modalAddEdit.show();
+    this.isLoadGroup = true;
   }
 
   handler(type: string, $event: ModalDirective) {
     if (type === "onHide" || type === "onHidden") {
       this.group = [];
       this.students = [];
-      this.isLoadStudent = false;
       this.isExist = false;
+      this.isLoadStudent = false;
       this.isLoadGroup = false;
+      this.isLoadLecturer = false;
+      this.isLoadProject = false;
     }
   }
 
@@ -132,6 +138,8 @@ export class GroupComponent implements OnInit {
   showEditModal(id: any) {
     this.loadGroup(id);
     this.loadStudents();
+    this.isLoadLecturer = true;
+    this.isLoadProject = true;
     this.modalAddEdit.show();
   }
 
@@ -144,6 +152,7 @@ export class GroupComponent implements OnInit {
   loadGroup(id: any) {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {
+        console.log(response);
         this.group = response;
         for(let se of response.studentEmails) {
           this.students.push(se);
@@ -157,12 +166,16 @@ export class GroupComponent implements OnInit {
     if (form.valid) {
       this.isSaved = true;
       if (this.group.groupId == undefined) {
+        this.group.studentEmails = this.students;
         this._dataService.post('/api/groups/add', JSON.stringify(this.group))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Add Success");
             this.isSaved = false;
+            this.isLoadData = false;
+            this.isExist = false;
+
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -181,6 +194,8 @@ export class GroupComponent implements OnInit {
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
             this.isSaved = false;
+            this.isLoadData = false;
+            this.isExist = false;
           }, error => this._dataService.handleError(error));
       }
     }
@@ -191,6 +206,7 @@ export class GroupComponent implements OnInit {
   }
 
   deleteConfirm(id: any) {
+    this.isLoadData = false;
     this._dataService.delete('/api/groups/delete/' + id)
       .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");
@@ -224,7 +240,7 @@ export class GroupComponent implements OnInit {
   loadStudents() {
     this._dataService.get("/api/students/getall").subscribe((response: any) => {
       for (let student of response.items) {
-        this.allStudents.push({ id: student, name: student.email});
+        this.allStudents.push({ id: student.email, name: student.email});
       }
       this.isLoadStudent = true;
     });
@@ -238,6 +254,7 @@ export class GroupComponent implements OnInit {
     checkedStyle: 'fontawesome',
     buttonClasses: 'btn btn-default btn-block',
     dynamicTitleMaxItems: 1,
+    selectAddedValues: true
     //displayAllSelectedText: true
   };
 }

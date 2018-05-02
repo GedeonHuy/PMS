@@ -72,6 +72,7 @@ export class RoleComponent implements OnInit {
             this.modalAddEdit.hide();
             form.resetForm();
             this.isSaved = false;
+            this.isLoadData = false;
             this._notificationService.printSuccessMessage("Add Success");
           }, error => this._dataService.handleError(error));
       }
@@ -82,6 +83,7 @@ export class RoleComponent implements OnInit {
             this.modalAddEdit.hide();
             form.resetForm();
             this.isSaved = false;
+            this.isLoadData = false;
             this._notificationService.printSuccessMessage("Update Success");
           }, error => this._dataService.handleError(error));
       }
@@ -93,6 +95,7 @@ export class RoleComponent implements OnInit {
   }
 
   deleteConfirm(id: any) {
+    this.isLoadData = false;
     this._dataService.delete('/api/roles/delete/' + id)
       .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");

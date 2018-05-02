@@ -56,12 +56,12 @@
     <div class="modal-content" style="background: pink">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Add/Edit group</h4>
-        <span *ngIf="!isLoadGroup" class="fa fa-refresh fa-spin"></span>      
+        <span *ngIf="!isLoadGroup && !isLoadStudent" class="fa fa-refresh fa-spin"></span>      
         <button type="button" class="close pull-right" (click)="hideAddEditModal()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" *ngIf="isLoadGroup">
+      <div class="modal-body" *ngIf="isLoadGroup && isLoadStudent">
         <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm)"
           *ngIf="group">
           <div class="form-group">
@@ -95,10 +95,10 @@
             </div>
           </div>
           <div class="ln_solid"></div>
-          <div class="form-group">
+          <div class="form-group" *ngIf="isLoadLecturer && isLoadProject">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="group.lecturerId" (change)="onLecturerChange()" name="lecturerId" required #lecturer="ngModel">
+              <select class="form-control" [(ngModel)]="group.lecturerId" name="lecturerId" required #lecturer="ngModel">
                 <option value=""></option>
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
@@ -106,7 +106,7 @@
             </div>
           </div>
           <div class="ln_solid"></div>
-          <div class="form-group">
+          <div class="form-group" *ngIf="isLoadLecturer && isLoadProject">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Project</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <select class="form-control" [(ngModel)]="group.projectId" name="projectId" required #project="ngModel">
