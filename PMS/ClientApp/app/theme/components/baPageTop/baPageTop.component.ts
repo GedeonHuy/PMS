@@ -1,5 +1,9 @@
+import { UtilityService } from './../../../core/services/utility.service';
+import { UrlConstants } from './../../../core/common/url.constants';
 import {Component} from '@angular/core';
-
+import { SystemConstants } from './../../../core/common/system.constants';
+import { AuthenService } from './../../../core/services/authen.service';
+import { LoggedInUser } from './../../../core/models/loggedin.user';
 import {GlobalState} from '../../../global.state';
 
 @Component({
@@ -11,8 +15,9 @@ export class BaPageTop {
 
   public isScrolled:boolean = false;
   public isMenuCollapsed:boolean = false;
-
-  constructor(private _state:GlobalState) {
+  public user: LoggedInUser;
+  constructor(private _state:GlobalState, private utilityService: UtilityService,
+    private authenService: AuthenService) {
     this._state.subscribe('menu.isCollapsed', (isCollapsed) => {
       this.isMenuCollapsed = isCollapsed;
     });
@@ -26,5 +31,13 @@ export class BaPageTop {
 
   public scrolledChanged(isScrolled) {
     this.isScrolled = isScrolled;
+  }
+
+  ngOnInit() {
+    this.user = JSON.parse(localStorage.getItem(SystemConstants.CURRENT_USER));
+  }
+  logout() {
+    localStorage.removeItem(SystemConstants.CURRENT_USER);
+    this.utilityService.navigate(UrlConstants.LOGIN);
   }
 }

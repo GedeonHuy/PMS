@@ -19,7 +19,7 @@ export class StudentComponent implements OnInit {
   public queryResult: any = {};
   public progress: any;
   public student: any;
-  public isClicked: boolean = false;
+  public isSaved: boolean = false;
   public isLoadData: boolean = false;
   public isLoadStudent: boolean = false;
   majors: any[];
@@ -76,7 +76,7 @@ export class StudentComponent implements OnInit {
 
   saveChange(form: NgForm) {
     if (form.valid) {
-      this.isClicked = true;
+      this.isSaved = true;
       if (this.student.id == undefined) {
         this._dataService.post('/api/students/add', JSON.stringify(this.student))
           .subscribe((response: any) => {
@@ -84,7 +84,7 @@ export class StudentComponent implements OnInit {
             this.modalAddEdit.hide();
             form.resetForm();
             this._notificationService.printSuccessMessage("Add Success");
-            this.isClicked = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -94,7 +94,7 @@ export class StudentComponent implements OnInit {
             this.modalAddEdit.hide();
             form.resetForm();
             this._notificationService.printSuccessMessage("Update Success");
-            this.isClicked = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
     }

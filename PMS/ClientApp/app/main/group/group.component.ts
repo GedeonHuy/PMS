@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import "rxjs/add/Observable/forkJoin";
+import "rxjs/add/observable/forkJoin";
 
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
@@ -8,7 +8,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AuthenService } from './../../core/services/authen.service';
 import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
-
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-group',
@@ -24,12 +24,13 @@ export class GroupComponent implements OnInit {
 
   public group: any = {};
   public groupJson: any = {};
-  public enrollment: any;
+  public student: any;
 
-  public isClicked: boolean;
-  public isLoading: boolean;
+  public isSaved: boolean;
   public isLoadGroup: boolean;
   public isLoadData: boolean;
+  public isLoadStudent: boolean;
+  isExist : boolean;
 
   isAdmin: boolean;
   isLecturer: boolean;
@@ -38,7 +39,6 @@ export class GroupComponent implements OnInit {
   projects: any[];
   lecturers: any[];
   quarters: any[];
-  public enrollments: string[] = [];
 
   majors: any[];
   PAGE_SIZE = 5;
@@ -53,9 +53,8 @@ export class GroupComponent implements OnInit {
   public typeStatus: any[] = ["Accepted", "Pending", "Denied"];
 
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
-    this.isLoading = false;
     this.isLoadData = false;
-    this.isClicked = false;
+    this.isSaved = false;
     this.isAdmin = false;
     this.isLecturer = false;
   }
@@ -114,27 +113,30 @@ export class GroupComponent implements OnInit {
   //Create method
   showAddModal() {
     this.group = {};
+    this.loadStudents();
     this.isLoadGroup = true;
     this.modalAddEdit.show();
   }
 
   handler(type: string, $event: ModalDirective) {
     if (type === "onHide" || type === "onHidden") {
-      this.enrollments = [];
+      this.group = [];
+      this.students = [];
+      this.isLoadStudent = false;
+      this.isExist = false;
+      this.isLoadGroup = false;
     }
   }
 
   //Edit method
   showEditModal(id: any) {
     this.loadGroup(id);
-    this.isLoadGroup = true;
+    this.loadStudents();
     this.modalAddEdit.show();
   }
 
   hideAddEditModal() {
     this.modalAddEdit.hide();
-    this.enrollments = [];
-    this.isLoading = false;
   }
 
 
@@ -143,25 +145,24 @@ export class GroupComponent implements OnInit {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {
         this.group = response;
-        for (let e of response.enrollments) {
-          this.enrollments.push(e.studentEmail);
+        for(let se of response.studentEmails) {
+          this.students.push(se);
         }
-        this.isLoading = true;
+        this.isExist = true;
+        this.isLoadGroup = true;
       });
   }
 
-  saveChange(valid: boolean) {
-    if (valid) {
-      this.isClicked = true;
+  saveChange(form: NgForm) {
+    if (form.valid) {
+      this.isSaved = true;
       if (this.group.groupId == undefined) {
-        this.group.enrollments = this.enrollments;
         this._dataService.post('/api/groups/add', JSON.stringify(this.group))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Add Success");
-            this.isClicked = false;
-            this.isLoading = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -174,14 +175,12 @@ export class GroupComponent implements OnInit {
           quarterId: this.group.quarterId,
           students: this.group.students
         };
-        console.log(JSON.stringify(this.groupJson));
         this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
-            this.isClicked = false;
-            this.isLoading = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
     }
@@ -219,15 +218,26 @@ export class GroupComponent implements OnInit {
     this.loadData();
   }
 
-  public allEnrollments: IMultiSelectOption[] = [];
+  public allStudents: IMultiSelectOption[] = [];
+  public students: string[] = [];
+
+  loadStudents() {
+    this._dataService.get("/api/students/getall").subscribe((response: any) => {
+      for (let student of response.items) {
+        this.allStudents.push({ id: student, name: student.email});
+      }
+      this.isLoadStudent = true;
+    });
+  }
+
 
   // Settings configuration
   mySettings: IMultiSelectSettings = {
-    pullRight: true,
+    //pullRight: true,
     enableSearch: true,
     checkedStyle: 'fontawesome',
     buttonClasses: 'btn btn-default btn-block',
-    dynamicTitleMaxItems: 3,
-    displayAllSelectedText: true
+    dynamicTitleMaxItems: 1,
+    //displayAllSelectedText: true
   };
 }

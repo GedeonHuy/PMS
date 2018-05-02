@@ -18,7 +18,7 @@ export class LecturerComponent implements OnInit {
   public queryResult: any = {};
 
   public lecturer: any;
-  public isClicked: boolean;
+  public isSaved: boolean;
   public isLoadLecturer : boolean;
   public isLoadData: boolean;
   public isAdmin: boolean;
@@ -29,7 +29,7 @@ export class LecturerComponent implements OnInit {
   };
 
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
-    this.isClicked = false;
+    this.isSaved = false;
     this.isAdmin = false;
     this.isLoadData = false;
   }
@@ -77,7 +77,7 @@ export class LecturerComponent implements OnInit {
 
   saveChange(form: NgForm) {
     if (form.valid) {
-      this.isClicked = true;
+      this.isSaved = true;
       if (this.lecturer.lecturerId == undefined) {
         this._dataService.post('/api/lecturers/add', JSON.stringify(this.lecturer))
           .subscribe((response: any) => {
@@ -85,7 +85,7 @@ export class LecturerComponent implements OnInit {
             this.modalAddEdit.hide();
             form.resetForm();
             this._notificationService.printSuccessMessage("Add Success");
-            this.isClicked = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -95,7 +95,7 @@ export class LecturerComponent implements OnInit {
             this.modalAddEdit.hide();
             form.resetForm();
             this._notificationService.printSuccessMessage("Update Success");
-            this.isClicked = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
     }

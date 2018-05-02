@@ -11,6 +11,9 @@ namespace PMS.Persistence
     {
         Task<Student> GetStudent(int? id, bool includeRelated = true);
         Task<Student> GetStudentByEmail(string email);
+
+        Task<Student> GetStudentByStudentCode(string studentCode);
+        
         void AddStudent(Student student);
         void RemoveStudent(Student student);
         void UpdateEnrollments(Student student, StudentResource studentResource);

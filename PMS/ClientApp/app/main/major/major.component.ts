@@ -19,7 +19,7 @@ export class MajorComponent implements OnInit {
   public queryResult: any = {};
 
   public major: any;
-  public isClicked: boolean;
+  public isSaved: boolean;
   public isLoadMajor = false;
 
   isAdmin: boolean;
@@ -32,7 +32,7 @@ export class MajorComponent implements OnInit {
   };
 
   constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
-    this.isClicked = false;
+    this.isSaved = false;
     this.isAdmin = false;
     this.isLoadData = false;
   }
@@ -73,14 +73,14 @@ export class MajorComponent implements OnInit {
 
   saveChange(form: NgForm) {
     if (form.valid) {
-      this.isClicked = true;
+      this.isSaved = true;
       if (this.major.majorId == undefined) {
         this._dataService.post('/api/majors/add', JSON.stringify(this.major))
           .subscribe((response: any) => {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Add Success");
-            this.isClicked = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -89,7 +89,7 @@ export class MajorComponent implements OnInit {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
-            this.isClicked = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
     }

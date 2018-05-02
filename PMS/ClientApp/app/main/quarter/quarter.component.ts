@@ -17,7 +17,7 @@ export class QuarterComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   public quarters: any[];
   public quarter: any;
-  public isClicked: boolean;
+  public isSaved: boolean;
   public isLoadQuarter: boolean;
   public queryResult: any = {};
 
@@ -28,7 +28,7 @@ export class QuarterComponent implements OnInit {
   };
 
   constructor(private _dataService: DataService, private _notificationService: NotificationService) {
-    this.isClicked = false;
+    this.isSaved = false;
     this.isLoadData = false;
   }
 
@@ -81,7 +81,7 @@ export class QuarterComponent implements OnInit {
 
   saveChange(form: NgForm) {
     if (form.valid) {
-      this.isClicked = true;
+      this.isSaved = true;
       if (this.quarter.quarterId == undefined) {
         this._dataService.post('/api/quarters/add', JSON.stringify(this.quarter))
           .subscribe((response: any) => {
@@ -89,7 +89,7 @@ export class QuarterComponent implements OnInit {
             this.modalAddEdit.hide();
             form.resetForm();
             this._notificationService.printSuccessMessage("Add Success");
-            this.isClicked = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -99,7 +99,7 @@ export class QuarterComponent implements OnInit {
             this.modalAddEdit.hide();
             form.resetForm();
             this._notificationService.printSuccessMessage("Update Success");
-            this.isClicked = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
     }

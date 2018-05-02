@@ -17,7 +17,7 @@ export class ProjectComponent implements OnInit {
 
   public projects: any[];
   public project: any;
-  public isClicked: boolean;
+  public isSaved: boolean;
   public isLoadData: boolean;
   public isLoadProject: boolean;
   majors : any[];
@@ -32,7 +32,7 @@ export class ProjectComponent implements OnInit {
 
 
   constructor(private _dataService: DataService, private _notificationService: NotificationService) {
-    this.isClicked = false;
+    this.isSaved = false;
     this.isLoadData = false;
   }
   ngOnInit() {
@@ -77,7 +77,7 @@ export class ProjectComponent implements OnInit {
 
   saveChange(form: NgForm) {
     if (form.valid) {
-      this.isClicked = true;
+      this.isSaved = true;
       if (this.project.projectId == undefined) {
         this._dataService.post('/api/projects/add', JSON.stringify(this.project))
           .subscribe((response: any) => {
@@ -85,7 +85,7 @@ export class ProjectComponent implements OnInit {
             this.modalAddEdit.hide();
             form.resetForm();
             this._notificationService.printSuccessMessage("Add Success");
-            this.isClicked = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -95,7 +95,7 @@ export class ProjectComponent implements OnInit {
             this.modalAddEdit.hide();
             form.resetForm();
             this._notificationService.printSuccessMessage("Update Success");
-            this.isClicked = false;
+            this.isSaved = false;
           }, error => this._dataService.handleError(error));
       }
     }

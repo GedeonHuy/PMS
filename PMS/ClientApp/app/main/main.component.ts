@@ -1,7 +1,7 @@
 import { SystemConstants } from './../core/common/system.constants';
 import { UtilityService } from './../core/services/utility.service';
 import { LoggedInUser } from './../core/models/loggedin.user';
-import { AuthenService } from 'app/core/services/authen.service';
+import { AuthenService } from './../core/services/authen.service';
 import { Component, OnInit } from '@angular/core';
 import { Routes } from '@angular/router';
 import { BaMenuService } from '../theme';

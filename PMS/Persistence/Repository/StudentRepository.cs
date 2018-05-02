@@ -43,6 +43,15 @@ namespace PMS.Persistence
                 .SingleOrDefaultAsync(s => s.Email == email);
         }
 
+        
+        public async Task<Student> GetStudentByStudentCode(string studentCode)
+        {
+            return await context.Students
+                .Include(s => s.Enrollments)
+                .Include(p => p.Major)
+                .SingleOrDefaultAsync(s => s.StudentCode == studentCode);
+        }
+
         public void AddStudent(Student student)
         {
             context.Students.Add(student);

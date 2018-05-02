@@ -18,7 +18,7 @@ export class RoleComponent implements OnInit {
 
   public roles: any = [];
   public role: any;
-  public isClicked: boolean = false;
+  public isSaved: boolean = false;
   public isLoadData: boolean = false;
   public isLoadRole: boolean = false;
 
@@ -71,7 +71,7 @@ export class RoleComponent implements OnInit {
             this.loadData();
             this.modalAddEdit.hide();
             form.resetForm();
-            this.isClicked = false;
+            this.isSaved = false;
             this._notificationService.printSuccessMessage("Add Success");
           }, error => this._dataService.handleError(error));
       }
@@ -81,7 +81,7 @@ export class RoleComponent implements OnInit {
             this.loadData();
             this.modalAddEdit.hide();
             form.resetForm();
-            this.isClicked = false;
+            this.isSaved = false;
             this._notificationService.printSuccessMessage("Update Success");
           }, error => this._dataService.handleError(error));
       }

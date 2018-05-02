@@ -161,6 +161,24 @@ namespace PMS.Controllers
             return Ok(studentResource);
         }
 
+
+        [HttpGet]
+        [Route("getstudentbycode/{studentCode}")]
+        public async Task<IActionResult> GetStudentByStudentCode(string studentCode)
+        {
+            var student = await studentRepository.GetStudentByStudentCode(studentCode);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var studentResource = mapper.Map<Student, StudentResource>(student);
+
+            return Ok(studentResource);
+        }
+
+
         [HttpGet]
         [Route("getenrollments/{email}")]
         public async Task<QueryResultResource<EnrollmentResource>> GetEnrollments(string email, QueryResource queryResource)

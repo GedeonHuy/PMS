@@ -1,9 +1,8 @@
+import { NotificationService } from './../../core/services/notification.service';
+import { AuthenService } from './../../core/services/authen.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationStart } from '@angular/router';
-import { NotificationService } from 'app/core/services/notification.service';
-import { AuthenService } from 'app/core/services/authen.service';
-
 @Component({
   selector: 'login',
   templateUrl: './login.html',
