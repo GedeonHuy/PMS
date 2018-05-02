@@ -33,7 +33,7 @@ namespace PMS.Resources
         public ICollection<int> UploadedFiles { get; set; }
         public ICollection<int> Enrollments { get; set; }
         public ICollection<int> Tasks { get; set; }
-        public ICollection<string> StudentCodes { get; set; } //Students không tồn tại trong Group.cs
+        public ICollection<string> StudentEmails { get; set; } //Students không tồn tại trong Group.cs
 
         public GroupResource()
         {
