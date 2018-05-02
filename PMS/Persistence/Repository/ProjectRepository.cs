@@ -136,5 +136,58 @@ namespace PMS.Persistence
                 }
             }
         }
+
+        public async Task<QueryResult<Project>> GetProjectsByMajor(int? majorId, Query queryObj)
+        {
+            var result = new QueryResult<Project>();
+
+            var query = context.Projects
+                .Include(p => p.Groups)
+                .Include(p => p.TagProjects)
+                    .ThenInclude(tp => tp.Tag)
+                .Include(p => p.Major)
+                .Where(c => c.IsDeleted == false && c.Major.MajorId == majorId)
+                .AsQueryable();
+
+            //filter
+            if (queryObj.Type != null)
+            {
+                query = query.Where(q => q.Type == queryObj.Type);
+            }
+
+            if (queryObj.LecturerId.HasValue)
+            {
+                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+            }
+
+            if (queryObj.MajorId.HasValue)
+            {
+                query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
+            }
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Project, object>>>()
+            {
+                ["title"] = s => s.Title,
+                ["type"] = s => s.Type,
+                ["code"] = s => s.ProjectCode,
+                ["description"] = s => s.Description,
+                ["major"] = s => s.Major.MajorName,
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.ProjectId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
+        }
     }
 }

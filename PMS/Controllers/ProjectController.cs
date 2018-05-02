@@ -151,6 +151,18 @@ namespace PMS.Controllers
             return mapper.Map<QueryResult<Project>, QueryResultResource<ProjectResource>>(queryResult);
         }
 
+        [HttpGet]
+        [Route("getprojectsbymajor/{id}")]
+        public async Task<QueryResultResource<ProjectResource>> GetProjectsByMajor(int id)
+        {
+            QueryResource queryResource = new QueryResource();
+
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await projectRepository.GetProjectsByMajor(id, query);
+
+            return mapper.Map<QueryResult<Project>, QueryResultResource<ProjectResource>>(queryResult);
+        }
+
         [HttpPost]
         [Route("upload")]
         public async Task<IActionResult> UploadLecturerFile(IFormFile file)
