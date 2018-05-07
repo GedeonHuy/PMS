@@ -110,11 +110,12 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public async Task<IActionResult> GetTags()
+        public async Task<QueryResultResource<TagResource>> GetTags(QueryResource queryResource)
         {
-            var tags = await repository.GetTags();
-            var tagResource = mapper.Map<IEnumerable<Tag>, IEnumerable<TagResource>>(tags);
-            return Ok(tagResource);
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await repository.GetTags(query);
+
+            return mapper.Map<QueryResult<Tag>, QueryResultResource<TagResource>>(queryResult);
         }
     }
 }

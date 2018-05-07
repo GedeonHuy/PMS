@@ -29,9 +29,9 @@ export class GroupComponent implements OnInit {
   public isLoadGroup: boolean;
   public isLoadData: boolean;
   public isLoadStudent: boolean;
-  isExist : boolean;
+  isExist: boolean;
 
-  isLoadLecturer : boolean;
+  isLoadLecturer: boolean;
   isLoadProject: boolean;
 
   isAdmin: boolean;
@@ -71,13 +71,13 @@ export class GroupComponent implements OnInit {
       this._dataService.get("/api/lecturers/getall"),
 
     ]).subscribe(data => {
-        this.quarters = data[0].items,
+      this.quarters = data[0].items,
         this.majors = data[1].items,
         this.projects = data[2].items
-        this.lecturers = data[3].items
-      });
+      this.lecturers = data[3].items
+    });
 
-      
+
   }
 
   onMajorChange() {
@@ -86,13 +86,13 @@ export class GroupComponent implements OnInit {
       .subscribe((response: any) => {
         this.lecturers = response.items;
         this.isLoadLecturer = true;
-    });
+      });
 
     this._dataService.get('/api/projects/getprojectsbymajor/' + selectedMajor)
-    .subscribe((response: any) => {
-      this.projects = response.items;
-      this.isLoadProject = true;
-    });
+      .subscribe((response: any) => {
+        this.projects = response.items;
+        this.isLoadProject = true;
+      });
   }
 
   loadData() {
@@ -154,7 +154,7 @@ export class GroupComponent implements OnInit {
       .subscribe((response: any) => {
         console.log(response);
         this.group = response;
-        for(let se of response.studentEmails) {
+        for (let se of response.studentEmails) {
           this.students.push(se);
         }
         this.isExist = true;
@@ -240,7 +240,7 @@ export class GroupComponent implements OnInit {
   loadStudents() {
     this._dataService.get("/api/students/getall").subscribe((response: any) => {
       for (let student of response.items) {
-        this.allStudents.push({ id: student.email, name: student.email});
+        this.allStudents.push({ id: student.email, name: student.email });
       }
       this.isLoadStudent = true;
     });

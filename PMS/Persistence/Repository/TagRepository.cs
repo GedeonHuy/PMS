@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using PMS.Data;
+using PMS.Extensions;
 using PMS.Models;
 using PMS.Persistence.IRepository;
 using PMS.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PMS.Persistence.Repository
@@ -42,12 +44,36 @@ namespace PMS.Persistence.Repository
             //context.Remove(Grade);
         }
 
-        public async Task<IEnumerable<Tag>> GetTags()
+        public async Task<QueryResult<Tag>> GetTags(Query queryObj)
         {
-            return await context.Tags
+            var result = new QueryResult<Tag>();
+
+            var query = context.Tags
                 .Include(g => g.TagProjects)
                     .ThenInclude(tp => tp.Project)
-                .ToListAsync();
+                .AsQueryable();
+
+            //filter
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Tag, object>>>()
+            {
+                ["name"] = s => s.TagName,
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.TagId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
 
         public void UpdateTagProjects(Tag tag, TagResource tagResource)

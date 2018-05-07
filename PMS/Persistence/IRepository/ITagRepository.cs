@@ -12,7 +12,7 @@ namespace PMS.Persistence
         Task<Tag> GetTag(int? id, bool includeRelated = true);
         void AddTag(Tag tag);
         void RemoveTag(Tag tag);
-        Task<IEnumerable<Tag>> GetTags();
+        Task<QueryResult<Tag>> GetTags(Query filter);
         void UpdateTagProjects(Tag tag, TagResource tagResource);
     }
 }

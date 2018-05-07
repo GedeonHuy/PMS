@@ -1,3 +1,5 @@
+
+
 import { SystemConstants } from './../../core/common/system.constants';
 import { ProjectTypesConstants } from './../../core/common/projectType.constants';
 import { Response } from '@angular/http';
@@ -6,6 +8,7 @@ import { DataService } from './../../core/services/data.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { NgForm } from '@angular/forms';
+import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 
 @Component({
   selector: 'app-project',
@@ -20,7 +23,8 @@ export class ProjectComponent implements OnInit {
   public isSaved: boolean;
   public isLoadData: boolean;
   public isLoadProject: boolean;
-  majors : any[];
+  public isLoadTag: boolean;
+  majors: any[];
 
   public queryResult: any = {};
 
@@ -48,6 +52,7 @@ export class ProjectComponent implements OnInit {
 
   //Create method
   showAddModal() {
+    this.loadTags();
     this.project = {};
     this.isLoadProject = true;
     this._dataService.get("/api/majors/getall").subscribe((response: any) => {
@@ -60,6 +65,7 @@ export class ProjectComponent implements OnInit {
   //Edit method
   showEditModal(id: any) {
     this.loadproject(id);
+    this.loadTags();
     this.modalAddEdit.show();
   }
 
@@ -68,6 +74,9 @@ export class ProjectComponent implements OnInit {
     this._dataService.get('/api/projects/getproject/' + id)
       .subscribe((response: any) => {
         this.project = response;
+        for (let se of response.tag) {
+          this.tags.push(se.tagid);
+        }
         this._dataService.get("/api/majors/getall").subscribe((response: any) => {
           this.majors = response.items;
           this.isLoadProject = true;
@@ -79,6 +88,7 @@ export class ProjectComponent implements OnInit {
     if (form.valid) {
       this.isSaved = true;
       if (this.project.projectId == undefined) {
+        this.project.tag = this.tags;
         this._dataService.post('/api/projects/add', JSON.stringify(this.project))
           .subscribe((response: any) => {
             this.loadData();
@@ -136,7 +146,32 @@ export class ProjectComponent implements OnInit {
     if (type === "onHide" || type === "onHidden") {
       this.project = [];
       this.isLoadProject = false;
+      this.tags = [];
     }
   }
+
+  public tags: any[] = [];
+  public allTags: IMultiSelectOption[] = [];
+
+
+  loadTags() {
+    this._dataService.get("/api/tags/getall").subscribe((response: any) => {
+      for (let tag of response.items) {
+        this.allTags.push({ id: tag.tagId, name: tag.tagName });
+      }
+      this.isLoadTag = true;
+    });
+  }
+
+  // Settings configuration
+  mySettings: IMultiSelectSettings = {
+    //pullRight: true,
+    enableSearch: true,
+    checkedStyle: 'fontawesome',
+    buttonClasses: 'btn btn-default btn-block',
+    dynamicTitleMaxItems: 1,
+    selectAddedValues: true
+    //displayAllSelectedText: true
+  };
 
 }
