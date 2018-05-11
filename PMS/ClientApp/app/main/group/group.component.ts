@@ -152,7 +152,6 @@ export class GroupComponent implements OnInit {
   loadGroup(id: any) {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {
-        console.log(response);
         this.group = response;
         for (let se of response.studentEmails) {
           this.students.push(se);

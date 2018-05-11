@@ -25,6 +25,7 @@ export class ProjectComponent implements OnInit {
   public isLoadProject: boolean;
   public isLoadTag: boolean;
   majors: any[];
+  isExist: boolean;
 
   public queryResult: any = {};
 
@@ -52,9 +53,12 @@ export class ProjectComponent implements OnInit {
 
   //Create method
   showAddModal() {
+    this.isExist = true;
+
     this.loadTags();
     this.project = {};
     this.isLoadProject = true;
+    
     this._dataService.get("/api/majors/getall").subscribe((response: any) => {
       this.majors = response.items;
       this.isLoadProject = true;
@@ -74,12 +78,13 @@ export class ProjectComponent implements OnInit {
     this._dataService.get('/api/projects/getproject/' + id)
       .subscribe((response: any) => {
         this.project = response;
-        for (let se of response.tag) {
-          this.tags.push(se.tagid);
+        for (let se of response.tags) {
+          this.tags.push(se.tagName);
         }
         this._dataService.get("/api/majors/getall").subscribe((response: any) => {
           this.majors = response.items;
           this.isLoadProject = true;
+          this.isExist = true;
         });
       });
   }
@@ -97,6 +102,8 @@ export class ProjectComponent implements OnInit {
             this._notificationService.printSuccessMessage("Add Success");
             this.isSaved = false;
             this.isLoadData = false;
+            this.isExist = false;
+
           }, error => this._dataService.handleError(error));
       }
       else {
@@ -108,6 +115,8 @@ export class ProjectComponent implements OnInit {
             this._notificationService.printSuccessMessage("Update Success");
             this.isSaved = false;
             this.isLoadData = false;
+            this.isExist = false;
+
           }, error => this._dataService.handleError(error));
       }
     }
@@ -145,8 +154,10 @@ export class ProjectComponent implements OnInit {
   handler(type: string, $event: ModalDirective) {
     if (type === "onHide" || type === "onHidden") {
       this.project = [];
-      this.isLoadProject = false;
       this.tags = [];
+      this.isLoadProject = false;
+      this.isExist = false;
+      this.isLoadTag = false;
     }
   }
 
@@ -157,7 +168,7 @@ export class ProjectComponent implements OnInit {
   loadTags() {
     this._dataService.get("/api/tags/getall").subscribe((response: any) => {
       for (let tag of response.items) {
-        this.allTags.push({ id: tag.tagId, name: tag.tagName });
+        this.allTags.push({ id: tag.tagName, name: tag.tagName });
       }
       this.isLoadTag = true;
     });
