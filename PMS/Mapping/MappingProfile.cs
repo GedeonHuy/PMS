@@ -41,9 +41,9 @@ namespace PMS.Mapping
             {
                 Chair = new ChairResource
                 {
-                    LecturerId = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Lecturer.LecturerId,
-                    ScorePercent = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Percentage,
-                    Score = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Score
+                    LecturerId = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Chair").Lecturer.LecturerId,
+                    ScorePercent = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Chair").Percentage,
+                    Score = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Chair").Score
                 },
                 Secretary = new SecretaryResource
                 {
