@@ -218,7 +218,7 @@ namespace PMS.Mapping
                     Projects = p.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
                 }))
                 .ForMember(pr => pr.TagProjects, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.TagProjectId)))
-                .ForMember(pr => pr.Tags, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.Tag.TagId)))
+                .ForMember(pr => pr.Tags, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.Tag.TagName)))
                 .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)));
 
             CreateMap<Lecturer, LecturerResource>()
