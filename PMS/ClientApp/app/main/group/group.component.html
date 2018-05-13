@@ -153,7 +153,7 @@
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="hideAddEditModal()" class="btn btn-primary">Cancel</button>
-              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid || isSaved">Save</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.valid || isSaved">Save</button>
               <span *ngIf="isSaved" class="fa fa-refresh fa-spin"></span>
             </div>
           </div>

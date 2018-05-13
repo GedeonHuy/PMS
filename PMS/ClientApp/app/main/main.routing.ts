@@ -35,7 +35,9 @@ export const routes: Routes = [
       { path: 'quarter', loadChildren: './quarter/quarter.module#QuarterModule' },
       { path: 'project', loadChildren: './project/project.module#ProjectModule' },
       { path: 'major', loadChildren: './major/major.module#MajorModule' },
-      { path: 'group', loadChildren: './group/group.module#GroupModule' }
+      { path: 'group', loadChildren: './group/group.module#GroupModule' },
+      { path: 'confirm-group', loadChildren: './confirm-group/confirm-group.module#GroupConfirmModule' }
+
     ],
     canActivate: [AuthGuard]
   }
