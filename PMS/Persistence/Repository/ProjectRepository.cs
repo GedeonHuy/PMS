@@ -72,6 +72,11 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
             }
 
+            if (queryObj.TagName!=null)
+            {
+                query = query.Where(q => q.TagProjects.Any(tp => tp.Tag.TagName == queryObj.TagName));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Project, object>>>()
             {

@@ -26,7 +26,7 @@ namespace PMS.Persistence
             {
                 return await context.Groups.FindAsync(id);
             }
-            return await context.Groups.Where(g => g.isDeleted == false)
+            return await context.Groups
                 .Include(p => p.Project)
                 .Include(p => p.Enrollments)
                     .ThenInclude(e => e.Student)
@@ -35,6 +35,7 @@ namespace PMS.Persistence
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
                 .Include(p => p.Board)
+                    .ThenInclude(be => be.BoardEnrollments)
                 .SingleOrDefaultAsync(s => s.GroupId == id);
         }
 
@@ -62,6 +63,7 @@ namespace PMS.Persistence
                 .Include(p => p.Major)
                 .Include(p => p.Quarter)
                 .Include(p => p.Board)
+                    .ThenInclude(be => be.BoardEnrollments)
                 .AsQueryable();
 
             //filter

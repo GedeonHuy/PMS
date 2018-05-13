@@ -350,6 +350,7 @@ namespace PMS.Mapping
 
             CreateMap<StudentResource, Student>()
             .ForMember(s => s.Id, opt => opt.Ignore())
+            .ForMember(s => s.Major, opt => opt.Ignore())
             .ForMember(s => s.Enrollments, opt => opt.Ignore());
             //.AfterMap((sr, s) =>
             //{
@@ -405,7 +406,11 @@ namespace PMS.Mapping
                  .ForMember(p => p.Major, opt => opt.Ignore());
 
             CreateMap<LecturerResource, Lecturer>()
-                 .ForMember(l => l.LecturerId, opt => opt.Ignore());
+                 .ForMember(l => l.LecturerId, opt => opt.Ignore())
+                 .ForMember(l => l.Major, opt => opt.Ignore())
+                 .ForMember(l => l.BoardEnrollments, opt => opt.Ignore())
+                 .ForMember(l => l.Groups, opt => opt.Ignore())
+                 .ForMember(l => l.Projects, opt => opt.Ignore());
 
             CreateMap<MajorResource, Major>()
                  .ForMember(m => m.MajorId, opt => opt.Ignore());
