@@ -75,7 +75,7 @@ namespace PMS.Controllers
             return Ok(result);
         }
 
-        [HttpPut] /*/api/enrollments/id*/
+        [HttpPut]
         [Route("update/{id}")]
         public async Task<IActionResult> UpdateProject(int id, [FromBody]ProjectResource projectResource)
         {

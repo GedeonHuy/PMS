@@ -19,7 +19,7 @@ namespace PMS.Resources
         public int? LecturerId { get; set; }
         public ICollection<int> Groups { get; set; }
         public ICollection<int> TagProjects { get; set; }
-        public ICollection<int> Tags { get; set; }
+        public ICollection<String> Tags { get; set; }
         public MajorResource Major { get; set; }
         public LecturerResource Lecturer { get; set; }
 
@@ -27,7 +27,7 @@ namespace PMS.Resources
         {
             Groups = new Collection<int>();
             TagProjects = new Collection<int>();
-            Tags = new Collection<int>();
+            Tags = new Collection<String>();
             IsCompleted = false;
             IsDeleted = false;
         }

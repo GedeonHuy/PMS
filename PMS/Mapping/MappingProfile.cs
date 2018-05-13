@@ -41,9 +41,9 @@ namespace PMS.Mapping
             {
                 Chair = new ChairResource
                 {
-                    LecturerId = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Lecturer.LecturerId,
-                    ScorePercent = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Percentage,
-                    Score = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "President").Score
+                    LecturerId = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Chair").Lecturer.LecturerId,
+                    ScorePercent = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Chair").Percentage,
+                    Score = c.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Chair").Score
                 },
                 Secretary = new SecretaryResource
                 {
@@ -218,7 +218,7 @@ namespace PMS.Mapping
                     Projects = p.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
                 }))
                 .ForMember(pr => pr.TagProjects, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.TagProjectId)))
-                .ForMember(pr => pr.Tags, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.Tag.TagId)))
+                .ForMember(pr => pr.Tags, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.Tag.TagName)))
                 .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)));
 
             CreateMap<Lecturer, LecturerResource>()
@@ -400,7 +400,9 @@ namespace PMS.Mapping
                 .ForMember(g => g.GroupId, opt => opt.Ignore());
 
             CreateMap<ProjectResource, Project>()
-                 .ForMember(p => p.ProjectId, opt => opt.Ignore());
+                 .ForMember(p => p.ProjectId, opt => opt.Ignore())
+                 .ForMember(p => p.TagProjects, opt => opt.Ignore())
+                 .ForMember(p => p.Major, opt => opt.Ignore());
 
             CreateMap<LecturerResource, Lecturer>()
                  .ForMember(l => l.LecturerId, opt => opt.Ignore());

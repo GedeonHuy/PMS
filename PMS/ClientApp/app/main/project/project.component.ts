@@ -26,6 +26,8 @@ export class ProjectComponent implements OnInit {
   public isLoadTag: boolean;
   majors: any[];
   isExist: boolean;
+  public tags: string[] = [];
+  public allTags: IMultiSelectOption[] = [];
 
   public queryResult: any = {};
 
@@ -58,7 +60,7 @@ export class ProjectComponent implements OnInit {
     this.loadTags();
     this.project = {};
     this.isLoadProject = true;
-    
+
     this._dataService.get("/api/majors/getall").subscribe((response: any) => {
       this.majors = response.items;
       this.isLoadProject = true;
@@ -79,7 +81,7 @@ export class ProjectComponent implements OnInit {
       .subscribe((response: any) => {
         this.project = response;
         for (let se of response.tags) {
-          this.tags.push(se.tagName);
+          this.tags.push(se);
         }
         this._dataService.get("/api/majors/getall").subscribe((response: any) => {
           this.majors = response.items;
@@ -93,7 +95,7 @@ export class ProjectComponent implements OnInit {
     if (form.valid) {
       this.isSaved = true;
       if (this.project.projectId == undefined) {
-        this.project.tag = this.tags;
+        this.project.tags = this.tags;
         this._dataService.post('/api/projects/add', JSON.stringify(this.project))
           .subscribe((response: any) => {
             this.loadData();
@@ -107,6 +109,7 @@ export class ProjectComponent implements OnInit {
           }, error => this._dataService.handleError(error));
       }
       else {
+        this.project.tags = this.tags;
         this._dataService.put('/api/projects/update/' + this.project.projectId, JSON.stringify(this.project))
           .subscribe((response: any) => {
             this.loadData();
@@ -160,10 +163,6 @@ export class ProjectComponent implements OnInit {
       this.isLoadTag = false;
     }
   }
-
-  public tags: any[] = [];
-  public allTags: IMultiSelectOption[] = [];
-
 
   loadTags() {
     this._dataService.get("/api/tags/getall").subscribe((response: any) => {

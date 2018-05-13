@@ -130,7 +130,7 @@ namespace PMS.Persistence.Repository
                 isMarked = false,
                 Percentage = lecturerInformations.Supervisor.ScorePercent,
                 BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Supervisor"),
-                Lecturer = board.Group.Lecturer
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Supervisor.LecturerId)
             };
 
             context.BoardEnrollments.Add(presidentBoardEnrollment);
