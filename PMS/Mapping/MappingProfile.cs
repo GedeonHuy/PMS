@@ -239,6 +239,7 @@ namespace PMS.Mapping
                 .ForMember(lr => lr.BoardEnrollments, opt => opt.MapFrom(l => l.BoardEnrollments.Select(lf => lf.BoardEnrollmentId)));
 
             CreateMap<Group, GroupResource>()
+                .ForMember(er => er.BoardId, opt => opt.MapFrom(e => e.Board.BoardId))
                 .ForMember(gr => gr.Enrollments, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.EnrollmentId)))
                 .ForMember(gr => gr.StudentEmails, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.Student.Email)))
                 .ForMember(gr => gr.UploadedFiles, opt => opt.MapFrom(g => g.UploadedFiles.Select(gf => gf.UploadedFileId)))
