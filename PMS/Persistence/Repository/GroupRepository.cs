@@ -36,6 +36,13 @@ namespace PMS.Persistence
                 .Include(p => p.Quarter)
                 .Include(p => p.Board)
                     .ThenInclude(be => be.BoardEnrollments)
+                        .ThenInclude(ce => ce.BoardRole)
+                .Include(p => p.Board)
+                    .ThenInclude(be => be.BoardEnrollments)
+                        .ThenInclude(ce => ce.Lecturer)
+                .Include(p => p.Board)
+                    .ThenInclude(be => be.Group)
+                        .ThenInclude(ge => ge.Project)
                 .SingleOrDefaultAsync(s => s.GroupId == id);
         }
 
@@ -64,6 +71,13 @@ namespace PMS.Persistence
                 .Include(p => p.Quarter)
                 .Include(p => p.Board)
                     .ThenInclude(be => be.BoardEnrollments)
+                        .ThenInclude(ce => ce.BoardRole)
+                .Include(p => p.Board)
+                    .ThenInclude(be => be.BoardEnrollments)
+                        .ThenInclude(ce => ce.Lecturer)
+                .Include(p => p.Board)
+                    .ThenInclude(be => be.Group)
+                        .ThenInclude(ge => ge.Project)
                 .AsQueryable();
 
             //filter

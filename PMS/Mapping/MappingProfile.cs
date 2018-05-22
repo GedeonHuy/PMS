@@ -240,6 +240,45 @@ namespace PMS.Mapping
 
             CreateMap<Group, GroupResource>()
                 .ForMember(er => er.BoardId, opt => opt.MapFrom(e => e.Board.BoardId))
+                .ForMember(er => er.Board, opt => opt.MapFrom(e => new BoardResource
+                {
+                    BoardId = e.Board.BoardId,
+                    GroupId = e.Board.Group.GroupId,
+                    IsDeleted = e.Board.IsDeleted,
+                    ResultGrade = e.Board.ResultGrade,
+                    ResultScore = e.Board.ResultScore,
+                    isAllScored = e.Board.isAllScored,
+                    ProjectName = e.Board.Group.Project.Title,
+                    GroupName = e.Board.Group.GroupName,
+                    LecturerInformations = new LecturerInformationResource
+                    {
+                        Chair = new ChairResource
+                        {
+                            LecturerId = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Chair").Lecturer.LecturerId,
+                            ScorePercent = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Chair").Percentage,
+                            Score = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Chair").Score
+                        },
+                        Secretary = new SecretaryResource
+                        {
+                            LecturerId = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Secretary").Lecturer.LecturerId,
+                            ScorePercent = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Secretary").Percentage,
+                            Score = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Secretary").Score
+                        },
+                        Reviewer = new ReviewerResource
+                        {
+                            LecturerId = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Reviewer").Lecturer.LecturerId,
+                            ScorePercent = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Reviewer").Percentage,
+                            Score = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Reviewer").Score
+                        },
+                        Supervisor = new SupervisorResource
+                        {
+                            LecturerId = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Supervisor").Lecturer.LecturerId,
+                            ScorePercent = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Supervisor").Percentage,
+                            Score = e.Board.BoardEnrollments.FirstOrDefault(cf => cf.BoardRole.BoardRoleName == "Supervisor").Score
+                        }
+                    },
+                    BoardEnrollments = e.Board.BoardEnrollments.Select(ef => ef.BoardEnrollmentId).ToList()
+                }))
                 .ForMember(gr => gr.Enrollments, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.EnrollmentId)))
                 .ForMember(gr => gr.StudentEmails, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.Student.Email)))
                 .ForMember(gr => gr.UploadedFiles, opt => opt.MapFrom(g => g.UploadedFiles.Select(gf => gf.UploadedFileId)))
