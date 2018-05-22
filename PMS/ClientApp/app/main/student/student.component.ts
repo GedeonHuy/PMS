@@ -14,6 +14,8 @@ import { Response } from '@angular/http';
 export class StudentComponent implements OnInit {
   //declare Modal
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
+  @ViewChild('modalImport') public modalImport: ModalDirective;
+  @ViewChild('fileInput') fileInput: ElementRef;
 
   public students: any[];
   public queryResult: any = {};
@@ -61,6 +63,11 @@ export class StudentComponent implements OnInit {
     this.modalAddEdit.show();
   }
 
+  //Import method
+  showImportModal(id: any) {
+    this.modalImport.show();
+  }
+
   //Get Student with Id
   loadStudent(id: any) {
     this._dataService.get('/api/students/getstudent/' + id)
@@ -98,6 +105,27 @@ export class StudentComponent implements OnInit {
           }, error => this._dataService.handleError(error));
       }
     }
+  }
+
+  uploadFile() {
+    var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
+
+    this._progressService.uploadProgress
+      .subscribe(progress => {
+        console.log(progress)
+        this._zone.run(() => {
+          this.progress = progress;
+        });
+      }, null,
+        () => { this.progress = null; });
+
+    this._dataService.upload('/api/students/upload/', nativeElement.files[0])
+      .subscribe((response: any) => {
+        this.loadData();
+        this.modalImport.hide();
+        this._notificationService.printSuccessMessage("Import Success");
+        this.isSaved = false;
+      }, error => this._dataService.handleError(error));
   }
 
 

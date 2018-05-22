@@ -167,6 +167,11 @@ namespace PMS.Controllers
         [Route("upload")]
         public async Task<IActionResult> UploadLecturerFile(IFormFile file)
         {
+            if (string.IsNullOrWhiteSpace(host.WebRootPath))
+            {
+                host.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
+
             var uploadFolderPath = Path.Combine(host.WebRootPath, "uploads/project");
             if (!Directory.Exists(uploadFolderPath))
             {

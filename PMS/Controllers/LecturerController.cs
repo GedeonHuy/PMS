@@ -166,7 +166,7 @@ namespace PMS.Controllers
         [HttpGet]
         [Route("getlecturersbymajor/{id}")]
         public async Task<QueryResultResource<LecturerResource>> GetLecturersByMajor(int id)
-        {   
+        {
             QueryResource queryResource = new QueryResource();
 
             var query = mapper.Map<QueryResource, Query>(queryResource);
@@ -225,6 +225,11 @@ namespace PMS.Controllers
         [Route("upload")]
         public async Task<IActionResult> UploadLecturerFile(IFormFile file)
         {
+            if (string.IsNullOrWhiteSpace(host.WebRootPath))
+            {
+                host.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
+
             var uploadFolderPath = Path.Combine(host.WebRootPath, "uploads/lecturer");
             if (!Directory.Exists(uploadFolderPath))
             {

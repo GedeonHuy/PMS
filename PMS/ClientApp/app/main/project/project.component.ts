@@ -5,10 +5,11 @@ import { ProjectTypesConstants } from './../../core/common/projectType.constants
 import { Response } from '@angular/http';
 import { NotificationService } from './../../core/services/notification.service';
 import { DataService } from './../../core/services/data.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { NgForm } from '@angular/forms';
 import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
+import { ProgressService } from '../../core/services/progress.service';
 
 @Component({
   selector: 'app-project',
@@ -17,6 +18,8 @@ import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-mul
 export class ProjectComponent implements OnInit {
 
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
+  @ViewChild('modalImport') public modalImport: ModalDirective;
+  @ViewChild('fileInput') fileInput: ElementRef;
 
   public projects: any[];
   public project: any;
@@ -24,6 +27,7 @@ export class ProjectComponent implements OnInit {
   public isLoadData: boolean;
   public isLoadProject: boolean;
   public isLoadTag: boolean;
+  public progress: any;
   majors: any[];
   isExist: boolean;
   public tags: string[] = [];
@@ -38,7 +42,8 @@ export class ProjectComponent implements OnInit {
   public types: any[] = [ProjectTypesConstants.A, ProjectTypesConstants.B, ProjectTypesConstants.C, ProjectTypesConstants.D];
 
 
-  constructor(private _dataService: DataService, private _notificationService: NotificationService) {
+  constructor(private _dataService: DataService, private _notificationService: NotificationService,
+    private _progressService: ProgressService, private _zone: NgZone) {
     this.isSaved = false;
     this.isLoadData = false;
   }
@@ -73,6 +78,11 @@ export class ProjectComponent implements OnInit {
     this.loadproject(id);
     this.loadTags();
     this.modalAddEdit.show();
+  }
+
+  //Import method
+  showImportModal(id: any) {
+    this.modalImport.show();
   }
 
   //Get Role with Id
@@ -123,6 +133,27 @@ export class ProjectComponent implements OnInit {
           }, error => this._dataService.handleError(error));
       }
     }
+  }
+
+  uploadFile() {
+    var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
+
+    this._progressService.uploadProgress
+      .subscribe(progress => {
+        console.log(progress)
+        this._zone.run(() => {
+          this.progress = progress;
+        });
+      }, null,
+        () => { this.progress = null; });
+
+    this._dataService.upload('/api/projects/upload/', nativeElement.files[0])
+      .subscribe((response: any) => {
+        this.loadData();
+        this.modalImport.hide();
+        this._notificationService.printSuccessMessage("Import Success");
+        this.isSaved = false;
+      }, error => this._dataService.handleError(error));
   }
 
   deleteproject(id: any) {
