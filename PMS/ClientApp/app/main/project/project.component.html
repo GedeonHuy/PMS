@@ -28,7 +28,16 @@
                 <td>{{rowIndex+1}}</td>
                 <td>{{project.title}}</td>
                 <td>{{project.type}}</td>
-                <td>{{project.description}}</td>
+                <td>
+                  <div class="row">{{project.description}}</div>
+                  <div class="row">
+                    <ul>
+                      <li style="display: inline" *ngFor="let tag of project.tags">
+                        <a [routerLink]="['/main/tag-details/', tag]" class="tag">{{tag}}</a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
                 <td>
                   <button class="btn btn-primary" (click)="showEditModal(project.projectId)">
                     <i class="fa fa-pencil-square-o"></i>

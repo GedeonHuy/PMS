@@ -1,13 +1,13 @@
 export const PAGES_MENU = [
   {
-    path: 'main',
+    path: "main",
     children: [
       {
-        path: 'dashboard',
+        path: "dashboard",
         data: {
           menu: {
-            title: 'general.menu.dashboard',
-            icon: 'ion-android-home',
+            title: "general.menu.dashboard",
+            icon: "ion-android-home",
             selected: false,
             expanded: false,
             order: 0
@@ -15,11 +15,11 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'role',
+        path: "role",
         data: {
           menu: {
-            title: 'Role',
-            icon: 'ion-android-home',
+            title: "Role",
+            icon: "ion-android-home",
             selected: false,
             expanded: false,
             order: 0
@@ -27,11 +27,11 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'student',
+        path: "student",
         data: {
           menu: {
-            title: 'Student',
-            icon: 'ion-android-home',
+            title: "Student",
+            icon: "ion-android-home",
             selected: false,
             expanded: false,
             order: 0
@@ -39,11 +39,11 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'major',
+        path: "major",
         data: {
           menu: {
-            title: 'Major',
-            icon: 'ion-android-home',
+            title: "Major",
+            icon: "ion-android-home",
             selected: false,
             expanded: false,
             order: 0
@@ -51,11 +51,11 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'project',
+        path: "project",
         data: {
           menu: {
-            title: 'Project',
-            icon: 'ion-android-home',
+            title: "Project",
+            icon: "ion-android-home",
             selected: false,
             expanded: false,
             order: 0
@@ -63,11 +63,11 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'lecturer',
+        path: "lecturer",
         data: {
           menu: {
-            title: 'Lecturer',
-            icon: 'ion-android-home',
+            title: "Lecturer",
+            icon: "ion-android-home",
             selected: false,
             expanded: false,
             order: 0
@@ -75,11 +75,11 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'quarter',
+        path: "quarter",
         data: {
           menu: {
-            title: 'Quarter',
-            icon: 'ion-android-home',
+            title: "Quarter",
+            icon: "ion-android-home",
             selected: false,
             expanded: false,
             order: 0
@@ -87,11 +87,11 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'group',
+        path: "group",
         data: {
           menu: {
-            title: 'Group',
-            icon: 'ion-android-home',
+            title: "Group",
+            icon: "ion-android-home",
             selected: false,
             expanded: false,
             order: 0
@@ -99,17 +99,41 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: 'confirm-group',
+        path: "confirm-group",
         data: {
           menu: {
-            title: 'Confirm Group',
-            icon: 'ion-android-home',
+            title: "Confirm Group",
+            icon: "ion-android-home",
+            selected: false,
+            expanded: false,
+            order: 0
+          }
+        }
+      },
+      {
+        path: "tag",
+        data: {
+          menu: {
+            title: "Tag",
+            icon: "ion-android-home",
             selected: false,
             expanded: false,
             order: 0
           }
         }
       }
+      // {
+      //   path: "tag-details",
+      //   data: {
+      //     menu: {
+      //       title: "Tag Details",
+      //       icon: "ion-android-home",
+      //       selected: false,
+      //       expanded: false,
+      //       order: 0
+      //     }
+      //   }
+      // }
     ]
   }
 ];

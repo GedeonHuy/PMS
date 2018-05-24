@@ -4,8 +4,8 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { ModalModule } from "ngx-bootstrap/modal";
-import { StudentComponent } from "./student.component";
-import { routing } from "./student.routing";
+import { TagComponent } from "./tag.component";
+import { routing } from "./tag.routing";
 import { NotificationService } from "../../core/services/notification.service";
 @NgModule({
   imports: [
@@ -15,7 +15,7 @@ import { NotificationService } from "../../core/services/notification.service";
     FormsModule,
     routing
   ],
-  declarations: [StudentComponent],
+  declarations: [TagComponent],
   providers: [DataService, NotificationService]
 })
-export class StudentModule {}
+export class TagModule {}

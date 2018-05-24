@@ -49,6 +49,7 @@ namespace PMS.Persistence.Repository
             var result = new QueryResult<Tag>();
 
             var query = context.Tags
+                .Where(c => c.IsDeleted == false)
                 .Include(g => g.TagProjects)
                     .ThenInclude(tp => tp.Project)
                 .AsQueryable();
