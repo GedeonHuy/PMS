@@ -38,8 +38,9 @@
                     <button class="btn btn-info" (click)="assignBoard(group.groupId)">
                         <i class="fa fa-users"></i>
                     </button>
-                    <button class="btn btn-primary" (click)="showEditModal(group.groupId)">
-                        <i class="fa fa-pencil-square-o"></i>
+
+                    <button *ngIf="isLecturer" class="btn btn-alert" (click)="mark(group.boardId)">
+                      <i class="fa fa-gavel"></i>
                     </button>
                   </td>
                 </tr>
@@ -73,8 +74,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12">chair</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <input type="hidden" [(ngModel)]="board.boardId" name="boardId" />
-              <select class="form-control" [(ngModel)]="boardEnrollments.chair.lecturerId" name="lecturerId" required #chair="ngModel">
-                <option value=""></option>
+              <select class="form-control" [(ngModel)]="boardEnrollments.chair.lecturerId" name="boardEnrollments.chair.lecturerId" required #chair="ngModel">
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="chair.valid || (chair.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the chair </small>
@@ -84,11 +84,10 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.chair.scorePercent" name="scorePercent" required #scorePercentchair="ngModel">
-                <option value=""></option>
-                <option *ngFor="let s of scorePercents">{{ s }}</option>
+              <select class="form-control" [(ngModel)]="boardEnrollments.chair.scorePercent" name="boardEnrollments.chair.scorePercent" required #scorePercentChair="ngModel">
+                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
               </select>
-              <small [hidden]="scorePercentchair.valid || (scorePercentchair.pristine && !addEditForm.submitted)" class="text-danger">
+              <small [hidden]="scorePercentChair.valid || (scorePercentChair.pristine && !addEditForm.submitted)" class="text-danger">
                 Please specify the score percent </small>
             </div>
           </div>
@@ -97,8 +96,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Secretary</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.lecturerId" name="lecturerId" required #secretary="ngModel">
-                <option value=""></option>
+              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.lecturerId" name="boardEnrollments.secretary.name" required #secretary="ngModel">
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="secretary.valid || (secretary.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the secretary </small>
@@ -108,9 +106,8 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.scorePercent" name="scorePercent" required #scorePercentSecretary="ngModel">
-                <option value=""></option>
-                <option *ngFor="let s of scorePercents">{{ s }}</option>
+              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.scorePercent" name="boardEnrollments.secretary.scorePercent" required #scorePercentSecretary="ngModel">
+                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
               </select>
               <small [hidden]="scorePercentSecretary.valid || (scorePercentSecretary.pristine && !addEditForm.submitted)" class="text-danger">
                 Please specify the score percent </small>
@@ -120,8 +117,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.lecturerId" name="lecturerId" required #supervisor="ngModel">
-                <option value=""></option>
+              <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.lecturerId" name="boardEnrollments.supervisor.name" required #supervisor="ngModel">
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="supervisor.valid || (supervisor.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the supervisor </small>
@@ -131,9 +127,9 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.scorePercent" name="scorePercent" required #scorePercentSupervisor="ngModel">
+              <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.scorePercent" name="boardEnrollments.supervisor.scorePercent" required #scorePercentSupervisor="ngModel">
                 <option value=""></option>
-                <option *ngFor="let s of scorePercents">{{ s }}</option>
+                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
               </select>
               <small [hidden]="scorePercentSupervisor.valid || (scorePercentSupervisor.pristine && !addEditForm.submitted)" class="text-danger">
                 Please specify the score percent </small>
@@ -143,8 +139,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Reviewer</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.lecturerId" name="lecturerId" required #reviewer="ngModel">
-                <option value=""></option>
+              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.lecturerId" name="boardEnrollments.reviewer.name" required #reviewer="ngModel">
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="reviewer.valid || (reviewer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the reviewer </small>
@@ -154,9 +149,8 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.scorePercent" name="scorePercent" required #scorePercentReviewer="ngModel">
-                <option value=""></option>
-                <option *ngFor="let s of scorePercents">{{ s }}</option>
+              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.scorePercent" name="boardEnrollments.reviewer.scorePercent" required #scorePercentReviewer="ngModel">
+                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
               </select>
               <small [hidden]="scorePercentReviewer.valid || (scorePercentReviewer.pristine && !addEditForm.submitted)" class="text-danger">
                 Please specify the score percent </small>
@@ -167,7 +161,7 @@
           
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-              <button type="button" (click)="hideAddEditModal()" class="btn btn-primary">Cancel</button>
+              <button type="button" (click)="hidemodalAddEdit()" class="btn btn-primary">Cancel</button>
               <button type="submit" class="btn btn-success" [disabled]="!addEditForm.valid || isSaved">Save</button>
               <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
             </div>
@@ -176,4 +170,64 @@
       </div>
     </div>
   </div>
+</div>
+
+<!--Modal Mark-->
+<div bsModal #modalMark="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)"
+(onHidden)="handler('onHidden', $event)">
+
+<div class="modal-dialog modal-lg">
+  <div class="modal-content" style="background: pink">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Mark This Group</h4>
+      <span *ngIf="!isLoadMark" class="fa fa-refresh fa-spin"></span>
+      <button type="button" class="close pull-right" (click)="hidemodalMark()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal form-label-left" novalidate #markForm="ngForm" (ngSubmit)="saveMark(markForm)"
+        *ngIf="boardEnrollment && isLoadMark">
+
+        <!-- boardEnrollmentId: this.boardEnrollment.boardEnrollmentId,
+          score: this.boardEnrollment.score,
+          percentage: this.boardEnrollment.percentage,
+          lecturerId: this.boardEnrollment.lecturerId,
+          boardID: this.boardEnrollment.boardId -->
+
+        <input type="hidden" [(ngModel)]="boardEnrollment.boardEnrollmentId" name="boardEnrollment.boardEnrollmentId" />
+        <input type="hidden" [(ngModel)]="boardEnrollment.percentage" name="boardEnrollment.percentage" />
+        <input type="hidden" [(ngModel)]="boardEnrollment.lecturerId" name="boardEnrollment.lecturerId" />
+        <input type="hidden" [(ngModel)]="boardEnrollment.boardID" name="boardEnrollment.boardID" />
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Mark</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input class="form-control" [(ngModel)]="boardEnrollment.score" name="boardEnrollment.score" required #markReviewer="ngModel"/>
+            <small [hidden]="markReviewer.valid || (markReviewer.pristine && !markForm.submitted)" class="text-danger">
+              Please specify the score </small>
+          </div>  
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Comment</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input class="form-control" [(ngModel)]="comment" name="comment" #commentReviewer="ngModel"/>
+            <small [hidden]="commentReviewer.valid || (commentReviewer.pristine && !commentReviewer.submitted)" class="text-danger">
+                Please specify the comment </small>
+          </div>  
+        </div>
+
+        <div class="form-group">
+          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+            <button type="button" (click)="hidemodalMark()" class="btn btn-primary">Cancel</button>
+            <button type="submit" class="btn btn-success" [disabled]="!markForm.valid || isSaved">Save</button>
+            <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 </div>
