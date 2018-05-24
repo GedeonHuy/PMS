@@ -43,7 +43,7 @@ namespace PMS.Persistence
                 .SingleOrDefaultAsync(s => s.Email == email);
         }
 
-        
+
         public async Task<Student> GetStudentByStudentCode(string studentCode)
         {
             return await context.Students
@@ -81,7 +81,7 @@ namespace PMS.Persistence
 
             if (queryObj.Year != null)
             {
-                query = query.Where(q => q.Year == queryObj.Year);
+                query = query.Where(q => q.Year.Equals(queryObj.Year));
             }
 
 

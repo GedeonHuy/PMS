@@ -14,6 +14,7 @@ namespace PMS.Resources
         public int Percentage { get; set; }
         public double? Score { get; set; }
         public bool isMarked { get; set; }
+        public string Comment { get; set; }
         public BoardResource Board { get; set; }
         public LecturerResource Lecturer { get; set; }
         public BoardEnrollmentResource()
