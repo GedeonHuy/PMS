@@ -204,8 +204,8 @@ aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onSh
         <div class="form-group">
           <label class="control-label col-md-3 col-sm-3 col-xs-12">Mark</label>
           <div class="col-md-9 col-sm-9 col-xs-12">
-            <input class="form-control" [(ngModel)]="boardEnrollment.score" name="boardEnrollment.score" required #markReviewer="ngModel"/>
-            <small [hidden]="markReviewer.valid || (markReviewer.pristine && !markForm.submitted)" class="text-danger">
+            <input class="form-control" [(ngModel)]="boardEnrollment.score" name="boardEnrollment.score" required #mark="ngModel"/>
+            <small [hidden]="markReviewer.valid || (mark.pristine && !markForm.submitted)" class="text-danger">
               Please specify the score </small>
           </div>  
         </div>
@@ -213,8 +213,8 @@ aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onSh
         <div class="form-group">
           <label class="control-label col-md-3 col-sm-3 col-xs-12">Comment</label>
           <div class="col-md-9 col-sm-9 col-xs-12">
-            <input class="form-control" [(ngModel)]="comment" name="comment" #commentReviewer="ngModel"/>
-            <small [hidden]="commentReviewer.valid || (commentReviewer.pristine && !commentReviewer.submitted)" class="text-danger">
+            <input class="form-control" [(ngModel)]="boardEnrollment.comment" name="boardEnrollment.comment" required #comment="ngModel"/>
+            <small [hidden]="commentReviewer.valid || (comment.pristine && !commentReviewer.submitted)" class="text-danger">
                 Please specify the comment </small>
           </div>  
         </div>

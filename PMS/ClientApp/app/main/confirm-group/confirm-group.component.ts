@@ -167,7 +167,6 @@ export class GroupConfirmComponent implements OnInit {
   //Mark method
   mark(id: any) {
     this.modalMark.show();
-    this.comment = "";
 
     Observable.forkJoin(
       this._dataService.get('/api/boardenrollments/getboardenrollmentsbylectureremail/' + this.thisLecturerEmail)
