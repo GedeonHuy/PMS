@@ -93,12 +93,12 @@ namespace PMS.Persistence
 
             if (queryObj.isConfirm != null)
             {
-                query = query.Where(q => q.isConfirm == queryObj.isConfirm);
+                query = query.Where(q => q.isConfirm.Equals(queryObj.isConfirm));
             }
 
             if (queryObj.Email != null)
             {
-                query = query.Where(q => q.Lecturer.Email == queryObj.Email || q.Lecturer == null);
+                query = query.Where(q => q.Lecturer.Email.Equals(queryObj.Email) || q.Lecturer == null);
             }
 
             if (queryObj.QuarterId.HasValue)

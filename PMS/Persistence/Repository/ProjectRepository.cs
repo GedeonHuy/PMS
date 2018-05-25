@@ -59,7 +59,7 @@ namespace PMS.Persistence
             //filter
             if (queryObj.Type != null)
             {
-                query = query.Where(q => q.Type == queryObj.Type);
+                query = query.Where(q => q.Type.Equals(queryObj.Type));
             }
 
             if (queryObj.LecturerId.HasValue)
@@ -72,9 +72,9 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
             }
 
-            if (queryObj.TagName!=null)
+            if (queryObj.TagName != null)
             {
-                query = query.Where(q => q.TagProjects.Any(tp => tp.Tag.TagName == queryObj.TagName));
+                query = query.Where(q => q.TagProjects.Any(tp => tp.Tag.TagName.Equals(queryObj.TagName)));
             }
 
             //sort

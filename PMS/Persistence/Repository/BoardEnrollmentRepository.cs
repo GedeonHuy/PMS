@@ -55,7 +55,7 @@ namespace PMS.Persistence.Repository
 
             //filter
 
-            query = query.Where(q => q.Lecturer.Email == email);
+            query = query.Where(q => q.Lecturer.Email.Equals(email));
 
             //sort
 

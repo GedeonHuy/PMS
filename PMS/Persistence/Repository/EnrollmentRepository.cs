@@ -75,7 +75,7 @@ namespace PMS.Persistence
             //filter
             if (queryObj.isConfirm != null)
             {
-                query = query.Where(q => q.isConfirm == queryObj.isConfirm);
+                query = query.Where(q => q.isConfirm.Equals(queryObj.isConfirm));
             }
 
             if (queryObj.QuarterId.HasValue)
@@ -85,12 +85,12 @@ namespace PMS.Persistence
 
             if (queryObj.Type != null)
             {
-                query = query.Where(q => q.Type == queryObj.Type);
+                query = query.Where(q => q.Type.Equals(queryObj.Type));
             }
 
             if (queryObj.Email != null)
             {
-                query = query.Where(q => q.Lecturer.Email == queryObj.Email || q.Lecturer == null);
+                query = query.Where(q => q.Lecturer.Email.Equals(queryObj.Email) || q.Lecturer == null);
             }
 
             if (queryObj.LecturerId.HasValue)
