@@ -171,6 +171,8 @@ export class GroupComponent implements OnInit {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Add Success");
+            form.resetForm();
+
             this.isSaved = false;
             this.isLoadData = false;
             this.isExist = false;
@@ -192,6 +194,8 @@ export class GroupComponent implements OnInit {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
+            form.resetForm();
+
             this.isSaved = false;
             this.isLoadData = false;
             this.isExist = false;

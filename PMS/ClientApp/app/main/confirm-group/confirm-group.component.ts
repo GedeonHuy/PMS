@@ -70,7 +70,6 @@ export class GroupConfirmComponent implements OnInit {
     Observable.forkJoin([
       this._dataService.get("/api/lecturers/getall")
     ]).subscribe(data => {
-      console.log(data[0].items);
       this.lecturers = data[0].items
     });
   }
@@ -78,7 +77,6 @@ export class GroupConfirmComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/groups/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log(response);
       this.isLoadData = true;
     });
   }
@@ -150,6 +148,8 @@ export class GroupConfirmComponent implements OnInit {
             this.modalAddEdit.hide();
             this.loadData();
             this._notificationService.printSuccessMessage("Add Success");
+            form.resetForm();
+
             this.isSaved = false;
             this.isLoadData =false;
           }, error => this._dataService.handleError(error));
@@ -160,6 +160,8 @@ export class GroupConfirmComponent implements OnInit {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
+            form.resetForm();
+
             this.isSaved = false;
             this.isLoadData =false;
           }, error => this._dataService.handleError(error));
