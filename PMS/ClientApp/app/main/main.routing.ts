@@ -89,6 +89,10 @@ export const routes: Routes = [
       {
         path: "confirm-group",
         loadChildren: "./confirm-group/confirm-group.module#GroupConfirmModule"
+      },
+      {
+        path: "group-details/:id",
+        loadChildren: "./group-details/group-details.module#GroupDetailsModule"
       }
     ],
     canActivate: [AuthGuard]
