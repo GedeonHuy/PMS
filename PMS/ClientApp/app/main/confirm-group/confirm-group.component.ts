@@ -12,6 +12,7 @@ import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-group',
+  styleUrls: ['./confirm-group.scss'],
   templateUrl: './confirm-group.component.html'
 })
 
@@ -86,6 +87,7 @@ export class GroupConfirmComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/groups/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
+      console.log(response);
       this.isLoadData = true;
     });
   }

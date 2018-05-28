@@ -2,9 +2,7 @@
     <img *ngIf="!isLoadData" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
     />
     <div class="row" *ngIf="isLoadData">
-      <div class="col-lg-12 col-md-12">
-        <button class="btn btn-success" style="float: right;" (click)="showAddModal()" translate>Add</button>
-      </div>
+
       <br/>
       <br/>
       <br/>
@@ -16,7 +14,7 @@
               <thead>
                 <tr>
                   <th>Id</th>
-                  <th>Name</th>
+                  <th >Students</th>
                   <th>Project</th>
                   <th>Supervisor</th>
                   <th>Status</th>
@@ -26,10 +24,14 @@
               <tbody>
                 <tr *ngFor="let group of queryResult.items; let rowIndex = index">
                   <td>{{rowIndex+1}}</td>
-                  <td>{{group.groupName}}</td>
+                  <td >
+                      <ul *ngFor="let student of group.studentInformations">
+                          {{ student.name }}
+                      </ul>
+                  </td>
                   <td>{{group.project.title}}</td>
                   <td>{{group.lecturer.name}}</td>
-                  <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">{{group.isConfirm}}</td>
+                  <td [ngClass]="group.isConfirm === 'Pending' ? 'blue': 'green'">{{group.isConfirm}}</td>
                   <td>
                     <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]">
                         <i class="fa fa-eye"></i>
