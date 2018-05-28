@@ -17,7 +17,8 @@ import { NgForm } from '@angular/forms';
 
 export class GroupConfirmComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
-
+  @ViewChild('modalMark') public modalMark: ModalDirective;
+  
   public groups: any[];
   public queryResult: any = {};
 
@@ -26,23 +27,30 @@ export class GroupConfirmComponent implements OnInit {
   public isSaved: boolean;
   public isLoadBoard: boolean;
   public isLoadData: boolean;
+  public isLoadMark: boolean;
 
   public boardEnrollments: any;
+  public boardEnrollment: any;
+  public boardEnrollmentJson: any = {};
   public board: any = {};
+  public comment: any;
   public chair: any;
   public secretary: any;
   public supervisor: any;
   public reviewer: any;
 
-  public scorePercents: any[] = [25, 50, 75, 100];
+  public scorePercents: number[] = [10, 20, 25, 30, 50, 75, 100];
 
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
 
+  thisLecturerEmail: any;
+
   projects: any[];
   lecturers: any[];
   quarters: any[];
+  boardEnrollmentsOfLecturer: any[];
 
   majors: any[];
   PAGE_SIZE = 5;
@@ -61,6 +69,7 @@ export class GroupConfirmComponent implements OnInit {
     this.isSaved = false;
     this.isAdmin = false;
     this.isLecturer = false;
+    this.isLoadMark = false;
   }
 
   ngOnInit() {
@@ -68,7 +77,7 @@ export class GroupConfirmComponent implements OnInit {
     this.permissionAccess();
 
     Observable.forkJoin([
-      this._dataService.get("/api/lecturers/getall")
+      this._dataService.get("/api/lecturers/getall/")
     ]).subscribe(data => {
       this.lecturers = data[0].items
     });
@@ -119,10 +128,56 @@ export class GroupConfirmComponent implements OnInit {
 
         this.isLoadBoard = true;
       } else {
-        this.lecturers = this.lecturers.filter(l => l.majorId == this.group.majorId);
+
+        this.board.groupId = this.group.groupId;
+        this.chair = {
+          name: this.lecturers.find(l => l.lecturerId == this.group.board.lecturerInformations.chair.lecturerId).name,
+          lecturerId: this.group.board.lecturerInformations.chair.lecturerId,
+          scorePercent: this.group.board.lecturerInformations.chair.scorePercent
+        };
+        this.secretary = {
+          name: this.lecturers.find(l => l.lecturerId == this.group.board.lecturerInformations.secretary.lecturerId).name,
+          lecturerId: this.group.board.lecturerInformations.secretary.lecturerId,
+          scorePercent: this.group.board.lecturerInformations.secretary.scorePercent
+        };
+        this.supervisor = {
+          name: this.lecturers.find(l => l.lecturerId == this.group.board.lecturerInformations.supervisor.lecturerId).name,
+          lecturerId: this.group.board.lecturerInformations.supervisor.lecturerId,
+          scorePercent: this.group.board.lecturerInformations.supervisor.scorePercent
+        };
+        this.reviewer = {
+          name: this.lecturers.find(l => l.lecturerId == this.group.board.lecturerInformations.reviewer.lecturerId).name,
+          lecturerId: this.group.board.lecturerInformations.reviewer.lecturerId,
+          scorePercent: this.group.board.lecturerInformations.reviewer.scorePercent
+        };
+        
+        this.boardEnrollments = {
+          chair: this.chair,
+          secretary: this.secretary,
+          supervisor: this.supervisor,
+          reviewer: this.reviewer
+        };
+        this.board.lecturerInformations = this.boardEnrollments;
+
         this.isLoadBoard = true;
       }
     });
+  }
+
+  //Mark method
+  mark(id: any) {
+    this.modalMark.show();
+
+    Observable.forkJoin(
+      this._dataService.get('/api/boardenrollments/getboardenrollmentsbylectureremail/' + this.thisLecturerEmail)
+    ).subscribe(data => {
+      this.boardEnrollmentsOfLecturer = data[0].items;
+      console.log(this.boardEnrollmentsOfLecturer);
+      this.boardEnrollment = this.boardEnrollmentsOfLecturer.find(be => be.boardID == id);
+      this.isLoadMark = true;
+    });
+
+    
   }
 
   handler(type: string, $event: ModalDirective) {
@@ -136,11 +191,13 @@ export class GroupConfirmComponent implements OnInit {
     this.modalAddEdit.hide();
   }
 
-
+  hidemodalMark() {
+    this.modalMark.hide();
+  }
+  
   saveChange(form: NgForm) {
     if (form.valid) {
       this.isSaved = true;
-      console.log(this.board);
 
       if (this.board.boardId == undefined) {
         this._dataService.post('/api/boards/add', JSON.stringify(this.board))
@@ -169,6 +226,33 @@ export class GroupConfirmComponent implements OnInit {
     }
   }
 
+  saveMark(form: NgForm) {
+    if (form.valid) {
+      this.isSaved = true;
+
+      if (this.boardEnrollment.score != null)
+      { 
+        //make legit json boardEnrollment
+        // this.boardEnrollmentJson = {
+        //   boardEnrollmentId: this.boardEnrollment.boardEnrollmentId,
+        //   score: this.boardEnrollment.score,
+        //   percentage: this.boardEnrollment.percentage,
+        //   lecturerId: this.boardEnrollment.lecturerId,
+        //   boardID: this.boardEnrollment.boardId
+        // };
+
+        this._dataService.put('/api/boardenrollments/update/' + this.boardEnrollment.boardEnrollmentId, JSON.stringify(this.boardEnrollment))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalMark.hide();
+            this._notificationService.printSuccessMessage("Update Success");
+            this.isSaved = false;
+            this.isLoadData = false;
+            this.isLoadMark = false;
+          }, error => this._dataService.handleError(error));
+      }
+    }
+  }
 
   permissionAccess() {
     this.user = this._authenService.getLoggedInUser();
@@ -178,6 +262,7 @@ export class GroupConfirmComponent implements OnInit {
 
     if (this.user.role === "Lecturer") {
       this.isLecturer = true;
+      this.thisLecturerEmail = this.user.email;
     }
 
     if (this.user.role === "Student") {
