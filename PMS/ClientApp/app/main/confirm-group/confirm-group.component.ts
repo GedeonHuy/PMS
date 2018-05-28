@@ -205,6 +205,8 @@ export class GroupConfirmComponent implements OnInit {
             this.modalAddEdit.hide();
             this.loadData();
             this._notificationService.printSuccessMessage("Add Success");
+            form.resetForm();
+
             this.isSaved = false;
             this.isLoadData =false;
           }, error => this._dataService.handleError(error));
@@ -215,6 +217,8 @@ export class GroupConfirmComponent implements OnInit {
             this.loadData();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
+            form.resetForm();
+
             this.isSaved = false;
             this.isLoadData =false;
           }, error => this._dataService.handleError(error));

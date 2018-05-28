@@ -87,7 +87,6 @@ export class StudentComponent implements OnInit {
           .get("/api/majors/getall")
           .subscribe((response: any) => {
             this.majors = response.items;
-            console.log(this.majors);
             this.isLoadStudent = true;
           });
       });
