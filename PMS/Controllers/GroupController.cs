@@ -58,7 +58,7 @@ namespace PMS.Controllers
 
             var group = mapper.Map<GroupResource, Group>(groupResource);
 
-            group.Lecturer = await lecturerRepository.GetLecturer(groupResource.LecturerId);
+            group.Lecturer = await lecturerRepository.GetLecturerByEmail(groupResource.LecturerEmail);
 
             if (groupResource.ProjectId == null)
             {

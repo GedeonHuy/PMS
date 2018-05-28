@@ -172,6 +172,7 @@ namespace PMS.Mapping
                     Enrollments = e.Group.Enrollments.Select(ef => ef.EnrollmentId).ToList(),
                     UploadedFiles = e.Group.UploadedFiles.Select(ef => ef.UploadedFileId).ToList(),
                     Tasks = e.Group.Tasks.Select(ef => ef.TaskId).ToList(),
+                    LecturerEmail = e.Group.Lecturer.Email,
                     StudentEmails = e.Group.Enrollments.Select(sf => sf.Student.Email).ToList(),
                     StudentInformations = e.Group.Enrollments.Select(sf => new StudentInformationResource
                     {
@@ -318,6 +319,7 @@ namespace PMS.Mapping
                     Lecturers = g.Major.Lecturers.Select(sf => sf.LecturerId).ToList(),
                 }))
                 .ForMember(gr => gr.LecturerId, opt => opt.MapFrom(g => g.Lecturer.LecturerId))
+                .ForMember(gr => gr.LecturerEmail, opt => opt.MapFrom(g => g.Lecturer.Email))
                 .ForMember(gr => gr.Lecturer, opt => opt.MapFrom(g => new LecturerResource
                 {
                     LecturerId = g.Lecturer.LecturerId,
@@ -359,6 +361,7 @@ namespace PMS.Mapping
                     ResultScore = s.Group.ResultScore,
                     Enrollments = s.Group.Enrollments.Select(sf => sf.EnrollmentId).ToList(),
                     StudentEmails = s.Group.Enrollments.Select(sf => sf.Student.Email).ToList(),
+                    LecturerEmail = s.Group.Lecturer.Email,
                     StudentInformations = s.Group.Enrollments.Select(sf => new StudentInformationResource
                     {
                         Email = sf.Student.Email,
