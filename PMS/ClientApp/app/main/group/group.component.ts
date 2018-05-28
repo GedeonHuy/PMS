@@ -164,43 +164,49 @@ export class GroupComponent implements OnInit {
   saveChange(form: NgForm) {
     if (form.valid) {
       this.isSaved = true;
-      if (this.group.groupId == undefined) {
-        this.group.studentEmails = this.students;
-        this._dataService.post('/api/groups/add', JSON.stringify(this.group))
-          .subscribe((response: any) => {
-            this.loadData();
-            this.modalAddEdit.hide();
-            this._notificationService.printSuccessMessage("Add Success");
-            form.resetForm();
+      console.log(this.group);
+      console.log(this.students);
 
-            this.isSaved = false;
-            this.isLoadData = false;
-            this.isExist = false;
+      // for (let student of this.students) {
+      //   this.group.studentEmails.push(student.email);
+      // }
+      // if (this.group.groupId == undefined) {
+      //   this.group.studentEmails = this.students;
+      //   this._dataService.post('/api/groups/add', JSON.stringify(this.group))
+      //     .subscribe((response: any) => {
+      //       this.loadData();
+      //       this.modalAddEdit.hide();
+      //       this._notificationService.printSuccessMessage("Add Success");
+      //       form.resetForm();
 
-          }, error => this._dataService.handleError(error));
-      }
-      else {
-        this.groupJson = {
-          groupName: this.group.groupName,
-          isConfirm: this.group.isConfirm,
-          projectId: this.group.projectId,
-          lecturerId: this.group.lecturerId,
-          majorId: this.group.majorId,
-          quarterId: this.group.quarterId,
-          students: this.group.students
-        };
-        this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
-          .subscribe((response: any) => {
-            this.loadData();
-            this.modalAddEdit.hide();
-            this._notificationService.printSuccessMessage("Update Success");
-            form.resetForm();
+      //       this.isSaved = false;
+      //       this.isLoadData = false;
+      //       this.isExist = false;
 
-            this.isSaved = false;
-            this.isLoadData = false;
-            this.isExist = false;
-          }, error => this._dataService.handleError(error));
-      }
+      //     }, error => this._dataService.handleError(error));
+      // }
+      // else {
+      //   this.groupJson = {
+      //     groupName: this.group.groupName,
+      //     isConfirm: this.group.isConfirm,
+      //     projectId: this.group.projectId,
+      //     lecturerId: this.group.lecturerId,
+      //     majorId: this.group.majorId,
+      //     quarterId: this.group.quarterId,
+      //     students: this.group.students
+      //   };
+      //   this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
+      //     .subscribe((response: any) => {
+      //       this.loadData();
+      //       this.modalAddEdit.hide();
+      //       this._notificationService.printSuccessMessage("Update Success");
+      //       form.resetForm();
+
+      //       this.isSaved = false;
+      //       this.isLoadData = false;
+      //       this.isExist = false;
+      //     }, error => this._dataService.handleError(error));
+      // }
     }
   }
 
@@ -239,17 +245,19 @@ export class GroupComponent implements OnInit {
 
   public allStudents: IMultiSelectOption[] = [];
   public students: string[] = [];
-
   loadStudents() {
     this._dataService.get("/api/students/getall").subscribe((response: any) => {
+      this.allStudents = [];
       for (let student of response.items) {
-        this.allStudents.push({ id: student.email, name: student.email });
+        var s = {
+          name: student.name,
+          email: student.email
+        };
+        this.allStudents.push({ id: s, name: student.email });
       }
       this.isLoadStudent = true;
     });
   }
-
-
   // Settings configuration
   mySettings: IMultiSelectSettings = {
     //pullRight: true,

@@ -122,7 +122,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Students</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <ss-multiselect-dropdown [settings]="mySettings" [ngModelOptions]="{standalone: true}" [options]="allStudents" [(ngModel)]="students"></ss-multiselect-dropdown>
+              <ss-multiselect-dropdown [settings]="mySettings" [ngModelOptions]="{standalone: true}" [options]="allStudents" [(ngModel)]="students" ></ss-multiselect-dropdown>
             </div>
           </div>
 
@@ -131,9 +131,8 @@
 
             <div class="col-md-9 col-sm-9 col-xs-12">
               <ul *ngIf="isExist">
-                <li *ngFor="let se of students">{{se}}</li>
+                <li *ngFor="let se of students">{{se.name}}</li>
               </ul>
-              <!-- <input type="text" *ngIf="isExist" disabled [(ngModel)]="students" name="email" class="form-control" />             -->
             </div>
           </div>
 
