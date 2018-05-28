@@ -30,6 +30,7 @@ namespace PMS.Persistence
                 .Include(l => l.Groups)
                 .Include(l => l.BoardEnrollments)
                 .Include(p => p.Major)
+                .Include(l => l.Projects)
                 .SingleOrDefaultAsync(s => s.LecturerId == id);
         }
 
@@ -43,6 +44,7 @@ namespace PMS.Persistence
                 .Include(l => l.Groups)
                 .Include(l => l.BoardEnrollments)
                 .Include(p => p.Major)
+                                .Include(l => l.Projects)
                 .SingleOrDefaultAsync(s => s.Email == email);
         }
 
@@ -84,6 +86,7 @@ namespace PMS.Persistence
                 .Include(l => l.Groups)
                 .Include(l => l.BoardEnrollments)
                 .Include(p => p.Major)
+                .Include(l => l.Projects)
                 .AsQueryable();
 
             //filter
@@ -246,6 +249,7 @@ namespace PMS.Persistence
                 .Include(l => l.Groups)
                 .Include(l => l.BoardEnrollments)
                 .Include(p => p.Major)
+                .Include(l => l.Projects)
                 .AsQueryable();
 
             //filter
