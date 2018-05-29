@@ -18,6 +18,8 @@ namespace PMS.Resources
         public string GroupName { get; set; }
         public string ProjectName { get; set; }
         public bool isAllScored { get; set; }
+        public DateTime DateTime { get; set; }
+        public int Order { get; set; }
         public LecturerInformationResource LecturerInformations { get; set; }
         public ICollection<int> BoardEnrollments { get; set; }
         public BoardResource()

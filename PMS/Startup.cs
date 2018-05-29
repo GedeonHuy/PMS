@@ -116,6 +116,7 @@ namespace PMS
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<DataSeeder>();
             services.AddTransient<RoleSeed>();
+            services.AddTransient<DbInitializer>();
             services.AddSignalR();
             services.AddResponseCompression();
             services.AddResponseCompression(options =>
@@ -127,7 +128,8 @@ namespace PMS
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSeeder dataSeeder, RoleSeed roleSeed)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+         DataSeeder dataSeeder, RoleSeed roleSeed, DbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -159,6 +161,8 @@ namespace PMS
             roleSeed.SeedAsync().Wait();
 
             dataSeeder.SeedAsync().Wait();
+
+            dbInitializer.Initialize().Wait();
 
         }
     }

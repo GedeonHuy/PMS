@@ -101,6 +101,8 @@ namespace PMS.Mapping
                     ResultScore = c.Board.ResultScore,
                     IsDeleted = c.Board.IsDeleted,
                     isAllScored = c.Board.isAllScored,
+                    DateTime = c.Board.DateTime,
+                    Order = c.Board.Order,
                     BoardEnrollments = c.Board.BoardEnrollments.Select(cf => cf.BoardEnrollmentId).ToList()
                 }));
 
@@ -243,6 +245,7 @@ namespace PMS.Mapping
                 }))
                 .ForMember(lr => lr.Groups, opt => opt.MapFrom(l => l.Groups.Select(lf => lf.GroupId)))
                 .ForMember(lr => lr.Projects, opt => opt.MapFrom(l => l.Projects.Select(lf => lf.ProjectId)))
+                .ForMember(lr => lr.ProjectDetails, opt => opt.MapFrom(l => l.Projects))
                 .ForMember(lr => lr.BoardEnrollments, opt => opt.MapFrom(l => l.BoardEnrollments.Select(lf => lf.BoardEnrollmentId)));
 
             CreateMap<Group, GroupResource>()
@@ -256,6 +259,8 @@ namespace PMS.Mapping
                     ResultScore = e.Board.ResultScore,
                     isAllScored = e.Board.isAllScored,
                     ProjectName = e.Board.Group.Project.Title,
+                    DateTime = e.Board.DateTime,
+                    Order = e.Board.Order,
                     GroupName = e.Board.Group.GroupName,
                     LecturerInformations = new LecturerInformationResource
                     {

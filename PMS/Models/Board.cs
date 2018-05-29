@@ -14,6 +14,8 @@ namespace PMS.Models
         public bool IsDeleted { get; set; }
         public bool isAllScored { get; set; }
         public Group Group { get; set; }
+        public DateTime DateTime { get; set; }
+        public int Order { get; set; }
         public ICollection<BoardEnrollment> BoardEnrollments { get; set; }
         public Board()
         {

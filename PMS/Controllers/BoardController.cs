@@ -9,6 +9,10 @@ using PMS.Resources;
 using PMS.Models;
 using PMS.Persistence.IRepository;
 using PMS.Resources.SubResources;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using OfficeOpenXml;
+
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,17 +25,19 @@ namespace PMS.Controllers
         private IBoardRepository boardRepository;
         private IGroupRepository groupRepository;
         private IBoardEnrollmentRepository boardEnrollmentRepository;
+        private IHostingEnvironment host;
         private IUnitOfWork unitOfWork;
 
         public BoardController(IMapper mapper, IUnitOfWork unitOfWork,
             IBoardRepository boardRepository, IGroupRepository groupRepository,
-            IBoardEnrollmentRepository boardEnrollmentRepository)
+            IBoardEnrollmentRepository boardEnrollmentRepository, IHostingEnvironment host)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
             this.boardRepository = boardRepository;
             this.groupRepository = groupRepository;
             this.boardEnrollmentRepository = boardEnrollmentRepository;
+            this.host = host;
         }
 
         [HttpPost]
@@ -69,6 +75,8 @@ namespace PMS.Controllers
             board = await boardRepository.GetBoard(board.BoardId);
 
             await boardRepository.AddLecturers(board, boardResource.LecturerInformations);
+            await boardRepository.UpdateOrder(board, boardResource);
+
             await unitOfWork.Complete();
 
             if (board.BoardEnrollments.Count(c => c.isMarked == true) == board.BoardEnrollments.Count)
@@ -278,6 +286,64 @@ namespace PMS.Controllers
 
             var result = mapper.Map<Board, BoardResource>(board);
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("exportexcel/{id}")]
+        public async Task ExportCustomer(int id)
+        {
+            var board = await boardRepository.GetBoard(id);
+            var fileName = board.Group.GroupName + "_result" + @".xlsx";
+
+            string rootFolder = host.WebRootPath;
+            var formFolderPath = Path.Combine(host.WebRootPath, "forms");
+            var formFilePath = Path.Combine(formFolderPath, @"result_form.xlsx");
+            // FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
+
+            var uploadFolderPath = Path.Combine(host.WebRootPath, "exports");
+            var filePath = Path.Combine(uploadFolderPath, fileName);
+
+            if (!System.IO.Directory.Exists(uploadFolderPath))
+            {
+                System.IO.Directory.CreateDirectory(uploadFolderPath);
+            }
+
+            //copy file from formfolder to export folder
+            System.IO.File.Copy(formFilePath, filePath, true);
+            FileInfo file = new FileInfo(Path.Combine(uploadFolderPath, fileName));
+
+            using (ExcelPackage package = new ExcelPackage(file))
+            {
+
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                int studentRows = board.Group.Enrollments.Count();
+                worksheet.Cells[8, 3].Value = board.Group.Project.Title;
+
+                int row = 12;
+                var studentNames = board.Group.Enrollments.Select(e => e.Student.Name).ToList();
+                foreach (var studentName in studentNames)
+                {
+                    worksheet.Cells[row, 3].Value = studentName;
+                    row++;
+                }
+
+                row = 21;
+                var lecturerInformations = board.BoardEnrollments.ToList();
+                foreach (var lecturerInformation in lecturerInformations)
+                {
+                    worksheet.Cells[row, 2].Value = lecturerInformation.Lecturer.Name;
+                    worksheet.Cells[row, 3].Value = lecturerInformation.BoardRole.BoardRoleName;
+                    worksheet.Cells[row, 4].Value = lecturerInformation.Comment;
+                    worksheet.Cells[row, 5].Value = lecturerInformation.Score;
+                    row++;
+                }
+
+                if (board.ResultScore != null)
+                {
+                    worksheet.Cells[25, 5].Value = board.ResultScore;
+                }
+                package.Save();
+            }
         }
     }
 }

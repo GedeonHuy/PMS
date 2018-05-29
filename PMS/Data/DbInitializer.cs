@@ -4,12 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace PMS.Data
 {
     public class DbInitializer
     {
-        public static void Initialize(ApplicationDbContext context)
+        private readonly ApplicationDbContext context;
+        private readonly UserManager<ApplicationUser> userManager;
+        public DbInitializer(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            this.context = context;
+            this.userManager = userManager;
+        }
+
+        public async System.Threading.Tasks.Task Initialize()
         {
             context.Database.EnsureCreated();
 
@@ -67,6 +76,25 @@ namespace PMS.Data
             }
             context.SaveChanges();
 
+            foreach (Student student in students)
+            {
+                var user = new ApplicationUser
+                {
+                    FullName = student.Name,
+                    Email = student.Email,
+                    Avatar = "/assets/images/user.png",
+                    Major = student.Major.MajorName,
+                    UserName = student.Email
+                };
+
+
+                var password = student.StudentCode.ToString(); // Password Default
+                await userManager.CreateAsync(user, password);
+                await userManager.AddToRoleAsync(user, "Student");
+
+            }
+            context.SaveChanges();
+
             var quarters = new Quarter[]
             {
                 new Quarter{QuarterName="Học Kì 1 - năm 2017-2018",QuarterStart=DateTime.Parse("2017-09-24"),QuarterEnd=DateTime.Parse("2017-12-02")},
@@ -91,6 +119,24 @@ namespace PMS.Data
             foreach (Lecturer s in lecturers)
             {
                 context.Lecturers.Add(s);
+            }
+            context.SaveChanges();
+
+            foreach (Lecturer lecturer in lecturers)
+            {
+                var user = new ApplicationUser
+                {
+                    FullName = lecturer.Name,
+                    Major = lecturer.Major.MajorName,
+                    Avatar = "/assets/images/user.png",
+                    Email = lecturer.Email,
+                    UserName = lecturer.Email
+                };
+
+                var password = "eiu@123"; // Password Default
+                await userManager.CreateAsync(user, password);
+                await userManager.AddToRoleAsync(user, "Lecturer");
+
             }
             context.SaveChanges();
 

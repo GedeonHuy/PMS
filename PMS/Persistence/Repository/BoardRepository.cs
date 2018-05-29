@@ -37,6 +37,9 @@ namespace PMS.Persistence.Repository
                 .Include(c => c.Group)
                     .ThenInclude(p => p.Project)
                 .Include(c => c.Group)
+                    .ThenInclude(p => p.Enrollments)
+                        .ThenInclude(e => e.Student)
+                .Include(c => c.Group)
                     .ThenInclude(p => p.Lecturer)
                 .SingleOrDefaultAsync(s => s.BoardId == id);
         }
@@ -58,12 +61,17 @@ namespace PMS.Persistence.Repository
 
             var query = context.Boards
                          .Where(c => c.IsDeleted == false)
-                         .Include(c => c.BoardEnrollments)
-                            .ThenInclude(l => l.Lecturer)
-                         .Include(c => c.BoardEnrollments)
-                            .ThenInclude(l => l.BoardRole)
-                         .Include(c => c.Group)
-                            .ThenInclude(p => p.Project)
+                .Include(c => c.BoardEnrollments)
+                    .ThenInclude(l => l.Lecturer)
+                 .Include(c => c.BoardEnrollments)
+                    .ThenInclude(l => l.BoardRole)
+                .Include(c => c.Group)
+                    .ThenInclude(p => p.Project)
+                .Include(c => c.Group)
+                    .ThenInclude(p => p.Enrollments)
+                        .ThenInclude(e => e.Student)
+                .Include(c => c.Group)
+                    .ThenInclude(p => p.Lecturer)
                           .AsQueryable();
 
             //sort
@@ -270,6 +278,15 @@ namespace PMS.Persistence.Repository
                     board.BoardEnrollments.Add(a);
                 }
             }
+        }
+
+        public async Task UpdateOrder(Board board, BoardResource boardResource)
+        {
+            var listBoardInDate = await context.Boards.Where(b => b.DateTime.Date == boardResource.DateTime.Date
+                && b.DateTime.Month == boardResource.DateTime.Month
+                && b.DateTime.Year == boardResource.DateTime.Year).ToListAsync();
+
+            board.Order = listBoardInDate.Count + 1;
         }
     }
 }

@@ -20,6 +20,7 @@ namespace PMS.Resources
         public ICollection<int> BoardEnrollments { get; set; }
         public ICollection<int> Groups { get; set; }
         public ICollection<int> Projects { get; set; }
+        public ICollection<ProjectResource> ProjectDetails { get; set; }
         public LecturerResource()
         {
             BoardEnrollments = new Collection<int>();
