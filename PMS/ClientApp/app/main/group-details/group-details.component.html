@@ -114,13 +114,13 @@
           <h4>
             <a *ngIf="isAdmin" class="btn btn-primary" (click)="calculateScore(group.boardId)"><i class="fa fa-calculator"></i></a>  
             Score:
-            <a *ngIf="group.resultScore">{{group.resultScore}}</a>
-            <a *ngIf="!group.resultScore">(Not yet calculated)</a>
+            <a *ngIf="group.board.resultScore">{{group.board.resultScore}}</a>
+            <a *ngIf="!group.board.resultScore">(Not yet calculated)</a>
           </h4>
           <h3>
             <a *ngIf="isAdmin" class="btn btn-warning" (click)="calculateGrade(group.boardId)"><i class="fa fa-check"></i></a>
-            <a *ngIf="group.resultGrade">{{group.resultGrade}}</a>
-            <a *ngIf="!group.resultGrade">(Not yet finalized)</a>
+            <a *ngIf="group.board.resultGrade">{{group.board.resultGrade}}</a>
+            <a *ngIf="!group.board.resultGrade">(Not yet finalized)</a>
           </h3>
         </div>
       </div>

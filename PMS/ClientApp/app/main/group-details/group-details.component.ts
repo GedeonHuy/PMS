@@ -284,14 +284,14 @@ export class GroupDetailsComponent implements OnInit {
     console.log(id);
     this._dataService.get('/api/boards/calculatescore/' + id)
       .subscribe((response: any) => {
-        this.ngOnInit();
+        window.location.reload();
       });
   }
 
   calculateGrade(id: any){
     this._dataService.get('/api/boards/calculategrade/' + id)
       .subscribe((response: any) => {
-        this.ngOnInit();
+        window.location.reload();
       });
   }
 }
