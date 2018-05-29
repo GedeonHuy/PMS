@@ -99,7 +99,12 @@ export class LecturerComponent implements OnInit {
             this._notificationService.printSuccessMessage("Add Success");
             this.isSaved = false;
             this.isLoadData = false;
-          }, error => this._dataService.handleError(error));
+          }, error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData =false;
+          });
       }
       else {
         this._dataService.put('/api/lecturers/update/' + this.lecturer.lecturerId, JSON.stringify(this.lecturer))
@@ -110,7 +115,12 @@ export class LecturerComponent implements OnInit {
             this._notificationService.printSuccessMessage("Update Success");
             this.isSaved = false;
             this.isLoadData = false;
-          }, error => this._dataService.handleError(error));
+          }, error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData =false;
+          });
       }
     }
   }
@@ -120,7 +130,6 @@ export class LecturerComponent implements OnInit {
 
     this._progressService.uploadProgress
       .subscribe(progress => {
-        console.log(progress)
         this._zone.run(() => {
           this.progress = progress;
         });

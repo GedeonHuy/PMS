@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using PMS.Resources.SubResources;
 
 namespace PMS.Resources
 {
@@ -34,6 +35,8 @@ namespace PMS.Resources
         public ICollection<int> Enrollments { get; set; }
         public ICollection<int> Tasks { get; set; }
         public ICollection<string> StudentEmails { get; set; } //Students không tồn tại trong Group.cs
+        public string LecturerEmail { get; set; }
+        public ICollection<StudentInformationResource> StudentInformations { get; set; }
 
         public GroupResource()
         {

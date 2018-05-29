@@ -164,6 +164,22 @@ namespace PMS.Controllers
         }
 
         [HttpGet]
+        [Route("getlecturerbyemail/{email}")]
+        public async Task<IActionResult> GetLecturerByEmail(string email)
+        {
+            var lecturer = await lecturerRepository.GetLecturerByEmail(email, true);
+
+            if (lecturer == null)
+            {
+                return NotFound();
+            }
+
+            var lecturerResource = mapper.Map<Lecturer, LecturerResource>(lecturer);
+
+            return Ok(lecturerResource);
+        }
+
+        [HttpGet]
         [Route("getlecturersbymajor/{id}")]
         public async Task<QueryResultResource<LecturerResource>> GetLecturersByMajor(int id)
         {

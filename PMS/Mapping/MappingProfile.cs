@@ -171,7 +171,14 @@ namespace PMS.Mapping
                     ResultScore = e.Group.ResultScore,
                     Enrollments = e.Group.Enrollments.Select(ef => ef.EnrollmentId).ToList(),
                     UploadedFiles = e.Group.UploadedFiles.Select(ef => ef.UploadedFileId).ToList(),
-                    Tasks = e.Group.Tasks.Select(ef => ef.TaskId).ToList()
+                    Tasks = e.Group.Tasks.Select(ef => ef.TaskId).ToList(),
+                    LecturerEmail = e.Group.Lecturer.Email,
+                    StudentEmails = e.Group.Enrollments.Select(sf => sf.Student.Email).ToList(),
+                    StudentInformations = e.Group.Enrollments.Select(sf => new StudentInformationResource
+                    {
+                        Email = sf.Student.Email,
+                        Name = sf.Student.Name
+                    }).ToList(),
                 }))
                 .ForMember(er => er.LecturerId, opt => opt.MapFrom(e => e.Lecturer.LecturerId))
                 .ForMember(er => er.Lecturer, opt => opt.MapFrom(e => new LecturerResource
@@ -281,6 +288,11 @@ namespace PMS.Mapping
                 }))
                 .ForMember(gr => gr.Enrollments, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.EnrollmentId)))
                 .ForMember(gr => gr.StudentEmails, opt => opt.MapFrom(g => g.Enrollments.Select(gf => gf.Student.Email)))
+                .ForMember(gr => gr.StudentInformations, opt => opt.MapFrom(g => g.Enrollments.Select(gf => new StudentInformationResource
+                {
+                    Name = gf.Student.Name,
+                    Email = gf.Student.Email
+                })))
                 .ForMember(gr => gr.UploadedFiles, opt => opt.MapFrom(g => g.UploadedFiles.Select(gf => gf.UploadedFileId)))
                 .ForMember(gr => gr.Tasks, opt => opt.MapFrom(g => g.Tasks.Select(gf => gf.TaskId)))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
@@ -307,6 +319,7 @@ namespace PMS.Mapping
                     Lecturers = g.Major.Lecturers.Select(sf => sf.LecturerId).ToList(),
                 }))
                 .ForMember(gr => gr.LecturerId, opt => opt.MapFrom(g => g.Lecturer.LecturerId))
+                .ForMember(gr => gr.LecturerEmail, opt => opt.MapFrom(g => g.Lecturer.Email))
                 .ForMember(gr => gr.Lecturer, opt => opt.MapFrom(g => new LecturerResource
                 {
                     LecturerId = g.Lecturer.LecturerId,
@@ -347,6 +360,13 @@ namespace PMS.Mapping
                     ResultGrade = s.Group.ResultGrade,
                     ResultScore = s.Group.ResultScore,
                     Enrollments = s.Group.Enrollments.Select(sf => sf.EnrollmentId).ToList(),
+                    StudentEmails = s.Group.Enrollments.Select(sf => sf.Student.Email).ToList(),
+                    LecturerEmail = s.Group.Lecturer.Email,
+                    StudentInformations = s.Group.Enrollments.Select(sf => new StudentInformationResource
+                    {
+                        Email = sf.Student.Email,
+                        Name = sf.Student.Name
+                    }).ToList(),
                     UploadedFiles = s.Group.UploadedFiles.Select(sf => sf.UploadedFileId).ToList(),
                     Tasks = s.Group.Tasks.Select(sf => sf.TaskId).ToList()
                 }));

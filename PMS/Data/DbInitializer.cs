@@ -94,18 +94,58 @@ namespace PMS.Data
             }
             context.SaveChanges();
 
+            var Tags = new Tag[]
+            {
+                new Tag{TagName="javascript",TagInfo="JavaScript (not to be confused with Java) is a high-level, dynamic, multi-paradigm, weakly-typed language used for both client-side and server-side scripting. Use this tag for questions regarding ECMAScript and its various dialects/implementations (excluding ActionScript and Google-Apps-Script)."},
+                new Tag{TagName="java",TagInfo="JavaScript (not to be confused with Java) is a high-level, dynamic, multi-paradigm, weakly-typed language used for both client-side and server-side scripting. Use this tag for questions regarding ECMAScript and its various dialects/implementations (excluding ActionScript and Google-Apps-Script)."},
+                new Tag{TagName="c#",TagInfo="C# (pronounced \"C sharp\") is a high level, object-oriented programming language that is designed for building a variety of applications that run on the .NET Framework (or .NET Core). C# is simple, powerful, type-safe, and object-oriented."},
+                new Tag{TagName="android",TagInfo="Android is Google's mobile operating system, used for programming or developing digital devices (Smartphones, Tablets, Automobiles, TVs, Wear, Glass, IoT). For topics related to Android, use Android-specific tags such as android-intent, not intent, android-activity, not activity, android-adapter, not adapter etc. For questions other than development or programming, but related to Android framework, use the link: https://android.stackexchange.com."},
+                new Tag{TagName="asp.net",TagInfo="ASP.NET is a Microsoft web application development framework that allows programmers to build dynamic web sites, web applications and web services. It is useful to use this tag in conjunction with the project type tag e.g. [asp.net-mvc], [asp.net-webforms], or [asp.net-web-api]. Do NOT use this tag for questions about ASP.NET Core - use [asp.net-core] instead."},
+                new Tag{TagName="node.js",TagInfo="Node.js is an event-based, non-blocking, asynchronous I/O framework that uses Google's V8 JavaScript engine and libuv library. It is used for developing applications that make heavy use of the ability to run JavaScript both on the client, as well as on server side and therefore benefit from the re-usability of code and the lack of context switching."},
+                new Tag{TagName="ios",TagInfo="iOS is the mobile operating system running on the Apple iPhone, iPod touch, and iPad. Use this tag [ios] for questions related to programming on the iOS platform. Use the related tags [objective-c] and [swift] for issues specific to those programming languages."},
+                new Tag{TagName="html5",TagInfo="HTML5 (Hyper Text Markup Language, version 5) is an umbrella term for recent web technologies. It is also the latest iteration of HTML. It became a W3C Recommendation in October 2014, introducing new elements and APIs."}
+            };
+            foreach (Tag t in Tags)
+            {
+                context.Tags.Add(t);
+            }
+            context.SaveChanges();
+
             var projects = new Project[]
             {
-                new Project{ProjectCode="1254",Title="Ứng dụng đặt xe trên mobile",Description="Thiết kế ứng dụng trên Android hoặc IOS giúp người dùng có thể xem đặt xe một cách tiện lợi",Type="A",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
-                new Project{ProjectCode="1317",Title="WebApplication hỗ trợ đặt món ăn",Description="Thiết kế website giúp tìm và đặt món ăn. Liên kết đến các shipper để giao hành nhanh nhất.",Type="Thực tập tốt nghiệp",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
-                new Project{ProjectCode="2001",Title="WebApplication mua bán trực tuyến",Description="Thiết kế website mua bán, tích hợp tài khoản, thanh toán online và quản lý kho hàng cho admin.",Type="B",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
-                new Project{ProjectCode="2658",Title="Ứng dụng game cờ vua trên Android",Description="Thiết kế game cờ vua sử dụng AI để phân tích các thế cờ, chiến thuật dựa trên từng người chơi.",Type="Tốt nghiệp",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
-                new Project{ProjectCode="1875",Title="Ứng dụng chia sẻ video",Description="Hỗ trợ người dùng chia sẽ video trên Facebook, Youtube và nhiều mạng xã hội khác một cách thuận tiện nhất.",Type="A",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
-                new Project{ProjectCode="3002",Title="WebApplication giải toán",Description="Thiết kế website hỗ trợ giải toán. Giải quyết các bài toán về đại số, hình học, toán cao ca61o nhanh nhất và có đưa ra giải thích cho người dùng dễ hiểu.",Type="B",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)}
+                new Project{ProjectCode="1254",Title="Ứng dụng đặt xe trên mobile",Description="Thiết kế ứng dụng trên Android hoặc IOS giúp người dùng có thể xem đặt xe một cách tiện lợi",Type="Basic Thesis",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1), Lecturer =context.Lecturers.FirstOrDefault(m=>m.LecturerId==1)},
+                new Project{ProjectCode="1317",Title="WebApplication hỗ trợ đặt món ăn",Description="Thiết kế website giúp tìm và đặt món ăn. Liên kết đến các shipper để giao hành nhanh nhất.",Type="Internship",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1), Lecturer =context.Lecturers.FirstOrDefault(m=>m.LecturerId==2)},
+                new Project{ProjectCode="2001",Title="WebApplication mua bán trực tuyến",Description="Thiết kế website mua bán, tích hợp tài khoản, thanh toán online và quản lý kho hàng cho admin.",Type="Academic Thesis",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1),Lecturer =context.Lecturers.FirstOrDefault(m=>m.LecturerId==1)},
+                new Project{ProjectCode="2658",Title="Ứng dụng game cờ vua trên Android",Description="Thiết kế game cờ vua sử dụng AI để phân tích các thế cờ, chiến thuật dựa trên từng người chơi.",Type="Final Thesis",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1),Lecturer =context.Lecturers.FirstOrDefault(m=>m.LecturerId==3)},
+                new Project{ProjectCode="1875",Title="Ứng dụng chia sẻ video",Description="Hỗ trợ người dùng chia sẽ video trên Facebook, Youtube và nhiều mạng xã hội khác một cách thuận tiện nhất.",Type="Basic Thesis",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2),Lecturer =context.Lecturers.FirstOrDefault(m=>m.LecturerId==4)},
+                new Project{ProjectCode="3002",Title="WebApplication giải toán",Description="Thiết kế website hỗ trợ giải toán. Giải quyết các bài toán về đại số, hình học, toán cao ca61o nhanh nhất và có đưa ra giải thích cho người dùng dễ hiểu.",Type="Academic Thesis",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2),Lecturer =context.Lecturers.FirstOrDefault(m=>m.LecturerId==4)}
             };
             foreach (Project s in projects)
             {
                 context.Projects.Add(s);
+            }
+            context.SaveChanges();
+
+            var tagProjects = new TagProject[]
+            {
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==1), Tag =context.Tags.FirstOrDefault(p => p.TagId==2)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==1), Tag =context.Tags.FirstOrDefault(p => p.TagId==4)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==2), Tag =context.Tags.FirstOrDefault(p => p.TagId==1)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==2), Tag =context.Tags.FirstOrDefault(p => p.TagId==6)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==2), Tag =context.Tags.FirstOrDefault(p => p.TagId==8)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==3), Tag =context.Tags.FirstOrDefault(p => p.TagId==3)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==3), Tag =context.Tags.FirstOrDefault(p => p.TagId==6)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==3), Tag =context.Tags.FirstOrDefault(p => p.TagId==8)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==4), Tag =context.Tags.FirstOrDefault(p => p.TagId==2)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==4), Tag =context.Tags.FirstOrDefault(p => p.TagId==4)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==5), Tag =context.Tags.FirstOrDefault(p => p.TagId==6)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==5), Tag =context.Tags.FirstOrDefault(p => p.TagId==7)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==6), Tag =context.Tags.FirstOrDefault(p => p.TagId==2)},
+                new TagProject{Project = context.Projects.FirstOrDefault(p => p.ProjectId==6), Tag =context.Tags.FirstOrDefault(p => p.TagId==8)},
+            };
+            foreach (TagProject t in tagProjects)
+            {
+                context.TagProjects.Add(t);
             }
             context.SaveChanges();
 
@@ -134,22 +174,6 @@ namespace PMS.Data
             }
             context.SaveChanges();
 
-            var Tags = new Tag[]
-            {
-                new Tag{TagName="javascript",TagInfo="JavaScript (not to be confused with Java) is a high-level, dynamic, multi-paradigm, weakly-typed language used for both client-side and server-side scripting. Use this tag for questions regarding ECMAScript and its various dialects/implementations (excluding ActionScript and Google-Apps-Script)."},
-                new Tag{TagName="java",TagInfo="JavaScript (not to be confused with Java) is a high-level, dynamic, multi-paradigm, weakly-typed language used for both client-side and server-side scripting. Use this tag for questions regarding ECMAScript and its various dialects/implementations (excluding ActionScript and Google-Apps-Script)."},
-                new Tag{TagName="c#",TagInfo="C# (pronounced \"C sharp\") is a high level, object-oriented programming language that is designed for building a variety of applications that run on the .NET Framework (or .NET Core). C# is simple, powerful, type-safe, and object-oriented."},
-                new Tag{TagName="android",TagInfo="Android is Google's mobile operating system, used for programming or developing digital devices (Smartphones, Tablets, Automobiles, TVs, Wear, Glass, IoT). For topics related to Android, use Android-specific tags such as android-intent, not intent, android-activity, not activity, android-adapter, not adapter etc. For questions other than development or programming, but related to Android framework, use the link: https://android.stackexchange.com."},
-                new Tag{TagName="asp.net",TagInfo="ASP.NET is a Microsoft web application development framework that allows programmers to build dynamic web sites, web applications and web services. It is useful to use this tag in conjunction with the project type tag e.g. [asp.net-mvc], [asp.net-webforms], or [asp.net-web-api]. Do NOT use this tag for questions about ASP.NET Core - use [asp.net-core] instead."},
-                new Tag{TagName="node.js",TagInfo="Node.js is an event-based, non-blocking, asynchronous I/O framework that uses Google's V8 JavaScript engine and libuv library. It is used for developing applications that make heavy use of the ability to run JavaScript both on the client, as well as on server side and therefore benefit from the re-usability of code and the lack of context switching."},
-                new Tag{TagName="ios",TagInfo="iOS is the mobile operating system running on the Apple iPhone, iPod touch, and iPad. Use this tag [ios] for questions related to programming on the iOS platform. Use the related tags [objective-c] and [swift] for issues specific to those programming languages."},
-                new Tag{TagName="html5",TagInfo="HTML5 (Hyper Text Markup Language, version 5) is an umbrella term for recent web technologies. It is also the latest iteration of HTML. It became a W3C Recommendation in October 2014, introducing new elements and APIs."}
-            };
-            foreach (Tag t in Tags)
-            {
-                context.Tags.Add(t);
-            }
-            context.SaveChanges();
             // var roles = new ApplicationRole[] {
             //     new ApplicationRole{Name="Admin", Description="Highest authority with few specifically restricted actions."},
             //     new ApplicationRole{Name="Lecturer", Description="Can create Project and upload files."},

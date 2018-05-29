@@ -26,6 +26,8 @@ namespace PMS.Persistence.Repository
             }
             return await context.UploadedFiles
                 .Include(g => g.Group)
+                    .ThenInclude(g => g.Enrollments)
+                        .ThenInclude(e => e.Student)
                 .SingleOrDefaultAsync(g => g.UploadedFileId == id);
         }
 
@@ -45,6 +47,8 @@ namespace PMS.Persistence.Repository
             return await context.UploadedFiles
                     .Where(c => c.IsDeleted == false)
                     .Include(g => g.Group)
+                        .ThenInclude(g => g.Enrollments)
+                            .ThenInclude(e => e.Student)
                     .ToListAsync();
         }
     }

@@ -10,6 +10,7 @@ namespace PMS.Persistence
     public interface ILecturerRepository
     {
         Task<Lecturer> GetLecturer(int? id, bool includeRelated = true);
+        Task<Lecturer> GetLecturerByEmail(string email, bool includeRelated = true);
         void AddLecturer(Lecturer lecturer);
         void RemoveLecturer(Lecturer lecturer);
         Task<QueryResult<Lecturer>> GetLecturers(Query filter);

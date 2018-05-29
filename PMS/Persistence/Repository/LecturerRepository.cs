@@ -30,7 +30,22 @@ namespace PMS.Persistence
                 .Include(l => l.Groups)
                 .Include(l => l.BoardEnrollments)
                 .Include(p => p.Major)
+                .Include(l => l.Projects)
                 .SingleOrDefaultAsync(s => s.LecturerId == id);
+        }
+
+        public async Task<Lecturer> GetLecturerByEmail(string email, bool includeRelated = true)
+        {
+            if (!includeRelated)
+            {
+                return await context.Lecturers.FirstOrDefaultAsync(l => l.Email.Equals(email));
+            }
+            return await context.Lecturers
+                .Include(l => l.Groups)
+                .Include(l => l.BoardEnrollments)
+                .Include(p => p.Major)
+                                .Include(l => l.Projects)
+                .SingleOrDefaultAsync(s => s.Email == email);
         }
 
         public void AddLecturer(Lecturer lecturer)
@@ -71,6 +86,7 @@ namespace PMS.Persistence
                 .Include(l => l.Groups)
                 .Include(l => l.BoardEnrollments)
                 .Include(p => p.Major)
+                .Include(l => l.Projects)
                 .AsQueryable();
 
             //filter
@@ -233,6 +249,7 @@ namespace PMS.Persistence
                 .Include(l => l.Groups)
                 .Include(l => l.BoardEnrollments)
                 .Include(p => p.Major)
+                .Include(l => l.Projects)
                 .AsQueryable();
 
             //filter
@@ -280,8 +297,8 @@ namespace PMS.Persistence
             }
         }
 
-        
-        
+
+
         public void UpdateGroups(Lecturer lecturer, LecturerResource lecturerResource)
         {
             if (lecturerResource.Groups != null && lecturerResource.Groups.Count >= 0)
