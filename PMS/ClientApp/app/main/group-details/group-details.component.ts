@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs/Observable';
+import "rxjs/add/observable/forkJoin";
+import { AuthenService } from './../../core/services/authen.service';
 
 import { Component, OnInit, group, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,7 +23,9 @@ export class GroupDetailsComponent implements OnInit {
   @ViewChild('modalUpload') public modalUpload: ModalDirective;
   @ViewChild('modalDownload') public modalDownload: ModalDirective;
   @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('modalMark') public modalMark: ModalDirective;
 
+  thisLecturerEmail: any;
   groupId: any;
   group: any;
   file: any;
@@ -35,9 +40,34 @@ export class GroupDetailsComponent implements OnInit {
   isLoadData: boolean;
   isLoadGit: boolean;
   isLoadDataCommit: boolean;
+  isLoadMark: boolean;
 
-  constructor(private route: ActivatedRoute, private _notificationService: NotificationService,
+  boardEnrollmentsOfLecturer: any[];
+
+  isAdmin: boolean;
+  isLecturer: boolean;
+  isStudent: boolean;
+
+  PAGE_SIZE = 5;
+
+  query: any = {
+    pageSize: this.PAGE_SIZE,
+    isConfirm: "Accepted"
+  };
+
+  public isLoadBoard: boolean;
+  public queryResult: any = {};
+  public isSaved: boolean;
+  public user: any;
+  public boardEnrollment: any;
+
+  constructor(private _authenService: AuthenService, private route: ActivatedRoute, private _notificationService: NotificationService,
     private router: Router, private _dataService: DataService) {
+
+    this.isAdmin = false;
+    this.isLecturer = false;
+    this.isLoadMark = true;
+    this.isSaved = false;
 
     this.isLoadData = false;
     this.isLoadGit = false;
@@ -53,6 +83,7 @@ export class GroupDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.permissionAccess();
     this.loadGroupDetails(this.groupId);
   }
 
@@ -60,7 +91,7 @@ export class GroupDetailsComponent implements OnInit {
     labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6", "Week 7", "Week 8", "Week 9", "Week 10", "Week 11", "Week 12"],
     datasets: [
       {
-        label: "Commits in 10 weeks",
+        label: "Commits in 12 weeks",
         fill: false,
         data: this.dataCommit,
         borderColor: "#66cc66",
@@ -77,7 +108,6 @@ export class GroupDetailsComponent implements OnInit {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {
         this.group = response;
-        console.log(this.group);
         this.linkGithub = response.linkGitHub.replace("https://github.com/", "");
         this.linkDowload = response.linkGitHub + "/archive/master.zip";
         this.loadGithub(this.linkGithub);
@@ -85,6 +115,24 @@ export class GroupDetailsComponent implements OnInit {
         this.loadCommitComment(this.linkGithub + "/commits");
         this.isLoadData = true;
       });
+  }
+
+  loadData() {
+    this._dataService.get("/api/groups/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+      this.queryResult = response;
+      this.isLoadData = true;
+    });
+  }
+
+  toQueryString(obj) {
+    var parts = [];
+    for (var property in obj) {
+      var value = obj[property];
+      if (value != null && value != undefined)
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+    }
+
+    return parts.join('&');
   }
 
   //Get repository
@@ -140,9 +188,9 @@ export class GroupDetailsComponent implements OnInit {
   async saveChange(form: NgForm) {
     if (form.valid) {
       var uploadedFileId = await this.AddUploadedFile();
-      console.log(uploadedFileId + "second")
+      // console.log(uploadedFileId + "second")
       var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
-      console.log(nativeElement.files[0])
+      // console.log(nativeElement.files[0])
       this._dataService.upload('/api/uploadfiles/addfile/' + uploadedFileId, nativeElement.files[0])
         .subscribe((response: any) => {
           this.modalUpload.hide();
@@ -152,6 +200,67 @@ export class GroupDetailsComponent implements OnInit {
     }
   }
 
+  saveMark(form: NgForm) {
+    if (form.valid) {
+      this.isSaved = true;
+
+      if (this.boardEnrollment.score != null)
+      { 
+        this._dataService.put('/api/boardenrollments/update/' + this.boardEnrollment.boardEnrollmentId, JSON.stringify(this.boardEnrollment))
+          .subscribe((response: any) => {
+            this.loadData();
+            this._notificationService.printSuccessMessage("Update Success");
+            form.resetForm();
+            this.isSaved = false;
+            this.isLoadData = false;
+            this.isLoadMark = false;
+            this.modalMark.hide();
+            this.ngOnInit();
+          }, error => this._dataService.handleError(error));
+      }
+    }
+  }
+
+  //Mark method
+  mark(id: any) {
+    this.modalMark.show();
+
+    Observable.forkJoin(
+      this._dataService.get('/api/boardenrollments/getboardenrollmentsbylectureremail/' + this.thisLecturerEmail)
+    ).subscribe(data => {
+      this.boardEnrollmentsOfLecturer = data[0].items;
+      this.boardEnrollment = this.boardEnrollmentsOfLecturer.find(be => be.boardID == id);
+      this.isLoadMark = true;
+    });
+  }
+
+  permissionAccess() {
+    this.user = this._authenService.getLoggedInUser();
+    if (this.user.role === "Admin") {
+      this.isAdmin = true;
+    }
+
+    if (this.user.role === "Lecturer") {
+      this.isLecturer = true;
+      this.thisLecturerEmail = this.user.email;
+    }
+
+    if (this.user.role === "Student") {
+      this.isStudent = true;
+    }
+  }
+  
+  handler(type: string, $event: ModalDirective) {
+    if (type === "onHide" || type === "onHidden") {
+      this.group = [];
+      this.isLoadBoard = false;
+    }
+  }
+
+  hidemodalMark() {
+    this.modalMark.hide();
+  }
+
   AddUploadedFile() {
     var uploadedFileId;
     return new Promise((resolve, reject) => {
@@ -159,7 +268,7 @@ export class GroupDetailsComponent implements OnInit {
       this._dataService.post('/api/uploadfiles/add', JSON.stringify(this.uploadedFile))
         .subscribe((response: any) => {
           uploadedFileId = (response.uploadedFileId);
-          console.log(uploadedFileId + "first");
+          // console.log(uploadedFileId + "first");
           this._notificationService.printSuccessMessage("Add Success");
           resolve(uploadedFileId);
         }, error => reject(this._dataService.handleError(error)));
@@ -169,5 +278,20 @@ export class GroupDetailsComponent implements OnInit {
     window.location.href = this.linkUploadedFileDowload
     this._notificationService.printSuccessMessage("Download Success");
     this.modalDownload.hide();
+  }
+
+  calculateScore(id: any){
+    console.log(id);
+    this._dataService.get('/api/boards/calculatescore/' + id)
+      .subscribe((response: any) => {
+        this.ngOnInit();
+      });
+  }
+
+  calculateGrade(id: any){
+    this._dataService.get('/api/boards/calculategrade/' + id)
+      .subscribe((response: any) => {
+        this.ngOnInit();
+      });
   }
 }

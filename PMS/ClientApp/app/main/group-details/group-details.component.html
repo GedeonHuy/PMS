@@ -50,10 +50,10 @@
       <br /><br />
       <div class="messages" *ngFor="let commit of commitDetails">
         <div class="row">
-            <div class="xs-12 col-md-8">
-                <h4 class="heading">{{commit.commit.author.name}}</h4>
-                <p class="message">{{commit.commit.message}}</p>
-              </div>
+          <div class="xs-12 col-md-8">
+            <h4 class="heading">{{commit.commit.author.name}}</h4>
+            <p class="message">{{commit.commit.message}}</p>
+          </div>
           <div class="xs-6 col-md-4">
             <h3 class="date text-info">{{commit.commit.author.date | date}}</h3>
           </div>
@@ -103,9 +103,81 @@
 
         <div class="text-center mtop20">
           <a class="btn btn-sm btn-primary" (click)="showUploadModal()"> Add files</a>
-          <a href="{{this.linkDowload}}" class="btn btn-sm btn-warning">Dowload Project in Github</a>
+          <a href="{{this.linkDowload}}" class="btn btn-sm btn-warning">Download Project in Github</a>
+          <a *ngIf="isAdmin" class="btn btn-primary" (click)="assignBoard(group.groupId)"> Assign board</a>
+          <a *ngIf="isLecturer" class="btn btn-warning" (click)="mark(group.boardId)"> Mark this group</a>
+        </div>
+
+        <br />
+        <h2>Grade</h2>
+        <div class="panel-body">
+          <h4>
+            <a *ngIf="isAdmin" class="btn btn-primary" (click)="calculateScore(group.boardId)"><i class="fa fa-calculator"></i></a>  
+            Score:
+            <a *ngIf="group.resultScore">{{group.resultScore}}</a>
+            <a *ngIf="!group.resultScore">(Not yet calculated)</a>
+          </h4>
+          <h3>
+            <a *ngIf="isAdmin" class="btn btn-warning" (click)="calculateGrade(group.boardId)"><i class="fa fa-check"></i></a>
+            <a *ngIf="group.resultGrade">{{group.resultGrade}}</a>
+            <a *ngIf="!group.resultGrade">(Not yet finalized)</a>
+          </h3>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!--Modal Mark-->
+<div bsModal #modalMark="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)"
+(onHidden)="handler('onHidden', $event)">
+
+<div class="modal-dialog modal-lg">
+  <div class="modal-content" style="background: pink">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Mark This Group</h4>
+      <span *ngIf="!isLoadMark" class="fa fa-refresh fa-spin"></span>
+      <button type="button" class="close pull-right" (click)="hidemodalMark()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal form-label-left" novalidate #markForm="ngForm" (ngSubmit)="saveMark(markForm)"
+        *ngIf="boardEnrollment && isLoadMark">
+
+        <input type="hidden" [(ngModel)]="boardEnrollment.boardEnrollmentId" name="boardEnrollment.boardEnrollmentId" />
+        <input type="hidden" [(ngModel)]="boardEnrollment.percentage" name="boardEnrollment.percentage" />
+        <input type="hidden" [(ngModel)]="boardEnrollment.lecturerId" name="boardEnrollment.lecturerId" />
+        <input type="hidden" [(ngModel)]="boardEnrollment.boardID" name="boardEnrollment.boardID" />
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Mark</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input class="form-control" [(ngModel)]="boardEnrollment.score" name="boardEnrollment.score" required #mark="ngModel"/>
+            <small [hidden]="mark.valid || (mark.pristine && !markForm.submitted)" class="text-danger">
+              Please specify the score </small>
+          </div>  
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Comment</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="text" cols="40" rows="5" class="form-control" type="multitext" [(ngModel)]="boardEnrollment.comment" name="boardEnrollment.comment" required #comment="ngModel"/>
+            <small [hidden]="comment.valid || (comment.pristine && !comment.submitted)" class="text-danger">
+                Please specify the comment </small>
+          </div>  
+        </div>
+
+        <div class="form-group">
+          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+            <button type="button" (click)="hidemodalMark()" class="btn btn-primary">Cancel</button>
+            <button type="submit" class="btn btn-success" [disabled]="!markForm.valid || isSaved">Save</button>
+            <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 </div>

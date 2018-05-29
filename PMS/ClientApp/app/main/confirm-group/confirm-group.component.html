@@ -158,7 +158,6 @@
           </div>
           <div class="ln_solid"></div>
 
-          
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="hidemodalAddEdit()" class="btn btn-primary">Cancel</button>
@@ -190,12 +189,6 @@ aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onSh
       <form class="form-horizontal form-label-left" novalidate #markForm="ngForm" (ngSubmit)="saveMark(markForm)"
         *ngIf="boardEnrollment && isLoadMark">
 
-        <!-- boardEnrollmentId: this.boardEnrollment.boardEnrollmentId,
-          score: this.boardEnrollment.score,
-          percentage: this.boardEnrollment.percentage,
-          lecturerId: this.boardEnrollment.lecturerId,
-          boardID: this.boardEnrollment.boardId -->
-
         <input type="hidden" [(ngModel)]="boardEnrollment.boardEnrollmentId" name="boardEnrollment.boardEnrollmentId" />
         <input type="hidden" [(ngModel)]="boardEnrollment.percentage" name="boardEnrollment.percentage" />
         <input type="hidden" [(ngModel)]="boardEnrollment.lecturerId" name="boardEnrollment.lecturerId" />
@@ -205,7 +198,7 @@ aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onSh
           <label class="control-label col-md-3 col-sm-3 col-xs-12">Mark</label>
           <div class="col-md-9 col-sm-9 col-xs-12">
             <input class="form-control" [(ngModel)]="boardEnrollment.score" name="boardEnrollment.score" required #mark="ngModel"/>
-            <small [hidden]="markReviewer.valid || (mark.pristine && !markForm.submitted)" class="text-danger">
+            <small [hidden]="mark.valid || (mark.pristine && !markForm.submitted)" class="text-danger">
               Please specify the score </small>
           </div>  
         </div>
@@ -214,7 +207,7 @@ aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onSh
           <label class="control-label col-md-3 col-sm-3 col-xs-12">Comment</label>
           <div class="col-md-9 col-sm-9 col-xs-12">
             <input class="form-control" [(ngModel)]="boardEnrollment.comment" name="boardEnrollment.comment" required #comment="ngModel"/>
-            <small [hidden]="commentReviewer.valid || (comment.pristine && !commentReviewer.submitted)" class="text-danger">
+            <small [hidden]="comment.valid || (comment.pristine && !comment.submitted)" class="text-danger">
                 Please specify the comment </small>
           </div>  
         </div>

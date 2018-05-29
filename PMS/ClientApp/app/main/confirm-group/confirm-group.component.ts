@@ -176,8 +176,6 @@ export class GroupConfirmComponent implements OnInit {
       this.boardEnrollment = this.boardEnrollmentsOfLecturer.find(be => be.boardID == id);
       this.isLoadMark = true;
     });
-
-    
   }
 
   handler(type: string, $event: ModalDirective) {
