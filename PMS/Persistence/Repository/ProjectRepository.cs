@@ -30,6 +30,7 @@ namespace PMS.Persistence
                 .Include(p => p.TagProjects)
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
+                .Include(p => p.Lecturer)
                 .SingleOrDefaultAsync(s => s.ProjectId == id);
         }
 
@@ -54,6 +55,7 @@ namespace PMS.Persistence
                 .Include(p => p.TagProjects)
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
+                .Include(p => p.Lecturer)
                 .AsQueryable();
 
             //filter
@@ -151,6 +153,7 @@ namespace PMS.Persistence
                 .Include(p => p.TagProjects)
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
+                .Include(p => p.Lecturer)
                 .Where(c => c.IsDeleted == false && c.Major.MajorId == majorId)
                 .AsQueryable();
 
