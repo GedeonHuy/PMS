@@ -14,7 +14,7 @@
               <thead>
                 <tr>
                   <th>Id</th>
-                  <th >Students</th>
+                  <th>Students</th>
                   <th>Project</th>
                   <th>Supervisor</th>
                   <th>Status</th>
@@ -60,7 +60,7 @@
   (onHidden)="handler('onHidden', $event)">
 
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background: pink">
+    <div class="modal-content" >
       <div class="modal-header">
         <h4 class="modal-title pull-left">Assign Board</h4>
         <span *ngIf="!isLoadBoard" class="fa fa-refresh fa-spin"></span>
@@ -179,7 +179,7 @@ aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onSh
 (onHidden)="handler('onHidden', $event)">
 
 <div class="modal-dialog modal-lg">
-  <div class="modal-content" style="background: pink">
+  <div class="modal-content" >
     <div class="modal-header">
       <h4 class="modal-title pull-left">Mark This Group</h4>
       <span *ngIf="!isLoadMark" class="fa fa-refresh fa-spin"></span>

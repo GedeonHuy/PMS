@@ -9,6 +9,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AuthenService } from './../../core/services/authen.service';
 import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import { NgForm } from '@angular/forms';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-group',
@@ -37,6 +38,8 @@ export class GroupComponent implements OnInit {
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
+
+  isLoading : boolean;
 
   projects: any[];
   lecturers: any[];
@@ -68,14 +71,13 @@ export class GroupComponent implements OnInit {
     Observable.forkJoin([
       this._dataService.get("/api/quarters/getall"),
       this._dataService.get("/api/majors/getall"),
-      this._dataService.get("/api/projects/getall"),
       this._dataService.get("/api/lecturers/getall"),
 
     ]).subscribe(data => {
       this.quarters = data[0].items,
         this.majors = data[1].items,
-        this.projects = data[2].items
-      this.lecturers = data[3].items
+      this.lecturers = data[2].items
+      this.isLoading = true;
     });
   }
 
@@ -101,15 +103,13 @@ export class GroupComponent implements OnInit {
   showAddModal() {
     this.isExist = true;
     this.group = {};
-    
     this.loadStudents();
     this._dataService.get('/api/lecturers/getlecturerbyemail/' + this.user.email)
       .subscribe((response: any) => {
         this.group.lecturerId = response.lecturerId;
         this.group.lecturerEmail = this.user.email;
         this.group.majorId = response.majorId;
-
-        console.log(this.projects);
+        this.projects = response.projectDetails;
 
         this.isLoadGroup = true;
       });
@@ -120,6 +120,7 @@ export class GroupComponent implements OnInit {
   handler(type: string, $event: ModalDirective) {
     if (type === "onHide" || type === "onHidden") {
       this.group = [];
+      this.projects = [];
       this.students = [];
       this.isSaved = false;
       this.isExist = false;
@@ -134,7 +135,12 @@ export class GroupComponent implements OnInit {
   showEditModal(id: any) {
     this.loadGroup(id);
     this.loadStudents();
-    this.isLoadLecturer = true;
+    this._dataService.get('/api/lecturers/getlecturerbyemail/' + this.user.email)
+    .subscribe((response: any) => {
+      this.projects = response.projectDetails;
+      this.isLoadGroup = true;
+    });
+
     this.isLoadProject = true;
     this.modalAddEdit.show();
   }
@@ -162,75 +168,68 @@ export class GroupComponent implements OnInit {
   saveChange(form: NgForm) {
     if (form.valid) {
       this.isSaved = true;
-      this.group.studentEmails = [];
+      if (this.group.groupId == undefined) {
 
-      for (let s of this.students) {
-        this.group.studentEmails.push(s.split(' - ')[1]);
+        this.group.studentEmails = [];
+
+        for (let s of this.students) {
+          this.group.studentEmails.push(s.split(' - ')[1]);
+        }
+        this._dataService.post('/api/groups/add', JSON.stringify(this.group))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            this._notificationService.printSuccessMessage("Add Success");
+            form.resetForm();
+
+            this.isSaved = false;
+            this.isLoadData = false;
+            this.isExist = false;
+
+          }, error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData = false;
+            this.isExist = false;
+          });
       }
+      else {
 
-      console.log(this.group);
-      // if (this.group.groupId == undefined) {
+        this.group.studentEmails = [];
 
-      //   this.group.studentEmails = [];
+        for (let s of this.students) {
+          this.group.studentEmails.push(s.split(' - ')[1]);
+        }
 
-      //   for (let s of this.students) {
-      //     this.group.studentEmails.push(s.split(' - ')[1]);
-      //   }
-      //   this._dataService.post('/api/groups/add', JSON.stringify(this.group))
-      //     .subscribe((response: any) => {
-      //       this.loadData();
-      //       this.modalAddEdit.hide();
-      //       this._notificationService.printSuccessMessage("Add Success");
-      //       form.resetForm();
+        this.groupJson = {
+          groupName: this.group.groupName,
+          isConfirm: this.group.isConfirm,
+          projectId: this.group.projectId,
+          lecturerEmail: this.user.email,
+          lecturerId: this.group.lecturerId,
+          majorId: this.group.majorId,
+          quarterId: this.group.quarterId,
+          studentEmails: this.group.studentEmails
+        };
+        this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
+          .subscribe((response: any) => {
+            this.loadData();
+            this.modalAddEdit.hide();
+            this._notificationService.printSuccessMessage("Update Success");
+            form.resetForm();
 
-      //       this.isSaved = false;
-      //       this.isLoadData = false;
-      //       this.isExist = false;
-
-      //     }, error => {
-      //       form.resetForm();
-      //       this._dataService.handleError(error)
-      //       this.isSaved = false;
-      //       this.isLoadData = false;
-      //       this.isExist = false;
-      //     });
-      // }
-      // else {
-
-      //   this.group.studentEmails = [];
-
-      //   for (let s of this.students) {
-      //     this.group.studentEmails.push(s.split(' - ')[1]);
-      //   }
-
-      //   this.groupJson = {
-      //     groupName: this.group.groupName,
-      //     isConfirm: this.group.isConfirm,
-      //     projectId: this.group.projectId,
-      //     lecturerEmail: this.user.email,
-      //     lecturerId: this.group.lecturerId,
-      //     majorId: this.group.majorId,
-      //     quarterId: this.group.quarterId,
-      //     studentEmails: this.group.studentEmails
-      //   };
-      //   this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
-      //     .subscribe((response: any) => {
-      //       this.loadData();
-      //       this.modalAddEdit.hide();
-      //       this._notificationService.printSuccessMessage("Update Success");
-      //       form.resetForm();
-
-      //       this.isSaved = false;
-      //       this.isLoadData = false;
-      //       this.isExist = false;
-      //     }, error => {
-      //       form.resetForm();
-      //       this._dataService.handleError(error)
-      //       this.isSaved = false;
-      //       this.isLoadData = false;
-      //       this.isExist = false;
-      //     });
-      // }
+            this.isSaved = false;
+            this.isLoadData = false;
+            this.isExist = false;
+          }, error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData = false;
+            this.isExist = false;
+          });
+      }
     }
   }
 

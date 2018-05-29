@@ -1,5 +1,4 @@
-
-
+import { AuthenService } from './../../core/services/authen.service';
 import { SystemConstants } from './../../core/common/system.constants';
 import { ProjectTypesConstants } from './../../core/common/projectType.constants';
 import { Response } from '@angular/http';
@@ -32,8 +31,12 @@ export class ProjectComponent implements OnInit {
   isExist: boolean;
   public tags: string[] = [];
   public allTags: IMultiSelectOption[] = [];
-
+  public user : any;
   public queryResult: any = {};
+
+
+  isAdmin: boolean;
+  isLecturer: boolean;
 
   query: any = {
     pageSize: SystemConstants.PAGE_SIZE
@@ -42,18 +45,32 @@ export class ProjectComponent implements OnInit {
   public types: any[] = [ProjectTypesConstants.A, ProjectTypesConstants.B, ProjectTypesConstants.C, ProjectTypesConstants.D];
 
 
-  constructor(private _dataService: DataService, private _notificationService: NotificationService,
+  constructor(private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService,
     private _progressService: ProgressService, private _zone: NgZone) {
     this.isSaved = false;
     this.isLoadData = false;
   }
   ngOnInit() {
     this.loadData();
+    this.permissionAccess();
+  }
+
+
+  permissionAccess() {
+    this.user = this._authenService.getLoggedInUser();
+    if (this.user.role === "Admin") {
+      this.isAdmin = true;
+    }
+
+    if (this.user.role === "Lecturer") {
+      this.isLecturer = true;
+    }
   }
 
   loadData() {
     this._dataService.get("/api/projects/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
+      console.log(response);
       this.isLoadData = true;
     });
   }
@@ -64,7 +81,13 @@ export class ProjectComponent implements OnInit {
 
     this.loadTags();
     this.project = {};
-    this.isLoadProject = true;
+
+    this._dataService.get('/api/lecturers/getlecturerbyemail/' + this.user.email)
+    .subscribe((response: any) => {
+      console.log(response);
+      this.project.majorId = response.majorId;
+      this.project.lecturerId = response.lecturerId;
+    });
 
     this._dataService.get("/api/majors/getall").subscribe((response: any) => {
       this.majors = response.items;
@@ -104,6 +127,9 @@ export class ProjectComponent implements OnInit {
   saveChange(form: NgForm) {
     if (form.valid) {
       this.isSaved = true;
+
+      console.log(this.project);
+
       if (this.project.projectId == undefined) {
         this.project.tags = this.tags;
         this._dataService.post('/api/projects/add', JSON.stringify(this.project))
@@ -150,7 +176,6 @@ export class ProjectComponent implements OnInit {
 
     this._progressService.uploadProgress
       .subscribe(progress => {
-        console.log(progress)
         this._zone.run(() => {
           this.progress = progress;
         });
@@ -199,6 +224,8 @@ export class ProjectComponent implements OnInit {
     if (type === "onHide" || type === "onHidden") {
       this.project = [];
       this.tags = [];
+      this.allTags = [];
+
       this.isLoadProject = false;
       this.isExist = false;
       this.isLoadTag = false;
@@ -207,6 +234,7 @@ export class ProjectComponent implements OnInit {
 
   loadTags() {
     this._dataService.get("/api/tags/getall").subscribe((response: any) => {
+      this.allTags = [];
       for (let tag of response.items) {
         this.allTags.push({ id: tag.tagName, name: tag.tagName });
       }

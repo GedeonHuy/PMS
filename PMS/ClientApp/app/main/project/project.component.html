@@ -20,6 +20,7 @@
                 <th>Title</th>
                 <th>Type</th>
                 <th>Description</th>
+                <th>Tags</th>
                 <th></th>
               </tr>
             </thead>
@@ -28,15 +29,13 @@
                 <td>{{rowIndex+1}}</td>
                 <td>{{project.title}}</td>
                 <td>{{project.type}}</td>
-                <td>
-                  <div class="row">{{project.description}}</div>
-                  <div class="row">
-                    <ul>
-                      <li style="display: inline" *ngFor="let tag of project.tags">
-                        <a [routerLink]="['/main/tag-details/', tag]" class="tag">{{tag}}</a>
-                      </li>
-                    </ul>
-                  </div>
+                <td>{{project.description}}</td>
+                <td>       
+                  <ul>
+                    <li style="display: inline" *ngFor="let tag of project.tags">
+                      <a [routerLink]="['/main/tag-details/', tag]" class="tag">{{tag}}</a>
+                    </li>
+                  </ul>
                 </td>
                 <td>
                   <button class="btn btn-primary" (click)="showEditModal(project.projectId)">
@@ -61,7 +60,7 @@
   aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)"
   (onHidden)="handler('onHidden', $event)">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background: pink">
+    <div class="modal-content" style="background: #1E90FF">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Add/Edit project</h4>
         <span *ngIf="!isLoadProject && !isLoadTag" class="fa fa-refresh fa-spin"></span>
@@ -95,13 +94,25 @@
               </small>
             </div>
           </div>
-          <div class="ln_solid"></div>
-          <div class="form-group">
+          <div class="ln_solid" *ngIf="isAdmin"></div>
+          <div class="form-group" *ngIf="isAdmin">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Major</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <select class="form-control" [(ngModel)]="project.majorId" name="majorId" required #major="ngModel">
                 <option value=""></option>
                 <option *ngFor="let m of majors" value="{{m.majorId}}">{{ m.majorName }}</option>
+              </select>
+              <small [hidden]="major.valid || (major.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the major </small>
+            </div>
+          </div>
+
+          <div class="ln_solid"*ngIf="isAdmin"></div>
+          <div class="form-group" *ngIf="isAdmin">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="project.lecturerId" name="lecturerId" required #lecturer="ngModel">
+                <option value=""></option>
+                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="major.valid || (major.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the major </small>
             </div>
@@ -128,12 +139,6 @@
 
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
-
-            <!-- <div class="col-md-9 col-sm-9 col-xs-12">
-              <ul *ngIf="isExist">
-                <li *ngFor="let tag of tags">{{tag}}</li>
-              </ul>
-            </div> -->
             <div class="col-md-9 col-sm-9 col-xs-12">
               <ul *ngIf="isExist">
                 <li *ngFor="let tag of tags">

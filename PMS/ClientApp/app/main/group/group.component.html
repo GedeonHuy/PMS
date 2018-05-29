@@ -1,7 +1,7 @@
 <div class="widgets">
-  <img *ngIf="!isLoadData" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
+  <img *ngIf="!isLoadData && !isLoading" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
   />
-  <div class="row" *ngIf="isLoadData">
+  <div class="row" *ngIf="isLoadData && isLoading">
     <div class="col-lg-12 col-md-12">
       <button class="btn btn-success" style="float: right;" (click)="showAddModal()" translate>Add</button>
     </div>
@@ -16,7 +16,7 @@
             <thead>
               <tr>
                 <th>Id</th>
-                <th>Name</th>
+                <th>Students</th>
                 <th>Project</th>
                 <th>Supervisor</th>
                 <th>Status</th>
@@ -26,7 +26,11 @@
             <tbody>
               <tr *ngFor="let group of queryResult.items; let rowIndex = index">
                 <td>{{rowIndex+1}}</td>
-                <td>{{group.groupName}}</td>
+                <td >
+                  <ul *ngFor="let student of group.studentInformations">
+                      {{ student.name }}
+                  </ul>
+                </td>
                 <td>{{group.project.title}}</td>
                 <td>{{group.lecturer.name}}</td>
                 <td>{{group.isConfirm}}</td>
@@ -53,7 +57,7 @@
   (onHidden)="handler('onHidden', $event)">
 
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background: pink">
+    <div class="modal-content" style="background: #1E90FF">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Add/Edit group</h4>
         <span *ngIf="!isLoadGroup && !isLoadStudent" class="fa fa-refresh fa-spin"></span>      
