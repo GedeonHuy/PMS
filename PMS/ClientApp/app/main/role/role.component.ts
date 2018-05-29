@@ -74,7 +74,12 @@ export class RoleComponent implements OnInit {
             this.isSaved = false;
             this.isLoadData = false;
             this._notificationService.printSuccessMessage("Add Success");
-          }, error => this._dataService.handleError(error));
+          }, error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData =false;
+          });
       }
       else {
         this._dataService.put('/api/roles/update/' + this.role.id, JSON.stringify(this.role))
@@ -85,7 +90,12 @@ export class RoleComponent implements OnInit {
             this.isSaved = false;
             this.isLoadData = false;
             this._notificationService.printSuccessMessage("Update Success");
-          }, error => this._dataService.handleError(error));
+          },error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData =false;
+          });
       }
     }
   }

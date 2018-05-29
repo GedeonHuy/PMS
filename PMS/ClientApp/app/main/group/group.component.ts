@@ -108,6 +108,9 @@ export class GroupComponent implements OnInit {
         this.group.lecturerId = response.lecturerId;
         this.group.lecturerEmail = this.user.email;
         this.group.majorId = response.majorId;
+
+        console.log(this.projects);
+
         this.isLoadGroup = true;
       });
     this.modalAddEdit.show();
@@ -118,6 +121,7 @@ export class GroupComponent implements OnInit {
     if (type === "onHide" || type === "onHidden") {
       this.group = [];
       this.students = [];
+      this.isSaved = false;
       this.isExist = false;
       this.isLoadStudent = false;
       this.isLoadGroup = false;
@@ -158,57 +162,75 @@ export class GroupComponent implements OnInit {
   saveChange(form: NgForm) {
     if (form.valid) {
       this.isSaved = true;
+      this.group.studentEmails = [];
 
-      if (this.group.groupId == undefined) {
-
-        this.group.studentEmails = [];
-
-        for (let s of this.students) {
-          this.group.studentEmails.push(s.split(' - ')[1]);
-        }
-        this._dataService.post('/api/groups/add', JSON.stringify(this.group))
-          .subscribe((response: any) => {
-            this.loadData();
-            this.modalAddEdit.hide();
-            this._notificationService.printSuccessMessage("Add Success");
-            form.resetForm();
-
-            this.isSaved = false;
-            this.isLoadData = false;
-            this.isExist = false;
-
-          }, error => this._dataService.handleError(error));
+      for (let s of this.students) {
+        this.group.studentEmails.push(s.split(' - ')[1]);
       }
-      else {
 
-        this.group.studentEmails = [];
+      console.log(this.group);
+      // if (this.group.groupId == undefined) {
 
-        for (let s of this.students) {
-          this.group.studentEmails.push(s.split(' - ')[1]);
-        }
+      //   this.group.studentEmails = [];
 
-        this.groupJson = {
-          groupName: this.group.groupName,
-          isConfirm: this.group.isConfirm,
-          projectId: this.group.projectId,
-          lecturerEmail: this.user.email,
-          lecturerId: this.group.lecturerId,
-          majorId: this.group.majorId,
-          quarterId: this.group.quarterId,
-          studentEmails: this.group.studentEmails
-        };
-        this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
-          .subscribe((response: any) => {
-            this.loadData();
-            this.modalAddEdit.hide();
-            this._notificationService.printSuccessMessage("Update Success");
-            form.resetForm();
+      //   for (let s of this.students) {
+      //     this.group.studentEmails.push(s.split(' - ')[1]);
+      //   }
+      //   this._dataService.post('/api/groups/add', JSON.stringify(this.group))
+      //     .subscribe((response: any) => {
+      //       this.loadData();
+      //       this.modalAddEdit.hide();
+      //       this._notificationService.printSuccessMessage("Add Success");
+      //       form.resetForm();
 
-            this.isSaved = false;
-            this.isLoadData = false;
-            this.isExist = false;
-          }, error => this._dataService.handleError(error));
-      }
+      //       this.isSaved = false;
+      //       this.isLoadData = false;
+      //       this.isExist = false;
+
+      //     }, error => {
+      //       form.resetForm();
+      //       this._dataService.handleError(error)
+      //       this.isSaved = false;
+      //       this.isLoadData = false;
+      //       this.isExist = false;
+      //     });
+      // }
+      // else {
+
+      //   this.group.studentEmails = [];
+
+      //   for (let s of this.students) {
+      //     this.group.studentEmails.push(s.split(' - ')[1]);
+      //   }
+
+      //   this.groupJson = {
+      //     groupName: this.group.groupName,
+      //     isConfirm: this.group.isConfirm,
+      //     projectId: this.group.projectId,
+      //     lecturerEmail: this.user.email,
+      //     lecturerId: this.group.lecturerId,
+      //     majorId: this.group.majorId,
+      //     quarterId: this.group.quarterId,
+      //     studentEmails: this.group.studentEmails
+      //   };
+      //   this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
+      //     .subscribe((response: any) => {
+      //       this.loadData();
+      //       this.modalAddEdit.hide();
+      //       this._notificationService.printSuccessMessage("Update Success");
+      //       form.resetForm();
+
+      //       this.isSaved = false;
+      //       this.isLoadData = false;
+      //       this.isExist = false;
+      //     }, error => {
+      //       form.resetForm();
+      //       this._dataService.handleError(error)
+      //       this.isSaved = false;
+      //       this.isLoadData = false;
+      //       this.isExist = false;
+      //     });
+      // }
     }
   }
 

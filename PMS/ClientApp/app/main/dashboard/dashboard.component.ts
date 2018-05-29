@@ -45,6 +45,9 @@ export class Dashboard {
 
   public types: any[] = [ProjectTypesConstants.A, ProjectTypesConstants.B, ProjectTypesConstants.C, ProjectTypesConstants.D];
 
+  public groupsAccepted: any = {};
+  public groups: any = {};
+
   ngOnInit() {
     Observable.forkJoin([
       this._dataService.get("/api/quarters/getall"),
@@ -69,12 +72,29 @@ export class Dashboard {
     }
 
     if (this.user.role === "Lecturer") {
-      //this.loadLecturerData();
+      this.loadLecturerData();
     }
   }
 
 
+  loadLecturerData() {
+    this.loadLecturerGroup();
+    this.loadLecturerGroupAccepted();
+  }
 
+  loadLecturerGroup() {
+    this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Pending&pageSize=3").subscribe((response: any) => {
+      this.groups = response;
+      this.isLoadData = true;      
+    });
+  }
+
+  loadLecturerGroupAccepted() {
+    this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Accepted&pageSize=3").subscribe((response: any) => {
+      this.groupsAccepted = response;
+      this.isLoadData = true;      
+    });
+  }
 
 
   permissionAccess() {

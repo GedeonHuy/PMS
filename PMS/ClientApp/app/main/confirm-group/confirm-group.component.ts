@@ -223,7 +223,12 @@ export class GroupConfirmComponent implements OnInit {
 
             this.isSaved = false;
             this.isLoadData =false;
-          }, error => this._dataService.handleError(error));
+          }, error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData =false;
+          });
       }
     }
   }

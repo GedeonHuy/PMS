@@ -88,8 +88,12 @@ export class TagComponent implements OnInit {
               this._notificationService.printSuccessMessage("Add Success");
               this.isSaved = false;
             },
-            error => this._dataService.handleError(error)
-          );
+            error => {
+              form.resetForm();
+              this._dataService.handleError(error)
+              this.isSaved = false;
+              this.isLoadData =false;
+            });
       } else {
         this._dataService
           .put("/api/tags/update/" + this.tag.id, JSON.stringify(this.tag))
@@ -101,8 +105,12 @@ export class TagComponent implements OnInit {
               this._notificationService.printSuccessMessage("Update Success");
               this.isSaved = false;
             },
-            error => this._dataService.handleError(error)
-          );
+            error => {
+              form.resetForm();
+              this._dataService.handleError(error)
+              this.isSaved = false;
+              this.isLoadData =false;
+            });
       }
     }
   }

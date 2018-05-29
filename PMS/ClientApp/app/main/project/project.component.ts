@@ -116,7 +116,12 @@ export class ProjectComponent implements OnInit {
             this.isLoadData = false;
             this.isExist = false;
 
-          }, error => this._dataService.handleError(error));
+          }, error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData =false;
+          });
       }
       else {
         this.project.tags = this.tags;
@@ -130,7 +135,12 @@ export class ProjectComponent implements OnInit {
             this.isLoadData = false;
             this.isExist = false;
 
-          }, error => this._dataService.handleError(error));
+          }, error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData =false;
+          });
       }
     }
   }

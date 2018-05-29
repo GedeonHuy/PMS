@@ -84,7 +84,12 @@ export class MajorComponent implements OnInit {
 
             this.isSaved = false;
             this.isLoadData = false;
-          }, error => this._dataService.handleError(error));
+          }, error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData =false;
+          });
       }
       else {
         this._dataService.put('/api/majors/update/' + this.major.majorId, JSON.stringify(this.major))
@@ -96,7 +101,12 @@ export class MajorComponent implements OnInit {
 
             this.isSaved = false;
             this.isLoadData = false;
-          }, error => this._dataService.handleError(error));
+          }, error => {
+            form.resetForm();
+            this._dataService.handleError(error)
+            this.isSaved = false;
+            this.isLoadData =false;
+          });
       }
     }
   }

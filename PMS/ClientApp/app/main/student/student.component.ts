@@ -106,8 +106,12 @@ export class StudentComponent implements OnInit {
               this._notificationService.printSuccessMessage("Add Success");
               this.isSaved = false;
             },
-            error => this._dataService.handleError(error)
-          );
+            error => {
+              form.resetForm();
+              this._dataService.handleError(error)
+              this.isSaved = false;
+              this.isLoadData =false;
+            });
       } else {
         this._dataService
           .put(
@@ -122,8 +126,12 @@ export class StudentComponent implements OnInit {
               this._notificationService.printSuccessMessage("Update Success");
               this.isSaved = false;
             },
-            error => this._dataService.handleError(error)
-          );
+            error => {
+              form.resetForm();
+              this._dataService.handleError(error)
+              this.isSaved = false;
+              this.isLoadData =false;
+            });
       }
     }
   }
