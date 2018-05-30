@@ -31,7 +31,15 @@ namespace PMS.Extensions
         {
             if (queryObj.Page == null || queryObj.Page == 0)
             {
-                return query;
+                if (queryObj.PageSize <= 0)
+                {
+                    return query;
+                }
+                else
+                {
+                    return query.Take(queryObj.PageSize);
+                }
+
             }
             else
             {
