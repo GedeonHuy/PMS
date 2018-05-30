@@ -6,7 +6,7 @@ namespace PMS.Persistence.IRepository
 {
     public interface IRoleRepository
     {
-        Task<IEnumerable<ApplicationRole>> GetRoles();
+        Task<QueryResult<ApplicationRole>> GetRoles(Query queryObj);
         void AddRole(ApplicationRole appRole);
         void RemoveRole(ApplicationRole appRole);
         Task<ApplicationRole> GetRole(string id);

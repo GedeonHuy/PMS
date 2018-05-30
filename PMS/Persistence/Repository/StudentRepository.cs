@@ -84,6 +84,16 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Year.Equals(queryObj.Year));
             }
 
+            if (queryObj.Name != null)
+            {
+                query = query.Where(q => q.Name.Equals(queryObj.Name));
+            }
+
+            if (queryObj.StudentCode != null)
+            {
+                query = query.Where(q => q.StudentCode.Equals(queryObj.StudentCode));
+            }
+
 
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Student, object>>>()
@@ -98,12 +108,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
-            result.TotalItems = await query.CountAsync();
-
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
 
             return result;
         }
@@ -161,12 +171,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
-            result.TotalItems = await query.CountAsync();
-
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
 
             return result;
         }
@@ -222,12 +232,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
-            result.TotalItems = await query.CountAsync();
-
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
 
             return result;
         }

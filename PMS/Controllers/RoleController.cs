@@ -37,10 +37,12 @@ namespace PMS.Controllers
         }
 
         [Route("getall")]
-        public async Task<IActionResult> GetAll()
+        public async Task<QueryResultResource<RoleResource>> GetAll(QueryResource queryResource)
         {
-            var roles = await repository.GetRoles();
-            return Ok(roles);
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await repository.GetRoles(query);
+
+            return mapper.Map<QueryResult<ApplicationRole>, QueryResultResource<RoleResource>>(queryResult);
         }
 
         [HttpPost]
@@ -107,62 +109,62 @@ namespace PMS.Controllers
             {
                 throw ex;
             }
-        
-    }
 
-    [HttpGet]
-    [Route("getrole/{id}")]
-    public async Task<IActionResult> GetRole(string id)
-    {
-        var role = await repository.GetRole(id);
-
-        if (role == null)
-        {
-            return NotFound();
         }
 
-        var roleResource = mapper.Map<ApplicationRole, RoleResource>(role);
-        return Ok(roleResource);
-    }
-
-
-
-    [HttpPut]
-    [Route("update/{id}")]
-    public async Task<IActionResult> Update(string id, [FromBody]RoleResource roleResource)
-    {
-        if (!ModelState.IsValid)
+        [HttpGet]
+        [Route("getrole/{id}")]
+        public async Task<IActionResult> GetRole(string id)
         {
-            return BadRequest(ModelState);
+            var role = await repository.GetRole(id);
+
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            var roleResource = mapper.Map<ApplicationRole, RoleResource>(role);
+            return Ok(roleResource);
         }
 
-        var role = await repository.GetRole(id);
 
-        if (role == null)
-            return NotFound();
 
-        mapper.Map<RoleResource, ApplicationRole>(roleResource, role);
-        await unitOfWork.Complete();
-
-        var result = mapper.Map<ApplicationRole, RoleResource>(role);
-        return Ok(result);
-    }
-
-    [HttpDelete]
-    [Route("delete/{id}")]
-    public async Task<IActionResult> DeleteRole(string id)
-    {
-        var role = await repository.GetRole(id);
-
-        if (role == null)
+        [HttpPut]
+        [Route("update/{id}")]
+        public async Task<IActionResult> Update(string id, [FromBody]RoleResource roleResource)
         {
-            return NotFound();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var role = await repository.GetRole(id);
+
+            if (role == null)
+                return NotFound();
+
+            mapper.Map<RoleResource, ApplicationRole>(roleResource, role);
+            await unitOfWork.Complete();
+
+            var result = mapper.Map<ApplicationRole, RoleResource>(role);
+            return Ok(result);
         }
 
-        repository.RemoveRole(role);
-        await unitOfWork.Complete();
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var role = await repository.GetRole(id);
 
-        return Ok(id);
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            repository.RemoveRole(role);
+            await unitOfWork.Complete();
+
+            return Ok(id);
+        }
     }
-}
 }
