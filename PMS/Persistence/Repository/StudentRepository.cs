@@ -84,6 +84,16 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Year.Equals(queryObj.Year));
             }
 
+            if (queryObj.Name != null)
+            {
+                query = query.Where(q => q.Name.Equals(queryObj.Name));
+            }
+
+            if (queryObj.StudentCode != null)
+            {
+                query = query.Where(q => q.StudentCode.Equals(queryObj.StudentCode));
+            }
+
 
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Student, object>>>()
