@@ -1,4 +1,4 @@
-export const PAGES_MENU = [
+export const PAGES_MENU_LECTURER = [
   {
     path: "main",
     children: [
@@ -7,18 +7,6 @@ export const PAGES_MENU = [
         data: {
           menu: {
             title: "general.menu.dashboard",
-            icon: "ion-android-home",
-            selected: false,
-            expanded: false,
-            order: 0
-          }
-        }
-      },
-      {
-        path: "role",
-        data: {
-          menu: {
-            title: "Role",
             icon: "ion-android-home",
             selected: false,
             expanded: false,
@@ -75,18 +63,6 @@ export const PAGES_MENU = [
         }
       },
       {
-        path: "quarter",
-        data: {
-          menu: {
-            title: "Quarter",
-            icon: "ion-android-home",
-            selected: false,
-            expanded: false,
-            order: 0
-          }
-        }
-      },
-      {
         path: "group",
         data: {
           menu: {
@@ -122,18 +98,6 @@ export const PAGES_MENU = [
           }
         }
       }
-      // {
-      //   path: "tag-details",
-      //   data: {
-      //     menu: {
-      //       title: "Tag Details",
-      //       icon: "ion-android-home",
-      //       selected: false,
-      //       expanded: false,
-      //       order: 0
-      //     }
-      //   }
-      // }
     ]
   }
 ];

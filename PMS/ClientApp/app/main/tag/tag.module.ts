@@ -1,3 +1,4 @@
+import { PaginationModule } from './../../core/pagination/pagination.module';
 import { NgaModule } from "./../../theme/nga.module";
 import { DataService } from "./../../core/services/data.service";
 import { NgModule } from "@angular/core";
@@ -11,6 +12,7 @@ import { NotificationService } from "../../core/services/notification.service";
   imports: [
     NgaModule,
     ModalModule.forRoot(),
+    PaginationModule,
     CommonModule,
     FormsModule,
     routing

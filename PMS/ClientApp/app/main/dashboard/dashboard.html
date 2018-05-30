@@ -37,10 +37,101 @@
   </div>
 
 
-  <div class="widgets">
+  <div class="widgets" *ngIf="isLecturer && isLoadData">
     <div class="row">
-      <div class="col-md-12">
-       
+      <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+            <h2>
+              <a href="main/group" alt="View all">My Group is pending</a>
+            </h2>
+          <div >
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Group Name</th>
+                  <th>Project</th>
+                  <th>Supervisor</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let group of groups.items; let rowIndex = index">
+                  <th scope="row">{{rowIndex+1}}</th>
+                  <td>{{group.groupName}}</td>
+                  <td>{{group.project.title}}</td>
+                  <td>{{group.lecturer.name}}</td>
+                  <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
+                    <b>{{group.isConfirm}}</b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+
+      <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+        <h2>
+          <a href="main/confirm-group" alt="View all">My Group is Accepted</a>
+        </h2>
+      <div >
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Group Name</th>
+              <th>Project</th>
+              <th>Supervisor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let group of groupsAccepted.items; let rowIndex = index">
+              <th scope="row">{{rowIndex+1}}</th>
+              <td>{{group.groupName}}</td>
+              <td>{{group.project.title}}</td>
+              <td>{{group.lecturer.name}}</td>
+              <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
+                <b>{{group.isConfirm}}</b>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="widgets" *ngIf="isStudent && isLoadData">
+    <div class="row">
+      <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+            <h2>
+              <a href="main/group"  alt="View all">My Group is pending</a>
+            </h2>
+          <div >
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Group Name</th>
+                  <th>Project</th>
+                  <th>Supervisor</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let group of groups.items; let rowIndex = index">
+                  <th scope="row">{{rowIndex+1}}</th>
+                  <td>{{group.groupName}}</td>
+                  <td>{{group.project.title}}</td>
+                  <td>{{group.lecturer.name}}</td>
+                  <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
+                    <b>{{group.isConfirm}}</b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
       </div>
     </div>
   </div>

@@ -1,3 +1,6 @@
+import { PAGES_MENU_STUDENT } from './main.menuStudent';
+import { PAGES_MENU_LECTURER } from './main.menuLecturer';
+import { PAGES_MENU_ADMIN } from './main.menuAdmin';
 import { SystemConstants } from './../core/common/system.constants';
 import { UtilityService } from './../core/services/utility.service';
 import { LoggedInUser } from './../core/models/loggedin.user';
@@ -5,8 +8,6 @@ import { AuthenService } from './../core/services/authen.service';
 import { Component, OnInit } from '@angular/core';
 import { Routes } from '@angular/router';
 import { BaMenuService } from '../theme';
-import { PAGES_MENU } from './main.menu';
-
 @Component({
   selector: 'pages',
   template: `
@@ -35,6 +36,13 @@ export class Main implements OnInit {
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem(SystemConstants.CURRENT_USER));
-    this._menuService.updateMenuByRoutes(<Routes>PAGES_MENU);
+    if (this.user.role == "Admin") {
+      this._menuService.updateMenuByRoutes(<Routes>PAGES_MENU_ADMIN);
+    }
+
+
+    if (this.user.role == "Lecturer") {
+      this._menuService.updateMenuByRoutes(<Routes>PAGES_MENU_LECTURER);
+    }
   }
 }

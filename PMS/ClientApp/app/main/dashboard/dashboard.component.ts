@@ -46,6 +46,7 @@ export class Dashboard {
   public types: any[] = [ProjectTypesConstants.A, ProjectTypesConstants.B, ProjectTypesConstants.C, ProjectTypesConstants.D];
 
   public groupsAccepted: any = {};
+  public groupsStudent: any = {};
   public groups: any = {};
 
   ngOnInit() {
@@ -74,7 +75,13 @@ export class Dashboard {
     if (this.user.role === "Lecturer") {
       this.loadLecturerData();
     }
+
   }
+
+
+
+
+
 
 
   loadLecturerData() {
@@ -83,7 +90,7 @@ export class Dashboard {
   }
 
   loadLecturerGroup() {
-    this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Pending&pageSize=3").subscribe((response: any) => {
+    this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Pending&page=3").subscribe((response: any) => {
       this.groups = response;
       this.isLoadData = true;      
     });
@@ -92,6 +99,14 @@ export class Dashboard {
   loadLecturerGroupAccepted() {
     this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Accepted&pageSize=3").subscribe((response: any) => {
       this.groupsAccepted = response;
+      this.isLoadData = true;      
+    });
+  }
+
+
+  loadStudentGroup() {
+    this._dataService.get("/api/students/getgroups/" + this.user.email + "?page=3").subscribe((response: any) => {
+      this.groupsStudent = response;
       this.isLoadData = true;      
     });
   }

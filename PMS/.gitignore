@@ -5,4 +5,7 @@ project.assets.json
 PMS.AssemblyInfo.csproj
 PMS.AssemblyInfoInputs.cache
 PMS.csproj.CoreCompileInputes.cahce
+PMS.runtimeconfig.json
+PMS.csproj.dotnetwatch.g.targets
+UserSecretsAssemblyInfo.csproj
 node_modules

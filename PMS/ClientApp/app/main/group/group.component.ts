@@ -96,6 +96,14 @@ export class GroupComponent implements OnInit {
     });
   }
 
+  loadDataDependOnStudent() {
+    this._dataService.get("/api/students/getgroups/" + this.user.email + "?page=3").subscribe((response: any) => {
+      this.queryResult = response;
+      console.log(response);
+      this.isLoadData = true;
+    });
+  }
+
   toQueryString(obj) {
     var parts = [];
     for (var property in obj) {
@@ -268,6 +276,8 @@ export class GroupComponent implements OnInit {
     }
 
     if (this.user.role === "Student") {
+      this.loadDataDependOnStudent();
+
       this.isStudent = true;
     }
   }

@@ -60,7 +60,6 @@ export class StudentComponent implements OnInit {
     this.student = {};
     this._dataService.get("/api/majors/getall").subscribe((response: any) => {
       this.majors = response.items;
-      console.log(this.majors);
       this.isLoadStudent = true;
     });
     this.modalAddEdit.show();
@@ -141,7 +140,6 @@ export class StudentComponent implements OnInit {
 
     this._progressService.uploadProgress.subscribe(
       progress => {
-        console.log(progress);
         this._zone.run(() => {
           this.progress = progress;
         });
@@ -175,6 +173,12 @@ export class StudentComponent implements OnInit {
         );
     }
     return parts.join("&");
+  }
+
+  onPageChange(page) {
+    this.isLoadData = false;
+    this.query.page = page;
+    this.loadData();
   }
 
   deleteStudent(id: any) {
