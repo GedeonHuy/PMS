@@ -257,7 +257,7 @@ export class GroupComponent implements OnInit {
   permissionAccess() {
     this.user = this._authenService.getLoggedInUser();
     if (this.user.role === "Admin") {
-      this.permissionAccess();
+      this.loadData();
 
       this.isAdmin = true;
     }
