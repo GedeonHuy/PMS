@@ -98,12 +98,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
-            result.TotalItems = await query.CountAsync();
-
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
 
             return result;
         }
@@ -161,12 +161,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
-            result.TotalItems = await query.CountAsync();
-
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
 
             return result;
         }
@@ -222,12 +222,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
-            result.TotalItems = await query.CountAsync();
-
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
 
             return result;
         }
