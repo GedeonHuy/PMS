@@ -31,7 +31,7 @@ export class GroupComponent implements OnInit {
   public isLoadData: boolean;
   public isLoadStudent: boolean;
   isExist: boolean;
-
+  isLoadRole : boolean;
   isLoadLecturer: boolean;
   isLoadProject: boolean;
 
@@ -53,6 +53,7 @@ export class GroupComponent implements OnInit {
     isConfirm: "Pending"
   };
 
+
   public user: any;
   public allStudents: IMultiSelectOption[] = [];
   public students: any[] = [];
@@ -66,8 +67,8 @@ export class GroupComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadData();
     this.permissionAccess();
+
     Observable.forkJoin([
       this._dataService.get("/api/quarters/getall"),
       this._dataService.get("/api/majors/getall"),
@@ -83,6 +84,13 @@ export class GroupComponent implements OnInit {
 
   loadData() {
     this._dataService.get("/api/groups/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
+      this.queryResult = response;
+      this.isLoadData = true;
+    });
+  }
+
+  loadDataDependOnLecturer() {
+    this._dataService.get("/api/groups/getall?pageSize=3&isConfirm=Pending&email=" + this.user.email).subscribe((response: any) => {
       this.queryResult = response;
       this.isLoadData = true;
     });
@@ -177,7 +185,7 @@ export class GroupComponent implements OnInit {
         }
         this._dataService.post('/api/groups/add', JSON.stringify(this.group))
           .subscribe((response: any) => {
-            this.loadData();
+            this.permissionAccess();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Add Success");
             form.resetForm();
@@ -214,7 +222,7 @@ export class GroupComponent implements OnInit {
         };
         this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
           .subscribe((response: any) => {
-            this.loadData();
+            this.permissionAccess();
             this.modalAddEdit.hide();
             this._notificationService.printSuccessMessage("Update Success");
             form.resetForm();
@@ -242,28 +250,32 @@ export class GroupComponent implements OnInit {
     this._dataService.delete('/api/groups/delete/' + id)
       .subscribe((response: Response) => {
         this._notificationService.printSuccessMessage("Delete Success");
-        this.loadData();
+        this.permissionAccess();
       });
   }
 
   permissionAccess() {
     this.user = this._authenService.getLoggedInUser();
     if (this.user.role === "Admin") {
+      this.permissionAccess();
+
       this.isAdmin = true;
     }
 
     if (this.user.role === "Lecturer") {
+      this.loadDataDependOnLecturer();
       this.isLecturer = true;
     }
 
     if (this.user.role === "Student") {
       this.isStudent = true;
     }
+    this.isLoadRole = true;
   }
 
   onPageChange(page) {
     this.query.page = page;
-    this.loadData();
+    this.permissionAccess();
   }
 
 
