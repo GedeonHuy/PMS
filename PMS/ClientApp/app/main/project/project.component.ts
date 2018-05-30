@@ -28,6 +28,7 @@ export class ProjectComponent implements OnInit {
   public isLoadTag: boolean;
   public progress: any;
   majors: any[];
+  lecturers :  any[];
   isExist: boolean;
   public tags: string[] = [];
   public allTags: IMultiSelectOption[] = [];
@@ -70,7 +71,6 @@ export class ProjectComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/projects/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log(response);
       this.isLoadData = true;
     });
   }
@@ -81,13 +81,21 @@ export class ProjectComponent implements OnInit {
 
     this.loadTags();
     this.project = {};
+    if (this.user.role == "Lecturer") {
+      this._dataService.get('/api/lecturers/getlecturerbyemail/' + this.user.email)
+      .subscribe((response: any) => {
+        this.project.majorId = response.majorId;
+        this.project.lecturerId = response.lecturerId;
+      });
+    }
 
-    this._dataService.get('/api/lecturers/getlecturerbyemail/' + this.user.email)
-    .subscribe((response: any) => {
-      console.log(response);
-      this.project.majorId = response.majorId;
-      this.project.lecturerId = response.lecturerId;
-    });
+    if (this.user.role == "Admin") {
+      this._dataService.get('/api/lecturers/getall')
+      .subscribe((response: any) => {
+        console.log(response);
+        this.lecturers = response.items;
+      });
+    }
 
     this._dataService.get("/api/majors/getall").subscribe((response: any) => {
       this.majors = response.items;
@@ -127,8 +135,6 @@ export class ProjectComponent implements OnInit {
   saveChange(form: NgForm) {
     if (form.valid) {
       this.isSaved = true;
-
-      console.log(this.project);
 
       if (this.project.projectId == undefined) {
         this.project.tags = this.tags;

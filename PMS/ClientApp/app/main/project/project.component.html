@@ -114,7 +114,7 @@
                 <option value=""></option>
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
-              <small [hidden]="major.valid || (major.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the major </small>
+              <small [hidden]="lecturer.valid || (lecturer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the lecturer </small>
             </div>
           </div>
 
