@@ -12,6 +12,9 @@ using PMS.Resources.SubResources;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using OfficeOpenXml;
+using Microsoft.Extensions.Configuration;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -26,11 +29,14 @@ namespace PMS.Controllers
         private IGroupRepository groupRepository;
         private IBoardEnrollmentRepository boardEnrollmentRepository;
         private IHostingEnvironment host;
+        private IExcelRepository excelRepository;
+        private IConfiguration config;
         private IUnitOfWork unitOfWork;
 
         public BoardController(IMapper mapper, IUnitOfWork unitOfWork,
             IBoardRepository boardRepository, IGroupRepository groupRepository,
-            IBoardEnrollmentRepository boardEnrollmentRepository, IHostingEnvironment host)
+            IBoardEnrollmentRepository boardEnrollmentRepository, IHostingEnvironment host,
+            IExcelRepository excelRepository, IConfiguration config)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
@@ -38,6 +44,8 @@ namespace PMS.Controllers
             this.groupRepository = groupRepository;
             this.boardEnrollmentRepository = boardEnrollmentRepository;
             this.host = host;
+            this.excelRepository = excelRepository;
+            this.config = config;
         }
 
         [HttpPost]
@@ -258,42 +266,20 @@ namespace PMS.Controllers
             }
 
             board.ResultScore = boardRepository.CalculateScore(board).ToString();
-            await unitOfWork.Complete();
-
-            var result = mapper.Map<Board, BoardResource>(board);
-            return Ok(result);
-        }
-
-        [HttpGet]
-        [Route("calculategrade/{id}")]
-        public async Task<IActionResult> CalculateGrade(int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var board = await boardRepository.GetBoard(id);
-
-            if (String.IsNullOrEmpty(board.ResultScore))
-            {
-                ModelState.AddModelError("Error", "Please calcualte the score before calcualate the grade.");
-                return BadRequest(ModelState);
-            }
 
             boardRepository.CalculateGrade(board);
             await unitOfWork.Complete();
 
+            await ExportExcel(board);
+
             var result = mapper.Map<Board, BoardResource>(board);
             return Ok(result);
         }
 
-        [HttpGet]
-        [Route("exportexcel/{id}")]
-        public async Task ExportCustomer(int id)
+        public async Task ExportExcel(Board board)
         {
-            var board = await boardRepository.GetBoard(id);
-            var fileName = board.Group.GroupName + "_result" + @".xlsx";
+
+            var fileName = board.Group.GroupName + "_" + board.BoardId + "_result" + @".xlsx";
 
             string rootFolder = host.WebRootPath;
             var formFolderPath = Path.Combine(host.WebRootPath, "forms");
@@ -343,6 +329,68 @@ namespace PMS.Controllers
                     worksheet.Cells[25, 5].Value = board.ResultScore;
                 }
                 package.Save();
+
+                //add to db
+                var excel = new Excel { FileName = fileName };
+                excelRepository.AddExcel(excel);
+                await unitOfWork.Complete();
+
+                //send mail
+                SendMail(board, filePath);
+            }
+        }
+
+        public void SendMail(Board board, string filePath)
+        {
+            var users = board.Group.Enrollments.Select(e => e.Student.Email).ToList();
+
+            foreach (var user in users)
+            {
+                try
+                {
+                    string FromAddress = "quanhmp@gmail.com";
+                    string FromAdressTitle = "Email from PMS!";
+                    //To Address  
+                    string ToAddress = user;
+                    string ToAdressTitle = "PMS!";
+                    string Subject = "Result of " + board.Group.Project.Type;
+                    string BodyContent = "Xin gửi các em kết quả của báo cáo đồ án "
+                    + board.Group.Project.Type + " của nhóm " + board.Group.GroupName;
+                    //Smtp Server  
+                    string SmtpServer = this.config["EmailSettings:Server"];
+                    //Smtp Port Number  
+                    int SmtpPortNumber = Int32.Parse(this.config["EmailSettings:Port"]);
+
+                    var mimeMessage = new MimeMessage();
+                    mimeMessage.From.Add(new MailboxAddress(FromAdressTitle, FromAddress));
+                    mimeMessage.To.Add(new MailboxAddress(ToAdressTitle, ToAddress));
+                    mimeMessage.Subject = Subject;
+
+                    var builder = new BodyBuilder();
+                    builder.TextBody = BodyContent;
+
+                    // attach excel result file
+                    builder.Attachments.Add(filePath);
+
+                    // Now we just need to set the message body 
+                    mimeMessage.Body = builder.ToMessageBody();
+
+                    using (var client = new SmtpClient())
+                    {
+
+                        client.Connect(SmtpServer, SmtpPortNumber, false);
+                        // Note: only needed if the SMTP server requires authentication  
+                        // Error 5.5.1 Authentication   
+                        client.Authenticate(this.config["EmailSettings:Email"], this.config["EmailSettings:Password"]);
+                        client.Send(mimeMessage);
+                        client.Disconnect(true);
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
     }
