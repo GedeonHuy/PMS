@@ -316,12 +316,35 @@ export class GroupComponent implements OnInit {
         quarterId: this.group.quarterId,
         studentEmails: this.group.studentEmails
       };
-
-      
       this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
         .subscribe((response: any) => {
           this.permissionAccess();
           this._notificationService.printSuccessMessage("Group Accepted");
+          this.isLoadData = false;
+      });
+    });
+  }
+
+  rejectGroup(id: any) {
+    this._dataService.get('/api/groups/getgroup/' + id)
+    .subscribe((response: any) => {
+      this.group = response;     
+
+      this.groupJson = {
+        groupName: this.group.groupName,
+        isConfirm: "Denied",
+        projectId: this.group.projectId,
+        lecturerEmail: this.user.email,
+        lecturerId: this.group.lecturerId,
+        majorId: this.group.majorId,
+        quarterId: this.group.quarterId,
+        studentEmails: this.group.studentEmails
+      };
+      this._dataService.put('/api/groups/update/' + this.group.groupId, JSON.stringify(this.groupJson))
+        .subscribe((response: any) => {
+          this.permissionAccess();
+          this._notificationService.printSuccessMessage("Group Accepted");
+          this.isLoadData = false;
       });
     });
   }
