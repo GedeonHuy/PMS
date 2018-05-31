@@ -285,7 +285,7 @@ namespace PMS.Controllers
             var formFolderPath = Path.Combine(host.WebRootPath, "forms");
             if (!System.IO.Directory.Exists(formFolderPath))
             {
-                System.IO.Directory.CreateDirectory(uploadFolderPath);
+                System.IO.Directory.CreateDirectory(formFolderPath);
             }
 
             var formFilePath = Path.Combine(formFolderPath, @"result_form.xlsx");
