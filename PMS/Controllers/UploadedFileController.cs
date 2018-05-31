@@ -72,7 +72,7 @@ namespace PMS.Controllers
                 return BadRequest("No Id of uploaded file can be found");
             }
 
-            var uploadFolderPath = Path.Combine(host.WebRootPath, "uploads/uploadedFile");
+            var uploadFolderPath = Path.Combine(host.ContentRootPath, "uploads/uploadedFile");
             if (!Directory.Exists(uploadFolderPath))
             {
                 Directory.CreateDirectory(uploadFolderPath);
