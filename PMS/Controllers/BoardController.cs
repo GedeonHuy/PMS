@@ -283,16 +283,21 @@ namespace PMS.Controllers
 
             string rootFolder = host.WebRootPath;
             var formFolderPath = Path.Combine(host.WebRootPath, "forms");
+            if (!System.IO.Directory.Exists(formFolderPath))
+            {
+                System.IO.Directory.CreateDirectory(uploadFolderPath);
+            }
+
             var formFilePath = Path.Combine(formFolderPath, @"result_form.xlsx");
             // FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
 
             var uploadFolderPath = Path.Combine(host.WebRootPath, "exports");
-            var filePath = Path.Combine(uploadFolderPath, fileName);
-
             if (!System.IO.Directory.Exists(uploadFolderPath))
             {
                 System.IO.Directory.CreateDirectory(uploadFolderPath);
             }
+
+            var filePath = Path.Combine(uploadFolderPath, fileName);
 
             //copy file from formfolder to export folder
             System.IO.File.Copy(formFilePath, filePath, true);
