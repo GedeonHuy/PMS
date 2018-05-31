@@ -45,10 +45,12 @@ export class GroupDetailsComponent implements OnInit {
 
   lecturers: any[];
   boardEnrollmentsOfLecturer: any[];
+  thisLecturerId: any;  
 
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
+  isReviewer: boolean;
 
   PAGE_SIZE = 5;
 
@@ -73,6 +75,7 @@ export class GroupDetailsComponent implements OnInit {
   constructor(private _authenService: AuthenService, private route: ActivatedRoute, private _notificationService: NotificationService,
     private router: Router, private _dataService: DataService) {
 
+    this.isReviewer = false;  
     this.isAdmin = false;
     this.isLecturer = false;
     this.isLoadMark = true;
@@ -300,11 +303,19 @@ export class GroupDetailsComponent implements OnInit {
     this.modalMark.show();
 
     Observable.forkJoin(
-      this._dataService.get('/api/boardenrollments/getboardenrollmentsbylectureremail/' + this.thisLecturerEmail)
+      this._dataService.get('/api/boardenrollments/getboardenrollmentsbylectureremail/' + this.thisLecturerEmail),
+      this._dataService.get('/api/boards/getboard/' + id),
     ).subscribe(data => {
       this.boardEnrollmentsOfLecturer = data[0].items;
       this.boardEnrollment = this.boardEnrollmentsOfLecturer.find(be => be.boardID == id);
       this.isLoadMark = true;
+
+      this.thisLecturerId = this.lecturers.find(l => l.email == this.thisLecturerEmail).lecturerId;
+      console.log(this.lecturers.find(l => l.email == this.thisLecturerEmail));
+      if(data[1].lecturerInformations.reviewer.lecturerId == this.thisLecturerId)
+      {
+        this.isReviewer = true;
+      }
     });
   }
 
@@ -427,7 +438,7 @@ export class GroupDetailsComponent implements OnInit {
     // console.log(id);
     this._dataService.get('/api/boards/calculatescore/' + id)
       .subscribe((response: any) => {
-        window.location.reload();
       });
+    window.location.reload()
   }
 }

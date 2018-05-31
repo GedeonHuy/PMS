@@ -206,10 +206,23 @@ aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onSh
           </div>  
         </div>
 
+        <!--Recommendation-START-->
+        <div *ngIf="isReviewer" class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Recommendation</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <textarea type="text"class="form-control" [(ngModel)]="boardEnrollment.recommendation" name="boardEnrollment.recommendation" required #recommendation="ngModel"></textarea>
+            <small [hidden]="recommendation.valid || (recommendation.pristine && !recommendation.submitted)" class="text-danger">
+                Please specify the recommendation </small>
+          </div>  
+        </div>
+
+        <input *ngIf="!isReviewer" type="hidden" class="form-control" [(ngModel)]="boardEnrollment.recommendation" name="boardEnrollment.recommendation" #recommendation="ngModel"/>
+        <!--Recommendation-END-->
+        
         <div class="form-group">
           <label class="control-label col-md-3 col-sm-3 col-xs-12">Comment</label>
           <div class="col-md-9 col-sm-9 col-xs-12">
-            <input class="form-control" [(ngModel)]="boardEnrollment.comment" name="boardEnrollment.comment" required #comment="ngModel"/>
+            <textarea type="text"class="form-control" [(ngModel)]="boardEnrollment.comment" name="boardEnrollment.comment" required #comment="ngModel"></textarea>
             <small [hidden]="comment.valid || (comment.pristine && !comment.submitted)" class="text-danger">
                 Please specify the comment </small>
           </div>  

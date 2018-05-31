@@ -44,8 +44,10 @@ export class GroupConfirmComponent implements OnInit {
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
+  isReviewer: boolean;
 
   thisLecturerEmail: any;
+  thisLecturerId: any;
 
   projects: any[];
   lecturers: any[];
@@ -70,6 +72,7 @@ export class GroupConfirmComponent implements OnInit {
     this.isAdmin = false;
     this.isLecturer = false;
     this.isLoadMark = false;
+    this.isReviewer = false;
   }
 
   ngOnInit() {
@@ -86,7 +89,7 @@ export class GroupConfirmComponent implements OnInit {
   loadData() {
     this._dataService.get("/api/groups/getall" + "?" + this.toQueryString(this.query)).subscribe((response: any) => {
       this.queryResult = response;
-      console.log(response);
+      // console.log(response);
       this.isLoadData = true;
     });
   }
@@ -170,12 +173,19 @@ export class GroupConfirmComponent implements OnInit {
     this.modalMark.show();
 
     Observable.forkJoin(
-      this._dataService.get('/api/boardenrollments/getboardenrollmentsbylectureremail/' + this.thisLecturerEmail)
+      this._dataService.get('/api/boardenrollments/getboardenrollmentsbylectureremail/' + this.thisLecturerEmail),
+      this._dataService.get('/api/boards/getboard/' + id),
     ).subscribe(data => {
       this.boardEnrollmentsOfLecturer = data[0].items;
-      console.log(this.boardEnrollmentsOfLecturer);
       this.boardEnrollment = this.boardEnrollmentsOfLecturer.find(be => be.boardID == id);
       this.isLoadMark = true;
+
+      this.thisLecturerId = this.lecturers.find(l => l.email == this.thisLecturerEmail).lecturerId;
+      console.log(this.lecturers.find(l => l.email == this.thisLecturerEmail));
+      if(data[1].lecturerInformations.reviewer.lecturerId == this.thisLecturerId)
+      {
+        this.isReviewer = true;
+      }
     });
   }
 
