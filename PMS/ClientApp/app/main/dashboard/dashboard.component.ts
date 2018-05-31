@@ -69,7 +69,7 @@ export class Dashboard {
     this.permissionAccess();
 
     if (this.user.role === "Student") {
-      //this.loadDataStudent();
+      this.loadStudentGroup();
     }
 
     if (this.user.role === "Lecturer") {
@@ -105,7 +105,7 @@ export class Dashboard {
 
 
   loadStudentGroup() {
-    this._dataService.get("/api/students/getgroups/" + this.user.email + "?page=3").subscribe((response: any) => {
+    this._dataService.get("/api/students/getgroups/" + this.user.email + "?pageSize=3").subscribe((response: any) => {
       this.groupsStudent = response;
       this.isLoadData = true;      
     });

@@ -104,9 +104,9 @@
 
   <div class="widgets" *ngIf="isStudent && isLoadData">
     <div class="row">
-      <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+      <div *ngIf="isStudent" class="col-md-12 col-sm-12 col-xs-12">
             <h2>
-              <a href="main/group"  alt="View all">My Group is pending</a>
+              <a href="main/confirm-group"  alt="View all">My Group</a>
             </h2>
           <div >
             <table class="table table-striped">
@@ -120,7 +120,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let group of groups.items; let rowIndex = index">
+                <tr *ngFor="let group of groupsStudent.items; let rowIndex = index">
                   <th scope="row">{{rowIndex+1}}</th>
                   <td>{{group.groupName}}</td>
                   <td>{{group.project.title}}</td>

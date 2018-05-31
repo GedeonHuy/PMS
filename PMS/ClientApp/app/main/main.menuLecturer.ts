@@ -19,19 +19,7 @@ export const PAGES_MENU_LECTURER = [
         data: {
           menu: {
             title: "Student",
-            icon: "ion-android-home",
-            selected: false,
-            expanded: false,
-            order: 0
-          }
-        }
-      },
-      {
-        path: "major",
-        data: {
-          menu: {
-            title: "Major",
-            icon: "ion-android-home",
+            icon: "fa fa-graduation-cap",
             selected: false,
             expanded: false,
             order: 0
@@ -43,7 +31,7 @@ export const PAGES_MENU_LECTURER = [
         data: {
           menu: {
             title: "Project",
-            icon: "ion-android-home",
+            icon: "fa fa-book",
             selected: false,
             expanded: false,
             order: 0
@@ -55,7 +43,7 @@ export const PAGES_MENU_LECTURER = [
         data: {
           menu: {
             title: "Lecturer",
-            icon: "ion-android-home",
+            icon: "fa fa-male",
             selected: false,
             expanded: false,
             order: 0
@@ -67,7 +55,7 @@ export const PAGES_MENU_LECTURER = [
         data: {
           menu: {
             title: "Group",
-            icon: "ion-android-home",
+            icon: "fa fa-group",
             selected: false,
             expanded: false,
             order: 0
@@ -79,7 +67,7 @@ export const PAGES_MENU_LECTURER = [
         data: {
           menu: {
             title: "Confirm Group",
-            icon: "ion-android-home",
+            icon: "fa fa-user-plus",
             selected: false,
             expanded: false,
             order: 0
@@ -91,7 +79,7 @@ export const PAGES_MENU_LECTURER = [
         data: {
           menu: {
             title: "Tag",
-            icon: "ion-android-home",
+            icon: "fa fa-tags",
             selected: false,
             expanded: false,
             order: 0

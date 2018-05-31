@@ -44,5 +44,9 @@ export class Main implements OnInit {
     if (this.user.role == "Lecturer") {
       this._menuService.updateMenuByRoutes(<Routes>PAGES_MENU_LECTURER);
     }
+
+    if (this.user.role == "Student") {
+      this._menuService.updateMenuByRoutes(<Routes>PAGES_MENU_STUDENT);
+    }
   }
 }

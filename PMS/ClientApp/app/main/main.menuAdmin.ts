@@ -19,7 +19,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Role",
-            icon: "ion-android-home",
+            icon: "fa fa-circle-notch",
             selected: false,
             expanded: false,
             order: 0
@@ -31,7 +31,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Student",
-            icon: "ion-android-home",
+            icon: "fa fa-graduation-cap",
             selected: false,
             expanded: false,
             order: 0
@@ -43,7 +43,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Major",
-            icon: "ion-android-home",
+            icon: "fa fa-bookmark",
             selected: false,
             expanded: false,
             order: 0
@@ -55,7 +55,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Project",
-            icon: "ion-android-home",
+            icon: "fa fa-book",
             selected: false,
             expanded: false,
             order: 0
@@ -67,7 +67,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Lecturer",
-            icon: "ion-android-home",
+            icon: "fa fa-male",
             selected: false,
             expanded: false,
             order: 0
@@ -79,7 +79,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Quarter",
-            icon: "ion-android-home",
+            icon: "fa fa-calendar",
             selected: false,
             expanded: false,
             order: 0
@@ -91,7 +91,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Group",
-            icon: "ion-android-home",
+            icon: "fa fa-group",
             selected: false,
             expanded: false,
             order: 0
@@ -103,7 +103,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Confirm Group",
-            icon: "ion-android-home",
+            icon: "fa fa-user-plus",
             selected: false,
             expanded: false,
             order: 0
@@ -115,25 +115,14 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Tag",
-            icon: "ion-android-home",
+            icon: "fa fa-tags",
             selected: false,
             expanded: false,
             order: 0
           }
         }
       }
-      // {
-      //   path: "tag-details",
-      //   data: {
-      //     menu: {
-      //       title: "Tag Details",
-      //       icon: "ion-android-home",
-      //       selected: false,
-      //       expanded: false,
-      //       order: 0
-      //     }
-      //   }
-      // }
+
     ]
   }
 ];

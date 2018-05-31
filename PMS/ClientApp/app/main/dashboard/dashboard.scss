@@ -1,5 +1,11 @@
 @import "../../theme/sass/conf/conf";
+.blue {
+  color: blue; 
+}
 
+.green {
+  color: green;
+}
 
 :host /deep/.pie-charts {
   color: $content-text;
@@ -14,6 +20,7 @@
       height: 114px;
     }
   }
+
 
   @media screen and (min-width: 1325px) {
     .pie-chart-item-container {
