@@ -34,13 +34,12 @@ export class GroupConfirmComponent implements OnInit {
   public boardEnrollment: any;
   public boardEnrollmentJson: any = {};
   public board: any = {};
-  public comment: any;
   public chair: any;
   public secretary: any;
   public supervisor: any;
   public reviewer: any;
 
-  public scorePercents: number[] = [10, 20, 25, 30, 50, 75, 100];
+  public scorePercents: number[] = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
 
   isAdmin: boolean;
   isLecturer: boolean;

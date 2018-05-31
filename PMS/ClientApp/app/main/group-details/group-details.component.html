@@ -111,16 +111,14 @@
         <br />
         <h2>Grade</h2>
         <div class="panel-body">
-          <h4>
-            <a *ngIf="isAdmin" class="btn btn-primary" (click)="calculateScore(group.boardId)"><i class="fa fa-calculator"></i></a>  
-            Score:
-            <a *ngIf="group.board.resultScore">{{group.board.resultScore}}</a>
-            <a *ngIf="!group.board.resultScore">(Not yet calculated)</a>
-          </h4>
           <h3>
-            <a *ngIf="isAdmin" class="btn btn-warning" (click)="calculateGrade(group.boardId)"><i class="fa fa-check"></i></a>
-            <a *ngIf="group.board.resultGrade">{{group.board.resultGrade}}</a>
-            <a *ngIf="!group.board.resultGrade">(Not yet finalized)</a>
+            <a *ngIf="isAdmin" class="btn btn-primary" (click)="calculateScore(group.boardId)"><i class="fa fa-calculator"></i></a>  
+            <br />
+            Score:
+            <a *ngIf="group.resultScore">{{group.resultScore}}</a>
+            <h2 class="">
+              <a *ngIf="group.resultGrade">{{group.resultGrade}}</a>
+            </h2>
           </h3>
         </div>
       </div>
@@ -173,6 +171,125 @@ aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onSh
           <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
             <button type="button" (click)="hidemodalMark()" class="btn btn-primary">Cancel</button>
             <button type="submit" class="btn btn-success" [disabled]="!markForm.valid || isSaved">Save</button>
+            <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--Modal board-->
+<div bsModal #modalBoard="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)"
+(onHidden)="handler('onHidden', $event)">
+
+<div class="modal-dialog modal-lg">
+  <div class="modal-content" style="background: #87CEFA">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Assign Board</h4>
+      <span *ngIf="!isLoadBoard" class="fa fa-refresh fa-spin"></span>
+      <button type="button" class="close pull-right" (click)="hidemodalBoard()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveBoard(addEditForm)"
+        *ngIf="board && boardEnrollments && isLoadBoard">
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">chair</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="hidden" [(ngModel)]="board.boardId" name="boardId" />
+            <select class="form-control" [(ngModel)]="boardEnrollments.chair.lecturerId" name="boardEnrollments.chair.lecturerId" required #chair="ngModel">
+              <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+            </select>
+            <small [hidden]="chair.valid || (chair.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the chair </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <select class="form-control" [(ngModel)]="boardEnrollments.chair.scorePercent" name="boardEnrollments.chair.scorePercent" required #scorePercentChair="ngModel">
+              <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+            </select>
+            <small [hidden]="scorePercentChair.valid || (scorePercentChair.pristine && !addEditForm.submitted)" class="text-danger">
+              Please specify the score percent </small>
+          </div>
+        </div>
+        <div class="ln_solid"></div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Secretary</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <select class="form-control" [(ngModel)]="boardEnrollments.secretary.lecturerId" name="boardEnrollments.secretary.name" required #secretary="ngModel">
+              <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+            </select>
+            <small [hidden]="secretary.valid || (secretary.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the secretary </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <select class="form-control" [(ngModel)]="boardEnrollments.secretary.scorePercent" name="boardEnrollments.secretary.scorePercent" required #scorePercentSecretary="ngModel">
+              <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+            </select>
+            <small [hidden]="scorePercentSecretary.valid || (scorePercentSecretary.pristine && !addEditForm.submitted)" class="text-danger">
+              Please specify the score percent </small>
+          </div>
+        </div>
+        <div class="ln_solid"></div>
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.lecturerId" name="boardEnrollments.supervisor.name" required #supervisor="ngModel">
+              <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+            </select>
+            <small [hidden]="supervisor.valid || (supervisor.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the supervisor </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.scorePercent" name="boardEnrollments.supervisor.scorePercent" required #scorePercentSupervisor="ngModel">
+              <option value=""></option>
+              <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+            </select>
+            <small [hidden]="scorePercentSupervisor.valid || (scorePercentSupervisor.pristine && !addEditForm.submitted)" class="text-danger">
+              Please specify the score percent </small>
+          </div>
+        </div>
+        <div class="ln_solid"></div>
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Reviewer</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.lecturerId" name="boardEnrollments.reviewer.name" required #reviewer="ngModel">
+              <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+            </select>
+            <small [hidden]="reviewer.valid || (reviewer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the reviewer </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.scorePercent" name="boardEnrollments.reviewer.scorePercent" required #scorePercentReviewer="ngModel">
+              <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+            </select>
+            <small [hidden]="scorePercentReviewer.valid || (scorePercentReviewer.pristine && !addEditForm.submitted)" class="text-danger">
+              Please specify the score percent </small>
+          </div>
+        </div>
+        <div class="ln_solid"></div>
+
+        <div class="form-group">
+          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+            <button type="button" (click)="hidemodalBoard()" class="btn btn-primary">Cancel</button>
+            <button type="submit" class="btn btn-success" [disabled]="!addEditForm.valid || isSaved">Save</button>
             <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
           </div>
         </div>
