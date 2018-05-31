@@ -281,8 +281,7 @@ namespace PMS.Controllers
 
             var fileName = board.Group.GroupName + "_" + board.BoardId + "_result" + @".xlsx";
 
-            string rootFolder = host.WebRootPath;
-            var formFolderPath = Path.Combine(host.WebRootPath, "forms");
+            var formFolderPath = Path.Combine(host.ContentRootPath, "forms");
             if (!System.IO.Directory.Exists(formFolderPath))
             {
                 System.IO.Directory.CreateDirectory(formFolderPath);
@@ -291,7 +290,7 @@ namespace PMS.Controllers
             var formFilePath = Path.Combine(formFolderPath, @"result_form.xlsx");
             // FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
 
-            var uploadFolderPath = Path.Combine(host.WebRootPath, "exports");
+            var uploadFolderPath = Path.Combine(host.ContentRootPath, "exports");
             if (!System.IO.Directory.Exists(uploadFolderPath))
             {
                 System.IO.Directory.CreateDirectory(uploadFolderPath);
