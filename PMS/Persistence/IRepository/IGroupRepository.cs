@@ -13,6 +13,7 @@ namespace PMS.Persistence
         void AddGroup(Group group);
         void RemoveGroup(Group group);
         Task<QueryResult<Group>> GetGroups(Query filter);
+        Task<QueryResult<Group>> GetGroupsByLecturerEmailInBoard(Query queryObj, string email);
         bool CheckEnrollment(Group group, Enrollment enrollment);
         Task<bool> CheckGroup(GroupResource group);
         void UpdateEnrollments(Group group, GroupResource groupResource);

@@ -44,7 +44,7 @@ namespace PMS.Persistence.Repository
             //context.Remove(boardEnrollment);
         }
 
-        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByLecturerEmail(string email)
+        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByLecturerEmail(Query queryObj, string email)
         {
             var result = new QueryResult<BoardEnrollment>();
             var query = context.BoardEnrollments
@@ -112,43 +112,59 @@ namespace PMS.Persistence.Repository
 
         }
 
-        public async Task<BoardEnrollment> GetBoardEnrollmentByLecturerEmail(string email, BoardResource boardResource)
-        {
-            var boardEnrollment = await context.BoardEnrollments
-                                    .Where(c => c.IsDeleted == false)
-                                    .Include(c => c.Lecturer)
-                                    .Include(c => c.Board)
-                                    .SingleOrDefaultAsync(c => c.Board.BoardId == boardResource.BoardId
-                                    && c.Lecturer.Email == email);
+        // public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentByLecturerEmail(Query queryObj, string email)
+        // {
+        //     var result = new QueryResult<BoardEnrollment>();
+        //     var query = context.BoardEnrollments
+        //                             .Where(c => c.IsDeleted == false && c.Lecturer.Email == email)
+        //                             .Include(c => c.Lecturer)
+        //                             .Include(c => c.Board)
+        //                         .AsQueryable();
 
-            return boardEnrollment;
-        }
 
-        public async Task<IEnumerable<BoardEnrollment>> GetBoardEnrollmentsByBoardId(int id)
+        //     //filter
+        //     if (queryObj.LecturerId.HasValue)
+        //     {
+        //         query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+        //     }
+        //     if (queryObj.Email != null)
+        //     {
+        //         query = query.Where(q => q.Lecturer.Email == queryObj.Email);
+        //     }
+
+        //     //sort
+
+        //     query = query.OrderByDescending(s => s.BoardEnrollmentId);
+
+        //     //paging
+
+        //     result.Items = await query.ToListAsync();
+
+        //     result.TotalItems = await query.CountAsync();
+
+        //     return result;
+        // }
+
+        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByBoardId(Query queryObj, int id)
         {
-            return await context.BoardEnrollments
+            var result = new QueryResult<BoardEnrollment>();
+            var query = context.BoardEnrollments
                                 .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Board)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.BoardRole)
                                 .Where(c => c.Board.BoardId == id)
-                                .ToListAsync();
-        }
-
-        public void UpdateScore(BoardEnrollment boardEnrollment)
-        {
-            context.Update(boardEnrollment);
-        }
-
-        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByGroupId(int id)
-        {
-            var result = new QueryResult<BoardEnrollment>();
-            var query = context.BoardEnrollments
-                                    .Include(c => c.Lecturer)
-                                    .Include(c => c.Board)
-                                        .ThenInclude(b => b.Group)
-                                    .Where(c => c.IsDeleted == false && c.Board.Group.GroupId == id)
                                 .AsQueryable();
+
+            //filter
+            if (queryObj.LecturerId.HasValue)
+            {
+                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+            }
+            if (queryObj.Email != null)
+            {
+                query = query.Where(q => q.Lecturer.Email == queryObj.Email);
+            }
 
             //sort
 
@@ -162,5 +178,44 @@ namespace PMS.Persistence.Repository
 
             return result;
         }
+
+        public void UpdateScore(BoardEnrollment boardEnrollment)
+        {
+            context.Update(boardEnrollment);
+        }
+
+        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByGroupId(Query queryObj, int id)
+        {
+            var result = new QueryResult<BoardEnrollment>();
+            var query = context.BoardEnrollments
+                                    .Include(c => c.Lecturer)
+                                    .Include(c => c.Board)
+                                        .ThenInclude(b => b.Group)
+                                    .Where(c => c.IsDeleted == false && c.Board.Group.GroupId == id)
+                                .AsQueryable();
+
+            //filter
+            if (queryObj.LecturerId.HasValue)
+            {
+                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+            }
+            if (queryObj.Email != null)
+            {
+                query = query.Where(q => q.Lecturer.Email == queryObj.Email);
+            }
+
+            //sort
+
+            query = query.OrderByDescending(s => s.BoardEnrollmentId);
+
+            //paging
+
+            result.Items = await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
+
+            return result;
+        }
+
     }
 }

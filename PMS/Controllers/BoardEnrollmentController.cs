@@ -130,19 +130,19 @@ namespace PMS.Controllers
             return Ok(boardEnrollmentResource);
         }
 
-        [HttpGet]
-        [Route("getboardenrollmentbylectureremail/{email}")]
-        public async Task<IActionResult> GetboardEnrollmentByLecturerEmail(string email, [FromBody]BoardResource boardResource)
-        {
-            var boardEnrollment = await boardEnrollmentRepository.GetBoardEnrollmentByLecturerEmail(email, boardResource);
-            if (boardEnrollment == null)
-            {
-                return NotFound();
-            }
-            var boardEnrollmentResource = mapper.Map<BoardEnrollment, BoardEnrollmentResource>(boardEnrollment);
+        // [HttpGet]
+        // [Route("getboardenrollmentbylectureremail/{email}")]
+        // public async Task<IActionResult> GetboardEnrollmentByLecturerEmail(string email, [FromBody]BoardResource boardResource)
+        // {
+        //     var boardEnrollment = await boardEnrollmentRepository.GetBoardEnrollmentByLecturerEmail(email, boardResource);
+        //     if (boardEnrollment == null)
+        //     {
+        //         return NotFound();
+        //     }
+        //     var boardEnrollmentResource = mapper.Map<BoardEnrollment, BoardEnrollmentResource>(boardEnrollment);
 
-            return Ok(boardEnrollmentResource);
-        }
+        //     return Ok(boardEnrollmentResource);
+        // }
 
         [HttpGet]
         [Route("getall")]
@@ -164,29 +164,29 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getboardenrollmentsbylectureremail/{email}")]
-        public async Task<QueryResultResource<BoardEnrollmentResource>> GetboardEnrollmentsByLecturerEmail(string email)
+        public async Task<QueryResultResource<BoardEnrollmentResource>> GetboardEnrollmentsByLecturerEmail(QueryResource queryResource, string email)
         {
-
-            var queryResult = await boardEnrollmentRepository.GetBoardEnrollmentsByLecturerEmail(email);
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await boardEnrollmentRepository.GetBoardEnrollmentsByLecturerEmail(query, email);
             return mapper.Map<QueryResult<BoardEnrollment>, QueryResultResource<BoardEnrollmentResource>>(queryResult);
         }
 
         [HttpGet]
         [Route("getboardenrollmentsbygroupid/{id}")]
-        public async Task<QueryResultResource<BoardEnrollmentResource>> GetboardEnrollmentsByGroupId(int id)
+        public async Task<QueryResultResource<BoardEnrollmentResource>> GetboardEnrollmentsByGroupId(QueryResource queryResource, int id)
         {
-
-            var queryResult = await boardEnrollmentRepository.GetBoardEnrollmentsByGroupId(id);
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await boardEnrollmentRepository.GetBoardEnrollmentsByGroupId(query, id);
             return mapper.Map<QueryResult<BoardEnrollment>, QueryResultResource<BoardEnrollmentResource>>(queryResult);
         }
 
         [HttpGet]
         [Route("getboardenrollmentsbyboardid/{id}")]
-        public async Task<IActionResult> GetboardEnrollmentsByboardId(int id)
+        public async Task<QueryResultResource<BoardEnrollmentResource>> GetboardEnrollmentsByboardId(QueryResource queryResource, int id)
         {
-            var boardEnrollments = await boardEnrollmentRepository.GetBoardEnrollmentsByBoardId(id);
-            var boardEnrollmentResource = mapper.Map<IEnumerable<BoardEnrollment>, IEnumerable<BoardEnrollmentResource>>(boardEnrollments);
-            return Ok(boardEnrollmentResource);
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await boardEnrollmentRepository.GetBoardEnrollmentsByBoardId(query, id);
+            return mapper.Map<QueryResult<BoardEnrollment>, QueryResultResource<BoardEnrollmentResource>>(queryResult);
         }
 
         [HttpPut]

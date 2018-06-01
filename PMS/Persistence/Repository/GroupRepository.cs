@@ -216,5 +216,79 @@ namespace PMS.Persistence
                 }
             }
         }
+
+        public async Task<QueryResult<Group>> GetGroupsByLecturerEmailInBoard(Query queryObj, string email)
+        {
+            var result = new QueryResult<Group>();
+
+            var query = context.Groups
+                .Include(p => p.Project)
+                .Include(p => p.Enrollments)
+                    .ThenInclude(e => e.Student)
+                .Include(p => p.UploadedFiles)
+                .Include(p => p.Lecturer)
+                .Include(p => p.Major)
+                .Include(p => p.Quarter)
+                .Include(p => p.Board)
+                    .ThenInclude(be => be.BoardEnrollments)
+                        .ThenInclude(ce => ce.BoardRole)
+                .Include(p => p.Board)
+                    .ThenInclude(be => be.BoardEnrollments)
+                        .ThenInclude(ce => ce.Lecturer)
+                .Include(p => p.Board)
+                    .ThenInclude(be => be.Group)
+                        .ThenInclude(ge => ge.Project)
+                 .Where(g => g.isDeleted == false && g.Board.BoardEnrollments.Any(be => be.Lecturer.Email.Equals(email)))
+                .AsQueryable();
+
+            //filter
+            if (queryObj.LecturerId.HasValue)
+            {
+                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+            }
+
+            if (queryObj.ProjectId.HasValue)
+            {
+                query = query.Where(q => q.Project.ProjectId == queryObj.ProjectId.Value);
+            }
+
+            if (queryObj.isConfirm != null)
+            {
+                query = query.Where(q => q.isConfirm.Equals(queryObj.isConfirm));
+            }
+
+            if (queryObj.Email != null)
+            {
+                query = query.Where(q => q.Lecturer.Email.Equals(queryObj.Email) || q.Lecturer == null);
+            }
+
+            if (queryObj.QuarterId.HasValue)
+            {
+                query = query.Where(q => q.Quarter.QuarterId == queryObj.QuarterId.Value);
+            }
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Group, object>>>()
+            {
+                ["name"] = s => s.GroupName,
+                ["quarter"] = s => s.Quarter.QuarterName,
+                ["lecturer"] = s => s.Lecturer.Name,
+                ["project"] = s => s.Project.Title
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.GroupId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
+
+            return result;
+        }
     }
 }

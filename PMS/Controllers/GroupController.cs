@@ -225,5 +225,14 @@ namespace PMS.Controllers
             var queryResult = await groupRepository.GetGroups(query);
             return mapper.Map<QueryResult<Group>, QueryResultResource<GroupResource>>(queryResult);
         }
+
+        [HttpGet]
+        [Route("getgroupsbylectureremailinboard/{email}")]
+        public async Task<QueryResultResource<GroupResource>> GetGroupsByLecturerEmailInBoard(QueryResource queryResource, string email)
+        {
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await groupRepository.GetGroupsByLecturerEmailInBoard(query, email);
+            return mapper.Map<QueryResult<Group>, QueryResultResource<GroupResource>>(queryResult);
+        }
     }
 }
