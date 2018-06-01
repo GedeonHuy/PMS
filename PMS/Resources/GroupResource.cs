@@ -36,6 +36,7 @@ namespace PMS.Resources
         public ICollection<int> Tasks { get; set; }
         public ICollection<string> StudentEmails { get; set; } //Students không tồn tại trong Group.cs
         public string LecturerEmail { get; set; }
+        public ICollection<string> Comments { get; set; }
         public ICollection<StudentInformationResource> StudentInformations { get; set; }
 
         public GroupResource()
@@ -44,6 +45,7 @@ namespace PMS.Resources
             Enrollments = new Collection<int>();
             UploadedFiles = new Collection<int>();
             Tasks = new Collection<int>();
+            Comments = new Collection<string>();
             isConfirm = "Pending";
             isDeleted = false;
         }

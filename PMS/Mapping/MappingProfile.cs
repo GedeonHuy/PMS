@@ -174,6 +174,7 @@ namespace PMS.Mapping
                     Enrollments = e.Group.Enrollments.Select(ef => ef.EnrollmentId).ToList(),
                     UploadedFiles = e.Group.UploadedFiles.Select(ef => ef.UploadedFileId).ToList(),
                     Tasks = e.Group.Tasks.Select(ef => ef.TaskId).ToList(),
+                    Comments = e.Group.Board.BoardEnrollments.Select(sf => sf.Comment).ToList(),
                     LecturerEmail = e.Group.Lecturer.Email,
                     StudentEmails = e.Group.Enrollments.Select(sf => sf.Student.Email).ToList(),
                     StudentInformations = e.Group.Enrollments.Select(sf => new StudentInformationResource
@@ -250,6 +251,7 @@ namespace PMS.Mapping
 
             CreateMap<Group, GroupResource>()
                 .ForMember(er => er.BoardId, opt => opt.MapFrom(e => e.Board.BoardId))
+                .ForMember(gr => gr.Comments, opt => opt.MapFrom(g => g.Board.BoardEnrollments.Select(gf => gf.Comment)))
                 .ForMember(er => er.Board, opt => opt.MapFrom(e => new BoardResource
                 {
                     BoardId = e.Board.BoardId,
@@ -367,6 +369,7 @@ namespace PMS.Mapping
                     Enrollments = s.Group.Enrollments.Select(sf => sf.EnrollmentId).ToList(),
                     StudentEmails = s.Group.Enrollments.Select(sf => sf.Student.Email).ToList(),
                     LecturerEmail = s.Group.Lecturer.Email,
+                    Comments = s.Group.Board.BoardEnrollments.Select(sf => sf.Comment).ToList(),
                     StudentInformations = s.Group.Enrollments.Select(sf => new StudentInformationResource
                     {
                         Email = sf.Student.Email,
