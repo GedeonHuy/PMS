@@ -164,10 +164,19 @@ namespace PMS.Controllers
 
         [HttpGet]
         [Route("getboardenrollmentsbylectureremail/{email}")]
-        public async Task<QueryResultResource<BoardEnrollmentResource>> GetboardEnrollments(string email)
+        public async Task<QueryResultResource<BoardEnrollmentResource>> GetboardEnrollmentsByLecturerEmail(string email)
         {
 
             var queryResult = await boardEnrollmentRepository.GetBoardEnrollmentsByLecturerEmail(email);
+            return mapper.Map<QueryResult<BoardEnrollment>, QueryResultResource<BoardEnrollmentResource>>(queryResult);
+        }
+
+        [HttpGet]
+        [Route("getboardenrollmentsbygroupid/{id}")]
+        public async Task<QueryResultResource<BoardEnrollmentResource>> GetboardEnrollmentsByGroupId(int id)
+        {
+
+            var queryResult = await boardEnrollmentRepository.GetBoardEnrollmentsByGroupId(id);
             return mapper.Map<QueryResult<BoardEnrollment>, QueryResultResource<BoardEnrollmentResource>>(queryResult);
         }
 

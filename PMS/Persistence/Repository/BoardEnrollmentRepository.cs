@@ -139,5 +139,28 @@ namespace PMS.Persistence.Repository
         {
             context.Update(boardEnrollment);
         }
+
+        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByGroupId(int id)
+        {
+            var result = new QueryResult<BoardEnrollment>();
+            var query = context.BoardEnrollments
+                                    .Include(c => c.Lecturer)
+                                    .Include(c => c.Board)
+                                        .ThenInclude(b => b.Group)
+                                    .Where(c => c.IsDeleted == false && c.Board.Group.GroupId == id)
+                                .AsQueryable();
+
+            //sort
+
+            query = query.OrderByDescending(s => s.BoardEnrollmentId);
+
+            //paging
+
+            result.Items = await query.ToListAsync();
+
+            result.TotalItems = await query.CountAsync();
+
+            return result;
+        }
     }
 }
