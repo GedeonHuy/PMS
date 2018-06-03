@@ -82,17 +82,17 @@ namespace PMS.Persistence
             //search
             if (queryObj.ProjectCodeSearch != null)
             {
-                query = query.Where(q => q.ProjectCode.ToLower().Contains(queryObj.ProjectCodeSearch.ToLower()));
+                query = query.Where(q => q.ProjectCode.ToLower().NonUnicode().Contains(queryObj.ProjectCodeSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.TitleSearch != null)
             {
-                query = query.Where(q => q.Title.ToLower().Contains(queryObj.TitleSearch.ToLower()));
+                query = query.Where(q => q.Title.ToLower().NonUnicode().Contains(queryObj.TitleSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.DescriptionSearch != null)
             {
-                query = query.Where(q => q.Description.ToLower().Contains(queryObj.DescriptionSearch.ToLower()));
+                query = query.Where(q => q.Description.ToLower().NonUnicode().Contains(queryObj.DescriptionSearch.ToLower().NonUnicode()));
             }
 
             //sort
@@ -192,17 +192,17 @@ namespace PMS.Persistence
             //search
             if (queryObj.ProjectCodeSearch != null)
             {
-                query = query.Where(q => q.ProjectCode.ToLower().Contains(queryObj.ProjectCodeSearch.ToLower()));
+                query = query.Where(q => q.ProjectCode.ToLower().NonUnicode().Contains(queryObj.ProjectCodeSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.TitleSearch != null)
             {
-                query = query.Where(q => q.Title.ToLower().Contains(queryObj.TitleSearch.ToLower()));
+                query = query.Where(q => q.Title.ToLower().NonUnicode().Contains(queryObj.TitleSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.DescriptionSearch != null)
             {
-                query = query.Where(q => q.Description.ToLower().Contains(queryObj.DescriptionSearch.ToLower()));
+                query = query.Where(q => q.Description.ToLower().NonUnicode().Contains(queryObj.DescriptionSearch.ToLower().NonUnicode()));
             }
 
             //sort

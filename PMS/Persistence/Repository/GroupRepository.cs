@@ -106,6 +106,27 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Quarter.QuarterId == queryObj.QuarterId.Value);
             }
 
+            //search
+            if (queryObj.GroupNameSearch != null)
+            {
+                query = query.Where(q => q.GroupName.ToLower().NonUnicode().Contains(queryObj.GroupNameSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.LinkGitHubSearch != null)
+            {
+                query = query.Where(q => q.LinkGitHub.ToLower().NonUnicode().Contains(queryObj.LinkGitHubSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.ResultGradeSearch != null)
+            {
+                query = query.Where(q => q.ResultGrade.ToLower().NonUnicode().Contains(queryObj.ResultGradeSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.ResultScoreSearch != null)
+            {
+                query = query.Where(q => q.ResultScore.ToLower().NonUnicode().Contains(queryObj.ResultScoreSearch.ToLower().NonUnicode()));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Group, object>>>()
             {
@@ -270,22 +291,22 @@ namespace PMS.Persistence
             //search
             if (queryObj.GroupNameSearch != null)
             {
-                query = query.Where(q => q.GroupName.ToLower().Contains(queryObj.GroupNameSearch.ToLower()));
+                query = query.Where(q => q.GroupName.ToLower().NonUnicode().Contains(queryObj.GroupNameSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.LinkGitHubSearch != null)
             {
-                query = query.Where(q => q.LinkGitHub.ToLower().Contains(queryObj.LinkGitHubSearch.ToLower()));
+                query = query.Where(q => q.LinkGitHub.ToLower().NonUnicode().Contains(queryObj.LinkGitHubSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.ResultGradeSearch != null)
             {
-                query = query.Where(q => q.ResultGrade.ToLower().Contains(queryObj.ResultGradeSearch.ToLower()));
+                query = query.Where(q => q.ResultGrade.ToLower().NonUnicode().Contains(queryObj.ResultGradeSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.ResultScoreSearch != null)
             {
-                query = query.Where(q => q.ResultScore.ToLower().Contains(queryObj.ResultScoreSearch.ToLower()));
+                query = query.Where(q => q.ResultScore.ToLower().NonUnicode().Contains(queryObj.ResultScoreSearch.ToLower().NonUnicode()));
             }
 
             //sort

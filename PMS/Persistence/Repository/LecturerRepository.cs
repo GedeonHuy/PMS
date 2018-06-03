@@ -98,22 +98,22 @@ namespace PMS.Persistence
             //search
             if (queryObj.NameSearch != null)
             {
-                query = query.Where(q => q.Name.ToLower().Contains(queryObj.NameSearch.ToLower()));
+                query = query.Where(q => q.Name.ToLower().NonUnicode().Contains(queryObj.NameSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.AddressSearch != null)
             {
-                query = query.Where(q => q.Address.ToLower().Contains(queryObj.AddressSearch.ToLower()));
+                query = query.Where(q => q.Address.ToLower().NonUnicode().Contains(queryObj.AddressSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.EmailSearch != null)
             {
-                query = query.Where(q => q.Email.ToLower().Contains(queryObj.EmailSearch.ToLower()));
+                query = query.Where(q => q.Email.ToLower().NonUnicode().Contains(queryObj.EmailSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.PhoneNumberSearch != null)
             {
-                query = query.Where(q => q.PhoneNumber.ToLower().Contains(queryObj.PhoneNumberSearch.ToLower()));
+                query = query.Where(q => q.PhoneNumber.ToLower().NonUnicode().Contains(queryObj.PhoneNumberSearch.ToLower().NonUnicode()));
             }
 
             //sort
@@ -241,22 +241,22 @@ namespace PMS.Persistence
             //search
             if (queryObj.GroupNameSearch != null)
             {
-                query = query.Where(q => q.GroupName.ToLower().Contains(queryObj.GroupNameSearch.ToLower()));
+                query = query.Where(q => q.GroupName.ToLower().NonUnicode().Contains(queryObj.GroupNameSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.LinkGitHubSearch != null)
             {
-                query = query.Where(q => q.LinkGitHub.ToLower().Contains(queryObj.LinkGitHubSearch.ToLower()));
+                query = query.Where(q => q.LinkGitHub.ToLower().NonUnicode().Contains(queryObj.LinkGitHubSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.ResultGradeSearch != null)
             {
-                query = query.Where(q => q.ResultGrade.ToLower().Contains(queryObj.ResultGradeSearch.ToLower()));
+                query = query.Where(q => q.ResultGrade.ToLower().NonUnicode().Contains(queryObj.ResultGradeSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.ResultScoreSearch != null)
             {
-                query = query.Where(q => q.ResultScore.ToLower().Contains(queryObj.ResultScoreSearch.ToLower()));
+                query = query.Where(q => q.ResultScore.ToLower().NonUnicode().Contains(queryObj.ResultScoreSearch.ToLower().NonUnicode()));
             }
 
             //sort
@@ -304,22 +304,22 @@ namespace PMS.Persistence
             //search
             if (queryObj.NameSearch != null)
             {
-                query = query.Where(q => q.Name.ToLower().Contains(queryObj.NameSearch.ToLower()));
+                query = query.Where(q => q.Name.ToLower().NonUnicode().Contains(queryObj.NameSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.AddressSearch != null)
             {
-                query = query.Where(q => q.Address.ToLower().Contains(queryObj.AddressSearch.ToLower()));
+                query = query.Where(q => q.Address.ToLower().NonUnicode().Contains(queryObj.AddressSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.EmailSearch != null)
             {
-                query = query.Where(q => q.Email.ToLower().Contains(queryObj.EmailSearch.ToLower()));
+                query = query.Where(q => q.Email.ToLower().NonUnicode().Contains(queryObj.EmailSearch.ToLower().NonUnicode()));
             }
 
             if (queryObj.PhoneNumberSearch != null)
             {
-                query = query.Where(q => q.PhoneNumber.ToLower().Contains(queryObj.PhoneNumberSearch.ToLower()));
+                query = query.Where(q => q.PhoneNumber.ToLower().NonUnicode().Contains(queryObj.PhoneNumberSearch.ToLower().NonUnicode()));
             }
 
             //sort
