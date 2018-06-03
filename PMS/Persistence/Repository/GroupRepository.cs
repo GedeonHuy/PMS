@@ -74,7 +74,7 @@ namespace PMS.Persistence
                         .ThenInclude(ce => ce.BoardRole)
                 .Include(p => p.Board)
                     .ThenInclude(be => be.BoardEnrollments)
-                        // .ThenInclude(ce => ce.Lecturer)
+                // .ThenInclude(ce => ce.Lecturer)
                 .Include(p => p.Board)
                     .ThenInclude(be => be.Group)
                         .ThenInclude(ge => ge.Project)
@@ -120,12 +120,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
+            result.TotalItems = await query.CountAsync();
+
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
-
-            result.TotalItems =  result.Items.Count();
 
             return result;
         }
@@ -281,12 +281,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
+            result.TotalItems = await query.CountAsync();
+
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
-
-            result.TotalItems = result.Items.Count();
 
             return result;
         }
