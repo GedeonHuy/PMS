@@ -19,7 +19,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Role",
-            icon: "fa fa-circle-notch",
+            icon: "fa fa-user-times",
             selected: false,
             expanded: false,
             order: 0
