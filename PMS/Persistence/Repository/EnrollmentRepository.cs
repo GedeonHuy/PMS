@@ -123,7 +123,7 @@ namespace PMS.Persistence
 
             result.Items = await query.ToListAsync();
 
-            result.TotalItems = await query.CountAsync();
+            result.TotalItems = result.Items.Count();
 
             return result;
 
