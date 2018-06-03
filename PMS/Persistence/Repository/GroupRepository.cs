@@ -267,6 +267,27 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Quarter.QuarterId == queryObj.QuarterId.Value);
             }
 
+            //search
+            if (queryObj.GroupNameSearch != null)
+            {
+                query = query.Where(q => q.GroupName.ToLower().Contains(queryObj.GroupNameSearch.ToLower()));
+            }
+
+            if (queryObj.LinkGitHubSearch != null)
+            {
+                query = query.Where(q => q.LinkGitHub.ToLower().Contains(queryObj.LinkGitHubSearch.ToLower()));
+            }
+
+            if (queryObj.ResultGradeSearch != null)
+            {
+                query = query.Where(q => q.ResultGrade.ToLower().Contains(queryObj.ResultGradeSearch.ToLower()));
+            }
+
+            if (queryObj.ResultScoreSearch != null)
+            {
+                query = query.Where(q => q.ResultScore.ToLower().Contains(queryObj.ResultScoreSearch.ToLower()));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Group, object>>>()
             {

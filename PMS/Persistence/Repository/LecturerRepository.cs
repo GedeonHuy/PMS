@@ -95,6 +95,27 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
             }
 
+            //search
+            if (queryObj.NameSearch != null)
+            {
+                query = query.Where(q => q.Name.ToLower().Contains(queryObj.NameSearch.ToLower()));
+            }
+
+            if (queryObj.AddressSearch != null)
+            {
+                query = query.Where(q => q.Address.ToLower().Contains(queryObj.AddressSearch.ToLower()));
+            }
+
+            if (queryObj.EmailSearch != null)
+            {
+                query = query.Where(q => q.Email.ToLower().Contains(queryObj.EmailSearch.ToLower()));
+            }
+
+            if (queryObj.PhoneNumberSearch != null)
+            {
+                query = query.Where(q => q.PhoneNumber.ToLower().Contains(queryObj.PhoneNumberSearch.ToLower()));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Lecturer, object>>>()
             {
@@ -217,6 +238,27 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Quarter.QuarterId == queryObj.QuarterId.Value);
             }
 
+            //search
+            if (queryObj.GroupNameSearch != null)
+            {
+                query = query.Where(q => q.GroupName.ToLower().Contains(queryObj.GroupNameSearch.ToLower()));
+            }
+
+            if (queryObj.LinkGitHubSearch != null)
+            {
+                query = query.Where(q => q.LinkGitHub.ToLower().Contains(queryObj.LinkGitHubSearch.ToLower()));
+            }
+
+            if (queryObj.ResultGradeSearch != null)
+            {
+                query = query.Where(q => q.ResultGrade.ToLower().Contains(queryObj.ResultGradeSearch.ToLower()));
+            }
+
+            if (queryObj.ResultScoreSearch != null)
+            {
+                query = query.Where(q => q.ResultScore.ToLower().Contains(queryObj.ResultScoreSearch.ToLower()));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Group, object>>>()
             {
@@ -257,6 +299,27 @@ namespace PMS.Persistence
             {
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value)
                             .Where(q => q.Major.MajorId == majorId);
+            }
+
+            //search
+            if (queryObj.NameSearch != null)
+            {
+                query = query.Where(q => q.Name.ToLower().Contains(queryObj.NameSearch.ToLower()));
+            }
+
+            if (queryObj.AddressSearch != null)
+            {
+                query = query.Where(q => q.Address.ToLower().Contains(queryObj.AddressSearch.ToLower()));
+            }
+
+            if (queryObj.EmailSearch != null)
+            {
+                query = query.Where(q => q.Email.ToLower().Contains(queryObj.EmailSearch.ToLower()));
+            }
+
+            if (queryObj.PhoneNumberSearch != null)
+            {
+                query = query.Where(q => q.PhoneNumber.ToLower().Contains(queryObj.PhoneNumberSearch.ToLower()));
             }
 
             //sort

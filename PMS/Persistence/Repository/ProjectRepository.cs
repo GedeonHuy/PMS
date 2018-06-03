@@ -79,6 +79,22 @@ namespace PMS.Persistence
                 query = query.Where(q => q.TagProjects.Any(tp => tp.Tag.TagName.Equals(queryObj.TagName)));
             }
 
+            //search
+            if (queryObj.ProjectCodeSearch != null)
+            {
+                query = query.Where(q => q.ProjectCode.ToLower().Contains(queryObj.ProjectCodeSearch.ToLower()));
+            }
+
+            if (queryObj.TitleSearch != null)
+            {
+                query = query.Where(q => q.Title.ToLower().Contains(queryObj.TitleSearch.ToLower()));
+            }
+
+            if (queryObj.DescriptionSearch != null)
+            {
+                query = query.Where(q => q.Description.ToLower().Contains(queryObj.DescriptionSearch.ToLower()));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Project, object>>>()
             {
@@ -171,6 +187,22 @@ namespace PMS.Persistence
             if (queryObj.MajorId.HasValue)
             {
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
+            }
+
+            //search
+            if (queryObj.ProjectCodeSearch != null)
+            {
+                query = query.Where(q => q.ProjectCode.ToLower().Contains(queryObj.ProjectCodeSearch.ToLower()));
+            }
+
+            if (queryObj.TitleSearch != null)
+            {
+                query = query.Where(q => q.Title.ToLower().Contains(queryObj.TitleSearch.ToLower()));
+            }
+
+            if (queryObj.DescriptionSearch != null)
+            {
+                query = query.Where(q => q.Description.ToLower().Contains(queryObj.DescriptionSearch.ToLower()));
             }
 
             //sort
