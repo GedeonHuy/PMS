@@ -26,6 +26,7 @@ namespace PMS.Resources
         public bool IsSortAscending { get; set; }
         public int Page { get; set; }
         public byte PageSize { get; set; }
+        public string BoardRoleName { get; set; }
 
         //search
         public string StudentCodeSearch { get; set; }

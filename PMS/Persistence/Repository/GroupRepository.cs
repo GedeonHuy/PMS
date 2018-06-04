@@ -288,6 +288,11 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Quarter.QuarterId == queryObj.QuarterId.Value);
             }
 
+            if (queryObj.BoardRoleName != null)
+            {
+                query = query.Where(q => q.Board.BoardEnrollments.Any(be => be.Lecturer.Email.Equals(email) && be.BoardRole.BoardRoleName == queryObj.BoardRoleName));
+            }
+
             //search
             if (queryObj.GroupNameSearch != null)
             {
