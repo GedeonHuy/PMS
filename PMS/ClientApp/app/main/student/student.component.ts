@@ -33,7 +33,7 @@ export class StudentComponent implements OnInit {
   majors: any[];
 
   query: any = {
-    pageSize: SystemConstants.PAGE_SIZE
+    pageSize: 10
   };
 
   constructor(

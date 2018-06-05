@@ -65,7 +65,7 @@ $hoverlink: darken($activelink, 20%);
 @mixin body-bg() {
   background-color: $body-bg;
 
-  $mainBgUrl: $assets-root + $images-root + 'white.png';
+  $mainBgUrl: $assets-root + $images-root + 'light-green.png';
 
   &::before {
     content: '';

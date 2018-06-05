@@ -1,3 +1,4 @@
+import { PaginationModule } from './core/pagination/pagination.module';
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -6,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthGuard } from './core/guards/auth.guard';
-
 /*
  * Platform and Environment providers/directives/pipes
  */
@@ -46,6 +46,7 @@ export type StoreType = {
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    PaginationModule,
     NgaModule.forRoot(),
     NgbModule.forRoot(),
     MainModule,

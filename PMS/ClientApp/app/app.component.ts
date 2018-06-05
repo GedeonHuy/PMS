@@ -48,7 +48,7 @@ export class App {
 
   private _loadImages(): void {
     // register some loaders
-    BaThemePreloader.registerLoader(this._imageLoader.load('assets/img/white.png'));
+    BaThemePreloader.registerLoader(this._imageLoader.load('assets/img/light-green.png'));
   }
 
 }

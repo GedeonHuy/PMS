@@ -61,7 +61,7 @@
   aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)"
   (onHidden)="handler('onHidden', $event)">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" >
+    <div class="modal-content" style="background: #7FFFD4">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Add/Edit project</h4>
         <span *ngIf="!isLoadProject && !isLoadTag" class="fa fa-refresh fa-spin"></span>
@@ -165,7 +165,7 @@
 <!--Modal import-->
 <div bsModal #modalImport="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content" style="background: #7FFFD4">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Import Excel file</h4>
         <button type="button" class="close pull-right" (click)="modalImport.hide()" aria-label="Close">

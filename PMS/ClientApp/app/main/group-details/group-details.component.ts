@@ -33,6 +33,7 @@ export class GroupDetailsComponent implements OnInit {
   dataCommit: any[] = [];
   commitDetails: any[] = [];
   public uploadedFile: any;
+  isHaveGithub : boolean;
   linkGithub: string;
   linkDowload: string;
   linkUploadedFileDowload: string;
@@ -112,7 +113,7 @@ export class GroupDetailsComponent implements OnInit {
         label: "Commits in 12 weeks",
         fill: false,
         data: this.dataCommit,
-        borderColor: "#66cc66",
+        borderColor: "black",
         borderWidth: 1
       }
     ]
@@ -126,11 +127,15 @@ export class GroupDetailsComponent implements OnInit {
     this._dataService.get('/api/groups/getgroup/' + id)
       .subscribe((response: any) => {
         this.group = response;
-        this.linkGithub = response.linkGitHub.replace("https://github.com/", "");
-        this.linkDowload = response.linkGitHub + "/archive/master.zip";
-        this.loadGithub(this.linkGithub);
-        this.loadDataCommits(this.linkGithub + "/stats/participation");
-        this.loadCommitComment(this.linkGithub + "/commits");
+        //if (response.linkGithub != null) {
+          this.linkGithub = response.linkGitHub.replace("https://github.com/", "");
+          this.linkDowload = response.linkGitHub + "/archive/master.zip";
+          this.loadGithub(this.linkGithub);
+          this.loadDataCommits(this.linkGithub + "/stats/participation");
+          this.loadCommitComment(this.linkGithub + "/commits");
+
+          this.isHaveGithub = true;
+        //}
         this.isLoadData = true;
         if (this.group.board.resultScore == null)
         {
@@ -148,7 +153,6 @@ export class GroupDetailsComponent implements OnInit {
         {
           this.group.resultGrade = this.group.board.resultGrade;
         }
-        console.log(this.group);
       });
   }
 
