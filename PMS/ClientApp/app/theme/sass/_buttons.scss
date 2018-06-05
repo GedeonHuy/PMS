@@ -95,6 +95,22 @@ button.btn.btn-info {
   }
 }
 
+button.btn.btn-assign {
+  @include buttonColor(rgb(7, 206, 0), rgb(7, 206, 0));
+  color: rgb(255, 255, 74);
+  &:active, &:target {
+    background-color: rgb(0, 150, 25);
+  }
+}
+
+button.btn.btn-mark {
+  @include buttonColor(rgb(213, 220, 255), rgb(213, 220, 255));
+  color: rgb(0, 5, 31);
+  &:active, &:target {
+    background-color: rgb(0, 127, 150);
+  }
+}
+
 button.btn.btn-warning {
   @include buttonColor($warning, $warning);
   &:active, &:target {

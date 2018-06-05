@@ -45,6 +45,7 @@ export class GroupDetailsComponent implements OnInit {
 
   lecturers: any[];
   boardEnrollmentsOfLecturer: any[];
+  groupBoardEnrollments: any[];
   thisLecturerId: any;  
 
   isAdmin: boolean;
@@ -123,15 +124,18 @@ export class GroupDetailsComponent implements OnInit {
 
   //Get Group with Id
   loadGroupDetails(id: any) {
-    this._dataService.get('/api/groups/getgroup/' + id)
-      .subscribe((response: any) => {
-        this.group = response;
-        this.linkGithub = response.linkGitHub.replace("https://github.com/", "");
-        this.linkDowload = response.linkGitHub + "/archive/master.zip";
+    Observable.forkJoin([
+    this._dataService.get('/api/groups/getgroup/' + id),
+    this._dataService.get('/api/boardenrollments/getboardenrollmentsbygroupid/' + id)
+    ]).subscribe(data => {
+        this.group = data[0];
+        this.linkGithub = data[0].linkGitHub.replace("https://github.com/", "");
+        this.linkDowload = data[0].linkGitHub + "/archive/master.zip";
         this.loadGithub(this.linkGithub);
         this.loadDataCommits(this.linkGithub + "/stats/participation");
         this.loadCommitComment(this.linkGithub + "/commits");
         this.isLoadData = true;
+        this.groupBoardEnrollments = data[1].items;
         if (this.group.board.resultScore == null)
         {
           this.group.resultScore = "N\\A";
