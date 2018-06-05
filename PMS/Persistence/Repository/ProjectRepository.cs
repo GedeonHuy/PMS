@@ -5,6 +5,7 @@ using PMS.Models;
 using PMS.Resources;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -228,6 +229,102 @@ namespace PMS.Persistence
             result.Items = await query.ToListAsync();
 
             return result;
+        }
+
+        public async Task<QueryResult<Project>> GetSimilarProjects(Query queryObj, ProjectResource projectResource)
+        {
+            var result = new QueryResult<Project>();
+
+            var searchtermTitle = projectResource.Title.NonUnicode();
+            var searchtermDescription = projectResource.Description.NonUnicode();
+
+            var query = context.Projects
+                .Where(c => c.IsDeleted == false
+                 && (searchtermTitle.CalculateSimilarity(c.Title.NonUnicode()) > 0.3
+                  || searchtermTitle.CalculateSimilarity(c.Description.NonUnicode()) > 0.3)
+                  || searchtermDescription.CalculateSimilarity(c.Title.NonUnicode()) > 0.3
+                  || searchtermDescription.CalculateSimilarity(c.Description.NonUnicode()) > 0.3)
+                .Include(p => p.Groups)
+                .Include(p => p.TagProjects)
+                    .ThenInclude(tp => tp.Tag)
+                .Include(p => p.Major)
+                .Include(p => p.Lecturer)
+                .AsQueryable();
+
+            //filter
+            if (queryObj.Type != null)
+            {
+                query = query.Where(q => q.Type == queryObj.Type);
+            }
+
+            if (queryObj.LecturerId.HasValue)
+            {
+                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+            }
+
+            if (queryObj.MajorId.HasValue)
+            {
+                query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
+            }
+
+            //search
+            if (queryObj.ProjectCodeSearch != null)
+            {
+                query = query.Where(q => q.ProjectCode.ToLower().NonUnicode().Contains(queryObj.ProjectCodeSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.TitleSearch != null)
+            {
+                query = query.Where(q => q.Title.ToLower().NonUnicode().Contains(queryObj.TitleSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.DescriptionSearch != null)
+            {
+                query = query.Where(q => q.Description.ToLower().NonUnicode().Contains(queryObj.DescriptionSearch.ToLower().NonUnicode()));
+            }
+
+            //sort
+            var columnsMap = new Dictionary<string, Expression<Func<Project, object>>>()
+            {
+                ["title"] = s => s.Title,
+                ["type"] = s => s.Type,
+                ["code"] = s => s.ProjectCode,
+                ["description"] = s => s.Description,
+                ["major"] = s => s.Major.MajorName,
+            };
+            if (queryObj.SortBy != "id" || queryObj.IsSortAscending != true)
+            {
+                query = query.OrderByDescending(s => s.ProjectId);
+            }
+            query = query.ApplyOrdering(queryObj, columnsMap);
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+            query = query.ApplyPaging(queryObj);
+
+            result.Items = await query.ToListAsync();
+
+            return result;
+            // var projects = await context.Projects
+            //     .Where(c => c.IsDeleted == false)
+            //     .Include(p => p.Groups)
+            //     .Include(p => p.TagProjects)
+            //         .ThenInclude(tp => tp.Tag)
+            //     .Include(p => p.Major)
+            //     .Include(p => p.Lecturer)
+            //     .ToListAsync();
+            // foreach (var project in projects)
+            // {
+            //     var a = searchterm.CalculateSimilarity(project.Title.NonUnicode());
+            //     var b = searchterm.CalculateSimilarity(project.Description.NonUnicode());
+            //     if (searchterm.CalculateSimilarity(project.Title.NonUnicode()) > 0.6
+            //        || searchterm.CalculateSimilarity(project.Description.NonUnicode()) > 0.6)
+            //     {
+            //         similarProject.Add(project);
+            //     }
+            // }
+            // return similarProject;
         }
     }
 }

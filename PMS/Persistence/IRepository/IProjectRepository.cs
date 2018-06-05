@@ -16,5 +16,6 @@ namespace PMS.Persistence
         void UpdateGroups(Project project, ProjectResource projectResource);
         void UpdateTagProjects(Project project, ProjectResource projectResource);
         Task<QueryResult<Project>> GetProjectsByMajor(int? majorId, Query filter);
+        Task<QueryResult<Project>> GetSimilarProjects(Query queryObj, ProjectResource projectResource);
     }
 }

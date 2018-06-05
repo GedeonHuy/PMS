@@ -240,5 +240,17 @@ namespace PMS.Controllers
 
             return Ok(mapper.Map<Excel, ExcelResource>(excel));
         }
+
+        [HttpPost]
+        [Route("getsimilarprojects")]
+        public async Task<QueryResultResource<ProjectResource>> GetSimilarProjects([FromBody]ProjectResource projectResource)
+        {
+            QueryResource queryResource = new QueryResource();
+
+            var query = mapper.Map<QueryResource, Query>(queryResource);
+            var queryResult = await projectRepository.GetSimilarProjects(query, projectResource);
+
+            return mapper.Map<QueryResult<Project>, QueryResultResource<ProjectResource>>(queryResult);
+        }
     }
 }
