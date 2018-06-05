@@ -433,6 +433,7 @@ export class GroupDetailsComponent implements OnInit {
         }, error => reject(this._dataService.handleError(error)));
     });
   }
+  
   download(modalUpload){
     window.location.href = this.linkUploadedFileDowload
     this._notificationService.printSuccessMessage("Download Success");
