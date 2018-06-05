@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace PMS.Resources
         public double? Score { get; set; }
         public bool isMarked { get; set; }
         public string Comment { get; set; }
-        public string Recommendation { get; set; }
+        public ICollection<String> Recommendations { get; set; }
         public BoardResource Board { get; set; }
         public LecturerResource Lecturer { get; set; }
         public BoardEnrollmentResource()
@@ -23,6 +24,7 @@ namespace PMS.Resources
             Lecturer = new LecturerResource();
             Board = new BoardResource();
             IsDeleted = false;
+            Recommendations = new Collection<String>();
         }
     }
 }

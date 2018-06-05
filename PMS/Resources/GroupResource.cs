@@ -38,6 +38,7 @@ namespace PMS.Resources
         public string LecturerEmail { get; set; }
         public ICollection<string> Comments { get; set; }
         public ICollection<StudentInformationResource> StudentInformations { get; set; }
+        public ICollection<UploadFilesInformationResource> UploadFilesInformation { get; set; }
 
         public GroupResource()
         {
@@ -46,6 +47,8 @@ namespace PMS.Resources
             UploadedFiles = new Collection<int>();
             Tasks = new Collection<int>();
             Comments = new Collection<string>();
+            UploadFilesInformation = new Collection<UploadFilesInformationResource>();
+            StudentInformations = new Collection<StudentInformationResource>();
             isConfirm = "Pending";
             isDeleted = false;
         }

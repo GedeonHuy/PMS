@@ -30,6 +30,7 @@ namespace PMS.Persistence.Repository
             return await context.BoardEnrollments
                 .Include(c => c.Lecturer)
                 .Include(c => c.Board)
+                .Include(c => c.Recommendations)
                 .SingleOrDefaultAsync(s => s.BoardEnrollmentId == id);
         }
 
@@ -51,6 +52,7 @@ namespace PMS.Persistence.Repository
                                 .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.Board)
+                                .Include(c => c.Recommendations)
                                 .AsQueryable();
 
             //filter
@@ -78,6 +80,7 @@ namespace PMS.Persistence.Repository
                                 .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.Board)
+                                .Include(c => c.Recommendations)
                                 .AsQueryable();
 
             //filter
@@ -153,6 +156,7 @@ namespace PMS.Persistence.Repository
                                 .Include(c => c.Board)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.BoardRole)
+                                .Include(c => c.Recommendations)
                                 .Where(c => c.Board.BoardId == id)
                                 .AsQueryable();
 
@@ -189,6 +193,7 @@ namespace PMS.Persistence.Repository
             var result = new QueryResult<BoardEnrollment>();
             var query = context.BoardEnrollments
                                     .Include(c => c.Lecturer)
+                                    .Include(c => c.Recommendations)
                                     .Include(c => c.Board)
                                         .ThenInclude(b => b.Group)
                                     .Where(c => c.IsDeleted == false && c.Board.Group.GroupId == id)
@@ -215,6 +220,29 @@ namespace PMS.Persistence.Repository
             result.Items = await query.ToListAsync();
 
             return result;
+        }
+
+        public void UpdateRecommendations(BoardEnrollment boardEnrollment, BoardEnrollmentResource boardEnrollmentResource)
+        {
+            if (boardEnrollmentResource.Recommendations != null && boardEnrollmentResource.Recommendations.Count >= 0)
+            {
+                //remove old tagprojects
+                var oldRecommendations = boardEnrollment.Recommendations.Where(p => !boardEnrollmentResource.Recommendations.Any(id => id == p.Description)).ToList();
+                foreach (Recommendation recommendation in oldRecommendations)
+                {
+                    recommendation.IsDeleted = true;
+                    boardEnrollment.Recommendations.Remove(recommendation);
+                }
+                //project.TagProjects.Clear();
+
+                //add new tagprojects
+                var newRecommendations = boardEnrollmentResource.Recommendations.Where(t => !boardEnrollment.Recommendations.Any(id => id.Description == t));
+                foreach (var recommendation in newRecommendations)
+                {
+                    boardEnrollment.Recommendations.Add(new Recommendation { IsDeleted = false, IsDone = false, Description = recommendation });
+                    //project.TagProjects.Add(a);
+                }
+            }
         }
 
     }
