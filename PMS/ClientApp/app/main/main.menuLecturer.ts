@@ -7,7 +7,7 @@ export const PAGES_MENU_LECTURER = [
         data: {
           menu: {
             title: "general.menu.dashboard",
-            icon: "ion-android-home",
+            icon: "fa fa-home",
             selected: false,
             expanded: false,
             order: 0

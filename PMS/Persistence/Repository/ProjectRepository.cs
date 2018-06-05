@@ -79,6 +79,22 @@ namespace PMS.Persistence
                 query = query.Where(q => q.TagProjects.Any(tp => tp.Tag.TagName.Equals(queryObj.TagName)));
             }
 
+            //search
+            if (queryObj.ProjectCodeSearch != null)
+            {
+                query = query.Where(q => q.ProjectCode.ToLower().NonUnicode().Contains(queryObj.ProjectCodeSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.TitleSearch != null)
+            {
+                query = query.Where(q => q.Title.ToLower().NonUnicode().Contains(queryObj.TitleSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.DescriptionSearch != null)
+            {
+                query = query.Where(q => q.Description.ToLower().NonUnicode().Contains(queryObj.DescriptionSearch.ToLower().NonUnicode()));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Project, object>>>()
             {
@@ -94,12 +110,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
+            result.TotalItems = await query.CountAsync();
+
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
-
-            result.TotalItems = await query.CountAsync();
 
             return result;
         }
@@ -173,6 +189,22 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
             }
 
+            //search
+            if (queryObj.ProjectCodeSearch != null)
+            {
+                query = query.Where(q => q.ProjectCode.ToLower().NonUnicode().Contains(queryObj.ProjectCodeSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.TitleSearch != null)
+            {
+                query = query.Where(q => q.Title.ToLower().NonUnicode().Contains(queryObj.TitleSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.DescriptionSearch != null)
+            {
+                query = query.Where(q => q.Description.ToLower().NonUnicode().Contains(queryObj.DescriptionSearch.ToLower().NonUnicode()));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Project, object>>>()
             {
@@ -188,12 +220,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
+            result.TotalItems = await query.CountAsync();
+
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
-
-            result.TotalItems = await query.CountAsync();
 
             return result;
         }

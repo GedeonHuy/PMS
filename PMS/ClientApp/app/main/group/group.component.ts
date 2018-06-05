@@ -90,16 +90,15 @@ export class GroupComponent implements OnInit {
   }
 
   loadDataDependOnLecturer() {
-    this._dataService.get("/api/groups/getall?pageSize=3&isConfirm=Pending&email=" + this.user.email).subscribe((response: any) => {
+    this._dataService.get("/api/groups/getall?email=" + this.user.email+"&pageSize=3&isConfirm=Pending").subscribe((response: any) => {
       this.queryResult = response;
       this.isLoadData = true;
     });
   }
 
   loadDataDependOnStudent() {
-    this._dataService.get("/api/students/getgroups/" + this.user.email + "?page=3").subscribe((response: any) => {
+    this._dataService.get("/api/students/getgroups/" + this.user.email + "?pageSize=3").subscribe((response: any) => {
       this.queryResult = response;
-      console.log(response);
       this.isLoadData = true;
     });
   }
@@ -271,6 +270,7 @@ export class GroupComponent implements OnInit {
     }
 
     if (this.user.role === "Lecturer") {
+      console.log("called");
       this.loadDataDependOnLecturer();
       this.isLecturer = true;
     }
@@ -304,6 +304,7 @@ export class GroupComponent implements OnInit {
     //pullRight: true,
     enableSearch: true,
     checkedStyle: 'fontawesome',
+    itemClasses: 'color:black',
     buttonClasses: 'btn btn-default btn-block',
     dynamicTitleMaxItems: 1,
     selectAddedValues: true

@@ -332,6 +332,10 @@ namespace PMS.Controllers
                 {
                     worksheet.Cells[25, 5].Value = board.ResultScore;
                 }
+
+                worksheet.PrinterSettings.FitToPage = true;
+                worksheet.PrinterSettings.FitToWidth = 1;
+                worksheet.PrinterSettings.FitToHeight = 0;
                 package.Save();
 
                 //add to db

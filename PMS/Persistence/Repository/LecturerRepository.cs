@@ -95,6 +95,27 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
             }
 
+            //search
+            if (queryObj.NameSearch != null)
+            {
+                query = query.Where(q => q.Name.ToLower().NonUnicode().Contains(queryObj.NameSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.AddressSearch != null)
+            {
+                query = query.Where(q => q.Address.ToLower().NonUnicode().Contains(queryObj.AddressSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.EmailSearch != null)
+            {
+                query = query.Where(q => q.Email.ToLower().NonUnicode().Contains(queryObj.EmailSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.PhoneNumberSearch != null)
+            {
+                query = query.Where(q => q.PhoneNumber.ToLower().NonUnicode().Contains(queryObj.PhoneNumberSearch.ToLower().NonUnicode()));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Lecturer, object>>>()
             {
@@ -107,12 +128,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
+            result.TotalItems = await query.CountAsync();
+
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
-
-            result.TotalItems = await query.CountAsync();
 
             return result;
         }
@@ -170,12 +191,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
+            result.TotalItems = await query.CountAsync();
+
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
-
-            result.TotalItems = await query.CountAsync();
 
             return result;
         }
@@ -217,6 +238,27 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Quarter.QuarterId == queryObj.QuarterId.Value);
             }
 
+            //search
+            if (queryObj.GroupNameSearch != null)
+            {
+                query = query.Where(q => q.GroupName.ToLower().NonUnicode().Contains(queryObj.GroupNameSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.LinkGitHubSearch != null)
+            {
+                query = query.Where(q => q.LinkGitHub.ToLower().NonUnicode().Contains(queryObj.LinkGitHubSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.ResultGradeSearch != null)
+            {
+                query = query.Where(q => q.ResultGrade.ToLower().NonUnicode().Contains(queryObj.ResultGradeSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.ResultScoreSearch != null)
+            {
+                query = query.Where(q => q.ResultScore.ToLower().NonUnicode().Contains(queryObj.ResultScoreSearch.ToLower().NonUnicode()));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Group, object>>>()
             {
@@ -231,12 +273,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
+            result.TotalItems = await query.CountAsync();
+
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
-
-            result.TotalItems = await query.CountAsync();
 
             return result;
         }
@@ -259,6 +301,27 @@ namespace PMS.Persistence
                             .Where(q => q.Major.MajorId == majorId);
             }
 
+            //search
+            if (queryObj.NameSearch != null)
+            {
+                query = query.Where(q => q.Name.ToLower().NonUnicode().Contains(queryObj.NameSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.AddressSearch != null)
+            {
+                query = query.Where(q => q.Address.ToLower().NonUnicode().Contains(queryObj.AddressSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.EmailSearch != null)
+            {
+                query = query.Where(q => q.Email.ToLower().NonUnicode().Contains(queryObj.EmailSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.PhoneNumberSearch != null)
+            {
+                query = query.Where(q => q.PhoneNumber.ToLower().NonUnicode().Contains(queryObj.PhoneNumberSearch.ToLower().NonUnicode()));
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Lecturer, object>>>()
             {
@@ -271,12 +334,12 @@ namespace PMS.Persistence
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
+            result.TotalItems = await query.CountAsync();
+
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
-
-            result.TotalItems = await query.CountAsync();
 
             return result;
         }

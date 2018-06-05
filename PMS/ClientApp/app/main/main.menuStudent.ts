@@ -7,7 +7,7 @@ export const PAGES_MENU_STUDENT = [
         data: {
           menu: {
             title: "general.menu.dashboard",
-            icon: "ion-android-home",
+            icon: "fa fa-home",
             selected: false,
             expanded: false,
             order: 0

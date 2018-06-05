@@ -30,6 +30,7 @@ namespace PMS.Persistence.Repository
             return await context.BoardEnrollments
                 .Include(c => c.Lecturer)
                 .Include(c => c.Board)
+                .Include(c => c.Recommendations)
                 .SingleOrDefaultAsync(s => s.BoardEnrollmentId == id);
         }
 
@@ -44,13 +45,14 @@ namespace PMS.Persistence.Repository
             //context.Remove(boardEnrollment);
         }
 
-        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByLecturerEmail(string email)
+        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByLecturerEmail(Query queryObj, string email)
         {
             var result = new QueryResult<BoardEnrollment>();
             var query = context.BoardEnrollments
                                 .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.Board)
+                                .Include(c => c.Recommendations)
                                 .AsQueryable();
 
             //filter
@@ -61,11 +63,11 @@ namespace PMS.Persistence.Repository
 
             query = query.OrderByDescending(s => s.BoardEnrollmentId);
 
+            result.TotalItems = await query.CountAsync();
+
             //paging
 
             result.Items = await query.ToListAsync();
-
-            result.TotalItems = await query.CountAsync();
 
             return result;
 
@@ -78,6 +80,7 @@ namespace PMS.Persistence.Repository
                                 .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.Board)
+                                .Include(c => c.Recommendations)
                                 .AsQueryable();
 
             //filter
@@ -101,38 +104,83 @@ namespace PMS.Persistence.Repository
             }
             query = query.ApplyOrdering(queryObj, columnsMap);
 
+            result.TotalItems = await query.CountAsync();
+
             //paging
             query = query.ApplyPaging(queryObj);
 
             result.Items = await query.ToListAsync();
 
-            result.TotalItems = await query.CountAsync();
-
             return result;
 
         }
 
-        public async Task<BoardEnrollment> GetBoardEnrollmentByLecturerEmail(string email, BoardResource boardResource)
-        {
-            var boardEnrollment = await context.BoardEnrollments
-                                    .Where(c => c.IsDeleted == false)
-                                    .Include(c => c.Lecturer)
-                                    .Include(c => c.Board)
-                                    .SingleOrDefaultAsync(c => c.Board.BoardId == boardResource.BoardId
-                                    && c.Lecturer.Email == email);
+        // public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentByLecturerEmail(Query queryObj, string email)
+        // {
+        //     var result = new QueryResult<BoardEnrollment>();
+        //     var query = context.BoardEnrollments
+        //                             .Where(c => c.IsDeleted == false && c.Lecturer.Email == email)
+        //                             .Include(c => c.Lecturer)
+        //                             .Include(c => c.Board)
+        //                         .AsQueryable();
 
-            return boardEnrollment;
-        }
 
-        public async Task<IEnumerable<BoardEnrollment>> GetBoardEnrollmentsByBoardId(int id)
+        //     //filter
+        //     if (queryObj.LecturerId.HasValue)
+        //     {
+        //         query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+        //     }
+        //     if (queryObj.Email != null)
+        //     {
+        //         query = query.Where(q => q.Lecturer.Email == queryObj.Email);
+        //     }
+
+        //     //sort
+
+        //     query = query.OrderByDescending(s => s.BoardEnrollmentId);
+
+        //     //paging
+
+        //     result.Items = await query.ToListAsync();
+
+        //     result.TotalItems = await query.CountAsync();
+
+        //     return result;
+        // }
+
+        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByBoardId(Query queryObj, int id)
         {
-            return await context.BoardEnrollments
+            var result = new QueryResult<BoardEnrollment>();
+            var query = context.BoardEnrollments
                                 .Where(c => c.IsDeleted == false)
                                 .Include(c => c.Board)
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.BoardRole)
+                                .Include(c => c.Recommendations)
                                 .Where(c => c.Board.BoardId == id)
-                                .ToListAsync();
+                                .AsQueryable();
+
+            //filter
+            if (queryObj.LecturerId.HasValue)
+            {
+                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+            }
+            if (queryObj.Email != null)
+            {
+                query = query.Where(q => q.Lecturer.Email == queryObj.Email);
+            }
+
+            //sort
+
+            query = query.OrderByDescending(s => s.BoardEnrollmentId);
+
+            result.TotalItems = await query.CountAsync();
+
+            //paging
+
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
 
         public void UpdateScore(BoardEnrollment boardEnrollment)
@@ -140,27 +188,62 @@ namespace PMS.Persistence.Repository
             context.Update(boardEnrollment);
         }
 
-        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByGroupId(int id)
+        public async Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByGroupId(Query queryObj, int id)
         {
             var result = new QueryResult<BoardEnrollment>();
             var query = context.BoardEnrollments
                                     .Include(c => c.Lecturer)
+                                    .Include(c => c.Recommendations)
                                     .Include(c => c.Board)
                                         .ThenInclude(b => b.Group)
                                     .Where(c => c.IsDeleted == false && c.Board.Group.GroupId == id)
                                 .AsQueryable();
 
+            //filter
+            if (queryObj.LecturerId.HasValue)
+            {
+                query = query.Where(q => q.Lecturer.LecturerId == queryObj.LecturerId.Value);
+            }
+            if (queryObj.Email != null)
+            {
+                query = query.Where(q => q.Lecturer.Email == queryObj.Email);
+            }
+
             //sort
 
             query = query.OrderByDescending(s => s.BoardEnrollmentId);
+
+            result.TotalItems = await query.CountAsync();
 
             //paging
 
             result.Items = await query.ToListAsync();
 
-            result.TotalItems = await query.CountAsync();
-
             return result;
         }
+
+        public void UpdateRecommendations(BoardEnrollment boardEnrollment, BoardEnrollmentResource boardEnrollmentResource)
+        {
+            if (boardEnrollmentResource.Recommendations != null && boardEnrollmentResource.Recommendations.Count >= 0)
+            {
+                //remove old tagprojects
+                var oldRecommendations = boardEnrollment.Recommendations.Where(p => !boardEnrollmentResource.Recommendations.Any(id => id == p.Description)).ToList();
+                foreach (Recommendation recommendation in oldRecommendations)
+                {
+                    recommendation.IsDeleted = true;
+                    boardEnrollment.Recommendations.Remove(recommendation);
+                }
+                //project.TagProjects.Clear();
+
+                //add new tagprojects
+                var newRecommendations = boardEnrollmentResource.Recommendations.Where(t => !boardEnrollment.Recommendations.Any(id => id.Description == t));
+                foreach (var recommendation in newRecommendations)
+                {
+                    boardEnrollment.Recommendations.Add(new Recommendation { IsDeleted = false, IsDone = false, Description = recommendation });
+                    //project.TagProjects.Add(a);
+                }
+            }
+        }
+
     }
 }

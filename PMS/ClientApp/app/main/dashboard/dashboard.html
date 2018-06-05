@@ -1,7 +1,7 @@
 <div class="row">
   <img *ngIf="!isLoadData" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
   />
-  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="isAdmin && isLoadData">
+  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="isAdmin && isLoadGroupByAdmin && isLoadData">
     <div class="row pie-charts">
 
       <ba-card class="pie-chart-item-container col-xlg-3 col-lg-3 col-md-6 col-sm-12 col-12">
@@ -32,6 +32,15 @@
           </div>
         </div>
       </ba-card>
+
+      <ba-card class="pie-chart-item-container col-xlg-3 col-lg-3 col-md-6 col-sm-12 col-12">   
+        <div class="pie-chart-item">
+          <div class="description">
+            <div translate>Today</div>
+            <div class="description-stats">{{today | date }}</div>
+          </div>
+        </div>
+      </ba-card>
     </div>
 
   </div>
@@ -39,7 +48,7 @@
 
   <div class="widgets" *ngIf="isLecturer && isLoadData">
     <div class="row">
-      <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+      <div *ngIf="isLecturer" class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-12">
             <h2>
               <a href="main/group" alt="View all">My Group is pending</a>
             </h2>
@@ -63,13 +72,18 @@
                   <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
                     <b>{{group.isConfirm}}</b>
                   </td>
+                  <td>
+                    <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]">
+                      <i class="fa fa-eye"></i>
+                  </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
       </div>
 
-      <div *ngIf="isLecturer" class="col-md-6 col-sm-6 col-xs-12">
+      <div *ngIf="isLecturer" class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-12">
         <h2>
           <a href="main/confirm-group" alt="View all">My Group is Accepted</a>
         </h2>
@@ -93,6 +107,11 @@
               <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
                 <b>{{group.isConfirm}}</b>
               </td>
+              <td>
+                <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]">
+                  <i class="fa fa-eye"></i>
+              </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -102,6 +121,45 @@
   </div>
 
 
+
+  <div class="widgets" *ngIf="isAdmin && isLoadGroupByAdmin && isLoadData">
+    <div class="row">
+        <div *ngIf="isAdmin" class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-12">
+            <h2>
+              <a href="main/confirm-group" alt="View all">All group</a>
+            </h2>
+          <div >
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Project</th>
+                  <th>Supervisor</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let group of groupByAdmin.items; let rowIndex = index">
+                  <th scope="row">{{rowIndex+1}}</th>
+                  <td>{{group.groupName}}</td>
+                  <td>{{group.project.title}}</td>
+                  <td>{{group.lecturer.name}}</td>
+                  <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
+                    <b>{{group.isConfirm}}</b>
+                  </td>
+                  <td>
+                    <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]">
+                      <i class="fa fa-eye"></i>
+                  </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+      </div>
+  </div>
+  
   <div class="widgets" *ngIf="isStudent && isLoadData">
     <div class="row">
       <div *ngIf="isStudent" class="col-md-12 col-sm-12 col-xs-12">

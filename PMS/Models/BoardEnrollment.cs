@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace PMS.Models
         public double? Score { get; set; }
         public bool isMarked { get; set; }
         public string Comment { get; set; }
-        public string Recommendation { get; set; }
+        public ICollection<Recommendation> Recommendations { get; set; }
         public Lecturer Lecturer { get; set; }
         public Board Board { get; set; }
         public BoardRole BoardRole { get; set; }
@@ -21,6 +22,7 @@ namespace PMS.Models
         {
             IsDeleted = false;
             isMarked = false;
+            Recommendations = new Collection<Recommendation>();
         }
     }
 }

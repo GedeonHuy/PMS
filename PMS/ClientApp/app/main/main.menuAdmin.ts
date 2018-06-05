@@ -7,7 +7,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "general.menu.dashboard",
-            icon: "ion-android-home",
+            icon: "fa fa-home",
             selected: false,
             expanded: false,
             order: 0
@@ -19,7 +19,7 @@ export const PAGES_MENU_ADMIN = [
         data: {
           menu: {
             title: "Role",
-            icon: "fa fa-circle-notch",
+            icon: "fa fa-user-times",
             selected: false,
             expanded: false,
             order: 0

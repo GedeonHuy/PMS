@@ -13,10 +13,10 @@ namespace PMS.Persistence.IRepository
         void AddBoardEnrollment(BoardEnrollment boardEnrollment);
         void RemoveBoardEnrollment(BoardEnrollment boardEnrollment);
         Task<QueryResult<BoardEnrollment>> GetBoardEnrollments(Query queryObj);
-        Task<BoardEnrollment> GetBoardEnrollmentByLecturerEmail(string email, BoardResource boardResource);
-        Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByLecturerEmail(string email);
-        Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByGroupId(int id);
-        Task<IEnumerable<BoardEnrollment>> GetBoardEnrollmentsByBoardId(int id);
+        Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByLecturerEmail(Query queryObj, string email);
+        Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByGroupId(Query queryObj, int id);
+        Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByBoardId(Query queryObj, int id);
         void UpdateScore(BoardEnrollment boardEnrollment);
+        void UpdateRecommendations(BoardEnrollment boardEnrollment, BoardEnrollmentResource boardEnrollmentResource);
     }
 }

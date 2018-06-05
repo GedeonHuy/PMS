@@ -8,6 +8,7 @@ namespace PMS.Models
 {
     public class Query : IQueryObject
     {
+        //filter
         public int? MajorId { get; set; }
         public int? ProjectId { get; set; }
         public int? LecturerId { get; set; }
@@ -26,6 +27,21 @@ namespace PMS.Models
         public bool IsSortAscending { get; set; }
         public int? Page { get; set; }
         public byte PageSize { get; set; }
+        public string BoardRoleName { get; set; }
+
+        //search
+        public string StudentCodeSearch { get; set; }
+        public string NameSearch { get; set; }
+        public string AddressSearch { get; set; }
+        public string EmailSearch { get; set; }
+        public string PhoneNumberSearch { get; set; }
+        public string ProjectCodeSearch { get; set; }
+        public string TitleSearch { get; set; }
+        public string DescriptionSearch { get; set; }
+        public string GroupNameSearch { get; set; }
+        public string LinkGitHubSearch { get; set; }
+        public string ResultGradeSearch { get; set; }
+        public string ResultScoreSearch { get; set; }
 
     }
 }

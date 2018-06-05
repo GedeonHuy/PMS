@@ -33,6 +33,7 @@ export class GroupDetailsComponent implements OnInit {
   dataCommit: any[] = [];
   commitDetails: any[] = [];
   public uploadedFile: any;
+  isHaveGithub : boolean;
   linkGithub: string;
   linkDowload: string;
   linkUploadedFileDowload: string;
@@ -113,7 +114,7 @@ export class GroupDetailsComponent implements OnInit {
         label: "Commits in 12 weeks",
         fill: false,
         data: this.dataCommit,
-        borderColor: "#66cc66",
+        borderColor: "black",
         borderWidth: 1
       }
     ]
@@ -134,11 +135,12 @@ export class GroupDetailsComponent implements OnInit {
         this.loadGithub(this.linkGithub);
         this.loadDataCommits(this.linkGithub + "/stats/participation");
         this.loadCommitComment(this.linkGithub + "/commits");
+        this.isHaveGithub = true;
         this.isLoadData = true;
         this.groupBoardEnrollments = data[1].items;
         if (this.group.board.resultScore == null)
         {
-          this.group.resultScore = "N\\A";
+          this.group.resultScore = "";
         }
         else
         {
@@ -146,13 +148,12 @@ export class GroupDetailsComponent implements OnInit {
         }
         if (this.group.board.resultGrade == null)
         {
-          this.group.resultGrade = "N\\A";
+          this.group.resultGrade = "";
         }
         else
         {
           this.group.resultGrade = this.group.board.resultGrade;
         }
-        console.log(this.group);
       });
   }
 
