@@ -3,8 +3,12 @@
     src="/assets/images/loading.gif" />
   <div class="row" *ngIf="(isLoadData && isLoadGit && isLoadDataCommit) || (isLoadData && !isHaveGithub)">
     <div class="col-lg-12 col-md-12">
-      <button *ngIf="isAdmin" class="btn btn-assign" style="float: right;" (click)="assignBoard(group.groupId)" translate> Assign board</button>
+      <button *ngIf="isAdmin" class="btn btn-primary" style="float: right;" (click)="calculateScore(group.boardId)"> Finalize</button>
+      <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;" (click)="calculateScore(group.boardId)"> Finalize</button>
       <button *ngIf="isLecturer && hasBoard" class="btn btn-mark" style="float: right;" (click)="mark(group.boardId)" translate> Mark this group</button>
+      <button *ngIf="!isLecturer && hasBoard" disabled class="btn btn-disabled" style="float: right;" (click)="mark(group.boardId)" translate> Mark this group</button>
+      <button *ngIf="isAdmin" class="btn btn-assign" style="float: right;" (click)="assignBoard(group.groupId)" translate> Assign board</button>
+      <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;" (click)="assignBoard(group.groupId)" translate> Assign board</button>
     </div>
     <br />
     <div class="col-12 col-sm-6 col-md-8">
@@ -119,7 +123,7 @@
 
         <div class="text-center mtop20">
           <a class="btn btn-sm btn-primary" (click)="showUploadModal()">Add files</a>
-          <a href="{{this.linkDowload}}" class="btn btn-sm btn-warning">Source code</a>
+          <a *ngIf="isHaveGithub" href="{{this.linkDowload}}" class="btn btn-sm btn-warning">Source code</a>
         </div>
 
         <br />
@@ -132,9 +136,6 @@
             Score:
             <a *ngIf="group.resultScore">{{group.resultScore}}</a>
           </h3>
-          <a *ngIf="isAdmin" class="btn btn-primary" (click)="calculateScore(group.boardId)">
-            <i class="fa fa-calculator"></i>
-          </a>
         </div>
       </div>
     </div>

@@ -73,6 +73,16 @@ a.btn.btn-primary, button.btn.btn-primary {
   }
 }
 
+button.btn.btn-disabled {
+  border-width: 1px;
+  color: black;
+  @include buttonColor(rgb(150, 150, 150), $border);
+  &:active, &:target {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: $default-text;
+  }
+}
+
 button.btn.btn-default {
   border-width: 1px;
   color: $content-text;
