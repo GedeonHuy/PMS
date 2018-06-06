@@ -147,12 +147,16 @@ export class GroupDetailsComponent implements OnInit {
     ]).subscribe(data => {
         //Group-START
         this.group = data[0];
-        this.linkGithub = data[0].linkGitHub.replace("https://github.com/", "");
-        this.linkDowload = data[0].linkGitHub + "/archive/master.zip";
-        this.loadGithub(this.linkGithub);
-        this.loadDataCommits(this.linkGithub + "/stats/participation");
-        this.loadCommitComment(this.linkGithub + "/commits");
-        this.isHaveGithub = true;
+          //Check link github-START
+        if (this.group.linkGitHub != null) {
+          this.linkGithub = data[0].linkGitHub.replace("https://github.com/", "");
+          this.linkDowload = data[0].linkGitHub + "/archive/master.zip";
+          this.loadGithub(this.linkGithub);
+          this.loadDataCommits(this.linkGithub + "/stats/participation");
+          this.loadCommitComment(this.linkGithub + "/commits");
+          this.isHaveGithub = true;
+        }
+          //Check link github-END
         this.isLoadData = true;
         //Group-END
 
@@ -459,7 +463,7 @@ export class GroupDetailsComponent implements OnInit {
     if (type === "onHide" || type === "onHidden") {
       this.group = [];
       this.isLoadData = false;
-
+      this.isHaveGithub = false;
       this.loadGroupDetails(this.groupId);
 
       this.isLoadBoard = false;
@@ -467,13 +471,19 @@ export class GroupDetailsComponent implements OnInit {
   }
 
   hidemodalMark() {
-    this.loadGroupDetails(this.groupId);
     this.modalMark.hide();
   }
 
   hidemodalBoard() {
-    this.loadGroupDetails(this.groupId);
     this.modalBoard.hide();
+  }
+
+  hidemodalDownload() {
+    this.modalDownload.hide();
+  }
+
+  hidemodalUpload() {
+    this.modalUpload.hide();
   }
 
   AddUploadedFile() {
@@ -497,7 +507,6 @@ export class GroupDetailsComponent implements OnInit {
   }
 
   calculateScore(id: any){
-    // console.log(id);
     this._dataService.get('/api/boards/calculatescore/' + id)
       .subscribe((response: any) => {
       });

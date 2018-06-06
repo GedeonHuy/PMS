@@ -1,7 +1,7 @@
 <div class="widgets">
   <img *ngIf="!isLoadData && !isLoadGit && !isLoadDataCommit" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;"
     src="/assets/images/loading.gif" />
-  <div class="row" *ngIf="isLoadData && isLoadGit && isLoadDataCommit">
+  <div class="row" *ngIf="(isLoadData && isLoadGit && isLoadDataCommit) || (isLoadData && !isHaveGithub)">
     <div class="col-lg-12 col-md-12">
       <button *ngIf="isAdmin" class="btn btn-assign" style="float: right;" (click)="assignBoard(group.groupId)" translate> Assign board</button>
       <button *ngIf="isLecturer && hasBoard" class="btn btn-mark" style="float: right;" (click)="mark(group.boardId)" translate> Mark this group</button>
@@ -10,7 +10,7 @@
     <div class="col-12 col-sm-6 col-md-8">
       <h2>Summary Project</h2>
 
-      <div class="row pie-charts">
+      <div *ngIf="isHaveGithub" class="row pie-charts">
         <div class="pie-chart-item-container col-xlg-3 col-lg-3 col-md-6 col-sm-12 col-12">
 
           <div class="pie-chart-item">
@@ -47,7 +47,7 @@
       </div>
       <br />
 
-      <div id="mainb">
+      <div *ngIf="isHaveGithub" id="mainb">
         <chart type="line" [options]="options" [data]="data"></chart>
       </div>
       <br />
@@ -100,6 +100,7 @@
           <b class="font-weight: bold;">Github</b>
           <p>
             <a href="{{group.linkGitHub}}">{{group.linkGitHub}}</a>
+            <a *ngIf="!isHaveGithub">(None)</a>
           </p>
           <b class="font-weight: bold;">Contributors</b>
           <p *ngFor="let student of group.studentEmails">{{student}}</p>
@@ -181,17 +182,16 @@
           </div>
 
           <!--Recommendation-START-->
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Recommendations</label>
           <div class="form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12">Recommendations</label>
               <form class="col-md-9 col-sm-9 col-xs-12" #recommendationForm="ngForm" (submit)="addRecommendation(boardEnrollment.boardEnrollmentId, recommendationForm)">
-                  <button class="form-horizontal btn btn-mark" style="float: right;" type="submit"><i class="fa fa-plus"></i></button>
-                  <input class="form-horizontal" type="text" [(ngModel)]="recommendationDescription" name="Recommendation" />
+                  <input class="form-control" style="padding-right: 4.13em;" type="text" [(ngModel)]="recommendationDescription" name="Recommendation" />
+                  <button class="form-horizontal btn btn-mark" style="float: right; margin-top: -2.3em; margin-right: 0.13em;" type="submit"><i class="fa fa-plus"></i></button>
               </form>
-
+              <br />
               <ul class="col-md-9 col-sm-9 col-xs-12"  *ngFor="let item of recommendations; let i = index" [attr.data-index]="i">
-                  <button class="btn btn-danger" (click)="removeRecommendation(i)"><i class="fa fa-minus"></i></button>
                   {{ item.description }}
-
+                  <button class="btn btn-danger" style="float: right; margin-right: 0.13em;" (click)="removeRecommendation(i)"><i class="fa fa-minus"></i></button>
               </ul>
           </div>
           <!--Recommendation-END-->
@@ -337,10 +337,10 @@
 <!-- Modal upload -->
 <div bsModal #modalUpload="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content" style="background: #7FFFD4;">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Add File</h4>
-        <button type="button" class="close pull-right" (click)="modalUpload.hide()" aria-label="Close">
+        <button type="button" class="close pull-right" (click)="hidemodalUpload()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -376,7 +376,7 @@
           <div class="ln_solid"></div>
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-              <button type="button" (click)="modalUpload.hide()" class="btn btn-primary">Cancel</button>
+              <button type="button" (click)="hidemodalUpload()" class="btn btn-primary">Cancel</button>
               <button type="submit" class="btn btn-success" [disabled]="!modalUpload.form.valid || isClicked">Add</button>
               <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
             </div>
@@ -392,10 +392,10 @@
 <div bsModal #modalDownload="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content" style="background: #7FFFD4">
       <div class="modal-header">
         <h4 class="modal-title pull-left">File Information</h4>
-        <button type="button" class="close pull-right" (click)="modalDownload.hide()" aria-label="Close">
+        <button type="button" class="close pull-right" (click)="hidemodalDownload()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -424,7 +424,7 @@
           <div class="ln_solid"></div>
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-              <button type="button" (click)="modalDownload.hide()" class="btn btn-primary">Cancel</button>
+              <button type="button" (click)="hidemodalDownload()" class="btn btn-primary">Cancel</button>
               <button type="submit" class="btn btn-success" [disabled]="!modalDownload.form.valid || isClicked">Download</button>
               <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
             </div>
