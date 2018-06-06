@@ -4,7 +4,7 @@
   <div class="row" *ngIf="isLoadData && isLoadGit && isLoadDataCommit">
     <div class="col-lg-12 col-md-12">
       <button *ngIf="isAdmin" class="btn btn-assign" style="float: right;" (click)="assignBoard(group.groupId)" translate> Assign board</button>
-      <button *ngIf="isLecturer" class="btn btn-mark" style="float: right;" (click)="mark(group.boardId)" translate> Mark this group</button>
+      <button *ngIf="isLecturer && hasBoard" class="btn btn-mark" style="float: right;" (click)="mark(group.boardId)" translate> Mark this group</button>
     </div>
     <br />
     <div class="col-12 col-sm-6 col-md-8">
@@ -54,26 +54,32 @@
       <br />
       <br />
       <br />
-      <h4>Recent Activity</h4>
+
+      <!--All Recommendations-START-->
+      <h4>Lecturers' recommendations</h4>
       <br />
       <br />
-      <div class="messages" *ngFor="let commit of commitDetails">
+      <div class="messages" *ngFor="let item of groupRecommendations; let i = index" [attr.data-index]="i">
         <div class="row">
           <div class="xs-12 col-md-8">
-            <h4 class="heading">{{commit.commit.author.name}}</h4>
-            <p class="message">{{commit.commit.message}}</p>
+            <h5 class="heading">#{{ i+1 }}</h5>
+            <p class="message">{{ item.description }}</p>
           </div>
           <div class="xs-6 col-md-4">
-            <h3 class="date text-info">{{commit.commit.author.date | date}}</h3>
+            <button *ngIf="!isReviewer" disabled [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)">
+              <i *ngIf="!item.isDone" class="fa fa-circle"></i>
+              <i *ngIf="item.isDone" class="fa fa-check-circle"></i>
+            </button>
+            <button *ngIf="isReviewer" [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)">
+                <i *ngIf="!item.isDone" class="fa fa-circle"></i>
+                <i *ngIf="item.isDone" class="fa fa-check-circle"></i>
+            </button>
           </div>
 
         </div>
       </div>
-
+    <!--All Recommendations-END-->
     </div>
-
-
-
 
     <div class="col-6 col-md-4">
       <h2>Group Description</h2>
@@ -105,14 +111,14 @@
         <ul class="list-unstyled project_files" *ngFor="let file of group.uploadFilesInformation">
           <li>
             <button (click)="showDownloadModal(file.uploadedFileId)">
-              <i class="{{file.url}}"></i> {{file.title}}</button>
+              <i class="{{file.url}}"></i> {{file.title}} </button>
           </li>
         </ul>
         <br />
 
         <div class="text-center mtop20">
-          <a class="btn btn-sm btn-primary" (click)="showUploadModal()"> Add files</a>
-          <a href="{{this.linkDowload}}" class="btn btn-sm btn-warning">Download Project in Github</a>
+          <a class="btn btn-sm btn-primary" (click)="showUploadModal()">Add files</a>
+          <a href="{{this.linkDowload}}" class="btn btn-sm btn-warning">Source code</a>
         </div>
 
         <br />
@@ -164,21 +170,6 @@
             </div>
           </div>
 
-          <!--Recommendation-START-->
-          <div *ngIf="isReviewer" class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Recommendation</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-              <textarea type="text" class="form-control" [(ngModel)]="boardEnrollment.recommendation" name="boardEnrollment.recommendation"
-                required #recommendation="ngModel"></textarea>
-              <small [hidden]="recommendation.valid || (recommendation.pristine && !recommendation.submitted)" class="text-danger">
-                Please specify the recommendation </small>
-            </div>
-          </div>
-
-          <input *ngIf="!isReviewer" type="hidden" class="form-control" [(ngModel)]="boardEnrollment.recommendation" name="boardEnrollment.recommendation"
-            #recommendation="ngModel" />
-          <!--Recommendation-END-->
-
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Comment</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
@@ -188,6 +179,22 @@
                 Please specify the comment </small>
             </div>
           </div>
+
+          <!--Recommendation-START-->
+          <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Recommendations</label>
+              <form class="col-md-9 col-sm-9 col-xs-12" #recommendationForm="ngForm" (submit)="addRecommendation(boardEnrollment.boardEnrollmentId, recommendationForm)">
+                  <button class="form-horizontal btn btn-mark" style="float: right;" type="submit"><i class="fa fa-plus"></i></button>
+                  <input class="form-horizontal" type="text" [(ngModel)]="recommendationDescription" name="Recommendation" />
+              </form>
+
+              <ul class="col-md-9 col-sm-9 col-xs-12"  *ngFor="let item of recommendations; let i = index" [attr.data-index]="i">
+                  <button class="btn btn-danger" (click)="removeRecommendation(i)"><i class="fa fa-minus"></i></button>
+                  {{ item.description }}
+
+              </ul>
+          </div>
+          <!--Recommendation-END-->
 
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">

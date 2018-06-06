@@ -95,7 +95,7 @@ namespace PMS.Controllers
                 boardEnrollment.isMarked = true;
             }
 
-            boardEnrollmentRepository.UpdateRecommendations(boardEnrollment, boardEnrollmentResource);
+            // boardEnrollmentRepository.UpdateRecommendations(boardEnrollment, boardEnrollmentResource);
 
             await unitOfWork.Complete();
 

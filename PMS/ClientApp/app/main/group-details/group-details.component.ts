@@ -17,7 +17,7 @@ import { SystemConstants } from '../../core/common/system.constants';
 @Component({
   selector: 'app-group-details',
   templateUrl: './group-details.component.html',
-  styleUrls: ['./group-details.component.scss']
+  styleUrls: ['./group-details.component.scss'],
 })
 export class GroupDetailsComponent implements OnInit {
   @ViewChild('modalUpload') public modalUpload: ModalDirective;
@@ -26,6 +26,9 @@ export class GroupDetailsComponent implements OnInit {
   @ViewChild('modalMark') public modalMark: ModalDirective;
   @ViewChild('modalBoard') public modalBoard: ModalDirective;
 
+  thisRecommendation: any;
+  recommendationDescription: any;
+  recommendations: any[];
   thisLecturerEmail: any;
   groupId: any;
   group: any;
@@ -43,12 +46,15 @@ export class GroupDetailsComponent implements OnInit {
   isLoadGit: boolean;
   isLoadDataCommit: boolean;
   isLoadMark: boolean;
+  isLoadRecommendation: boolean;
 
+  groupRecommendations: any[];
   lecturers: any[];
   boardEnrollmentsOfLecturer: any[];
   groupBoardEnrollments: any[];
   thisLecturerId: any;  
 
+  hasBoard: boolean;
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
@@ -61,6 +67,7 @@ export class GroupDetailsComponent implements OnInit {
     isConfirm: "Accepted"
   };
 
+  public todoList: Array<any>;
   public scorePercents: number[] = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
   public board: any = {};
   public chair: any;
@@ -76,10 +83,12 @@ export class GroupDetailsComponent implements OnInit {
 
   constructor(private _authenService: AuthenService, private route: ActivatedRoute, private _notificationService: NotificationService,
     private router: Router, private _dataService: DataService) {
-
+    
+    this.hasBoard = false;
     this.isReviewer = false;  
     this.isAdmin = false;
     this.isLecturer = false;
+    this.isLoadRecommendation = false;
     this.isLoadMark = true;
     this.isSaved = false;
 
@@ -98,13 +107,18 @@ export class GroupDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.permissionAccess();
-    this.loadGroupDetails(this.groupId);
 
+    this.thisRecommendation = {
+      boardEnrollmentId: null,
+      description: ""
+    };
     Observable.forkJoin([
       this._dataService.get("/api/lecturers/getall/")
     ]).subscribe(data => {
       this.lecturers = data[0].items
     });
+
+    this.loadGroupDetails(this.groupId);
   }
 
   data = {
@@ -127,8 +141,11 @@ export class GroupDetailsComponent implements OnInit {
   loadGroupDetails(id: any) {
     Observable.forkJoin([
     this._dataService.get('/api/groups/getgroup/' + id),
-    this._dataService.get('/api/boardenrollments/getboardenrollmentsbygroupid/' + id)
+    this._dataService.get('/api/boardenrollments/getboardenrollmentsbygroupid/' + id),
+    this._dataService.get('/api/recommendations/getrecommendationsbygroupid/' + id),
+    this._dataService.get("/api/lecturers/getall/")
     ]).subscribe(data => {
+        //Group-START
         this.group = data[0];
         this.linkGithub = data[0].linkGitHub.replace("https://github.com/", "");
         this.linkDowload = data[0].linkGitHub + "/archive/master.zip";
@@ -137,23 +154,52 @@ export class GroupDetailsComponent implements OnInit {
         this.loadCommitComment(this.linkGithub + "/commits");
         this.isHaveGithub = true;
         this.isLoadData = true;
+        //Group-END
+
+        //Check if has board-START
+        if (this.group.board != null)
+          this.hasBoard = true;
+        //Check if has board-END
+
+        //Check isReviewer-START
+        if (this.group.boardId != null && this.isLecturer == true)
+        { 
+          if (this.thisLecturerEmail != undefined)
+            this.thisLecturerId = data[3].items.find(l => l.email == this.thisLecturerEmail).lecturerId;
+
+          if (this.group.board.lecturerInformations.reviewer.lecturerId == this.thisLecturerId)
+          {
+            this.isReviewer = true;
+          }
+        }
+
+        //Check isReviewer-END
+
+        //Score-START
         this.groupBoardEnrollments = data[1].items;
-        if (this.group.board.resultScore == null)
+        if (this.groupBoardEnrollments.length != 0)
         {
-          this.group.resultScore = "";
+          if (this.group.board.resultScore == null)
+            this.group.resultScore = "";
+          else
+            this.group.resultScore = this.group.board.resultScore;
+          if (this.group.board.resultGrade == null)
+            this.group.resultGrade = "";
+          else
+            this.group.resultGrade = this.group.board.resultGrade;
         }
         else
-        {
-          this.group.resultScore = this.group.board.resultScore;
-        }
-        if (this.group.board.resultGrade == null)
-        {
+        { 
+          this.groupBoardEnrollments = undefined;
+          this.group.resultScore = "";
           this.group.resultGrade = "";
         }
-        else
-        {
-          this.group.resultGrade = this.group.board.resultGrade;
-        }
+        //Score-END
+
+        //Recommendations-START
+        this.isLoadRecommendation = true;
+        this.groupRecommendations = data[2].items;
+        //Recommendations-END
       });
   }
 
@@ -197,12 +243,15 @@ export class GroupDetailsComponent implements OnInit {
     this._dataService.getGithub(link)
       .subscribe((response: any) => {
         
-        for (var i = 40; i < response.all.length; i++) {
-          this.dataCommit.push(response.all[i]);
-        }
+        if (response.all.length != undefined)
+        {
+          for (var i = 40; i < response.all.length; i++) {
+            this.dataCommit.push(response.all[i]);
+          }
 
-        for (var i = 0; i < response.all.length; i++) {
-          this.commits = this.commits + response.all[i];
+          for (var i = 0; i < response.all.length; i++) {
+            this.commits = this.commits + response.all[i];
+          }
         }
 
         this.isLoadDataCommit = true;
@@ -309,18 +358,13 @@ export class GroupDetailsComponent implements OnInit {
 
     Observable.forkJoin(
       this._dataService.get('/api/boardenrollments/getboardenrollmentsbylectureremail/' + this.thisLecturerEmail),
-      this._dataService.get('/api/boards/getboard/' + id),
+      this._dataService.get('/api/recommendations/getrecommendationsbygroupid/' + id),
     ).subscribe(data => {
       this.boardEnrollmentsOfLecturer = data[0].items;
       this.boardEnrollment = this.boardEnrollmentsOfLecturer.find(be => be.boardID == id);
       this.isLoadMark = true;
 
-      this.thisLecturerId = this.lecturers.find(l => l.email == this.thisLecturerEmail).lecturerId;
-      console.log(this.lecturers.find(l => l.email == this.thisLecturerEmail));
-      if(data[1].lecturerInformations.reviewer.lecturerId == this.thisLecturerId)
-      {
-        this.isReviewer = true;
-      }
+      this.recommendations = data[1].items;
     });
   }
 
@@ -328,10 +372,18 @@ export class GroupDetailsComponent implements OnInit {
   assignBoard(id: any) {
     this.modalBoard.show();
     this.boardEnrollments = {};
-    this.chair = {};
-    this.secretary = {};
-    this.supervisor = {};
-    this.reviewer = {};
+    this.chair = {
+      'scorePercent': 25,
+    };
+    this.secretary = {
+      'scorePercent': 25,
+    };
+    this.supervisor = {
+      'scorePercent': 25,
+    };
+    this.reviewer = {
+      'scorePercent': 25,
+    };
 
     Observable.forkJoin(
       this._dataService.get('/api/groups/getgroup/' + id)
@@ -406,6 +458,10 @@ export class GroupDetailsComponent implements OnInit {
   handler(type: string, $event: ModalDirective) {
     if (type === "onHide" || type === "onHidden") {
       this.group = [];
+      this.isLoadData = false;
+
+      this.loadGroupDetails(this.groupId);
+
       this.isLoadBoard = false;
     }
   }
@@ -446,5 +502,43 @@ export class GroupDetailsComponent implements OnInit {
       .subscribe((response: any) => {
       });
     window.location.reload()
+  }
+
+  addRecommendation(id: any, form: NgForm){
+    this.thisRecommendation = {
+      boardEnrollmentId: null,
+      description: ""
+    };
+    this.thisRecommendation.boardEnrollmentId = id;
+    this.thisRecommendation.description = "" + this.recommendationDescription;
+    this.recommendations.push(
+      this.thisRecommendation,
+    );
+
+    this._dataService.post('/api/recommendations/add', JSON.stringify(this.thisRecommendation))
+      .subscribe((response: any) => {
+        this._notificationService.printSuccessMessage("Add Success");
+      }, error => this._dataService.handleError(error));
+    form.resetForm();
+  }
+
+  removeRecommendation(i: any) {
+    this._dataService.delete('/api/recommendations/delete/' + this.recommendations[i].recommendationId)
+        .subscribe((response: any) => {
+          this._notificationService.printSuccessMessage("Delete Success");
+        }, error => this._dataService.handleError(error));  
+    this.recommendations.splice(i, 1);
+  }
+
+  markRecommendation(i: any) {
+    if (this.groupRecommendations[i].isDone == false)
+      this.groupRecommendations[i].isDone = true;
+    else
+      this.groupRecommendations[i].isDone = false;
+
+    this._dataService.put('/api/recommendations/update/' + this.groupRecommendations[i].recommendationId, JSON.stringify(this.groupRecommendations[i]))
+      .subscribe((response: any) => {
+        this._notificationService.printSuccessMessage("Check Success");
+      }, error => this._dataService.handleError(error));  
   }
 }
