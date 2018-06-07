@@ -54,6 +54,7 @@ export class GroupDetailsComponent implements OnInit {
   groupBoardEnrollments: any[];
   thisLecturerId: any;  
 
+  hasRecommendations: boolean;
   hasBoard: boolean;
   isAdmin: boolean;
   isLecturer: boolean;
@@ -246,7 +247,7 @@ export class GroupDetailsComponent implements OnInit {
   loadDataCommits(link: string) {
     this._dataService.getGithub(link)
       .subscribe((response: any) => {
-        
+
         if (response.all.length != undefined)
         {
           for (var i = 40; i < response.all.length; i++) {
@@ -369,6 +370,11 @@ export class GroupDetailsComponent implements OnInit {
       this.isLoadMark = true;
 
       this.recommendations = data[1].items;
+      console.log(this.recommendations);
+      //   .find(r => r.boardEnrollmentId == this.boardEnrollment.boardEnrollmentId);
+      // if (this.recommendations.length != undefined) {
+      //   this.hasRecommendations = true;
+      // }
     });
   }
 
@@ -520,14 +526,17 @@ export class GroupDetailsComponent implements OnInit {
     };
     this.thisRecommendation.boardEnrollmentId = id;
     this.thisRecommendation.description = "" + this.recommendationDescription;
-    this.recommendations.push(
-      this.thisRecommendation,
-    );
 
     this._dataService.post('/api/recommendations/add', JSON.stringify(this.thisRecommendation))
       .subscribe((response: any) => {
         this._notificationService.printSuccessMessage("Add Success");
-      }, error => this._dataService.handleError(error));
+        this.thisRecommendation.recommendationId = response.recommendationId;
+        this.recommendations.push(
+          this.thisRecommendation,
+        );
+    }, error => this._dataService.handleError(error));
+
+    
     form.resetForm();
   }
 
