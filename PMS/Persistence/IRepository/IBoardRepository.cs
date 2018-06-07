@@ -20,7 +20,7 @@ namespace PMS.Persistence.IRepository
         string CheckLecturerInformations(LecturerInformationResource lecturerInformations);
         double CalculateScore(Board board);
         void CalculateGrade(Board board);
-        void UpdateBoardEnrollments(Board board, BoardResource boardResource);
+        Task UpdateBoardEnrollments(Board board, BoardResource boardResource);
         Task UpdateOrder(Board board, BoardResource boardResource);
     }
 }

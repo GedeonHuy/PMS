@@ -466,7 +466,8 @@ namespace PMS.Mapping
                 .ForMember(c => c.AnnouncementUserId, opt => opt.Ignore());
 
             CreateMap<BoardResource, Board>()
-                .ForMember(c => c.BoardId, opt => opt.Ignore());
+                .ForMember(c => c.BoardId, opt => opt.Ignore())
+                .ForMember(c => c.BoardEnrollments, opt => opt.Ignore());
 
             CreateMap<BoardEnrollmentResource, BoardEnrollment>()
                 .ForMember(c => c.Lecturer, opt => opt.Ignore())
