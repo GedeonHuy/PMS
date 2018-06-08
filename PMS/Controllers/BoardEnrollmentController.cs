@@ -50,7 +50,10 @@ namespace PMS.Controllers
                 boardEnrollment.isMarked = true;
             }
 
+            boardEnrollmentRepository.UpdateRecommendations(boardEnrollment, boardEnrollmentResource);
+
             boardEnrollmentRepository.AddBoardEnrollment(boardEnrollment);
+
             await unitOfWork.Complete();
 
             boardEnrollment = await boardEnrollmentRepository.GetBoardEnrollment(boardEnrollment.BoardEnrollmentId);
@@ -91,6 +94,9 @@ namespace PMS.Controllers
             {
                 boardEnrollment.isMarked = true;
             }
+
+            // boardEnrollmentRepository.UpdateRecommendations(boardEnrollment, boardEnrollmentResource);
+
             await unitOfWork.Complete();
 
             var result = mapper.Map<BoardEnrollment, BoardEnrollmentResource>(boardEnrollment);

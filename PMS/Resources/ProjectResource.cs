@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using PMS.Resources.SubResources;
 
 namespace PMS.Resources
 {
@@ -22,12 +23,14 @@ namespace PMS.Resources
         public ICollection<String> Tags { get; set; }
         public MajorResource Major { get; set; }
         public LecturerResource Lecturer { get; set; }
+        public ICollection<CategoryInformationResource> Categories { get; set; }
 
         public ProjectResource()
         {
             Groups = new Collection<int>();
             TagProjects = new Collection<int>();
             Tags = new Collection<String>();
+            Categories = new Collection<CategoryInformationResource>();
             IsCompleted = false;
             IsDeleted = false;
         }

@@ -57,21 +57,21 @@ namespace PMS.Controllers
                 return BadRequest(ModelState);
             }
 
-            // var checkLecturerInformations = boardRepository.CheckLecturerInformations(boardResource.LecturerInformations);
+            var checkLecturerInformations = boardRepository.CheckLecturerInformations(boardResource.LecturerInformations);
 
-            // //case: one percent of score is equal 0 or null          
-            // if (checkLecturerInformations == "nullOrZeroScorePercent")
-            // {
-            //     ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0 or null");
-            //     return BadRequest(ModelState);
-            // }
+            //case: one percent of score is equal 0 or null          
+            if (checkLecturerInformations == "nullScorePercent")
+            {
+                ModelState.AddModelError("Error", "One or more lecturer's percentage of score is not set");
+                return BadRequest(ModelState);
+            }
 
-            // //case: the total sum of score is not 100
-            // if (checkLecturerInformations == "sumScorePercentIsNot100")
-            // {
-            //     ModelState.AddModelError("Error", "If total percentage of score is not equal 100%");
-            //     return BadRequest(ModelState);
-            // }
+            //case: the total sum of score is not 100
+            if (checkLecturerInformations == "sumScorePercentIsNot100")
+            {
+                ModelState.AddModelError("Error", "Total percentage of score is not equal 100%");
+                return BadRequest(ModelState);
+            }
 
             var board = mapper.Map<BoardResource, Board>(boardResource);
             var group = await groupRepository.GetGroup(boardResource.GroupId);
@@ -110,27 +110,27 @@ namespace PMS.Controllers
             var checkLecturerInformations = boardRepository.CheckLecturerInformations(boardResource.LecturerInformations);
 
             //case: one percent of score is equal 0 or null          
-            if (checkLecturerInformations == "nullOrScorePercent")
+            if (checkLecturerInformations == "nullScorePercent")
             {
-                ModelState.AddModelError("Error", "One or more lecturer's percentage of score is 0 or null");
+                ModelState.AddModelError("Error", "One or more lecturer's percentage of score is not set");
                 return BadRequest(ModelState);
             }
 
             //case: the total sum of score is not 100
             if (checkLecturerInformations == "sumScorePercentIsNot100")
             {
-                ModelState.AddModelError("Error", "If total percentage of score is not equal 100%");
+                ModelState.AddModelError("Error", "Total percentage of score is not equal 100%");
                 return BadRequest(ModelState);
             }
 
-            var board = await boardRepository.GetBoard(id);
+            var board = await boardRepository.GetBoard(id, true);
 
             if (board == null)
                 return NotFound();
 
             mapper.Map<BoardResource, Board>(boardResource, board);
 
-            boardRepository.UpdateBoardEnrollments(board, boardResource);
+            await boardRepository.UpdateBoardEnrollments(board, boardResource);
 
             await unitOfWork.Complete();
 
@@ -332,6 +332,10 @@ namespace PMS.Controllers
                 {
                     worksheet.Cells[25, 5].Value = board.ResultScore;
                 }
+
+                worksheet.PrinterSettings.FitToPage = true;
+                worksheet.PrinterSettings.FitToWidth = 1;
+                worksheet.PrinterSettings.FitToHeight = 0;
                 package.Save();
 
                 //add to db

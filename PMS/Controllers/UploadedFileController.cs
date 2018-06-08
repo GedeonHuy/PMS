@@ -150,7 +150,7 @@ namespace PMS.Controllers
             }
 
             var contentType = "application/octet-stream";
-            var downloadPath = Path.Combine(host.WebRootPath, "uploads/uploadedFile/" + uploadedFile.FileName);
+            var downloadPath = Path.Combine(host.ContentRootPath, "uploads/uploadedFile/" + uploadedFile.FileName);
 
             var memory = new MemoryStream();
             using (var stream = new FileStream(downloadPath, FileMode.Open))

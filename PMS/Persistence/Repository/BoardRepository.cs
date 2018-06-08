@@ -158,8 +158,8 @@ namespace PMS.Persistence.Repository
 
         public string CheckLecturerInformations(LecturerInformationResource lecturerInformations)
         {
-            var president = lecturerInformations.Chair;
-            if (president.ScorePercent == null)
+            var chair = lecturerInformations.Chair;
+            if (chair.ScorePercent == null)
             {
                 return "nullScorePercent";
             }
@@ -182,7 +182,7 @@ namespace PMS.Persistence.Repository
                 return "nullScorePercent";
             }
 
-            if (president.ScorePercent + secretary.ScorePercent + reviewer.ScorePercent + supervisor.ScorePercent != 100)
+            if (chair.ScorePercent + secretary.ScorePercent + reviewer.ScorePercent + supervisor.ScorePercent != 100)
             {
                 return "sumScorePercentIsNot100";
             }
@@ -264,21 +264,121 @@ namespace PMS.Persistence.Repository
             }
         }
 
-        public void UpdateBoardEnrollments(Board board, BoardResource BoardResource)
+        public async Task UpdateBoardEnrollments(Board board, BoardResource BoardResource)
         {
             if (BoardResource.BoardEnrollments != null && BoardResource.BoardEnrollments.Count >= 0)
             {
-                //remove old BoardEnrollments
-                board.BoardEnrollments.Clear();
+                // //remove old BoardEnrollments
+                // board.BoardEnrollments.Clear();
 
-                //add new enrollments
-                var newBoardEnrollments = context.BoardEnrollments.Where(e => BoardResource.BoardEnrollments.Any(id => id == e.BoardEnrollmentId)).ToList();
-                foreach (var a in newBoardEnrollments)
+                // //add new enrollments
+                // var newBoardEnrollments = context.BoardEnrollments.Where(e => BoardResource.BoardEnrollments.Any(id => id == e.BoardEnrollmentId)).ToList();
+                // foreach (var a in newBoardEnrollments)
+                // {
+                //     board.BoardEnrollments.Add(a);
+                // }
+                var updatedBoardEnrollments = board.BoardEnrollments.ToList();
+                foreach (var boardEnrollment in updatedBoardEnrollments)
                 {
-                    board.BoardEnrollments.Add(a);
+                    if (boardEnrollment.BoardRole.BoardRoleName == "Chair")
+                    {
+                        if (boardEnrollment.Lecturer.LecturerId == BoardResource.LecturerInformations.Chair.LecturerId)
+                        {
+                            boardEnrollment.Percentage = BoardResource.LecturerInformations.Chair.ScorePercent;
+                        }
+                        else
+                        {
+                            boardEnrollment.IsDeleted = true;
+                            board.BoardEnrollments.Remove(boardEnrollment);
+                            var chairBoardEnrollment = new BoardEnrollment
+                            {
+                                Board = board,
+                                IsDeleted = false,
+                                isMarked = false,
+                                Percentage = BoardResource.LecturerInformations.Chair.ScorePercent,
+                                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Chair"),
+                                Lecturer = await context.Lecturers.FindAsync(BoardResource.LecturerInformations.Chair.LecturerId)
+
+                            };
+                            context.BoardEnrollments.Add(chairBoardEnrollment);
+                        }
+                    }
+
+                    else if (boardEnrollment.BoardRole.BoardRoleName == "Secretary")
+                    {
+                        if (boardEnrollment.Lecturer.LecturerId == BoardResource.LecturerInformations.Secretary.LecturerId)
+                        {
+                            boardEnrollment.Percentage = BoardResource.LecturerInformations.Secretary.ScorePercent;
+                        }
+                        else
+                        {
+                            boardEnrollment.IsDeleted = true;
+                            board.BoardEnrollments.Remove(boardEnrollment);
+                            var secretaryBoardEnrollment = new BoardEnrollment
+                            {
+                                Board = board,
+                                IsDeleted = false,
+                                isMarked = false,
+                                Percentage = BoardResource.LecturerInformations.Secretary.ScorePercent,
+                                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Secretary"),
+                                Lecturer = await context.Lecturers.FindAsync(BoardResource.LecturerInformations.Secretary.LecturerId)
+
+                            };
+                            context.BoardEnrollments.Add(secretaryBoardEnrollment);
+                        }
+                    }
+
+                    else if (boardEnrollment.BoardRole.BoardRoleName == "Supervisor")
+                    {
+                        if (boardEnrollment.Lecturer.LecturerId == BoardResource.LecturerInformations.Supervisor.LecturerId)
+                        {
+                            boardEnrollment.Percentage = BoardResource.LecturerInformations.Supervisor.ScorePercent;
+                        }
+                        else
+                        {
+                            boardEnrollment.IsDeleted = true;
+                            board.BoardEnrollments.Remove(boardEnrollment);
+                            var supervisorBoardEnrollment = new BoardEnrollment
+                            {
+                                Board = board,
+                                IsDeleted = false,
+                                isMarked = false,
+                                Percentage = BoardResource.LecturerInformations.Supervisor.ScorePercent,
+                                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Supervisor"),
+                                Lecturer = await context.Lecturers.FindAsync(BoardResource.LecturerInformations.Supervisor.LecturerId)
+
+                            };
+                            context.BoardEnrollments.Add(supervisorBoardEnrollment);
+                        }
+                    }
+
+                    else if (boardEnrollment.BoardRole.BoardRoleName == "Reviewer")
+                    {
+                        if (boardEnrollment.Lecturer.LecturerId == BoardResource.LecturerInformations.Reviewer.LecturerId)
+                        {
+                            boardEnrollment.Percentage = BoardResource.LecturerInformations.Reviewer.ScorePercent;
+                        }
+                        else
+                        {
+                            boardEnrollment.IsDeleted = true;
+                            board.BoardEnrollments.Remove(boardEnrollment);
+                            var reviewerBoardEnrollment = new BoardEnrollment
+                            {
+                                Board = board,
+                                IsDeleted = false,
+                                isMarked = false,
+                                Percentage = BoardResource.LecturerInformations.Reviewer.ScorePercent,
+                                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Reviewer"),
+                                Lecturer = await context.Lecturers.FindAsync(BoardResource.LecturerInformations.Reviewer.LecturerId)
+
+                            };
+                            context.BoardEnrollments.Add(reviewerBoardEnrollment);
+                        }
+                    }
                 }
             }
         }
+
 
         public async Task UpdateOrder(Board board, BoardResource boardResource)
         {

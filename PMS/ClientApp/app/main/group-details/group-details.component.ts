@@ -17,7 +17,7 @@ import { SystemConstants } from '../../core/common/system.constants';
 @Component({
   selector: 'app-group-details',
   templateUrl: './group-details.component.html',
-  styleUrls: ['./group-details.component.scss']
+  styleUrls: ['./group-details.component.scss'],
 })
 export class GroupDetailsComponent implements OnInit {
   @ViewChild('modalUpload') public modalUpload: ModalDirective;
@@ -26,6 +26,9 @@ export class GroupDetailsComponent implements OnInit {
   @ViewChild('modalMark') public modalMark: ModalDirective;
   @ViewChild('modalBoard') public modalBoard: ModalDirective;
 
+  thisRecommendation: any;
+  recommendationDescription: any;
+  recommendations: any[];
   thisLecturerEmail: any;
   groupId: any;
   group: any;
@@ -43,11 +46,16 @@ export class GroupDetailsComponent implements OnInit {
   isLoadGit: boolean;
   isLoadDataCommit: boolean;
   isLoadMark: boolean;
+  isLoadRecommendation: boolean;
 
+  groupRecommendations: any[];
   lecturers: any[];
   boardEnrollmentsOfLecturer: any[];
+  groupBoardEnrollments: any[];
   thisLecturerId: any;  
 
+  hasRecommendations: boolean;
+  hasBoard: boolean;
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
@@ -60,6 +68,7 @@ export class GroupDetailsComponent implements OnInit {
     isConfirm: "Accepted"
   };
 
+  public todoList: Array<any>;
   public scorePercents: number[] = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
   public board: any = {};
   public chair: any;
@@ -75,10 +84,12 @@ export class GroupDetailsComponent implements OnInit {
 
   constructor(private _authenService: AuthenService, private route: ActivatedRoute, private _notificationService: NotificationService,
     private router: Router, private _dataService: DataService) {
-
+    
+    this.hasBoard = false;
     this.isReviewer = false;  
     this.isAdmin = false;
     this.isLecturer = false;
+    this.isLoadRecommendation = false;
     this.isLoadMark = true;
     this.isSaved = false;
 
@@ -97,13 +108,18 @@ export class GroupDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.permissionAccess();
-    this.loadGroupDetails(this.groupId);
 
+    this.thisRecommendation = {
+      boardEnrollmentId: null,
+      description: ""
+    };
     Observable.forkJoin([
       this._dataService.get("/api/lecturers/getall/")
     ]).subscribe(data => {
       this.lecturers = data[0].items
     });
+
+    this.loadGroupDetails(this.groupId);
   }
 
   data = {
@@ -124,35 +140,71 @@ export class GroupDetailsComponent implements OnInit {
 
   //Get Group with Id
   loadGroupDetails(id: any) {
-    this._dataService.get('/api/groups/getgroup/' + id)
-      .subscribe((response: any) => {
-        this.group = response;
-        //if (response.linkGithub != null) {
-          this.linkGithub = response.linkGitHub.replace("https://github.com/", "");
-          this.linkDowload = response.linkGitHub + "/archive/master.zip";
+    Observable.forkJoin([
+    this._dataService.get('/api/groups/getgroup/' + id),
+    this._dataService.get('/api/boardenrollments/getboardenrollmentsbygroupid/' + id),
+    this._dataService.get('/api/recommendations/getrecommendationsbygroupid/' + id),
+    this._dataService.get("/api/lecturers/getall/")
+    ]).subscribe(data => {
+        //Group-START
+        this.group = data[0];
+          //Check link github-START
+        if (this.group.linkGitHub != null) {
+          this.linkGithub = data[0].linkGitHub.replace("https://github.com/", "");
+          this.linkDowload = data[0].linkGitHub + "/archive/master.zip";
           this.loadGithub(this.linkGithub);
           this.loadDataCommits(this.linkGithub + "/stats/participation");
           this.loadCommitComment(this.linkGithub + "/commits");
-
           this.isHaveGithub = true;
-        //}
+        }
+          //Check link github-END
         this.isLoadData = true;
-        if (this.group.board.resultScore == null)
+        //Group-END
+
+        //Check if has board-START
+        if (this.group.board != null)
+          this.hasBoard = true;
+        //Check if has board-END
+
+        //Check isReviewer-START
+        if (this.group.boardId != null && this.isLecturer == true)
+        { 
+          if (this.thisLecturerEmail != undefined)
+            this.thisLecturerId = data[3].items.find(l => l.email == this.thisLecturerEmail).lecturerId;
+
+          if (this.group.board.lecturerInformations.reviewer.lecturerId == this.thisLecturerId)
+          {
+            this.isReviewer = true;
+          }
+        }
+
+        //Check isReviewer-END
+
+        //Score-START
+        this.groupBoardEnrollments = data[1].items;
+        if (this.groupBoardEnrollments.length != 0)
         {
-          this.group.resultScore = "N\\A";
+          if (this.group.board.resultScore == null)
+            this.group.resultScore = "";
+          else
+            this.group.resultScore = this.group.board.resultScore;
+          if (this.group.board.resultGrade == null)
+            this.group.resultGrade = "";
+          else
+            this.group.resultGrade = this.group.board.resultGrade;
         }
         else
-        {
-          this.group.resultScore = this.group.board.resultScore;
+        { 
+          this.groupBoardEnrollments = undefined;
+          this.group.resultScore = "";
+          this.group.resultGrade = "";
         }
-        if (this.group.board.resultGrade == null)
-        {
-          this.group.resultGrade = "N\\A";
-        }
-        else
-        {
-          this.group.resultGrade = this.group.board.resultGrade;
-        }
+        //Score-END
+
+        //Recommendations-START
+        this.isLoadRecommendation = true;
+        this.groupRecommendations = data[2].items;
+        //Recommendations-END
       });
   }
 
@@ -195,13 +247,16 @@ export class GroupDetailsComponent implements OnInit {
   loadDataCommits(link: string) {
     this._dataService.getGithub(link)
       .subscribe((response: any) => {
-        
-        for (var i = 40; i < response.all.length; i++) {
-          this.dataCommit.push(response.all[i]);
-        }
 
-        for (var i = 0; i < response.all.length; i++) {
-          this.commits = this.commits + response.all[i];
+        if (response.all.length != undefined)
+        {
+          for (var i = 40; i < response.all.length; i++) {
+            this.dataCommit.push(response.all[i]);
+          }
+
+          for (var i = 0; i < response.all.length; i++) {
+            this.commits = this.commits + response.all[i];
+          }
         }
 
         this.isLoadDataCommit = true;
@@ -308,18 +363,18 @@ export class GroupDetailsComponent implements OnInit {
 
     Observable.forkJoin(
       this._dataService.get('/api/boardenrollments/getboardenrollmentsbylectureremail/' + this.thisLecturerEmail),
-      this._dataService.get('/api/boards/getboard/' + id),
+      this._dataService.get('/api/recommendations/getrecommendationsbygroupid/' + id),
     ).subscribe(data => {
       this.boardEnrollmentsOfLecturer = data[0].items;
       this.boardEnrollment = this.boardEnrollmentsOfLecturer.find(be => be.boardID == id);
       this.isLoadMark = true;
 
-      this.thisLecturerId = this.lecturers.find(l => l.email == this.thisLecturerEmail).lecturerId;
-      console.log(this.lecturers.find(l => l.email == this.thisLecturerEmail));
-      if(data[1].lecturerInformations.reviewer.lecturerId == this.thisLecturerId)
-      {
-        this.isReviewer = true;
-      }
+      this.recommendations = data[1].items;
+      console.log(this.recommendations);
+      //   .find(r => r.boardEnrollmentId == this.boardEnrollment.boardEnrollmentId);
+      // if (this.recommendations.length != undefined) {
+      //   this.hasRecommendations = true;
+      // }
     });
   }
 
@@ -327,10 +382,18 @@ export class GroupDetailsComponent implements OnInit {
   assignBoard(id: any) {
     this.modalBoard.show();
     this.boardEnrollments = {};
-    this.chair = {};
-    this.secretary = {};
-    this.supervisor = {};
-    this.reviewer = {};
+    this.chair = {
+      'scorePercent': 25,
+    };
+    this.secretary = {
+      'scorePercent': 25,
+    };
+    this.supervisor = {
+      'scorePercent': 25,
+    };
+    this.reviewer = {
+      'scorePercent': 25,
+    };
 
     Observable.forkJoin(
       this._dataService.get('/api/groups/getgroup/' + id)
@@ -405,18 +468,28 @@ export class GroupDetailsComponent implements OnInit {
   handler(type: string, $event: ModalDirective) {
     if (type === "onHide" || type === "onHidden") {
       this.group = [];
+      this.isLoadData = false;
+      this.isHaveGithub = false;
+      this.loadGroupDetails(this.groupId);
+
       this.isLoadBoard = false;
     }
   }
 
   hidemodalMark() {
-    this.loadGroupDetails(this.groupId);
     this.modalMark.hide();
   }
 
   hidemodalBoard() {
-    this.loadGroupDetails(this.groupId);
     this.modalBoard.hide();
+  }
+
+  hidemodalDownload() {
+    this.modalDownload.hide();
+  }
+
+  hidemodalUpload() {
+    this.modalUpload.hide();
   }
 
   AddUploadedFile() {
@@ -432,6 +505,7 @@ export class GroupDetailsComponent implements OnInit {
         }, error => reject(this._dataService.handleError(error)));
     });
   }
+  
   download(modalUpload){
     window.location.href = this.linkUploadedFileDowload
     this._notificationService.printSuccessMessage("Download Success");
@@ -439,10 +513,50 @@ export class GroupDetailsComponent implements OnInit {
   }
 
   calculateScore(id: any){
-    // console.log(id);
     this._dataService.get('/api/boards/calculatescore/' + id)
       .subscribe((response: any) => {
       });
     window.location.reload()
+  }
+
+  addRecommendation(id: any, form: NgForm){
+    this.thisRecommendation = {
+      boardEnrollmentId: null,
+      description: ""
+    };
+    this.thisRecommendation.boardEnrollmentId = id;
+    this.thisRecommendation.description = "" + this.recommendationDescription;
+
+    this._dataService.post('/api/recommendations/add', JSON.stringify(this.thisRecommendation))
+      .subscribe((response: any) => {
+        this._notificationService.printSuccessMessage("Add Success");
+        this.thisRecommendation.recommendationId = response.recommendationId;
+        this.recommendations.push(
+          this.thisRecommendation,
+        );
+    }, error => this._dataService.handleError(error));
+
+    
+    form.resetForm();
+  }
+
+  removeRecommendation(i: any) {
+    this._dataService.delete('/api/recommendations/delete/' + this.recommendations[i].recommendationId)
+        .subscribe((response: any) => {
+          this._notificationService.printSuccessMessage("Delete Success");
+        }, error => this._dataService.handleError(error));  
+    this.recommendations.splice(i, 1);
+  }
+
+  markRecommendation(i: any) {
+    if (this.groupRecommendations[i].isDone == false)
+      this.groupRecommendations[i].isDone = true;
+    else
+      this.groupRecommendations[i].isDone = false;
+
+    this._dataService.put('/api/recommendations/update/' + this.groupRecommendations[i].recommendationId, JSON.stringify(this.groupRecommendations[i]))
+      .subscribe((response: any) => {
+        this._notificationService.printSuccessMessage("Check Success");
+      }, error => this._dataService.handleError(error));  
   }
 }

@@ -115,6 +115,8 @@ namespace PMS.Data
                 new Lecturer{Name="Trần Nguyện Sơn Quân",DateOfBirth=DateTime.Parse("1980-12-29"),Email="quan.tran@eiu.edu.vn",PhoneNumber="0123843834",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
                 new Lecturer{Name="Lê Nhân Văn",DateOfBirth=DateTime.Parse("1986-11-10"),Email="van.le@eiu.edu.vn",PhoneNumber="0969843879",Address="Bình Dương",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
                 new Lecturer{Name="Nguyễn Đình Trung",DateOfBirth=DateTime.Parse("1979-02-13"),Email="trung.nguyen@eiu.edu.vn",PhoneNumber="0938843123",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
+                new Lecturer{Name="Nguyễn Lê Hà",DateOfBirth=DateTime.Parse("1970-02-13"),Email="ha.le@eiu.edu.vn",PhoneNumber="0938848923",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
+
             };
             foreach (Lecturer s in lecturers)
             {

@@ -1,11 +1,20 @@
 <div class="widgets">
-  <img *ngIf="!isLoadData && !isLoadGit && !isLoadDataCommit" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;" src="/assets/images/loading.gif"
-  />
-  <div class="row" *ngIf="isLoadData && isLoadGit && isLoadDataCommit">
+  <img *ngIf="!isLoadData && !isLoadGit && !isLoadDataCommit" style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;"
+    src="/assets/images/loading.gif" />
+  <div class="row" *ngIf="(isLoadData && isLoadGit && isLoadDataCommit) || (isLoadData && !isHaveGithub)">
+    <div class="col-lg-12 col-md-12">
+      <button *ngIf="isAdmin" class="btn btn-primary" style="float: right;" (click)="calculateScore(group.boardId)"> Finalize</button>
+      <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;" (click)="calculateScore(group.boardId)"> Finalize</button>
+      <button *ngIf="isLecturer && hasBoard" class="btn btn-mark" style="float: right;" (click)="mark(group.boardId)" translate> Mark this group</button>
+      <button *ngIf="!isLecturer && hasBoard" disabled class="btn btn-disabled" style="float: right;" (click)="mark(group.boardId)" translate> Mark this group</button>
+      <button *ngIf="isAdmin" class="btn btn-assign" style="float: right;" (click)="assignBoard(group.groupId)" translate> Assign board</button>
+      <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;" (click)="assignBoard(group.groupId)" translate> Assign board</button>
+    </div>
+    <br />
     <div class="col-12 col-sm-6 col-md-8">
       <h2>Summary Project</h2>
 
-      <div class="row pie-charts">
+      <div *ngIf="isHaveGithub" class="row pie-charts">
         <div class="pie-chart-item-container col-xlg-3 col-lg-3 col-md-6 col-sm-12 col-12">
 
           <div class="pie-chart-item">
@@ -42,29 +51,39 @@
       </div>
       <br />
 
-      <div id="mainb">
+      <div *ngIf="isHaveGithub" id="mainb">
         <chart type="line" [options]="options" [data]="data"></chart>
       </div>
-      <br /><br /><br /><br /> 
-      <h4>Recent Activity</h4>
-      <br /><br />
-      <div class="messages" *ngFor="let commit of commitDetails">
+      <br />
+      <br />
+      <br />
+      <br />
+
+      <!--All Recommendations-START-->
+      <h4>Lecturers' recommendations</h4>
+      <br />
+      <br />
+      <div class="messages" *ngFor="let item of groupRecommendations; let i = index" [attr.data-index]="i">
         <div class="row">
           <div class="xs-12 col-md-8">
-            <h4 class="heading">{{commit.commit.author.name}}</h4>
-            <p class="message">{{commit.commit.message}}</p>
+            <h5 class="heading">#{{ i+1 }}</h5>
+            <p class="message">{{ item.description }}</p>
           </div>
           <div class="xs-6 col-md-4">
-            <h3 class="date text-info">{{commit.commit.author.date | date}}</h3>
+            <button *ngIf="!isReviewer" disabled [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)">
+              <i *ngIf="!item.isDone" class="fa fa-circle"></i>
+              <i *ngIf="item.isDone" class="fa fa-check-circle"></i>
+            </button>
+            <button *ngIf="isReviewer" [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)">
+                <i *ngIf="!item.isDone" class="fa fa-circle"></i>
+                <i *ngIf="item.isDone" class="fa fa-check-circle"></i>
+            </button>
           </div>
 
         </div>
       </div>
-
+    <!--All Recommendations-END-->
     </div>
-
-
-
 
     <div class="col-6 col-md-4">
       <h2>Group Description</h2>
@@ -85,6 +104,7 @@
           <b class="font-weight: bold;">Github</b>
           <p>
             <a href="{{group.linkGitHub}}">{{group.linkGitHub}}</a>
+            <a *ngIf="!isHaveGithub">(None)</a>
           </p>
           <b class="font-weight: bold;">Contributors</b>
           <p *ngFor="let student of group.studentEmails">{{student}}</p>
@@ -93,19 +113,17 @@
 
         <br />
         <h5>Project files</h5>
-        <ul class="list-unstyled project_files" *ngFor="let file of group.uploadedFiles">
+        <ul class="list-unstyled project_files" *ngFor="let file of group.uploadFilesInformation">
           <li>
             <button (click)="showDownloadModal(file.uploadedFileId)">
-              <i class="{{file.url}}"></i> {{file.title}}</button>
+              <i class="{{file.url}}"></i> {{file.title}} </button>
           </li>
         </ul>
         <br />
 
         <div class="text-center mtop20">
-          <a class="btn btn-sm btn-primary" (click)="showUploadModal()"> Add files</a>
-          <a href="{{this.linkDowload}}" class="btn btn-sm btn-warning">Download Project in Github</a>
-          <a *ngIf="isAdmin" class="btn btn-primary" (click)="assignBoard(group.groupId)"> Assign board</a>
-          <a *ngIf="isLecturer" class="btn btn-warning" (click)="mark(group.boardId)"> Mark this group</a>
+          <a class="btn btn-sm btn-primary" (click)="showUploadModal()">Add files</a>
+          <a *ngIf="isHaveGithub" href="{{this.linkDowload}}" class="btn btn-sm btn-warning">Source code</a>
         </div>
 
         <br />
@@ -118,7 +136,6 @@
             Score:
             <a *ngIf="group.resultScore">{{group.resultScore}}</a>
           </h3>
-          <a *ngIf="isAdmin" class="btn btn-primary" (click)="calculateScore(group.boardId)"><i class="fa fa-calculator"></i></a>
         </div>
       </div>
     </div>
@@ -126,187 +143,296 @@
 </div>
 
 <!--Modal Mark-->
-<div bsModal #modalMark="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)"
-(onHidden)="handler('onHidden', $event)">
+<div bsModal #modalMark="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+  (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)" (onHidden)="handler('onHidden', $event)">
 
-<div class="modal-dialog modal-lg">
-  <div class="modal-content" style="background: #7FFFD4">
-    <div class="modal-header">
-      <h4 class="modal-title pull-left">Mark This Group</h4>
-      <span *ngIf="!isLoadMark" class="fa fa-refresh fa-spin"></span>
-      <button type="button" class="close pull-right" (click)="hidemodalMark()" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form class="form-horizontal form-label-left" novalidate #markForm="ngForm" (ngSubmit)="saveMark(markForm)"
-        *ngIf="boardEnrollment && isLoadMark">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="background: #7FFFD4">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Mark This Group</h4>
+        <span *ngIf="!isLoadMark" class="fa fa-refresh fa-spin"></span>
+        <button type="button" class="close pull-right" (click)="hidemodalMark()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal form-label-left" novalidate #markForm="ngForm" (ngSubmit)="saveMark(markForm)" *ngIf="boardEnrollment && isLoadMark">
 
-        <input type="hidden" [(ngModel)]="boardEnrollment.boardEnrollmentId" name="boardEnrollment.boardEnrollmentId" />
-        <input type="hidden" [(ngModel)]="boardEnrollment.percentage" name="boardEnrollment.percentage" />
-        <input type="hidden" [(ngModel)]="boardEnrollment.lecturerId" name="boardEnrollment.lecturerId" />
-        <input type="hidden" [(ngModel)]="boardEnrollment.boardID" name="boardEnrollment.boardID" />
+          <input type="hidden" [(ngModel)]="boardEnrollment.boardEnrollmentId" name="boardEnrollment.boardEnrollmentId" />
+          <input type="hidden" [(ngModel)]="boardEnrollment.percentage" name="boardEnrollment.percentage" />
+          <input type="hidden" [(ngModel)]="boardEnrollment.lecturerId" name="boardEnrollment.lecturerId" />
+          <input type="hidden" [(ngModel)]="boardEnrollment.boardID" name="boardEnrollment.boardID" />
 
-        <div class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Mark</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <input class="form-control" [(ngModel)]="boardEnrollment.score" name="boardEnrollment.score" required #mark="ngModel"/>
-            <small [hidden]="mark.valid || (mark.pristine && !markForm.submitted)" class="text-danger">
-              Please specify the score </small>
-          </div>  
-        </div>
-
-        <!--Recommendation-START-->
-        <div *ngIf="isReviewer" class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Recommendation</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <textarea type="text"class="form-control" [(ngModel)]="boardEnrollment.recommendation" name="boardEnrollment.recommendation" required #recommendation="ngModel"></textarea>
-            <small [hidden]="recommendation.valid || (recommendation.pristine && !recommendation.submitted)" class="text-danger">
-                Please specify the recommendation </small>
-          </div>  
-        </div>
-
-        <input *ngIf="!isReviewer" type="hidden" class="form-control" [(ngModel)]="boardEnrollment.recommendation" name="boardEnrollment.recommendation" #recommendation="ngModel"/>
-        <!--Recommendation-END-->
-
-        <div class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Comment</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <textarea type="text"class="form-control" [(ngModel)]="boardEnrollment.comment" name="boardEnrollment.comment" required #comment="ngModel"></textarea>
-            <small [hidden]="comment.valid || (comment.pristine && !comment.submitted)" class="text-danger">
-                Please specify the comment </small>
-          </div>  
-        </div>
-
-        <div class="form-group">
-          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-            <button type="button" (click)="hidemodalMark()" class="btn btn-primary">Cancel</button>
-            <button type="submit" class="btn btn-success" [disabled]="!markForm.valid || isSaved">Save</button>
-            <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Mark</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input class="form-control" [(ngModel)]="boardEnrollment.score" name="boardEnrollment.score" required #mark="ngModel" />
+              <small [hidden]="mark.valid || (mark.pristine && !markForm.submitted)" class="text-danger">
+                Please specify the score </small>
+            </div>
           </div>
-        </div>
-      </form>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Comment</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <textarea type="text" class="form-control" [(ngModel)]="boardEnrollment.comment" name="boardEnrollment.comment" required
+                #comment="ngModel"></textarea>
+              <small [hidden]="comment.valid || (comment.pristine && !comment.submitted)" class="text-danger">
+                Please specify the comment </small>
+            </div>
+          </div>
+
+          <!--Recommendation-START-->
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Recommendations</label>
+          <div class="form-group">
+              <form class="col-md-9 col-sm-9 col-xs-12" #recommendationForm="ngForm" (submit)="addRecommendation(boardEnrollment.boardEnrollmentId, recommendationForm)">
+                  <input class="form-control" style="padding-right: 4.13em;" type="text" [(ngModel)]="recommendationDescription" name="Recommendation" />
+                  <button class="form-horizontal btn btn-mark" style="float: right; margin-top: -2.3em; margin-right: 0.13em;" type="submit"><i class="fa fa-plus"></i></button>
+              </form>
+              <br />
+              <ul class="col-md-9 col-sm-9 col-xs-12" *ngFor="let item of recommendations; let i = index" [attr.data-index]="i">
+                  {{ item.description }}
+                  <button class="btn btn-danger" style="float: right; margin-right: 0.13em;" (click)="removeRecommendation(i)"><i class="fa fa-minus"></i></button>
+              </ul>
+              
+          </div>
+          <!--Recommendation-END-->
+
+          <div class="form-group">
+            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+              <button type="button" (click)="hidemodalMark()" class="btn btn-primary">Cancel</button>
+              <button type="submit" class="btn btn-success" [disabled]="!markForm.valid || isSaved">Save</button>
+              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 </div>
 
 <!--Modal board-->
-<div bsModal #modalBoard="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)"
-(onHidden)="handler('onHidden', $event)">
+<div bsModal #modalBoard="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+  (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)" (onHidden)="handler('onHidden', $event)">
 
-<div class="modal-dialog modal-lg">
-  <div class="modal-content" style="background: #7FFFD4">
-    <div class="modal-header">
-      <h4 class="modal-title pull-left">Assign Board</h4>
-      <span *ngIf="!isLoadBoard" class="fa fa-refresh fa-spin"></span>
-      <button type="button" class="close pull-right" (click)="hidemodalBoard()" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveBoard(addEditForm)"
-        *ngIf="board && boardEnrollments && isLoadBoard">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="background: #7FFFD4">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Assign Board</h4>
+        <span *ngIf="!isLoadBoard" class="fa fa-refresh fa-spin"></span>
+        <button type="button" class="close pull-right" (click)="hidemodalBoard()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveBoard(addEditForm)" *ngIf="board && boardEnrollments && isLoadBoard">
 
-        <div class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">chair</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <input type="hidden" [(ngModel)]="board.boardId" name="boardId" />
-            <select class="form-control" [(ngModel)]="boardEnrollments.chair.lecturerId" name="boardEnrollments.chair.lecturerId" required #chair="ngModel">
-              <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
-            </select>
-            <small [hidden]="chair.valid || (chair.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the chair </small>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">chair</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="hidden" [(ngModel)]="board.boardId" name="boardId" />
+              <select class="form-control" [(ngModel)]="boardEnrollments.chair.lecturerId" name="boardEnrollments.chair.lecturerId" required
+                #chair="ngModel">
+                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+              </select>
+              <small [hidden]="chair.valid || (chair.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the chair </small>
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <select class="form-control" [(ngModel)]="boardEnrollments.chair.scorePercent" name="boardEnrollments.chair.scorePercent" required #scorePercentChair="ngModel">
-              <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
-            </select>
-            <small [hidden]="scorePercentChair.valid || (scorePercentChair.pristine && !addEditForm.submitted)" class="text-danger">
-              Please specify the score percent </small>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="boardEnrollments.chair.scorePercent" name="boardEnrollments.chair.scorePercent"
+                required #scorePercentChair="ngModel">
+                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+              </select>
+              <small [hidden]="scorePercentChair.valid || (scorePercentChair.pristine && !addEditForm.submitted)" class="text-danger">
+                Please specify the score percent </small>
+            </div>
           </div>
-        </div>
-        <div class="ln_solid"></div>
+          <div class="ln_solid"></div>
 
-        <div class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Secretary</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <select class="form-control" [(ngModel)]="boardEnrollments.secretary.lecturerId" name="boardEnrollments.secretary.name" required #secretary="ngModel">
-              <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
-            </select>
-            <small [hidden]="secretary.valid || (secretary.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the secretary </small>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Secretary</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.lecturerId" name="boardEnrollments.secretary.name" required
+                #secretary="ngModel">
+                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+              </select>
+              <small [hidden]="secretary.valid || (secretary.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the secretary </small>
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <select class="form-control" [(ngModel)]="boardEnrollments.secretary.scorePercent" name="boardEnrollments.secretary.scorePercent" required #scorePercentSecretary="ngModel">
-              <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
-            </select>
-            <small [hidden]="scorePercentSecretary.valid || (scorePercentSecretary.pristine && !addEditForm.submitted)" class="text-danger">
-              Please specify the score percent </small>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.scorePercent" name="boardEnrollments.secretary.scorePercent"
+                required #scorePercentSecretary="ngModel">
+                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+              </select>
+              <small [hidden]="scorePercentSecretary.valid || (scorePercentSecretary.pristine && !addEditForm.submitted)" class="text-danger">
+                Please specify the score percent </small>
+            </div>
           </div>
-        </div>
-        <div class="ln_solid"></div>
-        <div class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.lecturerId" name="boardEnrollments.supervisor.name" required #supervisor="ngModel">
-              <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
-            </select>
-            <small [hidden]="supervisor.valid || (supervisor.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the supervisor </small>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.lecturerId" name="boardEnrollments.supervisor.name"
+                required #supervisor="ngModel">
+                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+              </select>
+              <small [hidden]="supervisor.valid || (supervisor.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the supervisor </small>
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.scorePercent" name="boardEnrollments.supervisor.scorePercent" required #scorePercentSupervisor="ngModel">
-              <option value=""></option>
-              <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
-            </select>
-            <small [hidden]="scorePercentSupervisor.valid || (scorePercentSupervisor.pristine && !addEditForm.submitted)" class="text-danger">
-              Please specify the score percent </small>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.scorePercent" name="boardEnrollments.supervisor.scorePercent"
+                required #scorePercentSupervisor="ngModel">
+                <option value=""></option>
+                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+              </select>
+              <small [hidden]="scorePercentSupervisor.valid || (scorePercentSupervisor.pristine && !addEditForm.submitted)" class="text-danger">
+                Please specify the score percent </small>
+            </div>
           </div>
-        </div>
-        <div class="ln_solid"></div>
-        <div class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Reviewer</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.lecturerId" name="boardEnrollments.reviewer.name" required #reviewer="ngModel">
-              <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
-            </select>
-            <small [hidden]="reviewer.valid || (reviewer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the reviewer </small>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Reviewer</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.lecturerId" name="boardEnrollments.reviewer.name" required
+                #reviewer="ngModel">
+                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
+              </select>
+              <small [hidden]="reviewer.valid || (reviewer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the reviewer </small>
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.scorePercent" name="boardEnrollments.reviewer.scorePercent" required #scorePercentReviewer="ngModel">
-              <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
-            </select>
-            <small [hidden]="scorePercentReviewer.valid || (scorePercentReviewer.pristine && !addEditForm.submitted)" class="text-danger">
-              Please specify the score percent </small>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.scorePercent" name="boardEnrollments.reviewer.scorePercent"
+                required #scorePercentReviewer="ngModel">
+                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+              </select>
+              <small [hidden]="scorePercentReviewer.valid || (scorePercentReviewer.pristine && !addEditForm.submitted)" class="text-danger">
+                Please specify the score percent </small>
+            </div>
           </div>
-        </div>
-        <div class="ln_solid"></div>
+          <div class="ln_solid"></div>
 
-        <div class="form-group">
-          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-            <button type="button" (click)="hidemodalBoard()" class="btn btn-primary">Cancel</button>
-            <button type="submit" class="btn btn-success" [disabled]="!addEditForm.valid || isSaved">Save</button>
-            <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+          <div class="form-group">
+            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+              <button type="button" (click)="hidemodalBoard()" class="btn btn-primary">Cancel</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.valid || isSaved">Save</button>
+              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Modal upload -->
+<div bsModal #modalUpload="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="background: #7FFFD4;">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Add File</h4>
+        <button type="button" class="close pull-right" (click)="hidemodalUpload()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal form-label-left" novalidate #modalUpload="ngForm" (ngSubmit)="saveChange(modalUpload)" *ngIf="uploadedFile">
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Title</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #title="ngModel" [(ngModel)]="uploadedFile.title" required name="title" class="form-control">
+              <small [hidden]="title.valid || (title.pristine && !modalUpload.submitted)" class="text-danger">
+                Student Code is required
+              </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Description</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="hidden" [(ngModel)]="uploadedFile.groupId" name="id" />
+              <input type="text" #description="ngModel" [(ngModel)]="uploadedFile.description" required minlength="1" name="name" class="form-control">
+              <small [hidden]="description.valid || (description.pristine && !modalUpload.submitted)" class="text-danger">
+                At least 1 characters
+              </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Add File</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="file" #fileInput class="form-control">
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+              <button type="button" (click)="hidemodalUpload()" class="btn btn-primary">Cancel</button>
+              <button type="submit" class="btn btn-success" [disabled]="!modalUpload.form.valid || isClicked">Add</button>
+              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal download -->
+<div bsModal #modalDownload="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="background: #7FFFD4">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">File Information</h4>
+        <button type="button" class="close pull-right" (click)="hidemodalDownload()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal form-label-left" novalidate #modalDownload="ngForm" (ngSubmit)="download(modalUpload)" *ngIf="file">
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Title</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #title="ngModel" [(ngModel)]="file.title" required name="title" class="form-control">
+              <small [hidden]="title.valid || (title.pristine && !modalDownload.submitted)" class="text-danger">
+                Student Code is required
+              </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Description</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="hidden" [(ngModel)]="file.groupId" name="id" />
+              <input type="text" #description="ngModel" [(ngModel)]="file.description" required minlength="1" name="name" class="form-control">
+              <small [hidden]="description.valid || (description.pristine && !modalDownload.submitted)" class="text-danger">
+                At least 1 characters
+              </small>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+              <button type="button" (click)="hidemodalDownload()" class="btn btn-primary">Cancel</button>
+              <button type="submit" class="btn btn-success" [disabled]="!modalDownload.form.valid || isClicked">Download</button>
+              <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

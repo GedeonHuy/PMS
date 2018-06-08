@@ -79,6 +79,7 @@ namespace PMS.Mapping
 
             CreateMap<BoardEnrollment, BoardEnrollmentResource>()
                 .ForMember(cr => cr.LecturerID, opt => opt.MapFrom(c => c.Lecturer.LecturerId))
+                .ForMember(cr => cr.Recommendations, opt => opt.MapFrom(c => c.Recommendations.Select(cf => cf.Description)))
                 .ForMember(cr => cr.Lecturer, opt => opt.MapFrom(c => new LecturerResource
                 {
                     LecturerId = c.Lecturer.LecturerId,
@@ -182,6 +183,12 @@ namespace PMS.Mapping
                         Email = sf.Student.Email,
                         Name = sf.Student.Name
                     }).ToList(),
+                    UploadFilesInformation = e.Group.UploadedFiles.Select(sf => new UploadFilesInformationResource
+                    {
+                        UploadedFileId = sf.UploadedFileId,
+                        Title = sf.Title,
+                        Url = sf.Url
+                    }).ToList(),
                 }))
                 .ForMember(er => er.LecturerId, opt => opt.MapFrom(e => e.Lecturer.LecturerId))
                 .ForMember(er => er.Lecturer, opt => opt.MapFrom(e => new LecturerResource
@@ -229,7 +236,12 @@ namespace PMS.Mapping
                 }))
                 .ForMember(pr => pr.TagProjects, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.TagProjectId)))
                 .ForMember(pr => pr.Tags, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.Tag.TagName)))
-                .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)));
+                .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)))
+                .ForMember(pr => pr.Categories, opt => opt.MapFrom(p => p.Categories.Select(pf => new CategoryInformationResource
+                {
+                    CategoryName = pf.CategoryName,
+                    Confidence = pf.Confidence
+                })));
 
             CreateMap<Lecturer, LecturerResource>()
                 .ForMember(lr => lr.MajorId, opt => opt.MapFrom(l => l.Major.MajorId))
@@ -300,6 +312,12 @@ namespace PMS.Mapping
                     Name = gf.Student.Name,
                     Email = gf.Student.Email
                 })))
+                 .ForMember(gr => gr.UploadFilesInformation, opt => opt.MapFrom(g => g.UploadedFiles.Select(gf => new UploadFilesInformationResource
+                 {
+                     UploadedFileId = gf.UploadedFileId,
+                     Title = gf.Title,
+                     Url = gf.Url
+                 })))
                 .ForMember(gr => gr.UploadedFiles, opt => opt.MapFrom(g => g.UploadedFiles.Select(gf => gf.UploadedFileId)))
                 .ForMember(gr => gr.Tasks, opt => opt.MapFrom(g => g.Tasks.Select(gf => gf.TaskId)))
                 .ForMember(er => er.QuarterId, opt => opt.MapFrom(e => e.Quarter.QuarterId))
@@ -350,7 +368,12 @@ namespace PMS.Mapping
                     Type = g.Project.Type,
                     IsDeleted = g.Project.IsDeleted,
                     IsCompleted = g.Project.IsCompleted,
-                    Groups = g.Project.Groups.Select(gf => gf.GroupId).ToList()
+                    Groups = g.Project.Groups.Select(gf => gf.GroupId).ToList(),
+                    Categories = g.Project.Categories.Select(gf => new CategoryInformationResource
+                    {
+                        CategoryName = gf.CategoryName,
+                        Confidence = gf.Confidence
+                    }).ToList()
                 }));
             CreateMap<Excel, ExcelResource>();
 
@@ -375,9 +398,18 @@ namespace PMS.Mapping
                         Email = sf.Student.Email,
                         Name = sf.Student.Name
                     }).ToList(),
+                    UploadFilesInformation = s.Group.UploadedFiles.Select(sf => new UploadFilesInformationResource
+                    {
+                        UploadedFileId = sf.UploadedFileId,
+                        Title = sf.Title,
+                        Url = sf.Url
+                    }).ToList(),
                     UploadedFiles = s.Group.UploadedFiles.Select(sf => sf.UploadedFileId).ToList(),
                     Tasks = s.Group.Tasks.Select(sf => sf.TaskId).ToList()
                 }));
+
+            CreateMap<Recommendation, RecommendationResource>()
+                .ForMember(cr => cr.BoardEnrollmentId, opt => opt.MapFrom(c => c.BoardEnrollment.BoardEnrollmentId));
 
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
 
@@ -444,10 +476,12 @@ namespace PMS.Mapping
                 .ForMember(c => c.AnnouncementUserId, opt => opt.Ignore());
 
             CreateMap<BoardResource, Board>()
-                .ForMember(c => c.BoardId, opt => opt.Ignore());
+                .ForMember(c => c.BoardId, opt => opt.Ignore())
+                .ForMember(c => c.BoardEnrollments, opt => opt.Ignore());
 
             CreateMap<BoardEnrollmentResource, BoardEnrollment>()
                 .ForMember(c => c.Lecturer, opt => opt.Ignore())
+                .ForMember(c => c.Recommendations, opt => opt.Ignore())
                 .ForMember(c => c.Board, opt => opt.Ignore())
                 .ForMember(c => c.BoardEnrollmentId, opt => opt.Ignore());
 
@@ -488,8 +522,8 @@ namespace PMS.Mapping
             CreateMap<ExcelResource, Excel>()
                 .ForMember(m => m.ExcelId, opt => opt.Ignore());
 
-            CreateMap<BoardEnrollmentResource, BoardEnrollment>()
-                .ForMember(m => m.BoardEnrollmentId, opt => opt.Ignore());
+            // CreateMap<BoardEnrollmentResource, BoardEnrollment>()
+            //     .ForMember(m => m.BoardEnrollmentId, opt => opt.Ignore());
 
             CreateMap<UploadedFileResource, UploadedFile>()
                 .ForMember(m => m.UploadedFileId, opt => opt.Ignore());
@@ -499,6 +533,12 @@ namespace PMS.Mapping
 
             CreateMap<TagResource, Tag>()
                 .ForMember(m => m.TagId, opt => opt.Ignore());
+
+            CreateMap<RecommendationResource, Recommendation>()
+                .ForMember(m => m.RecommendationId, opt => opt.Ignore());
+
+            CreateMap<CategoryResource, Category>()
+                .ForMember(m => m.CategoryId, opt => opt.Ignore());
 
             /*///////////////////////// Tasking Feature///////////////////////////////////// */
             CreateMap<ActivityResource, Activity>()

@@ -64,10 +64,22 @@ $hover: 24;
   }
 }
 
-button.btn.btn-primary {
+a.btn.btn-primary, button.btn.btn-primary {
   @include buttonColor($primary, $primary);
-  &:active, &:target {
+  color: white;
+  &:active, &:target, &:hover {
+    color: white;
     background-color: $primary-dark;
+  }
+}
+
+button.btn.btn-disabled {
+  border-width: 1px;
+  color: black;
+  @include buttonColor(rgb(150, 150, 150), $border);
+  &:active, &:target {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: $default-text;
   }
 }
 
@@ -83,6 +95,7 @@ button.btn.btn-default {
 
 button.btn.btn-success {
   @include buttonColor($success, $success);
+  color: white;
   &:active, &:target {
     background-color: $success-dark;
   }
@@ -90,13 +103,31 @@ button.btn.btn-success {
 
 button.btn.btn-info {
   @include buttonColor($info, $info);
+  color: white;
   &:active, &:target {
     background-color: $info-dark;
   }
 }
 
+button.btn.btn-assign {
+  @include buttonColor(rgb(7, 206, 0), rgb(7, 206, 0));
+  color: white;
+  &:active, &:target {
+    background-color: rgb(0, 150, 25);
+  }
+}
+
+button.btn.btn-mark {
+  @include buttonColor(rgb(1, 0, 65), rgb(1, 0, 65));
+  color: white;
+  &:active, &:target {
+    background-color: rgb(0, 127, 150);
+  }
+}
+
 button.btn.btn-warning {
   @include buttonColor($warning, $warning);
+  color: white;
   &:active, &:target {
     background-color: $warning-dark;
   }
@@ -104,6 +135,7 @@ button.btn.btn-warning {
 
 button.btn.btn-danger {
   @include buttonColor($danger, $danger);
+  color: white;
   &:active, &:target {
     background-color: $danger-dark;
   }
