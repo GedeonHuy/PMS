@@ -40,6 +40,7 @@ namespace PMS.Data
             builder.Entity<Tag>().ToTable("Tag");
             builder.Entity<TagProject>().ToTable("TagProject");
             builder.Entity<Recommendation>().ToTable("Recommendation");
+            builder.Entity<Category>().ToTable("Category");
 
             //TaskingModels
             builder.Entity<Activity>().ToTable("Activity");
@@ -69,6 +70,7 @@ namespace PMS.Data
         public DbSet<Tag> Tags { get; set; }
         public DbSet<TagProject> TagProjects { get; set; }
         public DbSet<Recommendation> Recommendations { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         //TaskingModels
         public DbSet<Activity> Activities { get; set; }
