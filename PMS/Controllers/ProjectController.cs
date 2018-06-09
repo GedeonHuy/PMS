@@ -248,8 +248,6 @@ namespace PMS.Controllers
             return Ok(mapper.Map<Excel, ExcelResource>(excel));
         }
 
-<<<<<<< HEAD
-
         [HttpGet]
         [Route("testai")]
         public IActionResult TestAI()
@@ -311,8 +309,6 @@ namespace PMS.Controllers
             return categories;
         }
 
-
-=======
         [HttpPost]
         [Route("getsimilarprojects")]
         public async Task<QueryResultResource<ProjectResource>> GetSimilarProjects([FromBody]ProjectResource projectResource)
@@ -324,6 +320,5 @@ namespace PMS.Controllers
 
             return mapper.Map<QueryResult<Project>, QueryResultResource<ProjectResource>>(queryResult);
         }
->>>>>>> 89ddfd38d5daff3ef937973f991a582ad5c223f0
     }
 }
