@@ -15,6 +15,7 @@ using OfficeOpenXml;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 using MailKit.Net.Smtp;
+using Aspose.Cells;
 
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -270,13 +271,37 @@ namespace PMS.Controllers
             boardRepository.CalculateGrade(board);
             await unitOfWork.Complete();
 
-            await ExportExcel(board);
+            string excelFilePath = await ExportExcel(board);
+            string pdfFilePath = ConvertExcelToPdf(excelFilePath, board);
+            SendMail(board, pdfFilePath);
 
             var result = mapper.Map<Board, BoardResource>(board);
             return Ok(result);
         }
 
-        public async Task ExportExcel(Board board)
+        public string ConvertExcelToPdf(string excelFilePath, Board board)
+        {
+            Aspose.Cells.License cellsLicense = new Aspose.Cells.License();
+
+            cellsLicense.SetLicense("Aspose.Cells.lic");
+            //open excel file
+            Workbook workBook = new Workbook(excelFilePath);
+
+            var fileName = board.Group.GroupName + "_" + board.BoardId + "_result" + @".pdf";
+            var uploadFolderPath = Path.Combine(host.ContentRootPath, "exports/pdf");
+            if (!System.IO.Directory.Exists(uploadFolderPath))
+            {
+                System.IO.Directory.CreateDirectory(uploadFolderPath);
+            }
+
+            var filePath = Path.Combine(uploadFolderPath, fileName);
+
+            //save workbook in PDF format
+            workBook.Save(filePath, SaveFormat.Pdf);
+            return filePath;
+        }
+
+        public async Task<string> ExportExcel(Board board)
         {
 
             var fileName = board.Group.GroupName + "_" + board.BoardId + "_result" + @".xlsx";
@@ -290,7 +315,7 @@ namespace PMS.Controllers
             var formFilePath = Path.Combine(formFolderPath, @"result_form.xlsx");
             // FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
 
-            var uploadFolderPath = Path.Combine(host.ContentRootPath, "exports");
+            var uploadFolderPath = Path.Combine(host.ContentRootPath, "exports/excel");
             if (!System.IO.Directory.Exists(uploadFolderPath))
             {
                 System.IO.Directory.CreateDirectory(uploadFolderPath);
@@ -344,7 +369,8 @@ namespace PMS.Controllers
                 await unitOfWork.Complete();
 
                 //send mail
-                SendMail(board, filePath);
+                //SendMail(board, filePath);
+                return filePath;
             }
         }
 
