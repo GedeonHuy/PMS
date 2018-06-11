@@ -350,7 +350,10 @@ namespace PMS.Controllers
             }
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 30002586dd5fe1fd89b32b9a57aced2907d5a65d
         [HttpPost]
         [Route("getsimilarprojects")]
         public async Task<QueryResultResource<ProjectResource>> GetSimilarProjects([FromBody]ProjectResource projectResource)
