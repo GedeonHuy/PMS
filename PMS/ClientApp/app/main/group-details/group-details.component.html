@@ -278,11 +278,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.lecturerId" name="boardEnrollments.supervisor.name"
-                required #supervisor="ngModel">
-                <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
-              </select>
-              <small [hidden]="supervisor.valid || (supervisor.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the supervisor </small>
+              <input disabled class="form-control" value="{{boardEnrollments.supervisor.name}}" style="color: black" required/>
             </div>
           </div>
 

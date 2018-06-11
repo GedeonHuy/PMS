@@ -52,7 +52,8 @@ export class GroupDetailsComponent implements OnInit {
   lecturers: any[];
   boardEnrollmentsOfLecturer: any[];
   groupBoardEnrollments: any[];
-  thisLecturerId: any;  
+  thisLecturerId: any;
+  thisLecturer: any;  
 
   hasRecommendations: boolean;
   hasBoard: boolean;
@@ -247,7 +248,7 @@ export class GroupDetailsComponent implements OnInit {
   loadDataCommits(link: string) {
     this._dataService.getGithub(link)
       .subscribe((response: any) => {
-
+        console.log(response);
         if (response.all.length != undefined)
         {
           for (var i = 40; i < response.all.length; i++) {
@@ -297,6 +298,9 @@ export class GroupDetailsComponent implements OnInit {
   saveBoard(form: NgForm) {
     if (form.valid) {
       this.isSaved = true;
+
+      console.log(this.board);
+      this.modalBoard.hide();
 
       if (this.board.boardId == undefined) {
         this._dataService.post('/api/boards/add', JSON.stringify(this.board))
@@ -369,18 +373,18 @@ export class GroupDetailsComponent implements OnInit {
       this.boardEnrollment = this.boardEnrollmentsOfLecturer.find(be => be.boardID == id);
       this.isLoadMark = true;
 
-      this.recommendations = data[1].items;
-      console.log(this.recommendations);
-      //   .find(r => r.boardEnrollmentId == this.boardEnrollment.boardEnrollmentId);
-      // if (this.recommendations.length != undefined) {
-      //   this.hasRecommendations = true;
-      // }
+      // this.recommendations = data[1].items;
+      this.recommendations = data[1].items
+        .filter(r => r.boardEnrollmentId == this.boardEnrollment.boardEnrollmentId);
     });
   }
 
   //Create method
   assignBoard(id: any) {
     this.modalBoard.show();
+    
+    console.log(this.group);
+
     this.boardEnrollments = {};
     this.chair = {
       'scorePercent': 25,
@@ -389,6 +393,8 @@ export class GroupDetailsComponent implements OnInit {
       'scorePercent': 25,
     };
     this.supervisor = {
+      'name': this.group.lecturer.name,
+      'lecturerId': this.group.lecturerId,
       'scorePercent': 25,
     };
     this.reviewer = {
@@ -411,10 +417,13 @@ export class GroupDetailsComponent implements OnInit {
         this.board.lecturerInformations.supervisor = this.supervisor;
         this.board.lecturerInformations.reviewer = this.reviewer;
 
+        this.boardEnrollments = this.board.lecturerInformations;
+
         this.isLoadBoard = true;
       } else {
 
         this.board.groupId = this.group.groupId;
+        this.board.boardId = this.group.boardId;
         this.chair = {
           name: this.lecturers.find(l => l.lecturerId == this.group.board.lecturerInformations.chair.lecturerId).name,
           lecturerId: this.group.board.lecturerInformations.chair.lecturerId,
