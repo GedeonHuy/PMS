@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Accord.MachineLearning.GPL" Version="3.8.2-alpha" />
+    <PackageReference Include="Aspose.Cells" Version="18.5.1" />
     <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-beta006" />
     <PackageReference Include="EPPlus.Core" Version="1.5.2" />
     <PackageReference Include="Google.Apis.Storage.v1" Version="1.34.0.1233" />
