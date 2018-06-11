@@ -123,6 +123,11 @@
 
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Description</label>
+            <img *ngIf="isGetSimilaryProject" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+            />
+            <button type="button" class="btn btn-primary" (click)="analyzeProject(project.description)">
+              <i class="fa fa-check"></i>
+            </button>         
             <div class="col-md-9 col-sm-9 col-xs-12">
               <textarea type="text" #description="ngModel" [(ngModel)]="project.description" required name="description" class="form-control"></textarea>
               <small [hidden]="description.valid || (description.pristine && !addEditForm.submitted)" class="text-danger">
@@ -131,12 +136,27 @@
             </div>
           </div>
 
+          <div class="ln_solid"></div>
+
+          <div class="form-group" *ngIf="isCheckProject">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Similary</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <ul>
+                <li *ngFor="let project of similaryProjects">
+                  <a href="#">{{project.key.title}}: {{project.value * 100}}%</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="ln_solid"></div>
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <ss-multiselect-dropdown [settings]="mySettings" [ngModelOptions]="{standalone: true}" [options]="allTags" [(ngModel)]="tags"></ss-multiselect-dropdown>
             </div>
           </div>
+          <div class="ln_solid"></div>
 
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
@@ -152,7 +172,7 @@
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="modalAddEdit.hide()" class="btn btn-primary">Cancel</button>
-              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid || isSaved">Save</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid || isSaved || !isCheckProject">Save</button>
               <span *ngIf="isSaved" class="fa fa-refresh fa-spin"></span>
             </div>
           </div>

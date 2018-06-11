@@ -286,15 +286,25 @@ namespace PMS.Controllers
 
             var projects = context.Projects.ToList();
             var topSimilarity = new List<String>();
-            var similarity = new Dictionary<int, double>();
+            var similarity = new Dictionary<Project, double>();
 
             foreach (var project in projects) {
                 var response = client.TranslateText(project.Description, "en");
-                if (Similarity(category, SplitLabel(response.TranslatedText)) >= 0) {
-                    similarity.Add(project.ProjectId, Similarity(category, SplitLabel(response.TranslatedText)));
+                if (Similarity(category, SplitLabel(response.TranslatedText)) >= 0.5) {
+                    similarity.Add(project, Math.Round(Similarity(category, SplitLabel(response.TranslatedText)),3));
                 }
             }
-            return Ok(similarity    );
+
+
+            var top3Project = (from entry in similarity 
+                           orderby entry.Value 
+                           descending select entry).ToDictionary
+                           (
+                            pair => pair.Key, 
+                            pair => pair.Value
+                           ).Take(3);
+
+            return Ok(top3Project);
         }
 
         public double Similarity(Dictionary<string, double> mainDict, Dictionary<string, double> dct2) {
@@ -349,7 +359,7 @@ namespace PMS.Controllers
                 return categories;
             }
         }
-        
+
         [HttpPost]
         [Route("getsimilarprojects")]
         public async Task<QueryResultResource<ProjectResource>> GetSimilarProjects([FromBody]ProjectResource projectResource)
