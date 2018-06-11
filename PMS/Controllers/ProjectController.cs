@@ -20,6 +20,9 @@ using Google.Cloud.Storage.V1;
 using Grpc.Auth;
 using static Google.Cloud.Language.V1.AnnotateTextRequest.Types;
 using Accord.Math;
+using PMS.Data;
+using Google.Cloud.Translation.V2;
+
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PMS.Controllers
@@ -38,10 +41,12 @@ namespace PMS.Controllers
         private IExcelRepository excelRepository;
         private ILecturerRepository lecturerRepository;
 
-        public ProjectController(IMapper mapper, IUnitOfWork unitOfWork,
+        private readonly ApplicationDbContext context;
+        public ProjectController(ApplicationDbContext context,IMapper mapper, IUnitOfWork unitOfWork,
             IProjectRepository projectRepository, IMajorRepository majorRepository,
             IHostingEnvironment host, IExcelRepository excelRepository, ILecturerRepository lecturerRepository)
         {
+            this.context = context;
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
             this.projectRepository = projectRepository;
@@ -248,8 +253,6 @@ namespace PMS.Controllers
             return Ok(mapper.Map<Excel, ExcelResource>(excel));
         }
 
-<<<<<<< HEAD
-
         [HttpGet]
         [Route("testai")]
         public IActionResult TestAI()
@@ -268,18 +271,50 @@ namespace PMS.Controllers
                     dot += a[label.Key] * d[label.Key];
                 }
             }
-
-
             //return Ok(d);
             return Ok(dot / (norm1 * norm2));                          
         }
 
-        public double Similarity(Dictionary<string, double> dct1, Dictionary<string, double> dct2) {
-            return 0.0;
+        [HttpPost]
+        [Route("analyzeproject")]
+        public IActionResult AnalyzeProject([FromBody]string description)
+        {
+            var credential = GoogleCredential.FromFile("pms-portal-trans.json");
+            TranslationClient client = TranslationClient.Create(credential);
+
+            var category = SplitLabel(client.TranslateText(description, "en").TranslatedText);
+
+            var projects = context.Projects.ToList();
+            var topSimilarity = new List<String>();
+            var similarity = new Dictionary<int, double>();
+
+            foreach (var project in projects) {
+                var response = client.TranslateText(project.Description, "en");
+                if (Similarity(category, SplitLabel(response.TranslatedText)) >= 0) {
+                    similarity.Add(project.ProjectId, Similarity(category, SplitLabel(response.TranslatedText)));
+                }
+            }
+            return Ok(similarity);
+        }
+
+        public double Similarity(Dictionary<string, double> mainDict, Dictionary<string, double> dct2) {
+            var norm1= Norm.Euclidean(mainDict.Values.ToArray());
+            var norm2 = Norm.Euclidean(dct2.Values.ToArray());
+
+            var dot = 0.0;
+            foreach (var label in mainDict) {
+                if (dct2.ContainsKey(label.Key))
+                {
+                    dot += mainDict[label.Key] * dct2[label.Key];
+                }
+            }
+
+            return dot / (norm1 * norm2);
         }
 
         public Dictionary<string, double> SplitLabel(string text) {
-
+            try {
+                
             var credential = GoogleCredential.FromFile("pms-portal.json")
                 .CreateScoped(LanguageServiceClient.DefaultScopes);
             var channel = new Grpc.Core.Channel(
@@ -308,11 +343,14 @@ namespace PMS.Controllers
                     }
                 }
             }
-            return categories;
+                return categories;
+            } catch (Exception e){
+                Dictionary<string, double> categories = new Dictionary<string, double>();
+                return categories;
+            }
         }
 
 
-=======
         [HttpPost]
         [Route("getsimilarprojects")]
         public async Task<QueryResultResource<ProjectResource>> GetSimilarProjects([FromBody]ProjectResource projectResource)
@@ -324,6 +362,5 @@ namespace PMS.Controllers
 
             return mapper.Map<QueryResult<Project>, QueryResultResource<ProjectResource>>(queryResult);
         }
->>>>>>> 89ddfd38d5daff3ef937973f991a582ad5c223f0
     }
 }
