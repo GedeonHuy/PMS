@@ -92,7 +92,6 @@ export class ProjectComponent implements OnInit {
     if (this.user.role == "Admin") {
       this._dataService.get('/api/lecturers/getall')
       .subscribe((response: any) => {
-        console.log(response);
         this.lecturers = response.items;
       });
     }
@@ -231,7 +230,6 @@ export class ProjectComponent implements OnInit {
       this.project = [];
       this.tags = [];
       this.allTags = [];
-
       this.isLoadProject = false;
       this.isExist = false;
       this.isLoadTag = false;
@@ -258,5 +256,22 @@ export class ProjectComponent implements OnInit {
     selectAddedValues: true
     //displayAllSelectedText: true
   };
+
+  isGetSimilaryProject : boolean;
+  similaryProjects: any[];
+  isCheckProject : boolean;
+  analyzeProject(description: string) {
+    this.isGetSimilaryProject = true;
+
+    this._dataService.post('/api/projects/analyzeproject', JSON.stringify(description))
+        .subscribe((response: any) => {
+          this.similaryProjects = response;
+          this.isGetSimilaryProject = false;
+
+          this.isCheckProject = true;
+        }, error => {
+          this._dataService.handleError(error)
+        });
+    }
 
 }

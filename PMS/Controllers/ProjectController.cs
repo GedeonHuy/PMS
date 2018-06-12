@@ -12,6 +12,16 @@ using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using Google.Cloud.Language.V1;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
+using Google.Apis.Storage.v1;
+using Google.Cloud.Storage.V1;
+using Grpc.Auth;
+using static Google.Cloud.Language.V1.AnnotateTextRequest.Types;
+using Accord.Math;
+using PMS.Data;
+using Google.Cloud.Translation.V2;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -31,10 +41,12 @@ namespace PMS.Controllers
         private IExcelRepository excelRepository;
         private ILecturerRepository lecturerRepository;
 
-        public ProjectController(IMapper mapper, IUnitOfWork unitOfWork,
+        private readonly ApplicationDbContext context;
+        public ProjectController(ApplicationDbContext context,IMapper mapper, IUnitOfWork unitOfWork,
             IProjectRepository projectRepository, IMajorRepository majorRepository,
             IHostingEnvironment host, IExcelRepository excelRepository, ILecturerRepository lecturerRepository)
         {
+            this.context = context;
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
             this.projectRepository = projectRepository;
@@ -239,6 +251,113 @@ namespace PMS.Controllers
             await unitOfWork.Complete();
 
             return Ok(mapper.Map<Excel, ExcelResource>(excel));
+        }
+
+        [HttpGet]
+        [Route("testai")]
+        public IActionResult TestAI()
+        {
+            var a = SplitLabel("Google Home enables users to speak voice commands to interact with services through the Home's intelligent personal assistant called Google Assistant. A large number of services, both in-house and third-party, are integrated, allowing users to listen to music, look at videos or photos, or receive news updates entirely by voice.");
+            var b = SplitLabel("Android is a mobile operating system developed by Google, based on the Linux kernel and designed primarily for touchscreen mobile devices such as smartphones and tablets.");
+            var c = SplitLabel("Google Cloud Platform, offered by Google, is a suite of cloud computing services that runs on the same infrastructure that Google uses internally for its end-user products, such as Google Search and YouTube. Alongside a set of management tools, it provides a series of modular cloud services including computing, data storage, data analytics and machine learning.");
+            var d = SplitLabel("Google is an American multinational technology company that specializes in Internet-related services and products. These include online advertising technologies, search, cloud computing, software, and hardware.");
+
+            var norm1= Norm.Euclidean(a.Values.ToArray());
+            var norm2 = Norm.Euclidean(d.Values.ToArray());
+            var dot = 0.0;
+            foreach (var label in a) {
+                if (d.ContainsKey(label.Key))
+                {
+                    dot += a[label.Key] * d[label.Key];
+                }
+            }
+            //return Ok(d);
+            return Ok(dot / (norm1 * norm2));                          
+        }
+
+        [HttpPost]
+        [Route("analyzeproject")]
+        public IActionResult AnalyzeProject([FromBody]string description)
+        {
+            var credential = GoogleCredential.FromFile("pms-portal-trans.json");
+            TranslationClient client = TranslationClient.Create(credential);
+
+            var category = SplitLabel(client.TranslateText(description, "en").TranslatedText);
+
+            var projects = context.Projects.ToList();
+            var topSimilarity = new List<String>();
+            var similarity = new Dictionary<Project, double>();
+
+            foreach (var project in projects) {
+                var response = client.TranslateText(project.Description, "en");
+                if (Similarity(category, SplitLabel(response.TranslatedText)) >= 0.5) {
+                    similarity.Add(project, Math.Round(Similarity(category, SplitLabel(response.TranslatedText)),3));
+                }
+            }
+
+
+            var top3Project = (from entry in similarity 
+                           orderby entry.Value 
+                           descending select entry).ToDictionary
+                           (
+                            pair => pair.Key, 
+                            pair => pair.Value
+                           ).Take(3);
+
+            return Ok(top3Project);
+        }
+
+        public double Similarity(Dictionary<string, double> mainDict, Dictionary<string, double> dct2) {
+            var norm1= Norm.Euclidean(mainDict.Values.ToArray());
+            var norm2 = Norm.Euclidean(dct2.Values.ToArray());
+
+            var dot = 0.0;
+            foreach (var label in mainDict) {
+                if (dct2.ContainsKey(label.Key))
+                {
+                    dot += mainDict[label.Key] * dct2[label.Key];
+                }
+            }
+
+            return dot / (norm1 * norm2);
+        }
+
+        public Dictionary<string, double> SplitLabel(string text) {
+            try {
+                
+            var credential = GoogleCredential.FromFile("pms-portal.json")
+                .CreateScoped(LanguageServiceClient.DefaultScopes);
+            var channel = new Grpc.Core.Channel(
+                LanguageServiceClient.DefaultEndpoint.ToString(),
+                credential.ToChannelCredentials());
+            var client = LanguageServiceClient.Create(channel);
+            var response = client.AnnotateText(new Document()
+            {
+                Content = text,
+                Type = Document.Types.Type.PlainText
+            },
+            new Features()
+            {
+                ExtractSyntax = true,
+                ExtractDocumentSentiment = true,
+                ExtractEntities = true,
+                ExtractEntitySentiment = true,
+                ClassifyText = true,
+            });          
+            Dictionary<string, double> categories = new Dictionary<string, double>();
+            foreach (var res in response.Categories) {
+                var tmp = res.Name.Split("/");
+                foreach(var label in tmp) {
+                    if(label != "") {
+                        categories[label] = res.Confidence;
+                    }
+                }
+            }
+                return categories;
+            } catch (Exception e){
+                Dictionary<string, double> categories = new Dictionary<string, double>();
+                return categories;
+            }
         }
 
         [HttpPost]

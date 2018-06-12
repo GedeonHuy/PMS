@@ -236,7 +236,12 @@ namespace PMS.Mapping
                 }))
                 .ForMember(pr => pr.TagProjects, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.TagProjectId)))
                 .ForMember(pr => pr.Tags, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.Tag.TagName)))
-                .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)));
+                .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)))
+                .ForMember(pr => pr.Categories, opt => opt.MapFrom(p => p.Categories.Select(pf => new CategoryInformationResource
+                {
+                    CategoryName = pf.CategoryName,
+                    Confidence = pf.Confidence
+                })));
 
             CreateMap<Lecturer, LecturerResource>()
                 .ForMember(lr => lr.MajorId, opt => opt.MapFrom(l => l.Major.MajorId))
@@ -363,7 +368,12 @@ namespace PMS.Mapping
                     Type = g.Project.Type,
                     IsDeleted = g.Project.IsDeleted,
                     IsCompleted = g.Project.IsCompleted,
-                    Groups = g.Project.Groups.Select(gf => gf.GroupId).ToList()
+                    Groups = g.Project.Groups.Select(gf => gf.GroupId).ToList(),
+                    Categories = g.Project.Categories.Select(gf => new CategoryInformationResource
+                    {
+                        CategoryName = gf.CategoryName,
+                        Confidence = gf.Confidence
+                    }).ToList()
                 }));
             CreateMap<Excel, ExcelResource>();
 
@@ -526,6 +536,9 @@ namespace PMS.Mapping
 
             CreateMap<RecommendationResource, Recommendation>()
                 .ForMember(m => m.RecommendationId, opt => opt.Ignore());
+
+            CreateMap<CategoryResource, Category>()
+                .ForMember(m => m.CategoryId, opt => opt.Ignore());
 
             /*///////////////////////// Tasking Feature///////////////////////////////////// */
             CreateMap<ActivityResource, Activity>()
