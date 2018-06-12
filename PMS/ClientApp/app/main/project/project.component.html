@@ -30,7 +30,7 @@
                 <td>{{project.title}}</td>
                 <td>{{project.type}}</td>
                 <td>{{project.description}}</td>
-                <td>       
+                <td>
                   <ul>
                     <li style="display: inline" *ngFor="let tag of project.tags">
                       <a [routerLink]="['/main/tag-details/', tag]" class="tag">{{tag}}</a>
@@ -54,8 +54,8 @@
     </div>
   </div>
 </div>
-<pagination *ngIf="isLoadData" [total-items]="queryResult.totalItems" 
-[page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>
+<pagination *ngIf="isLoadData" [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>
+
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true" (onShow)="handler('onShow', $event)" (onShown)="handler('onShown', $event)" (onHide)="handler('onHide', $event)"
@@ -107,7 +107,7 @@
             </div>
           </div>
 
-          <div class="ln_solid"*ngIf="isAdmin"></div>
+          <div class="ln_solid" *ngIf="isAdmin"></div>
           <div class="form-group" *ngIf="isAdmin">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Lecturer</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
@@ -127,7 +127,7 @@
             />
             <button type="button" class="btn btn-primary" (click)="analyzeProject(project.description)">
               <i class="fa fa-check"></i>
-            </button>         
+            </button>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <textarea type="text" #description="ngModel" [(ngModel)]="project.description" required name="description" class="form-control"></textarea>
               <small [hidden]="description.valid || (description.pristine && !addEditForm.submitted)" class="text-danger">
@@ -163,7 +163,7 @@
             <div class="col-md-9 col-sm-9 col-xs-12">
               <ul *ngIf="isExist">
                 <li *ngFor="let tag of tags">
-                  <a href="#" class="tag">{{tag}}</a>
+                  <a [routerLink]="['/main/tag-details/', tag]" class="tag">{{tag}}</a>
                 </li>
               </ul>
             </div>

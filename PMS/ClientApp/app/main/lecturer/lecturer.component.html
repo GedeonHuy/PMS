@@ -11,7 +11,7 @@
     <br/>
 
     <div class="col-lg-12 col-md-12">
-      <ba-card cardTitle="quarters" isAddButton=true baCardClass="with-scroll table-panel">
+      <ba-card cardTitle="lecturers" isAddButton=true baCardClass="with-scroll table-panel">
         <div class="horizontal-scroll">
           <table class="table table-hover">
             <thead>
@@ -46,8 +46,7 @@
     </div>
   </div>
 </div>
-<pagination *ngIf="isLoadData" [total-items]="queryResult.totalItems" 
-[page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>
+<pagination *ngIf="isLoadData" [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>
 <!--Modal add and edit-->
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true">

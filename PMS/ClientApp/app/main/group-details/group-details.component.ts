@@ -53,7 +53,7 @@ export class GroupDetailsComponent implements OnInit {
   boardEnrollmentsOfLecturer: any[];
   groupBoardEnrollments: any[];
   thisLecturerId: any;
-  thisLecturer: any;  
+  thisLecturer: any;
 
   hasRecommendations: boolean;
   hasBoard: boolean;
@@ -446,15 +446,16 @@ export class GroupDetailsComponent implements OnInit {
       this.isLoadMark = true;
 
       // this.recommendations = data[1].items;
-      this.recommendations = data[1].items
-        .filter(r => r.boardEnrollmentId == this.boardEnrollment.boardEnrollmentId);
+      this.recommendations = data[1].items.filter(
+        r => r.boardEnrollmentId == this.boardEnrollment.boardEnrollmentId
+      );
     });
   }
 
   //Create method
   assignBoard(id: any) {
     this.modalBoard.show();
-    
+
     console.log(this.group);
 
     this.boardEnrollments = {};
@@ -465,9 +466,9 @@ export class GroupDetailsComponent implements OnInit {
       scorePercent: 25
     };
     this.supervisor = {
-      'name': this.group.lecturer.name,
-      'lecturerId': this.group.lecturerId,
-      'scorePercent': 25,
+      name: this.group.lecturer.name,
+      lecturerId: this.group.lecturerId,
+      scorePercent: 25
     };
     this.reviewer = {
       scorePercent: 25
