@@ -77,7 +77,10 @@ namespace PMS.Controllers
 
             projectRepository.UpdateGroups(project, projectResource);
             projectRepository.UpdateTagProjects(project, projectResource);
-            await projectRepository.UpdateCategories(project, projectResource);
+
+            //Add categories into projects
+            var categories = GetCategoriesFromDescription(projectResource.Description);
+            await projectRepository.UpdateCategories(project, categories);
 
             await unitOfWork.Complete();
 
@@ -114,7 +117,10 @@ namespace PMS.Controllers
 
             projectRepository.UpdateGroups(project, projectResource);
             projectRepository.UpdateTagProjects(project, projectResource);
-            await projectRepository.UpdateCategories(project, projectResource);
+
+            //Add categories into project
+            var categories = GetCategoriesFromDescription(projectResource.Description);
+            await projectRepository.UpdateCategories(project, categories);
 
             await unitOfWork.Complete();
 
@@ -294,8 +300,9 @@ namespace PMS.Controllers
             foreach (var project in projects)
             {
                 var response = client.TranslateText(project.Description, "en");
-                if (Similarity(category, GetCategoriesFromDescription(response.TranslatedText)) >= 0.5) {
-                    similarity.Add(project, Math.Round(Similarity(category, GetCategoriesFromDescription(response.TranslatedText)),3));
+                if (Similarity(category, GetCategoriesFromDescription(response.TranslatedText)) >= 0.5)
+                {
+                    similarity.Add(project, Math.Round(Similarity(category, GetCategoriesFromDescription(response.TranslatedText)), 3));
                 }
             }
 
@@ -312,7 +319,8 @@ namespace PMS.Controllers
             return Ok(top3Project);
         }
 
-        public double Similarity(Dictionary<string, double> mainDict, Dictionary<string, double> dct2) {
+        public double Similarity(Dictionary<string, double> mainDict, Dictionary<string, double> dct2)
+        {
             var norm1 = Norm.Euclidean(mainDict.Values.ToArray());
             var norm2 = Norm.Euclidean(dct2.Values.ToArray());
 
@@ -328,29 +336,31 @@ namespace PMS.Controllers
             return dot / (norm1 * norm2);
         }
 
-        public Dictionary<string, double> GetCategoriesFromDescription(string text) {
-            try {
-                
-            var credential = GoogleCredential.FromFile("pms-portal.json")
-                .CreateScoped(LanguageServiceClient.DefaultScopes);
-            var channel = new Grpc.Core.Channel(
-                LanguageServiceClient.DefaultEndpoint.ToString(),
-                credential.ToChannelCredentials());
-            var client = LanguageServiceClient.Create(channel);
-            var response = client.AnnotateText(new Document()
+        public Dictionary<string, double> GetCategoriesFromDescription(string text)
+        {
+            try
             {
-                Content = text,
-                Type = Document.Types.Type.PlainText
-            },
-            
-                new Features()
+
+                var credential = GoogleCredential.FromFile("pms-portal.json")
+                    .CreateScoped(LanguageServiceClient.DefaultScopes);
+                var channel = new Grpc.Core.Channel(
+                    LanguageServiceClient.DefaultEndpoint.ToString(),
+                    credential.ToChannelCredentials());
+                var client = LanguageServiceClient.Create(channel);
+                var response = client.AnnotateText(new Document()
                 {
-                    ExtractSyntax = true,
-                    ExtractDocumentSentiment = true,
-                    ExtractEntities = true,
-                    ExtractEntitySentiment = true,
-                    ClassifyText = true,
-                });
+                    Content = text,
+                    Type = Document.Types.Type.PlainText
+                },
+
+                    new Features()
+                    {
+                        ExtractSyntax = true,
+                        ExtractDocumentSentiment = true,
+                        ExtractEntities = true,
+                        ExtractEntitySentiment = true,
+                        ClassifyText = true,
+                    });
                 Dictionary<string, double> categories = new Dictionary<string, double>();
                 foreach (var res in response.Categories)
                 {
@@ -364,7 +374,9 @@ namespace PMS.Controllers
                     }
                 }
                 return categories;
-            } catch {
+            }
+            catch
+            {
                 Dictionary<string, double> categories = new Dictionary<string, double>();
                 return categories;
             }
