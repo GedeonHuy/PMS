@@ -161,6 +161,43 @@ namespace PMS.Persistence
             }
         }
 
+        public async Task UpdateCategories(Project project, ProjectResource projectResource)
+        {
+            if (projectResource.Categories != null && projectResource.Categories.Count >= 0)
+            {
+                //remove old categories
+                var oldCategories = project.Categories.Where(p => !projectResource.Categories.Any(id => id.CategoryName == p.CategoryName)).ToList();
+                foreach (Category category in oldCategories)
+                {
+                    category.IsDeleted = true;
+                    project.Categories.Remove(category);
+                }
+                //project.TagProjects.Clear();
+
+                //add new tagprojects
+                var newCategories = projectResource.Categories.Where(t => !project.Categories.Any(id => id.CategoryName == t.CategoryName));
+                foreach (var categoryInformation in newCategories)
+                {
+                    var category = await context.Categories.FirstOrDefaultAsync(c => c.CategoryName == categoryInformation.CategoryName);
+                    if (category == null)
+                    {
+                        project.Categories.Add(new Category
+                        {
+                            CategoryName = categoryInformation.CategoryName,
+                            Confidence = categoryInformation.Confidence,
+                            IsDeleted = false,
+                            Project = project
+                        });
+                    }
+                    else
+                    {
+                        project.Categories.Add(category);
+                    }
+                    //project.TagProjects.Add(a);
+                }
+            }
+        }
+
         public async Task<QueryResult<Project>> GetProjectsByMajor(int? majorId, Query queryObj)
         {
             var result = new QueryResult<Project>();
