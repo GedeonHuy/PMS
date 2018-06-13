@@ -27,6 +27,7 @@ namespace PMS.Resources
         public int Page { get; set; }
         public byte PageSize { get; set; }
         public string BoardRoleName { get; set; }
+        public string ResultScore { get; set; }
 
         //search
         public string StudentCodeSearch { get; set; }

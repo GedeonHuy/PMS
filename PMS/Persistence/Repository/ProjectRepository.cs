@@ -28,6 +28,7 @@ namespace PMS.Persistence
             }
             return await context.Projects
                 .Include(p => p.Groups)
+                    .ThenInclude(tp => tp.Board)
                 .Include(p => p.TagProjects)
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
@@ -53,6 +54,7 @@ namespace PMS.Persistence
             var query = context.Projects
                 .Where(c => c.IsDeleted == false)
                 .Include(p => p.Groups)
+                    .ThenInclude(tp => tp.Board)
                 .Include(p => p.TagProjects)
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
@@ -78,6 +80,11 @@ namespace PMS.Persistence
             if (queryObj.TagName != null)
             {
                 query = query.Where(q => q.TagProjects.Any(tp => tp.Tag.TagName.Equals(queryObj.TagName)));
+            }
+
+            if (queryObj.ResultScore != null)
+            {
+                query = query.Where(q => q.Groups.Any(qg => Convert.ToDouble(qg.Board.ResultScore) >= Convert.ToDouble(queryObj.ResultScore)));
             }
 
             //search
@@ -161,12 +168,12 @@ namespace PMS.Persistence
             }
         }
 
-        public async Task UpdateCategories(Project project, ProjectResource projectResource)
+        public async Task UpdateCategories(Project project, Dictionary<string, double> categories)
         {
-            if (projectResource.Categories != null && projectResource.Categories.Count >= 0)
+            if (categories != null && categories.Count >= 0)
             {
                 //remove old categories
-                var oldCategories = project.Categories.Where(p => !projectResource.Categories.Any(id => id.CategoryName == p.CategoryName)).ToList();
+                var oldCategories = project.Categories.Where(p => !categories.Any(id => id.Key == p.CategoryName)).ToList();
                 foreach (Category category in oldCategories)
                 {
                     category.IsDeleted = true;
@@ -175,16 +182,16 @@ namespace PMS.Persistence
                 //project.TagProjects.Clear();
 
                 //add new tagprojects
-                var newCategories = projectResource.Categories.Where(t => !project.Categories.Any(id => id.CategoryName == t.CategoryName));
+                var newCategories = categories.Where(t => !project.Categories.Any(id => id.CategoryName == t.Key));
                 foreach (var categoryInformation in newCategories)
                 {
-                    var category = await context.Categories.FirstOrDefaultAsync(c => c.CategoryName == categoryInformation.CategoryName);
+                    var category = await context.Categories.FirstOrDefaultAsync(c => c.CategoryName == categoryInformation.Key);
                     if (category == null)
                     {
                         project.Categories.Add(new Category
                         {
-                            CategoryName = categoryInformation.CategoryName,
-                            Confidence = categoryInformation.Confidence,
+                            CategoryName = categoryInformation.Key,
+                            Confidence = categoryInformation.Value,
                             IsDeleted = false,
                             Project = project
                         });
@@ -282,6 +289,7 @@ namespace PMS.Persistence
                   || searchtermDescription.CalculateSimilarity(c.Title.NonUnicode()) > 0.3
                   || searchtermDescription.CalculateSimilarity(c.Description.NonUnicode()) > 0.3)
                 .Include(p => p.Groups)
+                    .ThenInclude(tp => tp.Board)
                 .Include(p => p.TagProjects)
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
