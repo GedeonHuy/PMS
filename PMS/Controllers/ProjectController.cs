@@ -294,14 +294,8 @@ namespace PMS.Controllers
             foreach (var project in projects)
             {
                 var response = client.TranslateText(project.Description, "en");
-<<<<<<< HEAD
                 if (Similarity(category, GetCategoriesFromDescription(response.TranslatedText)) >= 0.5) {
                     similarity.Add(project, Math.Round(Similarity(category, GetCategoriesFromDescription(response.TranslatedText)),3));
-=======
-                if (Similarity(category, SplitLabel(response.TranslatedText)) >= 0.5)
-                {
-                    similarity.Add(project, Math.Round(Similarity(category, SplitLabel(response.TranslatedText)), 3));
->>>>>>> 0e4462264371e0b9c4a12ad0a7748b6e191e4445
                 }
             }
 
@@ -318,12 +312,7 @@ namespace PMS.Controllers
             return Ok(top3Project);
         }
 
-<<<<<<< HEAD
         public double Similarity(Dictionary<string, double> mainDict, Dictionary<string, double> dct2) {
-=======
-        public double Similarity(Dictionary<string, double> mainDict, Dictionary<string, double> dct2)
-        {
->>>>>>> 0e4462264371e0b9c4a12ad0a7748b6e191e4445
             var norm1 = Norm.Euclidean(mainDict.Values.ToArray());
             var norm2 = Norm.Euclidean(dct2.Values.ToArray());
 
@@ -339,7 +328,6 @@ namespace PMS.Controllers
             return dot / (norm1 * norm2);
         }
 
-<<<<<<< HEAD
         public Dictionary<string, double> GetCategoriesFromDescription(string text) {
             try {
                 
@@ -354,25 +342,7 @@ namespace PMS.Controllers
                 Content = text,
                 Type = Document.Types.Type.PlainText
             },
-            new Features()
-=======
-        public Dictionary<string, double> SplitLabel(string text)
-        {
-            try
->>>>>>> 0e4462264371e0b9c4a12ad0a7748b6e191e4445
-            {
-
-                var credential = GoogleCredential.FromFile("pms-portal.json")
-                    .CreateScoped(LanguageServiceClient.DefaultScopes);
-                var channel = new Grpc.Core.Channel(
-                    LanguageServiceClient.DefaultEndpoint.ToString(),
-                    credential.ToChannelCredentials());
-                var client = LanguageServiceClient.Create(channel);
-                var response = client.AnnotateText(new Document()
-                {
-                    Content = text,
-                    Type = Document.Types.Type.PlainText
-                },
+            
                 new Features()
                 {
                     ExtractSyntax = true,
@@ -394,13 +364,7 @@ namespace PMS.Controllers
                     }
                 }
                 return categories;
-<<<<<<< HEAD
             } catch {
-=======
-            }
-            catch (Exception e)
-            {
->>>>>>> 0e4462264371e0b9c4a12ad0a7748b6e191e4445
                 Dictionary<string, double> categories = new Dictionary<string, double>();
                 return categories;
             }
