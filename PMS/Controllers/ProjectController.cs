@@ -42,7 +42,7 @@ namespace PMS.Controllers
         private ILecturerRepository lecturerRepository;
 
         private readonly ApplicationDbContext context;
-        public ProjectController(ApplicationDbContext context,IMapper mapper, IUnitOfWork unitOfWork,
+        public ProjectController(ApplicationDbContext context, IMapper mapper, IUnitOfWork unitOfWork,
             IProjectRepository projectRepository, IMajorRepository majorRepository,
             IHostingEnvironment host, IExcelRepository excelRepository, ILecturerRepository lecturerRepository)
         {
@@ -77,6 +77,7 @@ namespace PMS.Controllers
 
             projectRepository.UpdateGroups(project, projectResource);
             projectRepository.UpdateTagProjects(project, projectResource);
+            await projectRepository.UpdateCategories(project, projectResource);
 
             await unitOfWork.Complete();
 
@@ -113,6 +114,7 @@ namespace PMS.Controllers
 
             projectRepository.UpdateGroups(project, projectResource);
             projectRepository.UpdateTagProjects(project, projectResource);
+            await projectRepository.UpdateCategories(project, projectResource);
 
             await unitOfWork.Complete();
 
@@ -262,17 +264,18 @@ namespace PMS.Controllers
             var c = GetCategoriesFromDescription("Google Cloud Platform, offered by Google, is a suite of cloud computing services that runs on the same infrastructure that Google uses internally for its end-user products, such as Google Search and YouTube. Alongside a set of management tools, it provides a series of modular cloud services including computing, data storage, data analytics and machine learning.");
             var d = GetCategoriesFromDescription("Google is an American multinational technology company that specializes in Internet-related services and products. These include online advertising technologies, search, cloud computing, software, and hardware.");
 
-            var norm1= Norm.Euclidean(a.Values.ToArray());
+            var norm1 = Norm.Euclidean(a.Values.ToArray());
             var norm2 = Norm.Euclidean(d.Values.ToArray());
             var dot = 0.0;
-            foreach (var label in a) {
+            foreach (var label in a)
+            {
                 if (d.ContainsKey(label.Key))
                 {
                     dot += a[label.Key] * d[label.Key];
                 }
             }
             //return Ok(d);
-            return Ok(dot / (norm1 * norm2));                          
+            return Ok(dot / (norm1 * norm2));
         }
 
         [HttpPost]
@@ -288,31 +291,45 @@ namespace PMS.Controllers
             var topSimilarity = new List<String>();
             var similarity = new Dictionary<Project, double>();
 
-            foreach (var project in projects) {
+            foreach (var project in projects)
+            {
                 var response = client.TranslateText(project.Description, "en");
+<<<<<<< HEAD
                 if (Similarity(category, GetCategoriesFromDescription(response.TranslatedText)) >= 0.5) {
                     similarity.Add(project, Math.Round(Similarity(category, GetCategoriesFromDescription(response.TranslatedText)),3));
+=======
+                if (Similarity(category, SplitLabel(response.TranslatedText)) >= 0.5)
+                {
+                    similarity.Add(project, Math.Round(Similarity(category, SplitLabel(response.TranslatedText)), 3));
+>>>>>>> 0e4462264371e0b9c4a12ad0a7748b6e191e4445
                 }
             }
 
 
-            var top3Project = (from entry in similarity 
-                           orderby entry.Value 
-                           descending select entry).ToDictionary
+            var top3Project = (from entry in similarity
+                               orderby entry.Value
+                               descending
+                               select entry).ToDictionary
                            (
-                            pair => pair.Key, 
+                            pair => pair.Key,
                             pair => pair.Value
                            ).Take(3);
 
             return Ok(top3Project);
         }
 
+<<<<<<< HEAD
         public double Similarity(Dictionary<string, double> mainDict, Dictionary<string, double> dct2) {
+=======
+        public double Similarity(Dictionary<string, double> mainDict, Dictionary<string, double> dct2)
+        {
+>>>>>>> 0e4462264371e0b9c4a12ad0a7748b6e191e4445
             var norm1 = Norm.Euclidean(mainDict.Values.ToArray());
             var norm2 = Norm.Euclidean(dct2.Values.ToArray());
 
             var dot = 0.0;
-            foreach (var label in mainDict) {
+            foreach (var label in mainDict)
+            {
                 if (dct2.ContainsKey(label.Key))
                 {
                     dot += mainDict[label.Key] * dct2[label.Key];
@@ -322,6 +339,7 @@ namespace PMS.Controllers
             return dot / (norm1 * norm2);
         }
 
+<<<<<<< HEAD
         public Dictionary<string, double> GetCategoriesFromDescription(string text) {
             try {
                 
@@ -337,24 +355,52 @@ namespace PMS.Controllers
                 Type = Document.Types.Type.PlainText
             },
             new Features()
+=======
+        public Dictionary<string, double> SplitLabel(string text)
+        {
+            try
+>>>>>>> 0e4462264371e0b9c4a12ad0a7748b6e191e4445
             {
-                ExtractSyntax = true,
-                ExtractDocumentSentiment = true,
-                ExtractEntities = true,
-                ExtractEntitySentiment = true,
-                ClassifyText = true,
-            });          
-            Dictionary<string, double> categories = new Dictionary<string, double>();
-            foreach (var res in response.Categories) {
-                var tmp = res.Name.Split("/");
-                foreach(var label in tmp) {
-                    if(label != "") {
-                        categories[label] = res.Confidence;
+
+                var credential = GoogleCredential.FromFile("pms-portal.json")
+                    .CreateScoped(LanguageServiceClient.DefaultScopes);
+                var channel = new Grpc.Core.Channel(
+                    LanguageServiceClient.DefaultEndpoint.ToString(),
+                    credential.ToChannelCredentials());
+                var client = LanguageServiceClient.Create(channel);
+                var response = client.AnnotateText(new Document()
+                {
+                    Content = text,
+                    Type = Document.Types.Type.PlainText
+                },
+                new Features()
+                {
+                    ExtractSyntax = true,
+                    ExtractDocumentSentiment = true,
+                    ExtractEntities = true,
+                    ExtractEntitySentiment = true,
+                    ClassifyText = true,
+                });
+                Dictionary<string, double> categories = new Dictionary<string, double>();
+                foreach (var res in response.Categories)
+                {
+                    var tmp = res.Name.Split("/");
+                    foreach (var label in tmp)
+                    {
+                        if (label != "")
+                        {
+                            categories[label] = res.Confidence;
+                        }
                     }
                 }
-            }
                 return categories;
+<<<<<<< HEAD
             } catch {
+=======
+            }
+            catch (Exception e)
+            {
+>>>>>>> 0e4462264371e0b9c4a12ad0a7748b6e191e4445
                 Dictionary<string, double> categories = new Dictionary<string, double>();
                 return categories;
             }
