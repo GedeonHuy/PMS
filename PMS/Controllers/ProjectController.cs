@@ -257,10 +257,10 @@ namespace PMS.Controllers
         [Route("testai")]
         public IActionResult TestAI()
         {
-            var a = SplitLabel("Google Home enables users to speak voice commands to interact with services through the Home's intelligent personal assistant called Google Assistant. A large number of services, both in-house and third-party, are integrated, allowing users to listen to music, look at videos or photos, or receive news updates entirely by voice.");
-            var b = SplitLabel("Android is a mobile operating system developed by Google, based on the Linux kernel and designed primarily for touchscreen mobile devices such as smartphones and tablets.");
-            var c = SplitLabel("Google Cloud Platform, offered by Google, is a suite of cloud computing services that runs on the same infrastructure that Google uses internally for its end-user products, such as Google Search and YouTube. Alongside a set of management tools, it provides a series of modular cloud services including computing, data storage, data analytics and machine learning.");
-            var d = SplitLabel("Google is an American multinational technology company that specializes in Internet-related services and products. These include online advertising technologies, search, cloud computing, software, and hardware.");
+            var a = GetCategoriesFromDescription("Google Home enables users to speak voice commands to interact with services through the Home's intelligent personal assistant called Google Assistant. A large number of services, both in-house and third-party, are integrated, allowing users to listen to music, look at videos or photos, or receive news updates entirely by voice.");
+            var b = GetCategoriesFromDescription("Android is a mobile operating system developed by Google, based on the Linux kernel and designed primarily for touchscreen mobile devices such as smartphones and tablets.");
+            var c = GetCategoriesFromDescription("Google Cloud Platform, offered by Google, is a suite of cloud computing services that runs on the same infrastructure that Google uses internally for its end-user products, such as Google Search and YouTube. Alongside a set of management tools, it provides a series of modular cloud services including computing, data storage, data analytics and machine learning.");
+            var d = GetCategoriesFromDescription("Google is an American multinational technology company that specializes in Internet-related services and products. These include online advertising technologies, search, cloud computing, software, and hardware.");
 
             var norm1= Norm.Euclidean(a.Values.ToArray());
             var norm2 = Norm.Euclidean(d.Values.ToArray());
@@ -282,7 +282,7 @@ namespace PMS.Controllers
             var credential = GoogleCredential.FromFile("pms-portal-trans.json");
             TranslationClient client = TranslationClient.Create(credential);
 
-            var category = SplitLabel(client.TranslateText(description, "en").TranslatedText);
+            var category = GetCategoriesFromDescription(client.TranslateText(description, "en").TranslatedText);
 
             var projects = context.Projects.ToList();
             var topSimilarity = new List<String>();
@@ -290,8 +290,8 @@ namespace PMS.Controllers
 
             foreach (var project in projects) {
                 var response = client.TranslateText(project.Description, "en");
-                if (Similarity(category, SplitLabel(response.TranslatedText)) >= 0.5) {
-                    similarity.Add(project, Math.Round(Similarity(category, SplitLabel(response.TranslatedText)),3));
+                if (Similarity(category, GetCategoriesFromDescription(response.TranslatedText)) >= 0.5) {
+                    similarity.Add(project, Math.Round(Similarity(category, GetCategoriesFromDescription(response.TranslatedText)),3));
                 }
             }
 
@@ -308,7 +308,7 @@ namespace PMS.Controllers
         }
 
         public double Similarity(Dictionary<string, double> mainDict, Dictionary<string, double> dct2) {
-            var norm1= Norm.Euclidean(mainDict.Values.ToArray());
+            var norm1 = Norm.Euclidean(mainDict.Values.ToArray());
             var norm2 = Norm.Euclidean(dct2.Values.ToArray());
 
             var dot = 0.0;
@@ -322,7 +322,7 @@ namespace PMS.Controllers
             return dot / (norm1 * norm2);
         }
 
-        public Dictionary<string, double> SplitLabel(string text) {
+        public Dictionary<string, double> GetCategoriesFromDescription(string text) {
             try {
                 
             var credential = GoogleCredential.FromFile("pms-portal.json")
@@ -354,7 +354,7 @@ namespace PMS.Controllers
                 }
             }
                 return categories;
-            } catch (Exception e){
+            } catch {
                 Dictionary<string, double> categories = new Dictionary<string, double>();
                 return categories;
             }
