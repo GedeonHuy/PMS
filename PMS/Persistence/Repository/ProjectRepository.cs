@@ -103,6 +103,11 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Description.ToLower().NonUnicode().Contains(queryObj.DescriptionSearch.ToLower().NonUnicode()));
             }
 
+            if (queryObj.IsNotAssigned == true)
+            {
+                query = query.Where(q => q.Groups == null || q.Groups.Count == 0);
+            }
+
             //sort
             var columnsMap = new Dictionary<string, Expression<Func<Project, object>>>()
             {
@@ -234,6 +239,11 @@ namespace PMS.Persistence
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
             }
 
+            if (queryObj.IsNotAssigned == true)
+            {
+                query = query.Where(q => q.Groups == null || q.Groups.Count == 0);
+            }
+
             //search
             if (queryObj.ProjectCodeSearch != null)
             {
@@ -310,6 +320,11 @@ namespace PMS.Persistence
             if (queryObj.MajorId.HasValue)
             {
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
+            }
+
+            if (queryObj.IsNotAssigned == true)
+            {
+                query = query.Where(q => q.Groups == null || q.Groups.Count == 0);
             }
 
             //search

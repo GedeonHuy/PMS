@@ -29,7 +29,7 @@ namespace PMS.Models
         public byte PageSize { get; set; }
         public string BoardRoleName { get; set; }
         public string ResultScore { get; set; }
-
+        public bool IsAssigned { get; set; }
         //search
         public string StudentCodeSearch { get; set; }
         public string NameSearch { get; set; }
