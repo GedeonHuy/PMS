@@ -505,7 +505,9 @@ namespace PMS.Mapping
             CreateMap<ProjectResource, Project>()
                  .ForMember(p => p.ProjectId, opt => opt.Ignore())
                  .ForMember(p => p.TagProjects, opt => opt.Ignore())
-                 .ForMember(p => p.Major, opt => opt.Ignore());
+                 .ForMember(p => p.Major, opt => opt.Ignore())
+                 .ForMember(p => p.Categories, opt => opt.Ignore());
+
 
             CreateMap<LecturerResource, Lecturer>()
                  .ForMember(l => l.LecturerId, opt => opt.Ignore())

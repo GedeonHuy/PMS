@@ -28,6 +28,7 @@ namespace PMS.Persistence
             }
             return await context.Projects
                 .Include(p => p.Groups)
+                    .ThenInclude(tp => tp.Board)
                 .Include(p => p.TagProjects)
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
@@ -53,6 +54,7 @@ namespace PMS.Persistence
             var query = context.Projects
                 .Where(c => c.IsDeleted == false)
                 .Include(p => p.Groups)
+                    .ThenInclude(tp => tp.Board)
                 .Include(p => p.TagProjects)
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
@@ -80,6 +82,11 @@ namespace PMS.Persistence
                 query = query.Where(q => q.TagProjects.Any(tp => tp.Tag.TagName.Equals(queryObj.TagName)));
             }
 
+            if (queryObj.ResultScore != null)
+            {
+                query = query.Where(q => q.Groups.Any(qg => Convert.ToDouble(qg.Board.ResultScore) >= Convert.ToDouble(queryObj.ResultScore)));
+            }
+
             //search
             if (queryObj.ProjectCodeSearch != null)
             {
@@ -94,6 +101,11 @@ namespace PMS.Persistence
             if (queryObj.DescriptionSearch != null)
             {
                 query = query.Where(q => q.Description.ToLower().NonUnicode().Contains(queryObj.DescriptionSearch.ToLower().NonUnicode()));
+            }
+
+            if (queryObj.IsNotAssigned == true)
+            {
+                query = query.Where(q => q.Groups == null || q.Groups.Count == 0);
             }
 
             //sort
@@ -161,6 +173,43 @@ namespace PMS.Persistence
             }
         }
 
+        public async Task UpdateCategories(Project project, Dictionary<string, double> categories)
+        {
+            if (categories != null && categories.Count >= 0)
+            {
+                //remove old categories
+                var oldCategories = project.Categories.Where(p => !categories.Any(id => id.Key == p.CategoryName)).ToList();
+                foreach (Category category in oldCategories)
+                {
+                    category.IsDeleted = true;
+                    project.Categories.Remove(category);
+                }
+                //project.TagProjects.Clear();
+
+                //add new tagprojects
+                var newCategories = categories.Where(t => !project.Categories.Any(id => id.CategoryName == t.Key));
+                foreach (var categoryInformation in newCategories)
+                {
+                    var category = await context.Categories.FirstOrDefaultAsync(c => c.CategoryName == categoryInformation.Key);
+                    if (category == null)
+                    {
+                        project.Categories.Add(new Category
+                        {
+                            CategoryName = categoryInformation.Key,
+                            Confidence = categoryInformation.Value,
+                            IsDeleted = false,
+                            Project = project
+                        });
+                    }
+                    else
+                    {
+                        project.Categories.Add(category);
+                    }
+                    //project.TagProjects.Add(a);
+                }
+            }
+        }
+
         public async Task<QueryResult<Project>> GetProjectsByMajor(int? majorId, Query queryObj)
         {
             var result = new QueryResult<Project>();
@@ -188,6 +237,11 @@ namespace PMS.Persistence
             if (queryObj.MajorId.HasValue)
             {
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
+            }
+
+            if (queryObj.IsNotAssigned == true)
+            {
+                query = query.Where(q => q.Groups == null || q.Groups.Count == 0);
             }
 
             //search
@@ -245,6 +299,7 @@ namespace PMS.Persistence
                   || searchtermDescription.CalculateSimilarity(c.Title.NonUnicode()) > 0.3
                   || searchtermDescription.CalculateSimilarity(c.Description.NonUnicode()) > 0.3)
                 .Include(p => p.Groups)
+                    .ThenInclude(tp => tp.Board)
                 .Include(p => p.TagProjects)
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
@@ -265,6 +320,11 @@ namespace PMS.Persistence
             if (queryObj.MajorId.HasValue)
             {
                 query = query.Where(q => q.Major.MajorId == queryObj.MajorId.Value);
+            }
+
+            if (queryObj.IsNotAssigned == true)
+            {
+                query = query.Where(q => q.Groups == null || q.Groups.Count == 0);
             }
 
             //search
