@@ -259,7 +259,8 @@ namespace PMS.Persistence
                 .Include(p => p.Board)
                     .ThenInclude(be => be.Group)
                         .ThenInclude(ge => ge.Project)
-                 .Where(g => g.isDeleted == false && g.Board.BoardEnrollments.Any(be => be.Lecturer.Email.Equals(email)))
+                .Where(g => g.isDeleted == false)
+                .Where(g => g.Board.BoardEnrollments.Any(be => be.Lecturer.Email.Equals(email)))
                 .AsQueryable();
 
             //filter
@@ -278,10 +279,10 @@ namespace PMS.Persistence
                 query = query.Where(q => q.isConfirm.Equals(queryObj.isConfirm));
             }
 
-            if (queryObj.Email != null)
-            {
-                query = query.Where(q => q.Lecturer.Email.Equals(queryObj.Email) || q.Lecturer == null);
-            }
+            // if (queryObj.Email != null)
+            // {
+            //     query = query.Where(q => q.Lecturer.Email.Equals(queryObj.Email) || q.Lecturer == null);
+            // }
 
             if (queryObj.QuarterId.HasValue)
             {

@@ -7,13 +7,25 @@ $hover: 24;
 .btn {
   cursor: pointer;
   border-radius: 5px;
-  transition: all 0.1s ease;
+  transition: all 0.5s ease;
   padding: 0.344rem 1rem;
   font-size: 0.9rem;
+  position: relative;	
 }
 
-.btn:hover {
-  transform: scale(1.2);
+.btn::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 0%;
+	height: 100%;
+	transition: all 0.25s;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.btn:hover::after {
+  width: 100%;
+  border: inset 0 0 0 1em rgba(255, 255, 255, 0.1);
 }
 
 @mixin styleButton($color, $borderColor) {

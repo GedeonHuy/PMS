@@ -29,10 +29,10 @@
                 <td>{{student.name}}</td>
                 <td>{{student.email}}</td>
                 <td>
-                  <button class="btn btn-primary" (click)="showEditModal(student.id)">
+                  <button class="btn btn-primary" (click)="showEditModal(student.id)" title="Edit this student">
                     <i class="fa fa-pencil-square-o"></i>
                   </button>
-                  <button class="btn btn-danger" (click)="deleteStudent(student.id)">
+                  <button class="btn btn-danger" (click)="deleteStudent(student.id)" title="Remove this student">
                     <i class="fa fa-trash"></i>
                   </button>
                 </td>

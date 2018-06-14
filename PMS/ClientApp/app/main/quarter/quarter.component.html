@@ -29,10 +29,10 @@
                 <td>{{quarter.quarterStart | date}}</td>
                 <td>{{quarter.quarterEnd | date}}</td>
                 <td>
-                  <button class="btn btn-primary" (click)="showEditModal(quarter.quarterId)">
+                  <button class="btn btn-primary" (click)="showEditModal(quarter.quarterId)" title="Edit this quarter">
                     <i class="fa fa-pencil-square-o"></i>
                   </button>
-                  <button class="btn btn-danger" (click)="deletequarter(quarter.quarterId)">
+                  <button class="btn btn-danger" (click)="deletequarter(quarter.quarterId)" title="Remove this quarter">
                     <i class="fa fa-trash"></i>
                   </button>
                 </td>

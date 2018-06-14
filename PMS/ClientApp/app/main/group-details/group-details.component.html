@@ -4,11 +4,11 @@
   <div class="row" *ngIf="(isLoadData && isLoadGit && isLoadDataCommit) || (isLoadData && !isHaveGithub)">
     <div class="col-lg-12 col-md-12">
       <button *ngIf="isAdmin" class="btn btn-primary" style="float: right;" (click)="calculateScore(group.boardId)"> Finalize</button>
-      <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;" (click)="calculateScore(group.boardId)"> Finalize</button>
+      <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;"> Finalize</button>
       <button *ngIf="isLecturer && hasBoard" class="btn btn-mark" style="float: right;" (click)="mark(group.boardId)" translate> Mark this group</button>
-      <button *ngIf="!isLecturer && hasBoard" disabled class="btn btn-disabled" style="float: right;" (click)="mark(group.boardId)" translate> Mark this group</button>
+      <button *ngIf="!isLecturer && hasBoard" disabled class="btn btn-disabled" style="float: right;" translate> Mark this group</button>
       <button *ngIf="isAdmin" class="btn btn-assign" style="float: right;" (click)="assignBoard(group.groupId)" translate> Assign board</button>
-      <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;" (click)="assignBoard(group.groupId)" translate> Assign board</button>
+      <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;" translate> Assign board</button>
     </div>
     <br />
     <div class="col-12 col-sm-6 col-md-8">
@@ -70,11 +70,11 @@
             <p class="message">{{ item.description }}</p>
           </div>
           <div class="xs-6 col-md-4">
-            <button *ngIf="!isReviewer" disabled [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)">
+            <button *ngIf="!isReviewer" disabled [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)" title="Mark this recommendation as done (as check symbol) or not (no check symbol)">
               <i *ngIf="!item.isDone" class="fa fa-circle"></i>
               <i *ngIf="item.isDone" class="fa fa-check-circle"></i>
             </button>
-            <button *ngIf="isReviewer" [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)">
+            <button *ngIf="isReviewer" [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)" title="Mark this recommendation as done (as check symbol) or not (no check symbol)">
                 <i *ngIf="!item.isDone" class="fa fa-circle"></i>
                 <i *ngIf="item.isDone" class="fa fa-check-circle"></i>
             </button>
@@ -122,20 +122,27 @@
         <br />
 
         <div class="text-center mtop20">
-          <a class="btn btn-sm btn-primary" (click)="showUploadModal()">Add files</a>
+          <a *ngIf="isLecturer || isStudent" class="btn btn-sm btn-primary" (click)="showUploadModal()">Add files</a>
           <a *ngIf="isHaveGithub" href="{{this.linkDowload}}" class="btn btn-sm btn-warning">Source code</a>
         </div>
 
         <br />
-        <h2>Grade</h2>
-        <div class="panel-body">
-          <h3>
-            <h2 class="">
-              <a *ngIf="group.resultGrade">{{group.resultGrade}}</a>
-            </h2>
+        
+        <div *ngIf="isLoadGrade" class="panel-body">
+          <h2>
+            Grade:
+            <a *ngIf="group.resultGrade" style="font-size: 3.5vw">{{group.resultGrade}}</a>
+          </h2>
+          <h2>
             Score:
             <a *ngIf="group.resultScore">{{group.resultScore}}</a>
-          </h3>
+          </h2>
+        </div>
+        <div *ngIf="!isLoadGrade" class="panel-body">
+          <img style=" position: absolute;margin: auto;top: 0;left: 0;right: 0;bottom: 0;transform: scale(0.35);"
+            src="/assets/images/loading.gif" />
+          <br />
+          <h3>Calculating grade and score...</h3>
         </div>
       </div>
     </div>
@@ -187,12 +194,12 @@
           <div class="form-group">
               <form class="col-md-9 col-sm-9 col-xs-12" #recommendationForm="ngForm" (submit)="addRecommendation(boardEnrollment.boardEnrollmentId, recommendationForm)">
                   <input class="form-control" style="padding-right: 4.13em;" type="text" [(ngModel)]="recommendationDescription" name="Recommendation" />
-                  <button class="form-horizontal btn btn-mark" style="float: right; margin-top: -2.3em; margin-right: 0.13em;" type="submit"><i class="fa fa-plus"></i></button>
+                  <button class="form-horizontal btn btn-mark" style="float: right; margin-top: -2.3em; margin-right: 0.13em;" type="submit" title="Add this recommendation"><i class="fa fa-plus"></i></button>
               </form>
               <br />
               <ul class="col-md-9 col-sm-9 col-xs-12" *ngFor="let item of recommendations; let i = index" [attr.data-index]="i">
                   {{ item.description }}
-                  <button class="btn btn-danger" style="float: right; margin-right: 0.13em;" (click)="removeRecommendation(i)"><i class="fa fa-minus"></i></button>
+                  <button class="btn btn-danger" style="float: right; margin-right: 0.13em;" (click)="removeRecommendation(i)" title="Remove this recommendation"><i class="fa fa-minus"></i></button>
               </ul>
               
           </div>
@@ -231,8 +238,8 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Chair</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <input type="hidden" [(ngModel)]="board.boardId" name="boardId" />
-              <select class="form-control" [(ngModel)]="boardEnrollments.chair.lecturerId" name="boardEnrollments.chair.lecturerId" required
-                #chair="ngModel">
+              <select class="form-control" [(ngModel)]="boardEnrollments.chair.lecturerId" (change)="onLecturerChange($event.target.value, 'chair')" name="boardEnrollments.chair.name" required
+                #secretary="ngModel">
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="chair.valid || (chair.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the chair </small>
@@ -242,9 +249,9 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.chair.scorePercent" name="boardEnrollments.chair.scorePercent"
+              <select class="form-control" [(ngModel)]="boardEnrollments.chair.scorePercent" (change)="onScorePercentChange()" name="boardEnrollments.chair.scorePercent"
                 required #scorePercentChair="ngModel">
-                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+                <option type="number" *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
               </select>
               <small [hidden]="scorePercentChair.valid || (scorePercentChair.pristine && !addEditForm.submitted)" class="text-danger">
                 Please specify the score percent </small>
@@ -255,7 +262,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Secretary</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.lecturerId" name="boardEnrollments.secretary.name" required
+              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.lecturerId" (change)="onLecturerChange($event.target.value, 'secretary')" name="boardEnrollments.secretary.name" required
                 #secretary="ngModel">
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
@@ -266,9 +273,9 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.scorePercent" name="boardEnrollments.secretary.scorePercent"
+              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.scorePercent" (change)="onScorePercentChange()" name="boardEnrollments.secretary.scorePercent"
                 required #scorePercentSecretary="ngModel">
-                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+                <option type="number" *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
               </select>
               <small [hidden]="scorePercentSecretary.valid || (scorePercentSecretary.pristine && !addEditForm.submitted)" class="text-danger">
                 Please specify the score percent </small>
@@ -285,10 +292,10 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.scorePercent" name="boardEnrollments.supervisor.scorePercent"
+              <select class="form-control" [(ngModel)]="boardEnrollments.supervisor.scorePercent" (change)="onScorePercentChange()" name="boardEnrollments.supervisor.scorePercent"
                 required #scorePercentSupervisor="ngModel">
                 <option value=""></option>
-                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+                <option type="number" *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
               </select>
               <small [hidden]="scorePercentSupervisor.valid || (scorePercentSupervisor.pristine && !addEditForm.submitted)" class="text-danger">
                 Please specify the score percent </small>
@@ -298,7 +305,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Reviewer</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.lecturerId" name="boardEnrollments.reviewer.name" required
+              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.lecturerId" (change)="onLecturerChange($event.target.value, 'reviewer')" name="boardEnrollments.reviewer.name" required
                 #reviewer="ngModel">
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
@@ -309,9 +316,9 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Score percent</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.scorePercent" name="boardEnrollments.reviewer.scorePercent"
+              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.scorePercent" (change)="onScorePercentChange()" name="boardEnrollments.reviewer.scorePercent"
                 required #scorePercentReviewer="ngModel">
-                <option *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
+                <option type="number" *ngFor="let s of scorePercents" value="{{s}}">{{ s }}</option>
               </select>
               <small [hidden]="scorePercentReviewer.valid || (scorePercentReviewer.pristine && !addEditForm.submitted)" class="text-danger">
                 Please specify the score percent </small>
@@ -322,7 +329,7 @@
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="hidemodalBoard()" class="btn btn-primary">Cancel</button>
-              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.valid || isSaved">Save</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.valid || isSaved || isConflict">Save</button>
               <span *ngIf="isClicked" class="fa fa-refresh fa-spin"></span>
             </div>
           </div>

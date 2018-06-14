@@ -27,10 +27,10 @@
                 <td>{{major.majorName}}</td>
                 <td>{{major.majorCode}}</td>
                 <td>
-                  <button *ngIf="isAdmin" class="btn btn-primary" (click)="showEditModal(major.majorId)">
+                  <button *ngIf="isAdmin" class="btn btn-primary" (click)="showEditModal(major.majorId)" title="Edit this major">
                     <i class="fa fa-pencil-square-o"></i>
                   </button>
-                  <button *ngIf="isAdmin" class="btn btn-danger" (click)="deletemajor(major.majorId)">
+                  <button *ngIf="isAdmin" class="btn btn-danger" (click)="deletemajor(major.majorId)" title="Remove this major">
                     <i class="fa fa-trash"></i>
                   </button>
 

@@ -35,19 +35,19 @@
                 <td>{{group.lecturer.name}}</td>
                 <td style="color:blue;">{{group.isConfirm}}</td>
                 <td>
-                  <button class="btn btn-primary" (click)="showEditModal(group.groupId)">
+                  <button class="btn btn-primary" (click)="showEditModal(group.groupId)" title="Edit this group">
                     <i class="fa fa-pencil-square-o"></i>
                   </button>
 
-                  <button class="btn btn-success" (click)="acceptGroup(group.groupId)">
+                  <button class="btn btn-success" (click)="acceptGroup(group.groupId)" title="Qualify this group to advance to the defense">
                     <i class="fa fa-check"></i>
                   </button>
 
-                  <button class="btn btn-warning" (click)="rejectGroup(group.groupId)">
+                  <button class="btn btn-warning" (click)="rejectGroup(group.groupId)" title="Disqualify this group from defense">
                     <i class="fa fa-ban"></i>
                   </button>
 
-                  <button class="btn btn-danger" (click)="deleteGroup(group.groupId)">
+                  <button class="btn btn-danger" (click)="deleteGroup(group.groupId)" title="Erase this group from existence">
                     <i class="fa fa-trash"></i>
                   </button>
                 </td>

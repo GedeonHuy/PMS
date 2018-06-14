@@ -73,7 +73,7 @@
                   <b>{{group.isConfirm}}</b>
                 </td>
                 <td>
-                  <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]">
+                  <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]" title="View details of this group">
                     <i class="fa fa-eye"></i>
                   </button>
                 </td>
@@ -109,7 +109,7 @@
                   <b>{{group.isConfirm}}</b>
                 </td>
                 <td>
-                  <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]">
+                  <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]" title="View details of this group">
                     <i class="fa fa-eye"></i>
                   </button>
                 </td>
@@ -118,6 +118,43 @@
           </table>
         </div>
       </div>
+
+      <div *ngIf="isLecturer" class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-12">
+        <h2>
+          <a href="main/confirm-group" alt="View all">My Marking Groups</a>
+        </h2>
+        <div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Group Name</th>
+                <th>Project</th>
+                <th>Supervisor</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let group of groupsInBoard.items; let rowIndex = index">
+                <th scope="row">{{rowIndex+1}}</th>
+                <td>{{group.groupName}}</td>
+                <td>{{group.project.title}}</td>
+                <td>{{group.lecturer.name}}</td>
+                <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
+                  <b>{{group.isConfirm}}</b>
+                </td>
+                <td>
+                  <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]" title="View details of this group">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -151,7 +188,7 @@
                   <b>{{group.isConfirm}}</b>
                 </td>
                 <td>
-                  <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]">
+                  <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]" title="View details of this group">
                     <i class="fa fa-eye"></i>
                   </button>
                 </td>

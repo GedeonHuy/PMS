@@ -8,17 +8,19 @@ import { DataService } from "./../../core/services/data.service";
 import { ModalDirective } from "ngx-bootstrap/modal";
 import { ElementRef } from "@angular/core";
 import { NotificationService } from "../../core/services/notification.service";
-import { NgForm } from "@angular/forms";
+import { NgForm, NgModel } from "@angular/forms";
 // import { Promise } from 'q';
 import { async } from "@angular/core/testing";
 import { validateConfig } from "@angular/router/src/config";
 import { SystemConstants } from "../../core/common/system.constants";
+import { forEach } from "@angular/router/src/utils/collection";
 
 @Component({
   selector: "app-group-details",
   templateUrl: "./group-details.component.html",
   styleUrls: ["./group-details.component.scss"]
 })
+
 export class GroupDetailsComponent implements OnInit {
   @ViewChild("modalUpload") public modalUpload: ModalDirective;
   @ViewChild("modalDownload") public modalDownload: ModalDirective;
@@ -47,14 +49,19 @@ export class GroupDetailsComponent implements OnInit {
   isLoadDataCommit: boolean;
   isLoadMark: boolean;
   isLoadRecommendation: boolean;
-
+  isOneHundred: boolean;
+  isLoadGrade: boolean;
+  
+  temp: any[];
   groupRecommendations: any[];
   lecturers: any[];
   boardEnrollmentsOfLecturer: any[];
   groupBoardEnrollments: any[];
   thisLecturerId: any;
   thisLecturer: any;
-
+  lecturerIds: any[];
+  
+  isConflict: boolean;
   hasRecommendations: boolean;
   hasBoard: boolean;
   isAdmin: boolean;
@@ -142,6 +149,7 @@ export class GroupDetailsComponent implements OnInit {
       this._dataService.get("/api/lecturers/getall/")
     ]).subscribe(data => {
       this.lecturers = data[0].items;
+      this.lecturers = data[0].items;
     });
 
     this.loadGroupDetails(this.groupId);
@@ -225,6 +233,7 @@ export class GroupDetailsComponent implements OnInit {
       //Check isReviewer-END
 
       //Score-START
+      this.isLoadGrade = true;
       this.groupBoardEnrollments = data[1].items;
       if (this.groupBoardEnrollments.length != 0) {
         if (this.group.board.resultScore == null) this.group.resultScore = "";
@@ -340,60 +349,87 @@ export class GroupDetailsComponent implements OnInit {
   }
 
   saveBoard(form: NgForm) {
-    console.log(this.board.boardId);
     if (form.valid) {
-      this.isSaved = true;
-      if (this.board.boardId == undefined) {
-        this._dataService
-          .post("/api/boards/add", JSON.stringify(this.board))
-          .subscribe(
-            (response: any) => {
-              this.modalBoard.hide();
-              this.loadData();
-              this._notificationService.printSuccessMessage("Add Success");
-              form.resetForm();
 
-              this.isSaved = false;
-              this.isLoadData = false;
-            },
-            error => {
-              this._dataService.handleError(error);
-              if (
-                this.boardEnrollments.chair.scorePercent +
-                  this.boardEnrollments.secretary.scorePercent +
-                  this.boardEnrollments.supervisor.scorePercent +
-                  this.boardEnrollments.reviewer.scorePercent !=
-                100
-              ) {
-                this._notificationService.printErrorMessage(
-                  "Total percent must be 100%!"
-                );
+      //start transform string values into int numbers
+      this.board.lecturerInformations.chair.scorePercent
+        = parseInt(this.board.lecturerInformations.chair.scorePercent);
+      this.board.lecturerInformations.secretary.scorePercent
+        = parseInt(this.board.lecturerInformations.secretary.scorePercent);
+      this.board.lecturerInformations.supervisor.scorePercent
+        = parseInt(this.board.lecturerInformations.supervisor.scorePercent);
+      this.board.lecturerInformations.reviewer.scorePercent
+        = parseInt(this.board.lecturerInformations.reviewer.scorePercent);
+      //end transform string values into int numbers
+
+      //start check if sum all score percents equals 100
+      this.lecturerIds = [
+        this.board.lecturerInformations.chair.lecturerId,
+        this.board.lecturerInformations.secretary.lecturerId,
+        this.board.lecturerInformations.supervisor.lecturerId,
+        this.board.lecturerInformations.reviewer.lecturerId
+      ];
+      this.isOneHundred =
+        this.board.lecturerInformations.chair.scorePercent +
+        this.board.lecturerInformations.secretary.scorePercent +
+        this.board.lecturerInformations.supervisor.scorePercent +
+        this.board.lecturerInformations.reviewer.scorePercent == 100;
+      //end check if sum all score percents equals 100
+
+      if (this.isOneHundred == true) {
+        this.isSaved = true;
+        if (this.board.boardId == undefined) {
+          this._dataService
+            .post("/api/boards/add", JSON.stringify(this.board))
+            .subscribe(
+              (response: any) => {
+                this.modalBoard.hide();
+                this.loadData();
+                this._notificationService.printSuccessMessage("Add Success");
+                form.resetForm();
+
+                this.isSaved = false;
+                this.isLoadData = false;
+              },
+              error => {
+                this._dataService.handleError(error);
               }
-            }
-          );
-      } else {
-        this._dataService
-          .put(
-            "/api/boards/update/" + this.board.boardId,
-            JSON.stringify(this.board)
-          )
-          .subscribe(
-            (response: any) => {
-              this.loadData();
-              this.modalBoard.hide();
-              this._notificationService.printSuccessMessage("Update Success");
-              form.resetForm();
+            );
+        } else {
+          this._dataService
+            .put(
+              "/api/boards/update/" + this.board.boardId,
+              JSON.stringify(this.board)
+            )
+            .subscribe(
+              (response: any) => {
+                this.loadData();
+                this.modalBoard.hide();
+                this._notificationService.printSuccessMessage("Update Success");
+                form.resetForm();
 
-              this.isSaved = false;
-              this.isLoadData = false;
-            },
-            error => {
-              form.resetForm();
-              this._dataService.handleError(error);
-              this.isSaved = false;
-              this.isLoadData = false;
-            }
-          );
+                this.isSaved = false;
+                this.isLoadData = false;
+              },
+              error => {
+                form.resetForm();
+                this._dataService.handleError(error);
+                this.isSaved = false;
+                this.isLoadData = false;
+              }
+            );
+        }
+      } else {
+        this.assignBoard(this.group.groupId);
+
+        this._notificationService.printErrorMessage(
+          "Total percent must be 100%!\nPlease try again."
+        );
+        this.isConflict = true;
+        setTimeout(() => {
+          this.isConflict = false;
+        },
+        3000);
       }
     }
   }
@@ -436,7 +472,7 @@ export class GroupDetailsComponent implements OnInit {
           this.thisLecturerEmail
       ),
       this._dataService.get(
-        "/api/recommendations/getrecommendationsbygroupid/" + id
+        "/api/recommendations/getrecommendationsbygroupid/" + this.groupId
       )
     ).subscribe(data => {
       this.boardEnrollmentsOfLecturer = data[0].items;
@@ -445,41 +481,85 @@ export class GroupDetailsComponent implements OnInit {
       );
       this.isLoadMark = true;
 
-      // this.recommendations = data[1].items;
-      this.recommendations = data[1].items.filter(
+      this.recommendations = data[1].items;
+      this.recommendations = this.recommendations.filter(
         r => r.boardEnrollmentId == this.boardEnrollment.boardEnrollmentId
       );
+
     });
+  }
+
+  onScorePercentChange() {
+    this.isConflict = false;
+  }
+
+  onLecturerChange(selected: any, seat: any) {
+
+    if ((selected == this.boardEnrollments.chair.lecturerId) && !(seat === 'chair')) {
+      this.isConflict = false;
+      this.boardEnrollments.chair.lecturerId = null;
+
+    } else if ((selected == this.boardEnrollments.secretary.lecturerId) && !(seat === 'secretary')) {
+      this.isConflict = false;
+      this.boardEnrollments.secretary.lecturerId = null;
+
+    } else if ((selected == this.boardEnrollments.reviewer.lecturerId) && !(seat === 'reviewer')) {
+      this.isConflict = false;
+      this.boardEnrollments.reviewer.lecturerId = null;
+
+    } else if ((selected == this.boardEnrollments.supervisor.lecturerId) && !(seat === 'supervisor')) {
+      if (seat === 'chair') this.boardEnrollments.chair.lecturerId = null;
+      if (seat === 'secretary') this.boardEnrollments.secretary.lecturerId = null;
+      if (seat === 'reviewer') this.boardEnrollments.reviewer.lecturerId = null;
+
+      this._notificationService.printErrorMessage(
+        "This lecturer is the supervisor!"
+      );
+      this.isConflict = true;
+    }
+    
+    this.temp = [
+      parseInt(this.boardEnrollments.chair.lecturerId),
+      parseInt(this.boardEnrollments.secretary.lecturerId),
+      parseInt(this.boardEnrollments.supervisor.lecturerId),
+      parseInt(this.boardEnrollments.reviewer.lecturerId)
+    ];
+
+    console.log(this.temp);
+
+    this.boardEnrollments.chair.lecturerId        = this.temp[0];
+    this.boardEnrollments.secretary.lecturerId    = this.temp[1];
+    this.boardEnrollments.supervisor.lecturerId   = this.temp[2];
+    this.boardEnrollments.reviewer.lecturerId     = this.temp[3];
   }
 
   //Create method
   assignBoard(id: any) {
     this.modalBoard.show();
-
-    console.log(this.group);
-
-    this.boardEnrollments = {};
-    this.chair = {
-      scorePercent: 25
-    };
-    this.secretary = {
-      scorePercent: 25
-    };
-    this.supervisor = {
-      name: this.group.lecturer.name,
-      lecturerId: this.group.lecturerId,
-      scorePercent: 25
-    };
-    this.reviewer = {
-      scorePercent: 25
-    };
-
+    this.isConflict = false;
+    
     Observable.forkJoin(
       this._dataService.get("/api/groups/getgroup/" + id)
     ).subscribe(data => {
       this.group = data[0];
 
       if (this.group.board == null) {
+        this.boardEnrollments = {};
+        this.chair = {
+          scorePercent: 25
+        };
+        this.secretary = {
+          scorePercent: 25
+        };
+        this.supervisor = {
+          name: this.group.lecturer.name,
+          lecturerId: this.group.lecturerId,
+          scorePercent: 25
+        };
+        this.reviewer = {
+          scorePercent: 25
+        };
+
         this.group.board = {};
 
         //this.lecturers = this.lecturers.filter(l => l.majorId == this.group.majorId);
@@ -619,10 +699,12 @@ export class GroupDetailsComponent implements OnInit {
   }
 
   calculateScore(id: any) {
+    this.isLoadGrade = false;
     this._dataService
       .get("/api/boards/calculatescore/" + id)
-      .subscribe((response: any) => {});
-    window.location.reload();
+      .subscribe((response: any) => {
+        this.loadGroupDetails(this.groupId);
+      });
   }
 
   addRecommendation(id: any, form: NgForm) {
@@ -656,10 +738,10 @@ export class GroupDetailsComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this._notificationService.printSuccessMessage("Delete Success");
+          this.recommendations.splice(i, 1);
         },
         error => this._dataService.handleError(error)
       );
-    this.recommendations.splice(i, 1);
   }
 
   markRecommendation(i: any) {

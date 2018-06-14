@@ -27,10 +27,10 @@
                 <td ngClass="nowrap">{{role.name}}</td>
                 <td>{{role.description}}</td>
                 <td>
-                  <button class="btn btn-primary" (click)="showEditModal(role.id)">
+                  <button class="btn btn-primary" (click)="showEditModal(role.id)" title="Edit this role">
                     <i class="fa fa-pencil-square-o"></i>
                   </button>
-                  <button class="btn btn-danger" (click)="deleteRole(role.id)">
+                  <button class="btn btn-danger" (click)="deleteRole(role.id)" title="Remove this role">
                     <i class="fa fa-trash"></i>
                   </button>
                 </td>

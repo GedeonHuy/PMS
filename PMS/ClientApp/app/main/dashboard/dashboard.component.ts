@@ -49,7 +49,8 @@ export class Dashboard {
   public groupsAccepted: any = {};
   public groupsStudent: any = {};
   public groups: any = {};
-
+  public groupsInBoard = {};
+  
   ngOnInit() {
     this.today = Date.now();
 
@@ -90,6 +91,7 @@ export class Dashboard {
   loadLecturerData() {
     this.loadLecturerGroup();
     this.loadLecturerGroupAccepted();
+    this.loadLecturerGroupInBoard();
   }
 
   loadLecturerGroup() {
@@ -106,6 +108,12 @@ export class Dashboard {
     });
   }
 
+  loadLecturerGroupInBoard() {
+    this._dataService.get("/api/groups/getgroupsbylectureremailinboard/" + this.user.email).subscribe((response: any) => {
+      this.groupsInBoard = response;
+      this.isLoadData = true;      
+    });
+  }
 
   loadStudentGroup() {
     this._dataService.get("/api/students/getgroups/" + this.user.email + "?pageSize=3").subscribe((response: any) => {

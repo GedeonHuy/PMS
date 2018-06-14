@@ -1,3 +1,4 @@
+import { AuthenService } from "./../../core/services/authen.service";
 import { SystemConstants } from "./../../core/common/system.constants";
 import { ProgressService } from "./../../core/services/progress.service";
 import { NotificationService } from "./../../core/services/notification.service";
@@ -23,6 +24,7 @@ export class StudentComponent implements OnInit {
   @ViewChild("modalImport") public modalImport: ModalDirective;
   @ViewChild("fileInput") fileInput: ElementRef;
 
+  public user: any;
   public students: any[];
   public queryResult: any = {};
   public progress: any;
@@ -30,19 +32,30 @@ export class StudentComponent implements OnInit {
   public isSaved: boolean = false;
   public isLoadData: boolean = false;
   public isLoadStudent: boolean = false;
+  public isLoadRole: boolean;
   majors: any[];
+  isAdmin: boolean;
+  isLecturer: boolean;
+  isStudent: boolean;
 
   query: any = {
     pageSize: 10
   };
 
   constructor(
+    private _authenService: AuthenService,
     private _dataService: DataService,
     private _progressService: ProgressService,
     private _notificationService: NotificationService,
     private _zone: NgZone
-  ) {}
+  ) {
+    this.isAdmin = false;
+    this.isLecturer = false;
+    this.isStudent = false;
+    this.isLoadRole = false;
+  }
   ngOnInit() {
+    this.permissionAccess();
     this.loadData();
   }
 
@@ -196,11 +209,28 @@ export class StudentComponent implements OnInit {
         this.loadData();
       });
   }
-
+  
   handler(type: string, $event: ModalDirective) {
     if (type === "onHide" || type === "onHidden") {
       this.student = [];
       this.isLoadStudent = false;
     }
+  }
+
+  permissionAccess() {
+    this.user = this._authenService.getLoggedInUser();
+    if (this.user.role === "Admin") {
+      this.isAdmin = true;
+    }
+
+    if (this.user.role === "Lecturer") {
+      this.isLecturer = true;
+    }
+
+    if (this.user.role === "Student") {
+      this.isStudent = true;
+    }
+
+    this.isLoadRole = true;
   }
 }

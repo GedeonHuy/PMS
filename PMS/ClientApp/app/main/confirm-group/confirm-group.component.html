@@ -33,7 +33,7 @@
                   <td>{{group.lecturer.name}}</td>
                   <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">{{group.isConfirm}}</td>
                   <td>
-                    <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]">
+                    <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]" title="View details of this group">
                         <i class="fa fa-eye"></i>
                     </button>
 
