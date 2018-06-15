@@ -494,18 +494,25 @@ export class GroupDetailsComponent implements OnInit {
   }
 
   onLecturerChange(selected: any, seat: any) {
-
+    this.isConflict = false;
+    
     if ((selected == this.boardEnrollments.chair.lecturerId) && !(seat === 'chair')) {
-      this.isConflict = false;
-      this.boardEnrollments.chair.lecturerId = null;
+      this.isConflict = true;
+      this._notificationService.printErrorMessage(
+        "This lecturer is already the chair!"
+      );
 
     } else if ((selected == this.boardEnrollments.secretary.lecturerId) && !(seat === 'secretary')) {
-      this.isConflict = false;
-      this.boardEnrollments.secretary.lecturerId = null;
+      this.isConflict = true;
+      this._notificationService.printErrorMessage(
+        "This lecturer is already the secretary!"
+      );
 
     } else if ((selected == this.boardEnrollments.reviewer.lecturerId) && !(seat === 'reviewer')) {
-      this.isConflict = false;
-      this.boardEnrollments.reviewer.lecturerId = null;
+      this.isConflict = true;
+      this._notificationService.printErrorMessage(
+        "This lecturer is already the reviewer!"
+      );
 
     } else if ((selected == this.boardEnrollments.supervisor.lecturerId) && !(seat === 'supervisor')) {
       if (seat === 'chair') this.boardEnrollments.chair.lecturerId = null;
@@ -513,7 +520,7 @@ export class GroupDetailsComponent implements OnInit {
       if (seat === 'reviewer') this.boardEnrollments.reviewer.lecturerId = null;
 
       this._notificationService.printErrorMessage(
-        "This lecturer is the supervisor!"
+        "Cannot select this lecturer because this is the supervisor!"
       );
       this.isConflict = true;
     }
