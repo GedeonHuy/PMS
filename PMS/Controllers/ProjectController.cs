@@ -300,7 +300,7 @@ namespace PMS.Controllers
             foreach (var project in projects)
             {
                 var response = client.TranslateText(project.Description, "en");
-                if (Similarity(category, GetCategoriesFromDescription(response.TranslatedText)) >= 0.5)
+                if (Similarity(category, GetCategoriesFromDescription(response.TranslatedText)) >= 0.1)
                 {
                     similarity.Add(project, Math.Round(Similarity(category, GetCategoriesFromDescription(response.TranslatedText)), 3));
                 }
