@@ -33,6 +33,8 @@ namespace PMS.Persistence
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
                 .Include(p => p.Lecturer)
+                .Include(p => p.CategoryProjects)
+                    .ThenInclude(cp => cp.Category)
                 .SingleOrDefaultAsync(s => s.ProjectId == id);
         }
 
@@ -59,6 +61,8 @@ namespace PMS.Persistence
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
                 .Include(p => p.Lecturer)
+                .Include(p => p.CategoryProjects)
+                    .ThenInclude(cp => cp.Category)
                 .AsQueryable();
 
             //filter
@@ -178,32 +182,38 @@ namespace PMS.Persistence
             if (categories != null && categories.Count >= 0)
             {
                 //remove old categories
-                var oldCategories = project.Categories.Where(p => !categories.Any(id => id.Key == p.CategoryName)).ToList();
-                foreach (Category category in oldCategories)
+                var oldCategoryProjects = project.CategoryProjects.Where(p => !categories.Any(id => id.Key == p.Category.CategoryName)).ToList();
+                foreach (CategoryProject categoryProject in oldCategoryProjects)
                 {
-                    category.IsDeleted = true;
-                    project.Categories.Remove(category);
+                    categoryProject.IsDeleted = true;
+                    project.CategoryProjects.Remove(categoryProject);
                 }
                 //project.TagProjects.Clear();
 
                 //add new tagprojects
-                var newCategories = categories.Where(t => !project.Categories.Any(id => id.CategoryName == t.Key));
+                var newCategories = categories.Where(t => !project.CategoryProjects.Any(id => id.Category.CategoryName == t.Key));
                 foreach (var categoryInformation in newCategories)
                 {
-                    var category = await context.Categories.FirstOrDefaultAsync(c => c.CategoryName == categoryInformation.Key);
-                    if (category == null)
+                    var categoryProject = await context.CategoryProjects.FirstOrDefaultAsync(c => c.Category.CategoryName == categoryInformation.Key);
+                    if (categoryProject == null)
                     {
-                        project.Categories.Add(new Category
+                        var category = new Category
                         {
                             CategoryName = categoryInformation.Key,
                             Confidence = categoryInformation.Value,
+                            IsDeleted = false
+                        };
+
+                        project.CategoryProjects.Add(new CategoryProject
+                        {
+                            Category = category,
                             IsDeleted = false,
                             Project = project
                         });
                     }
                     else
                     {
-                        project.Categories.Add(category);
+                        project.CategoryProjects.Add(categoryProject);
                     }
                     //project.TagProjects.Add(a);
                 }
@@ -220,6 +230,8 @@ namespace PMS.Persistence
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
                 .Include(p => p.Lecturer)
+                .Include(p => p.CategoryProjects)
+                    .ThenInclude(cp => cp.Category)
                 .Where(c => c.IsDeleted == false && c.Major.MajorId == majorId)
                 .AsQueryable();
 
@@ -304,6 +316,8 @@ namespace PMS.Persistence
                     .ThenInclude(tp => tp.Tag)
                 .Include(p => p.Major)
                 .Include(p => p.Lecturer)
+                .Include(p => p.CategoryProjects)
+                    .ThenInclude(cp => cp.Category)
                 .AsQueryable();
 
             //filter

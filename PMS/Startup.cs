@@ -50,6 +50,7 @@ namespace PMS
             services.AddScoped<ITagProjectRepository, TagProjectRepository>();
             services.AddScoped<IRecommendationRepository, RecommendationRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryProjectRepository, CategoryProjectRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             //Tasking Features
             services.AddScoped<ITaskItemRepository, TaskItemRepository>();

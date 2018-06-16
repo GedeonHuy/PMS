@@ -39,8 +39,6 @@ namespace PMS.Controllers
 
             var category = mapper.Map<CategoryResource, Category>(categoryResource);
 
-            category.Project = await projectRepository.GetProject(categoryResource.ProjectId);
-
             categoryRepository.AddCategory(category);
             await unitOfWork.Complete();
 
@@ -64,8 +62,6 @@ namespace PMS.Controllers
                 return NotFound();
 
             mapper.Map<CategoryResource, Category>(categoryResource, category);
-
-            category.Project = await projectRepository.GetProject(categoryResource.ProjectId);
 
             await unitOfWork.Complete();
 

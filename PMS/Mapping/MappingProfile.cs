@@ -237,10 +237,11 @@ namespace PMS.Mapping
                 .ForMember(pr => pr.TagProjects, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.TagProjectId)))
                 .ForMember(pr => pr.Tags, opt => opt.MapFrom(p => p.TagProjects.Select(pf => pf.Tag.TagName)))
                 .ForMember(pr => pr.Groups, opt => opt.MapFrom(p => p.Groups.Select(pf => pf.GroupId)))
-                .ForMember(pr => pr.Categories, opt => opt.MapFrom(p => p.Categories.Select(pf => new CategoryInformationResource
+                 .ForMember(pr => pr.CategoryProjects, opt => opt.MapFrom(p => p.CategoryProjects.Select(pf => pf.CategoryProjectId)))
+                .ForMember(pr => pr.Categories, opt => opt.MapFrom(p => p.CategoryProjects.Select(pf => new CategoryInformationResource
                 {
-                    CategoryName = pf.CategoryName,
-                    Confidence = pf.Confidence
+                    CategoryName = pf.Category.CategoryName,
+                    Confidence = pf.Category.Confidence
                 })));
 
             CreateMap<Lecturer, LecturerResource>()
@@ -369,10 +370,11 @@ namespace PMS.Mapping
                     IsDeleted = g.Project.IsDeleted,
                     IsCompleted = g.Project.IsCompleted,
                     Groups = g.Project.Groups.Select(gf => gf.GroupId).ToList(),
-                    Categories = g.Project.Categories.Select(gf => new CategoryInformationResource
+                    CategoryProjects = g.Project.CategoryProjects.Select(gf => gf.CategoryProjectId).ToList(),
+                    Categories = g.Project.CategoryProjects.Select(gf => new CategoryInformationResource
                     {
-                        CategoryName = gf.CategoryName,
-                        Confidence = gf.Confidence
+                        CategoryName = gf.Category.CategoryName,
+                        Confidence = gf.Category.Confidence
                     }).ToList()
                 }));
             CreateMap<Excel, ExcelResource>();
@@ -419,6 +421,13 @@ namespace PMS.Mapping
             CreateMap<TagProject, TagProjectResource>()
                 .ForMember(tr => tr.TagId, opt => opt.MapFrom(t => t.Tag.TagId))
                 .ForMember(tr => tr.ProjectId, opt => opt.MapFrom(t => t.Project.ProjectId));
+
+            CreateMap<Category, CategoryResource>()
+                 .ForMember(tr => tr.CategoryProjects, opt => opt.MapFrom(t => t.CategoryProjects.Select(tf => tf.CategoryProjectId)));
+
+            CreateMap<CategoryProject, CategoryProjectResource>()
+                .ForMember(cr => cr.CategoryId, opt => opt.MapFrom(c => c.Category.CategoryId))
+                .ForMember(cr => cr.ProjectId, opt => opt.MapFrom(c => c.Project.ProjectId));
 
             /*///////////////////////// Tasking Feature///////////////////////////////////// */
             CreateMap<Activity, ActivityResource>()
@@ -506,7 +515,7 @@ namespace PMS.Mapping
                  .ForMember(p => p.ProjectId, opt => opt.Ignore())
                  .ForMember(p => p.TagProjects, opt => opt.Ignore())
                  .ForMember(p => p.Major, opt => opt.Ignore())
-                 .ForMember(p => p.Categories, opt => opt.Ignore());
+                 .ForMember(p => p.CategoryProjects, opt => opt.Ignore());
 
 
             CreateMap<LecturerResource, Lecturer>()
@@ -541,6 +550,11 @@ namespace PMS.Mapping
 
             CreateMap<CategoryResource, Category>()
                 .ForMember(m => m.CategoryId, opt => opt.Ignore());
+
+            CreateMap<CategoryProjectResource, CategoryProject>()
+                .ForMember(m => m.CategoryProjectId, opt => opt.Ignore())
+                .ForMember(m => m.Category, opt => opt.Ignore())
+                .ForMember(m => m.Project, opt => opt.Ignore());
 
             /*///////////////////////// Tasking Feature///////////////////////////////////// */
             CreateMap<ActivityResource, Activity>()
