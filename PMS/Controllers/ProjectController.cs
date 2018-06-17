@@ -21,6 +21,7 @@ using PMS.Resources;
 using static Google.Cloud.Language.V1.AnnotateTextRequest.Types;
 using Accord.Math;
 using Google.Cloud.Translation.V2;
+using Microsoft.EntityFrameworkCore;
 using PMS.Data;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -274,7 +275,11 @@ namespace PMS.Controllers {
 
             var category = GetCategoriesFromDescription (client.TranslateText (description, "en").TranslatedText);
 
-            var projects = context.Projects.ToList ();
+            var projects = context.Projects
+                .Include (p => p.Groups)
+                .ThenInclude (g => g.Board)
+                .Where (p => (p.Groups != null || p.Groups.Count > 0) && p.Groups.Any (g => g.Board.ResultScore == null));
+            
             var topSimilarity = new List<String> ();
             var similarity = new Dictionary<Project, double> ();
 
@@ -307,26 +312,24 @@ namespace PMS.Controllers {
             return dot / (norm1 * norm2);
         }
 
-
         [HttpGet]
-        [Route("demo")]
+        [Route ("demo")]
         public IActionResult DemoNatural () {
 
             string text = "The Eastern International University is a business school (Becamex IDC), operating under the model of many universities in a university; It attracts and gathers graduates from many European countries. To train students in the direction of research - application, good at both professional and foreign languages, according to the main idea is close relationship - mutual and community service; Training on the development needs of reality, contributing to promoting the sustainable development of the country.";
-            
+
             var credential = GoogleCredential.FromFile ("pms-portal.json")
-                    .CreateScoped (LanguageServiceClient.DefaultScopes);
+                .CreateScoped (LanguageServiceClient.DefaultScopes);
             var channel = new Grpc.Core.Channel (
-                    LanguageServiceClient.DefaultEndpoint.ToString (),
-                    credential.ToChannelCredentials ());
+                LanguageServiceClient.DefaultEndpoint.ToString (),
+                credential.ToChannelCredentials ());
             var client = LanguageServiceClient.Create (channel);
-            
-            var response = client.ClassifyText(new Document()
-            {
+
+            var response = client.ClassifyText (new Document () {
                 Content = text,
-                Type = Document.Types.Type.PlainText
+                    Type = Document.Types.Type.PlainText
             });
-            return Ok(response);
+            return Ok (response);
         }
 
         public Dictionary<string, double> GetCategoriesFromDescription (string text) {
