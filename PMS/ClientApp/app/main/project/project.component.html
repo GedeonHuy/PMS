@@ -20,7 +20,7 @@
                 <th>Title</th>
                 <th>Type</th>
                 <th>Description</th>
-                <th>Tags</th>
+                <th style="text-align: center">Tags</th>
                 <th></th>
               </tr>
             </thead>
@@ -139,8 +139,8 @@
           <div class="ln_solid"></div>
 
           <div class="form-group" *ngIf="isCheckProject">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Similary</label>
-            <div class="col-md-9 col-sm-9 col-xs-12">
+            <label  class="control-label col-md-3 col-sm-3 col-xs-12">Similary</label>
+            <div  class="col-md-9 col-sm-9 col-xs-12">
               <ul>
                 <li *ngFor="let project of similaryProjects">
                   <a href="#">{{project.key.title}}: {{project.value * 100}}%</a>

@@ -228,6 +228,7 @@ export class ProjectComponent implements OnInit {
   handler(type: string, $event: ModalDirective) {
     if (type === "onHide" || type === "onHidden") {
       this.project = [];
+      this.similaryProjects = [];
       this.tags = [];
       this.allTags = [];
       this.isLoadProject = false;
@@ -266,8 +267,8 @@ export class ProjectComponent implements OnInit {
     this._dataService.post('/api/projects/analyzeproject', JSON.stringify(description))
         .subscribe((response: any) => {
           this.similaryProjects = response;
+          console.log(this.similaryProjects.length);
           this.isGetSimilaryProject = false;
-
           this.isCheckProject = true;
         }, error => {
           this._dataService.handleError(error)

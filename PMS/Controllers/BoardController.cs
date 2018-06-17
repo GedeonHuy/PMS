@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using MimeKit;
 using MailKit.Net.Smtp;
 using Aspose.Cells;
+using System.Threading;
 
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -269,15 +270,17 @@ namespace PMS.Controllers
             board.ResultScore = boardRepository.CalculateScore(board).ToString();
 
             boardRepository.CalculateGrade(board);
-            await unitOfWork.Complete();
 
-            string excelFilePath = await ExportExcel(board);
+            string excelFilePath = ExportExcel(board);
             string pdfFilePath = ConvertExcelToPdf(excelFilePath, board);
             SendMail(board, pdfFilePath);
 
+            await unitOfWork.Complete();
             var result = mapper.Map<Board, BoardResource>(board);
             return Ok(result);
         }
+
+
 
         public string ConvertExcelToPdf(string excelFilePath, Board board)
         {
@@ -301,7 +304,7 @@ namespace PMS.Controllers
             return filePath;
         }
 
-        public async Task<string> ExportExcel(Board board)
+        public string ExportExcel(Board board)
         {
 
             var fileName = board.Group.GroupName + "_" + board.BoardId + "_result" + @".xlsx";
@@ -366,7 +369,6 @@ namespace PMS.Controllers
                 //add to db
                 var excel = new Excel { FileName = fileName };
                 excelRepository.AddExcel(excel);
-                await unitOfWork.Complete();
 
                 //send mail
                 //SendMail(board, filePath);
@@ -374,7 +376,7 @@ namespace PMS.Controllers
             }
         }
 
-        public void SendMail(Board board, string filePath)
+        public async Task SendMail(Board board, string filePath)
         {
             var users = board.Group.Enrollments.Select(e => e.Student.Email).ToList();
 

@@ -24,10 +24,12 @@ namespace PMS.Resources
         public MajorResource Major { get; set; }
         public LecturerResource Lecturer { get; set; }
         public ICollection<CategoryInformationResource> Categories { get; set; }
+        public ICollection<int> CategoryProjects { get; set; }
 
         public ProjectResource()
         {
             Groups = new Collection<int>();
+            CategoryProjects = new Collection<int>();
             TagProjects = new Collection<int>();
             Tags = new Collection<String>();
             Categories = new Collection<CategoryInformationResource>();

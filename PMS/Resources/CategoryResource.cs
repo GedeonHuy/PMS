@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using PMS.Models;
 using PMS.Resources;
 
 namespace PMS.Resources
@@ -10,10 +13,11 @@ namespace PMS.Resources
         public double Confidence { get; set; }
         public bool IsDeleted { get; set; }
         public int? ProjectId { get; set; }
-        public ProjectResource Project { get; set; }
+        public ICollection<int> CategoryProjects { get; set; }
         public CategoryResource()
         {
             IsDeleted = false;
+            CategoryProjects = new Collection<int>();
         }
     }
 

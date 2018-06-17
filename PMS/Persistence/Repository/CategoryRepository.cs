@@ -33,13 +33,14 @@ namespace PMS.Persistence.Repository
             var result = new QueryResult<Category>();
 
             var query = context.Categories
-                .Include(p => p.Project)
+                .Include(p => p.CategoryProjects)
+                    .ThenInclude(pe => pe.Project)
                 .AsQueryable();
 
             //filter
             if (queryObj.ProjectId.HasValue)
             {
-                query = query.Where(q => q.Project.ProjectId == queryObj.ProjectId.Value);
+                query = query.Where(q => q.CategoryProjects.Any(cp => cp.Project.ProjectId == queryObj.ProjectId.Value));
             }
 
             //search
@@ -76,7 +77,8 @@ namespace PMS.Persistence.Repository
                 return await context.Categories.FindAsync(id);
             }
             return await context.Categories
-                .Include(p => p.Project)
+                .Include(p => p.CategoryProjects)
+                    .ThenInclude(pe => pe.Project)
                 .SingleOrDefaultAsync(s => s.CategoryId == id);
         }
 
