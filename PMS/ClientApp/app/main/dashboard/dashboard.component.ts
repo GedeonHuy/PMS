@@ -109,8 +109,12 @@ export class Dashboard {
   }
 
   loadLecturerGroupInBoard() {
-    this._dataService.get("/api/groups/getgroupsbylectureremailinboard/" + this.user.email).subscribe((response: any) => {
-      this.groupsInBoard = response;
+    
+    Observable.forkJoin([
+      this._dataService.get("/api/groups/getgroupsbylectureremailinboard/" + this.user.email),  
+    ]).subscribe(data => {
+      this.groupsInBoard = data[0];
+      console.log(this.groupsInBoard);
       this.isLoadData = true;      
     });
   }
