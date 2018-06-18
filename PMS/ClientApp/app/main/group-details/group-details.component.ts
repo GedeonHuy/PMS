@@ -745,10 +745,10 @@ export class GroupDetailsComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this._notificationService.printSuccessMessage("Delete Success");
-          this.recommendations.splice(i, 1);
-        },
-        error => this._dataService.handleError(error)
+        }
       );
+
+    this.recommendations.splice(i, 1);
   }
 
   markRecommendation(i: any) {
