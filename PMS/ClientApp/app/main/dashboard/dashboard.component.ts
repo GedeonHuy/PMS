@@ -33,6 +33,7 @@ export class Dashboard {
     this.isLoadData = false;
     this.isLoadLecturerCouncil = false;
   }
+  element: any;
   projects: any[];
   lecturers: any[];
   quarters: any[];
@@ -49,7 +50,7 @@ export class Dashboard {
   public groupsAccepted: any = {};
   public groupsStudent: any = {};
   public groups: any = {};
-  public groupsInBoard = {};
+  public groupsInBoard = [];
   
   ngOnInit() {
     this.today = Date.now();
@@ -63,6 +64,14 @@ export class Dashboard {
     }
 
     if (this.user.role === "Lecturer") {
+      Observable.forkJoin([
+        this._dataService.get("/api/lecturers/getall"),
+  
+      ]).subscribe(data => {
+        this.lecturers = data[0].items,
+        this.isLoadData = true;
+      });
+
       this.loadLecturerData();
     }
 
@@ -113,7 +122,58 @@ export class Dashboard {
     Observable.forkJoin([
       this._dataService.get("/api/groups/getgroupsbylectureremailinboard/" + this.user.email),  
     ]).subscribe(data => {
-      this.groupsInBoard = data[0];
+      var thisLecturerId = this.lecturers.find(l => l.email === this.user.email).lecturerId;
+      for (var i=0; i<data[0].items.length; i++) {
+        if (data[0].items[i].board.lecturerInformations.chair.lecturerId
+          == thisLecturerId) {
+            this.element = {
+              isGraded: false,
+              group: data[0].items[i],
+            };
+            var graded = false;
+            if (data[0].items[i].board.lecturerInformations.chair.score != null) {
+              graded = true;
+            }
+            this.element.isGraded = graded;
+            this.groupsInBoard.push(this.element);
+        } else if (data[0].items[i].board.lecturerInformations.secretary.lecturerId
+          == thisLecturerId) {
+            this.element = {
+              isGraded: false,
+              group: data[0].items[i],
+            };
+            var graded = false;
+            if (data[0].items[i].board.lecturerInformations.secretary.score != null) {
+              graded = true;
+            }
+            this.element.isGraded = graded;
+            this.groupsInBoard.push(this.element);
+        } else if (data[0].items[i].board.lecturerInformations.supervisor.lecturerId
+          == thisLecturerId) {
+            this.element = {
+              isGraded: false,
+              group: data[0].items[i],
+            };
+            var graded = false;
+            if (data[0].items[i].board.lecturerInformations.supervisor.score != null) {
+              graded = true;
+            }
+            this.element.isGraded = graded;
+            this.groupsInBoard.push(this.element);
+        } else if (data[0].items[i].board.lecturerInformations.reviewer.lecturerId
+          == thisLecturerId) {
+            this.element = {
+              isGraded: false,
+              group: data[0].items[i],
+            };
+            var graded = false;
+            if (data[0].items[i].board.lecturerInformations.reviewer.score != null) {
+              graded = true;
+            }
+            this.element.isGraded = graded;
+            this.groupsInBoard.push(this.element);
+        }
+      }
       console.log(this.groupsInBoard);
       this.isLoadData = true;      
     });

@@ -136,16 +136,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let group of groupsInBoard.items; let rowIndex = index">
+              <tr *ngFor="let element of groupsInBoard; let rowIndex = index">
                 <th scope="row">{{rowIndex+1}}</th>
-                <td>{{group.groupName}}</td>
-                <td>{{group.project.title}}</td>
-                <td>{{group.lecturer.name}}</td>
-                <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
-                  <b>{{group.isConfirm}}</b>
+                <td>{{element.group.groupName}}</td>
+                <td>{{element.group.project.title}}</td>
+                <td>{{element.group.lecturer.name}}</td>
+                <td [ngClass]="element.group.isConfirm == 'Pending' ? 'blue': 'green'">
+                  <b>{{element.group.isConfirm}}</b>
                 </td>
                 <td>
-                  <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]" title="View details of this group">
+                  <button [ngClass]="element.isGraded ? 'btn btn-assign': 'btn btn-warning'" [routerLink]="['/main/group-details/', element.group.groupId]" title="View details of this group">
                     <i class="fa fa-eye"></i>
                   </button>
                 </td>
