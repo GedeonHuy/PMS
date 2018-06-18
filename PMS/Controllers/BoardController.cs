@@ -271,16 +271,36 @@ namespace PMS.Controllers
 
             boardRepository.CalculateGrade(board);
 
-            string excelFilePath = ExportExcel(board);
+            string excelFilePath = ExportExcelForStudents(board);
             string pdfFilePath = ConvertExcelToPdf(excelFilePath, board);
-            SendMail(board, pdfFilePath);
+            SendMailForStudents(board, pdfFilePath);
 
             await unitOfWork.Complete();
             var result = mapper.Map<Board, BoardResource>(board);
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("sendformtolecturers/{id}")]
+        public async Task<IActionResult> SendFormToLecturers(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var board = await boardRepository.GetBoard(id);
+            foreach (var boardEnrollment in board.BoardEnrollments)
+            {
+                string excelFilePath = ExportExcelForLecturers(board, boardEnrollment);
+                string pdfFilePath = ConvertExcelToPdf(excelFilePath, board);
+                SendMailForLecturers(boardEnrollment, board, pdfFilePath);
+            }
+
+            await unitOfWork.Complete();
+            var result = mapper.Map<Board, BoardResource>(board);
+            return Ok(result);
+        }
 
         public string ConvertExcelToPdf(string excelFilePath, Board board)
         {
@@ -304,10 +324,10 @@ namespace PMS.Controllers
             return filePath;
         }
 
-        public string ExportExcel(Board board)
+        public string ExportExcelForStudents(Board board)
         {
 
-            var fileName = board.Group.GroupName + "_" + board.BoardId + "_result" + @".xlsx";
+            var fileName = board.Group.GroupName + "_" + board.BoardId + "_resultForStudents" + @".xlsx";
 
             var formFolderPath = Path.Combine(host.ContentRootPath, "forms");
             if (!System.IO.Directory.Exists(formFolderPath))
@@ -378,7 +398,76 @@ namespace PMS.Controllers
             }
         }
 
-        public async Task SendMail(Board board, string filePath)
+        public string ExportExcelForLecturers(Board board, BoardEnrollment boardEnrollment)
+        {
+
+            var fileName = board.Group.GroupName + "_" + board.BoardId + "_resultForLecturers" + @".xlsx";
+
+            var formFolderPath = Path.Combine(host.ContentRootPath, "forms");
+            if (!System.IO.Directory.Exists(formFolderPath))
+            {
+                System.IO.Directory.CreateDirectory(formFolderPath);
+            }
+
+            var formFilePath = Path.Combine(formFolderPath, @"lecturer_form.xlsx");
+            // FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
+
+            var uploadFolderPath = Path.Combine(host.ContentRootPath, "exports/excel");
+            if (!System.IO.Directory.Exists(uploadFolderPath))
+            {
+                System.IO.Directory.CreateDirectory(uploadFolderPath);
+            }
+
+            var filePath = Path.Combine(uploadFolderPath, fileName);
+
+            //copy file from formfolder to export folder
+            System.IO.File.Copy(formFilePath, filePath, true);
+            FileInfo file = new FileInfo(Path.Combine(uploadFolderPath, fileName));
+
+            using (ExcelPackage package = new ExcelPackage(file))
+            {
+
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                int studentRows = board.Group.Enrollments.Count();
+                worksheet.Cells[8, 3].Value = board.Group.Project.Title;
+
+                int row = 12;
+                var studentNames = board.Group.Enrollments.Select(e => e.Student.Name).ToList();
+                foreach (var studentName in studentNames)
+                {
+                    worksheet.Cells[row, 3].Value = studentName;
+                    row++;
+                }
+
+                worksheet.Cells[16, 3].Value = boardEnrollment.Lecturer.Name;
+                worksheet.Cells[22, 2].Value = boardEnrollment.Score;
+                worksheet.Cells[22, 3].Value = boardEnrollment.Comment;
+                row = 22;
+                foreach (var recommendation in boardEnrollment.Recommendations)
+                {
+                    worksheet.Cells[row, 5].Value = recommendation.Description;
+                    row++;
+                }
+
+                worksheet.Cells[28, 5].Value = "Ngày " + DateTime.Now.Day.ToString()
+                + " Tháng " + DateTime.Now.Month.ToString() + " Năm " + DateTime.Now.Year.ToString();
+
+                worksheet.PrinterSettings.FitToPage = true;
+                worksheet.PrinterSettings.FitToWidth = 1;
+                worksheet.PrinterSettings.FitToHeight = 0;
+                package.Save();
+
+                //add to db
+                var excel = new Excel { FileName = fileName };
+                excelRepository.AddExcel(excel);
+
+                //send mail
+                //SendMail(board, filePath);
+                return filePath;
+            }
+        }
+
+        public async Task SendMailForStudents(Board board, string filePath)
         {
             var users = board.Group.Enrollments.Select(e => e.Student.Email).ToList();
 
@@ -430,6 +519,56 @@ namespace PMS.Controllers
                     throw ex;
                 }
             }
+        }
+
+        public async Task SendMailForLecturers(BoardEnrollment boardEnrollment, Board board, string filePath)
+        {
+            try
+            {
+                string FromAddress = "quanhmp@gmail.com";
+                string FromAdressTitle = "Email from PMS!";
+                //To Address  
+                string ToAddress = boardEnrollment.Lecturer.Email;
+                string ToAdressTitle = "PMS!";
+                string Subject = "Result form of " + board.Group.Project.Type;
+                string BodyContent = "Xin gửi các thầy form chấm điểm của báo cáo đồ án "
+                + board.Group.Project.Type + " của nhóm " + board.Group.GroupName;
+                //Smtp Server  
+                string SmtpServer = this.config["EmailSettings:Server"];
+                //Smtp Port Number  
+                int SmtpPortNumber = Int32.Parse(this.config["EmailSettings:Port"]);
+
+                var mimeMessage = new MimeMessage();
+                mimeMessage.From.Add(new MailboxAddress(FromAdressTitle, FromAddress));
+                mimeMessage.To.Add(new MailboxAddress(ToAdressTitle, ToAddress));
+                mimeMessage.Subject = Subject;
+
+                var builder = new BodyBuilder();
+                builder.TextBody = BodyContent;
+
+                // attach excel result file
+                builder.Attachments.Add(filePath);
+
+                // Now we just need to set the message body 
+                mimeMessage.Body = builder.ToMessageBody();
+
+                using (var client = new SmtpClient())
+                {
+
+                    client.Connect(SmtpServer, SmtpPortNumber, false);
+                    // Note: only needed if the SMTP server requires authentication  
+                    // Error 5.5.1 Authentication   
+                    client.Authenticate(this.config["EmailSettings:Email"], this.config["EmailSettings:Password"]);
+                    client.Send(mimeMessage);
+                    client.Disconnect(true);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
     }
 }
