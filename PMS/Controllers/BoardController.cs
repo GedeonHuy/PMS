@@ -351,14 +351,16 @@ namespace PMS.Controllers
                 {
                     worksheet.Cells[row, 2].Value = lecturerInformation.Lecturer.Name;
                     worksheet.Cells[row, 3].Value = lecturerInformation.BoardRole.BoardRoleName;
-                    worksheet.Cells[row, 4].Value = lecturerInformation.Comment;
-                    worksheet.Cells[row, 5].Value = lecturerInformation.Score;
+                    worksheet.Cells[row, 4].Value = lecturerInformation.Percentage;
+                    worksheet.Cells[row, 5].Value = lecturerInformation.Comment;
+                    worksheet.Cells[row, 6].Value = lecturerInformation.Score;
                     row++;
                 }
 
                 if (board.ResultScore != null)
                 {
-                    worksheet.Cells[25, 5].Value = board.ResultScore;
+                    worksheet.Cells[25, 6].Value = board.ResultScore;
+                    worksheet.Cells[26, 6].Value = board.ResultGrade;
                 }
 
                 worksheet.PrinterSettings.FitToPage = true;
