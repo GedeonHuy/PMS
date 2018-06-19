@@ -14,6 +14,8 @@ export class Login {
   public email: AbstractControl;
   public password: AbstractControl;
   public submitted: boolean = false;
+  public submittedGuest: boolean = false;
+
   loading = false;
   user: any = {};
 
@@ -38,6 +40,21 @@ export class Login {
       }, error => {
         this.notificationService.printErrorMessage("Failed to login");
         this.submitted = false;
+      });
+    }
+  }
+
+  loginWithGuest() {
+    console.log(this.user.email);
+    this.user.email = "guest@eiu.edu.vn"
+    this.user.password = "eiu@123";
+    this.submittedGuest = true;
+    if (this.form.valid) {
+      this.authenService.login(this.user.email, this.user.password).subscribe(data => {
+        this.router.navigate(["/main/dashboard"]);
+      }, error => {
+        this.notificationService.printErrorMessage("Failed to login");
+        this.submittedGuest = false;
       });
     }
   }
