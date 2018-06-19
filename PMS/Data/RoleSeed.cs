@@ -51,6 +51,16 @@ namespace PMS.Data
                     };
                     await _roleManager.CreateAsync(roleLecturer);
                 }
+
+                if (!_context.Roles.Any(r => r.Name == "Guest"))
+                {
+                    var roleGuest = new ApplicationRole
+                    {
+                        Name = "Guest",
+                        Description = "Can refer project in Easter International University without login."
+                    };
+                    await _roleManager.CreateAsync(roleGuest);
+                }
             }
         }
     }

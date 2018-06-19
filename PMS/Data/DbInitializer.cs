@@ -76,8 +76,21 @@ namespace PMS.Data
             {
                 context.Students.Add(s);
             }
-            context.SaveChanges();
 
+            context.SaveChanges();
+            var userGuest = new ApplicationUser
+            {
+                FullName = "Guest",
+                Email = "guest@eiu.edu.vn",
+                Avatar = "/assets/images/user.png",
+                Major = "",
+                UserName = "guest@eiu.edu.vn"
+            };
+            var passwordGuest = "eiu@123";
+            await userManager.CreateAsync(userGuest, passwordGuest);
+            await userManager.AddToRoleAsync(userGuest, "Guest"); 
+            context.SaveChanges();
+  
             foreach (Student student in students)
             {
                 var user = new ApplicationUser
