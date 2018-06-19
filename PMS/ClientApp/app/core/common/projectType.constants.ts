@@ -1,6 +1,6 @@
 export class ProjectTypesConstants {
-    public static A = "Basic Thesis";
-    public static B = "Academic Thesis";
+    public static A = "Basic Project";
+    public static B = "Academic Project";
     public static C = "Internship";
-    public static D = "Final Thesis";
+    public static D = "Final Project";
 }

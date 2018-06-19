@@ -18,15 +18,23 @@ export class Dashboard {
   public isSaved: boolean;
   public user: any;
   public today: any;
+  isGuest: boolean;
   isAdmin: boolean;
   isLecturer: boolean;
   isStudent: boolean;
+  isLoadGroupInBoard: boolean;
   isLoadData: boolean;
   isLoadLecturerCouncil : boolean;
-  groupByAdmin : any;
   isLoadGroupByAdmin: boolean;
+  isLoadGroupForGuest: boolean;
+  isLoadGroupByLecturer: boolean;
+  isLoadGroupAccepted: boolean;   
+  thisLecturerId: any;
+  groupByAdmin : any;
+  groupForGuest: any;
   constructor(private router: Router, private _authenService: AuthenService, private _dataService: DataService, private _notificationService: NotificationService) {
     this.isSaved = false;
+    this.isGuest = false;
     this.isAdmin = false;
     this.isStudent = false;
     this.isLecturer = false;
@@ -58,6 +66,10 @@ export class Dashboard {
 
     this.user = this._authenService.getLoggedInUser();
     this.permissionAccess();
+
+    if (this.user.role === "Guest") {
+      this.loadGuestData();
+    }
 
     if (this.user.role === "Student") {
       this.loadStudentGroup();
@@ -92,28 +104,34 @@ export class Dashboard {
         this.isLoadData = true;
       });
 
-      this.loadGroupByAdmin();
+      this.loadGroupByAdmin('All');
     }
 
+  }
+
+  loadGuestData() {
+    this.loadGroupForGuest();
+    this.isLoadData = true;
   }
 
   loadLecturerData() {
     this.loadLecturerGroup();
     this.loadLecturerGroupAccepted();
     this.loadLecturerGroupInBoard();
+    this.isLoadData = true;
   }
 
   loadLecturerGroup() {
     this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Pending&pageSize=3").subscribe((response: any) => {
       this.groups = response;
-      this.isLoadData = true;      
+      this.isLoadGroupByLecturer = true;      
     });
   }
 
   loadLecturerGroupAccepted() {
     this._dataService.get("/api/lecturers/getgroups/" + this.user.email + "?isConfirm=Accepted&pageSize=3").subscribe((response: any) => {
       this.groupsAccepted = response;
-      this.isLoadData = true;      
+      this.isLoadGroupAccepted = true;        
     });
   }
 
@@ -122,10 +140,11 @@ export class Dashboard {
     Observable.forkJoin([
       this._dataService.get("/api/groups/getgroupsbylectureremailinboard/" + this.user.email),  
     ]).subscribe(data => {
-      var thisLecturerId = this.lecturers.find(l => l.email === this.user.email).lecturerId;
+      this.thisLecturerId = this.lecturers.find(l => l.email === this.user.email).lecturerId;
+      console.log(this.thisLecturerId);
       for (var i=0; i<data[0].items.length; i++) {
         if (data[0].items[i].board.lecturerInformations.chair.lecturerId
-          == thisLecturerId) {
+          == this.thisLecturerId) {
             this.element = {
               isGraded: false,
               group: data[0].items[i],
@@ -137,7 +156,7 @@ export class Dashboard {
             this.element.isGraded = graded;
             this.groupsInBoard.push(this.element);
         } else if (data[0].items[i].board.lecturerInformations.secretary.lecturerId
-          == thisLecturerId) {
+          == this.thisLecturerId) {
             this.element = {
               isGraded: false,
               group: data[0].items[i],
@@ -149,7 +168,7 @@ export class Dashboard {
             this.element.isGraded = graded;
             this.groupsInBoard.push(this.element);
         } else if (data[0].items[i].board.lecturerInformations.supervisor.lecturerId
-          == thisLecturerId) {
+          == this.thisLecturerId) {
             this.element = {
               isGraded: false,
               group: data[0].items[i],
@@ -161,7 +180,7 @@ export class Dashboard {
             this.element.isGraded = graded;
             this.groupsInBoard.push(this.element);
         } else if (data[0].items[i].board.lecturerInformations.reviewer.lecturerId
-          == thisLecturerId) {
+          == this.thisLecturerId) {
             this.element = {
               isGraded: false,
               group: data[0].items[i],
@@ -174,8 +193,7 @@ export class Dashboard {
             this.groupsInBoard.push(this.element);
         }
       }
-      console.log(this.groupsInBoard);
-      this.isLoadData = true;      
+      this.isLoadGroupInBoard = true;  
     });
   }
 
@@ -186,15 +204,20 @@ export class Dashboard {
     });
   }
 
+  loadGroupForGuest() {
+    this._dataService.get("/api/groups/getall").subscribe((response: any) => {
+      this.groupForGuest = response;
+      this.isLoadGroupForGuest = true;
+      this.groupForGuest.items = this.groupForGuest.items.filter(g => g.isConfirm === 'Accepted');
+      console.log(this.groupForGuest.items);
+    }); 
+  }
 
-
-  loadGroupByAdmin() {
-
+  loadGroupByAdmin(y) {
     this._dataService.get("/api/groups/getall").subscribe((response: any) => {
       this.groupByAdmin = response;
-      this.isLoadGroupByAdmin = true;  
-    });
-
+      this.isLoadGroupByAdmin = true;
+    }); 
   }
 
 
@@ -207,6 +230,9 @@ export class Dashboard {
     }
     if (this.user.role === "Student") {
       this.isStudent = true;
+    }
+    if (this.user.role === "Guest") {
+      this.isGuest = true;
     }
   }
 }

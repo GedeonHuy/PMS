@@ -1,5 +1,9 @@
 @import './../../theme/sass/conf/conf';
 
+.red {
+  color: red;
+}
+
 :host /deep/.pie-charts {
 
   .pie-chart-item-container {
