@@ -275,10 +275,12 @@ namespace PMS.Controllers {
 
             var category = GetCategoriesFromDescription (client.TranslateText (description, "en").TranslatedText);
 
-            var projects = context.Projects
-                .Include (p => p.Groups)
-                .ThenInclude (g => g.Board)
-                .Where (p => (p.Groups != null || p.Groups.Count > 0) && p.Groups.Any (g => g.Board.ResultScore == null));
+            // var projects = context.Projects
+            //     .Include (p => p.Groups)
+            //     .ThenInclude (g => g.Board)
+            //     .Where (p => (p.Groups != null || p.Groups.Count > 0) && p.Groups.Any (g => g.Board.ResultScore == null));
+
+            var projects = context.Projects.ToList();
             
             var topSimilarity = new List<String> ();
             var similarity = new Dictionary<Project, double> ();
