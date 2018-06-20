@@ -88,9 +88,9 @@ namespace PMS.Data
             };
             var passwordGuest = "eiu@123";
             await userManager.CreateAsync(userGuest, passwordGuest);
-            await userManager.AddToRoleAsync(userGuest, "Guest"); 
+            await userManager.AddToRoleAsync(userGuest, "Guest");
             context.SaveChanges();
-  
+
             foreach (Student student in students)
             {
                 var user = new ApplicationUser
@@ -125,16 +125,20 @@ namespace PMS.Data
 
             var lecturers = new Lecturer[]
             {
+                // new Lecturer{Name="Naruto",DateOfBirth=DateTime.Parse("1958-9-5"),Email="damducduy.it@gmail.com",PhoneNumber="0934843856",Address="Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                // new Lecturer{Name="Sasuke",DateOfBirth=DateTime.Parse("1958-9-5"),Email="test@gmail.com",PhoneNumber="0934843856",Address="Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                // new Lecturer{Name="Ahihi",DateOfBirth=DateTime.Parse("1958-9-5"),Email="test2@gmail.com",PhoneNumber="0934843856",Address="Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                // new Lecturer{Name="Nadadaruto",DateOfBirth=DateTime.Parse("1958-9-5"),Email="test3@gmail.com",PhoneNumber="0934843856",Address="Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
                 //new Lecturer{Name="Lý Mạnh Hùng",DateOfBirth=DateTime.Parse("1980-02-05"),Email="hung.ly@eiu.edu.vn",PhoneNumber="0918843826",Address="Bình DƯơng",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
-                new Lecturer{Name="Nguyễn Công Vũ",DateOfBirth=DateTime.Parse("1958-9-5"),Email="vu.nguyen@eiu.edu.vn",PhoneNumber="0934843856",Address="Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
-                new Lecturer{Name="Hà Minh Ngọc",DateOfBirth=DateTime.Parse("1981-12-26"),Email="ngoc.ha@eiu.edu.vn",PhoneNumber="0123843834",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
-                new Lecturer{Name="Tất Quảng Phát",DateOfBirth=DateTime.Parse("1985-11-19"),Email="phat.tat@eiu.edu.vn",PhoneNumber="0969843879",Address="Bình Dương",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
-                new Lecturer{Name="Lý Văn Hưng",DateOfBirth=DateTime.Parse("1984-10-12"),Email="hung.ly@eiu.edu.vn",PhoneNumber="0969843879",Address="Bình Dương",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
-                new Lecturer{Name="Huỳnh Tấn Phước",DateOfBirth=DateTime.Parse("1979-09-01"),Email="phuoc.huynh@eiu.edu.vn",PhoneNumber="0938843123",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
-                new Lecturer{Name="Nguyễn Hoàng Sỹ",DateOfBirth=DateTime.Parse("1983-05-31"),Email="sy.nguyen@eiu.edu.vn",PhoneNumber="0938843123",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
-                new Lecturer{Name="Đỗ Đình Thuấn",DateOfBirth=DateTime.Parse("1980-05-07"),Email="thuan.do@eiu.edu.vn",PhoneNumber="0938848923",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
-                new Lecturer{Name="Đặng Thái Đoàn",DateOfBirth=DateTime.Parse("1988-06-19"),Email="doan.dang@eiu.edu.vn",PhoneNumber="0938848923",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
-
+                new Lecturer{Name="Nguyễn Công Vũ",DateOfBirth=DateTime.Parse("1958-9-5"),Email="vu.nguyen1@eiu.edu.vn",PhoneNumber="0934843856",Address="Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Lecturer{Name="Hà Minh Ngọc",DateOfBirth=DateTime.Parse("1981-12-26"),Email="ngoc.ha1@eiu.edu.vn",PhoneNumber="0123843834",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Lecturer{Name="Tất Quảng Phát",DateOfBirth=DateTime.Parse("1985-11-19"),Email="phat.tat1@eiu.edu.vn",PhoneNumber="0969843879",Address="Bình Dương",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                //new Lecturer{Name="Lý Văn Hưng",DateOfBirth=DateTime.Parse("1984-10-12"),Email="hung.ly@eiu.edu.vn",PhoneNumber="0969843879",Address="Bình Dương",Major=context.Majors.FirstOrDefault(m=>m.MajorId==1)},
+                new Lecturer{Name="Huỳnh Tấn Phước",DateOfBirth=DateTime.Parse("1979-09-01"),Email="darknessdragon3d@gmail.com",PhoneNumber="0938843123",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
+                new Lecturer{Name="Nguyễn Hoàng Sỹ",DateOfBirth=DateTime.Parse("1983-05-31"),Email="sy.nguyen1@eiu.edu.vn",PhoneNumber="0938843123",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
+                new Lecturer{Name="Đỗ Đình Thuấn",DateOfBirth=DateTime.Parse("1980-05-07"),Email="thuan.do1@eiu.edu.vn",PhoneNumber="0938848923",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
+                new Lecturer{Name="Đặng Thái Đoàn",DateOfBirth=DateTime.Parse("1988-06-19"),Email="doan.dang1@eiu.edu.vn",PhoneNumber="0938848923",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
+                 new Lecturer{Name="Nguyễn Thành Đại",DateOfBirth=DateTime.Parse("1989-08-27"),Email="dai.nguyen1@eiu.edu.vn",PhoneNumber="0938848923",Address="Thành Phố Hồ Chí Minh",Major=context.Majors.FirstOrDefault(m=>m.MajorId==2)},
             };
             foreach (Lecturer s in lecturers)
             {
