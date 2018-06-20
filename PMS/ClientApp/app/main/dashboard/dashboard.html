@@ -46,11 +46,11 @@
   </div>
 
 
-  <div class="widgets" *ngIf="isLecturer && isLoadData">
+  <div class="widgets" *ngIf="isLecturer && isLoadGroupAccepted && isLoadGroupInBoard && isLoadGroupByLecturer && isLoadData">
     <div class="row">
       <div *ngIf="isLecturer" class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-12">
         <h2>
-          <a href="main/group" alt="View all">My Group is pending</a>
+          <a href="main/group" alt="View all">Pending groups</a>
         </h2>
         <div>
           <table class="table table-striped">
@@ -85,7 +85,7 @@
 
       <div *ngIf="isLecturer" class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-12">
         <h2>
-          <a href="main/confirm-group" alt="View all">My Group is Accepted</a>
+          <a href="main/confirm-group" alt="View all">Accepted groups</a>
         </h2>
         <div>
           <table class="table table-striped">
@@ -121,7 +121,7 @@
 
       <div *ngIf="isLecturer" class="col-xlg-6 col-xl-6 col-lg-12 col-sm-12 col-12">
         <h2>
-          <a href="main/confirm-group" alt="View all">My Grading Groups</a>
+          <a href="main/confirm-group" alt="View all">Groups to grade</a>
         </h2>
         <div>
           <table class="table table-striped">
@@ -141,8 +141,9 @@
                 <td>{{element.group.groupName}}</td>
                 <td>{{element.group.project.title}}</td>
                 <td>{{element.group.lecturer.name}}</td>
-                <td [ngClass]="element.group.isConfirm == 'Pending' ? 'blue': 'green'">
-                  <b>{{element.group.isConfirm}}</b>
+                <td [ngClass]="element.isGraded == true ? 'green': 'red'">
+                  <b *ngIf="element.isGraded">Graded</b>
+                  <b *ngIf="!element.isGraded">Not graded</b>
                 </td>
                 <td>
                   <button [ngClass]="element.isGraded ? 'btn btn-assign': 'btn btn-warning'" [routerLink]="['/main/group-details/', element.group.groupId]" title="View details of this group">
@@ -200,11 +201,51 @@
     </div>
   </div>
 
+  <div class="widgets" *ngIf="isGuest && isLoadGroupForGuest && isLoadData">
+    <div class="row">
+      <div *ngIf="isGuest" class="col-xlg-12 col-xl-12 col-lg-12 col-sm-12 col-12">
+        <h2>
+          <a href="main/confirm-group" alt="View all">All group</a>
+        </h2>
+        <div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Group Name</th>
+                <th>Project</th>
+                <th>Supervisor</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let group of groupForGuest.items; let rowIndex = index">
+                <th scope="row">{{rowIndex+1}}</th>
+                <td>{{group.groupName}}</td>
+                <td>{{group.project.title}}</td>
+                <td>{{group.lecturer.name}}</td>
+                <td [ngClass]="group.isConfirm == 'Pending' ? 'blue': 'green'">
+                  <b>{{group.isConfirm}}</b>
+                </td>
+                <td>
+                  <button class="btn btn-warning" [routerLink]="['/main/group-details/', group.groupId]" title="View details of this group">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="widgets" *ngIf="isStudent && isLoadData">
     <div class="row">
       <div *ngIf="isStudent" class="col-md-12 col-sm-12 col-xs-12">
         <h2>
-          <a href="main/confirm-group" alt="View all">My Group</a>
+          <a href="main/confirm-group" alt="View all">My Groups</a>
         </h2>
         <div>
           <table class="table table-striped">

@@ -51,6 +51,7 @@ export class GroupDetailsComponent implements OnInit {
   isLoadRecommendation: boolean;
   isOneHundred: boolean;
   isLoadGrade: boolean;
+  isSendForm: boolean;
   
   temp: any[];
   groupRecommendations: any[];
@@ -231,6 +232,10 @@ export class GroupDetailsComponent implements OnInit {
       }
 
       //Check isReviewer-END
+
+      //flag up the form sending process
+      this.isSendForm = true;
+      ////////////
 
       //Score-START
       this.isLoadGrade = true;
@@ -712,6 +717,19 @@ export class GroupDetailsComponent implements OnInit {
       .subscribe((response: any) => {
         this.loadGroupDetails(this.groupId);
       });
+  }
+
+  sendForm(id: any) {
+    this.isSendForm = false;
+    this._dataService
+      .get("/api/boards/sendformtolecturers/" + id)
+      .subscribe((response: any) => {
+        this.loadGroupDetails(this.groupId);
+      });
+    // setTimeout(() => {
+    //   this.loadGroupDetails(this.groupId);
+    // },
+    // 5000);
   }
 
   addRecommendation(id: any, form: NgForm) {

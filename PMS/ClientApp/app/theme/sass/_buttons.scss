@@ -85,6 +85,16 @@ a.btn.btn-primary, button.btn.btn-primary {
   }
 }
 
+button.btn.btn-sendform {
+  border-width: 1px;
+  color: rgb(255, 255, 255);
+  @include buttonColor(rgb(245, 60, 122), $border);
+  &:active, &:target {
+    background-color: rgba(255, 0, 170, 0.2);
+    color: $default-text;
+  }
+}
+
 button.btn.btn-disabled {
   border-width: 1px;
   color: black;
