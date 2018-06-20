@@ -47,7 +47,7 @@
 <div bsModal #modalAddEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background: pink">
+    <div class="modal-content" style="background: #7FFFD4">
       <div class="modal-header">
         <h4 class="modal-title pull-left">Add/Edit Role</h4>
         <button type="button" class="close pull-right" (click)="modalAddEdit.hide()" aria-label="Close">
@@ -55,7 +55,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm.valid)"
+        <form class="form-horizontal form-label-left" novalidate #addEditForm="ngForm" (ngSubmit)="saveChange(addEditForm)"
           *ngIf="role">
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
