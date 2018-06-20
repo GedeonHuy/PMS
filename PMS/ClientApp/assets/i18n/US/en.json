@@ -1,6 +1,6 @@
 {
   "login": {
-    "title": "Sign in to PMS Portal!!!",
+    "title": "Sign in to PMS Portal",
     "signup_link": "New to ng2-admin? Sign up!",
     "email": "Email",
     "password": "Password",
