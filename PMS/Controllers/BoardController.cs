@@ -466,7 +466,8 @@ namespace PMS.Controllers
                 worksheet.Cells[29, 4].Value = sixthGrade.Score;
                 worksheet.Cells[29, 5].Value = sixthGrade.Comment;
 
-
+                worksheet.Cells[30, 4].Value =firstGrade.Score.Value + secondGrade.Score.Value + thirdGrade.Score.Value +fourthGrade.Score.Value
+                +fifthGrade.Score.Value + sixthGrade.Score.Value;
                 // worksheet.Cells[22, 2].Value = boardEnrollment.Score;
                 // worksheet.Cells[22, 3].Value = boardEnrollment.Comment;
                 // row = 22;
