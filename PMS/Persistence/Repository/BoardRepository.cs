@@ -36,6 +36,8 @@ namespace PMS.Persistence.Repository
                     .ThenInclude(l => l.BoardRole)
                 .Include(c => c.BoardEnrollments)
                     .ThenInclude(l => l.Recommendations)
+                .Include(c => c.BoardEnrollments)
+                    .ThenInclude(l => l.Grades)
                 .Include(c => c.Group)
                     .ThenInclude(p => p.Project)
                 .Include(c => c.Group)
@@ -69,6 +71,8 @@ namespace PMS.Persistence.Repository
                     .ThenInclude(l => l.BoardRole)
                 .Include(c => c.BoardEnrollments)
                     .ThenInclude(l => l.Recommendations)
+                .Include(c => c.BoardEnrollments)
+                    .ThenInclude(l => l.Grades)
                 .Include(c => c.Group)
                     .ThenInclude(p => p.Project)
                 .Include(c => c.Group)
@@ -111,8 +115,15 @@ namespace PMS.Persistence.Repository
                 isMarked = false,
                 Percentage = lecturerInformations.Chair.ScorePercent,
                 BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Chair"),
-                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Chair.LecturerId)
-
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Chair.LecturerId),
+                Grades = new Grade[]{
+                    new Grade{IsDeleted=false,GradeDescription="Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Phương pháp thực hiện tốt",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Kết quả đề tài có áp dụng thực tế",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Trả lời tập trung vào đề tài, trả lời tốt câu hỏi",GradeMaxScore=20},
+                }
             };
 
             var secretaryBoardEnrollment = new BoardEnrollment
@@ -122,7 +133,15 @@ namespace PMS.Persistence.Repository
                 isMarked = false,
                 Percentage = lecturerInformations.Secretary.ScorePercent,
                 BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Secretary"),
-                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Secretary.LecturerId)
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Secretary.LecturerId),
+                Grades = new Grade[]{
+                    new Grade{IsDeleted=false,GradeDescription="Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Phương pháp thực hiện tốt",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Kết quả đề tài có áp dụng thực tế",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Trả lời tập trung vào đề tài, trả lời tốt câu hỏi",GradeMaxScore=20},
+                }
             };
 
             var reviewerBoardEnrollment = new BoardEnrollment
@@ -132,7 +151,15 @@ namespace PMS.Persistence.Repository
                 isMarked = false,
                 Percentage = lecturerInformations.Reviewer.ScorePercent,
                 BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Reviewer"),
-                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Reviewer.LecturerId)
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Reviewer.LecturerId),
+                Grades = new Grade[]{
+                    new Grade{IsDeleted=false,GradeDescription="Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Phương pháp thực hiện tốt",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Kết quả đề tài có áp dụng thực tế",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Trả lời tập trung vào đề tài, trả lời tốt câu hỏi",GradeMaxScore=20},
+                }
             };
 
             var supervisorBoardEnrollment = new BoardEnrollment
@@ -142,7 +169,15 @@ namespace PMS.Persistence.Repository
                 isMarked = false,
                 Percentage = lecturerInformations.Supervisor.ScorePercent,
                 BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Supervisor"),
-                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Supervisor.LecturerId)
+                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Supervisor.LecturerId),
+                Grades = new Grade[]{
+                    new Grade{IsDeleted=false,GradeDescription="Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Phương pháp thực hiện tốt",GradeMaxScore=20},
+                    new Grade{IsDeleted=false,GradeDescription="Kết quả đề tài có áp dụng thực tế",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Trả lời tập trung vào đề tài, trả lời tốt câu hỏi",GradeMaxScore=20},
+                }
             };
 
             context.BoardEnrollments.Add(presidentBoardEnrollment);

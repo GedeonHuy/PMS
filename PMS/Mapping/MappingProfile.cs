@@ -80,6 +80,7 @@ namespace PMS.Mapping
             CreateMap<BoardEnrollment, BoardEnrollmentResource>()
                 .ForMember(cr => cr.LecturerID, opt => opt.MapFrom(c => c.Lecturer.LecturerId))
                 .ForMember(cr => cr.Recommendations, opt => opt.MapFrom(c => c.Recommendations.Select(cf => cf.Description)))
+                .ForMember(cr => cr.Grades, opt => opt.MapFrom(c => c.Grades.Select(cf => cf.GradeId)))
                 .ForMember(cr => cr.Lecturer, opt => opt.MapFrom(c => new LecturerResource
                 {
                     LecturerId = c.Lecturer.LecturerId,
@@ -94,6 +95,12 @@ namespace PMS.Mapping
                     Projects = c.Lecturer.Projects.Select(cf => cf.ProjectId).ToList()
 
                 }))
+                .ForMember(cr => cr.GradeInformation, opt => opt.MapFrom(c => c.Grades.Select(cf => new GradeInformationResource{
+                    GradeDescription = cf.GradeDescription,
+                    GradeMaxScore = cf.GradeMaxScore,
+                    Score = cf.Score,
+                    Comment = cf.Comment
+                })))
                 .ForMember(cr => cr.BoardID, opt => opt.MapFrom(c => c.Board.BoardId))
                 .ForMember(cr => cr.Board, opt => opt.MapFrom(c => new BoardResource
                 {
@@ -108,7 +115,7 @@ namespace PMS.Mapping
                 }));
 
             CreateMap<Grade, GradeResource>()
-               .ForMember(gr => gr.Enrollment, opt => opt.MapFrom(g => g.Enrollment));
+               .ForMember(gr => gr.BoardEnrollmentId, opt => opt.MapFrom(g => g.BoardEnrollment.BoardEnrollmentId));
 
             CreateMap<Student, StudentResource>()
                 .ForMember(sr => sr.MajorId, opt => opt.MapFrom(s => s.Major.MajorId))
@@ -491,6 +498,7 @@ namespace PMS.Mapping
             CreateMap<BoardEnrollmentResource, BoardEnrollment>()
                 .ForMember(c => c.Lecturer, opt => opt.Ignore())
                 .ForMember(c => c.Recommendations, opt => opt.Ignore())
+                .ForMember(c => c.Grades, opt => opt.Ignore())
                 .ForMember(c => c.Board, opt => opt.Ignore())
                 .ForMember(c => c.BoardEnrollmentId, opt => opt.Ignore());
 

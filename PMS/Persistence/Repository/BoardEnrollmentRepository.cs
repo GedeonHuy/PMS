@@ -31,6 +31,7 @@ namespace PMS.Persistence.Repository
                 .Include(c => c.Lecturer)
                 .Include(c => c.Board)
                 .Include(c => c.Recommendations)
+                .Include(c => c.Grades)
                 .SingleOrDefaultAsync(s => s.BoardEnrollmentId == id);
         }
 
@@ -53,6 +54,7 @@ namespace PMS.Persistence.Repository
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.Board)
                                 .Include(c => c.Recommendations)
+                                .Include(c => c.Grades)
                                 .AsQueryable();
 
             //filter
@@ -81,6 +83,7 @@ namespace PMS.Persistence.Repository
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.Board)
                                 .Include(c => c.Recommendations)
+                                .Include(c => c.Grades)
                                 .AsQueryable();
 
             //filter
@@ -157,6 +160,7 @@ namespace PMS.Persistence.Repository
                                 .Include(c => c.Lecturer)
                                 .Include(c => c.BoardRole)
                                 .Include(c => c.Recommendations)
+                                .Include(c => c.Grades)
                                 .Where(c => c.Board.BoardId == id)
                                 .AsQueryable();
 
@@ -194,6 +198,7 @@ namespace PMS.Persistence.Repository
             var query = context.BoardEnrollments
                                     .Include(c => c.Lecturer)
                                     .Include(c => c.Recommendations)
+                                    .Include(c => c.Grades)
                                     .Include(c => c.Board)
                                         .ThenInclude(b => b.Group)
                                     .Where(c => c.IsDeleted == false && c.Board.Group.GroupId == id)
@@ -243,6 +248,24 @@ namespace PMS.Persistence.Repository
                     //project.TagProjects.Add(a);
                 }
             }
+        }
+
+        public void UpdateGrades(BoardEnrollment boardEnrollment, BoardEnrollmentResource boardEnrollmentResource)
+        {
+            var totalScore =0.0;
+            foreach(var gradeInformation in boardEnrollmentResource.GradeInformation){
+                var grade = context.Grades
+                            .Include(g => g.BoardEnrollment)
+                            .FirstOrDefault(g => g.BoardEnrollment.BoardEnrollmentId ==boardEnrollment.BoardEnrollmentId && 
+                            g.GradeDescription.Equals(gradeInformation.GradeDescription));
+                if(grade != null){
+                    grade.Score = gradeInformation.Score;
+                    grade.Comment = gradeInformation.Comment;
+                    grade.BoardEnrollment = boardEnrollment;
+                }
+                totalScore += gradeInformation.Score.Value;
+            }
+            boardEnrollment.Score =totalScore;
         }
 
     }

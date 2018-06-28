@@ -18,5 +18,6 @@ namespace PMS.Persistence.IRepository
         Task<QueryResult<BoardEnrollment>> GetBoardEnrollmentsByBoardId(Query queryObj, int id);
         void UpdateScore(BoardEnrollment boardEnrollment);
         void UpdateRecommendations(BoardEnrollment boardEnrollment, BoardEnrollmentResource boardEnrollmentResource);
+        void UpdateGrades(BoardEnrollment boardEnrollment, BoardEnrollmentResource boardEnrollmentResource);
     }
 }

@@ -440,16 +440,43 @@ namespace PMS.Controllers
                 }
 
                 worksheet.Cells[16, 3].Value = boardEnrollment.Lecturer.Name;
-                worksheet.Cells[22, 2].Value = boardEnrollment.Score;
-                worksheet.Cells[22, 3].Value = boardEnrollment.Comment;
-                row = 22;
-                foreach (var recommendation in boardEnrollment.Recommendations)
-                {
-                    worksheet.Cells[row, 5].Value = recommendation.Description;
-                    row++;
-                }
 
-                worksheet.Cells[28, 5].Value = "Ngày " + DateTime.Now.Day.ToString()
+                //add grade 
+                var firstGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)"));
+                worksheet.Cells[23, 4].Value = firstGrade.Score;
+                worksheet.Cells[23, 5].Value = firstGrade.Comment;
+
+                var secondGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học"));
+                worksheet.Cells[24, 4].Value = secondGrade.Score;
+                worksheet.Cells[24, 5].Value = secondGrade.Comment;
+
+                var thirdGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Phương pháp thực hiện tốt"));
+                worksheet.Cells[25, 4].Value = thirdGrade.Score;
+                worksheet.Cells[25, 5].Value = thirdGrade.Comment;
+
+                var fourthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Kết quả đề tài có áp dụng thực tế"));
+                worksheet.Cells[26, 4].Value = fourthGrade.Score;
+                worksheet.Cells[26, 5].Value = fourthGrade.Comment;
+
+                var fifthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo"));
+                worksheet.Cells[27, 4].Value = fifthGrade.Score;
+                worksheet.Cells[27, 5].Value = fifthGrade.Comment;
+
+                var sixthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Trả lời tập trung vào đề tài, trả lời tốt câu hỏi"));
+                worksheet.Cells[29, 4].Value = sixthGrade.Score;
+                worksheet.Cells[29, 5].Value = sixthGrade.Comment;
+
+
+                // worksheet.Cells[22, 2].Value = boardEnrollment.Score;
+                // worksheet.Cells[22, 3].Value = boardEnrollment.Comment;
+                // row = 22;
+                // foreach (var recommendation in boardEnrollment.Recommendations)
+                // {
+                //     worksheet.Cells[row, 5].Value = recommendation.Description;
+                //     row++;
+                // }
+
+                worksheet.Cells[32, 5].Value = "Ngày " + DateTime.Now.Day.ToString()
                 + " Tháng " + DateTime.Now.Month.ToString() + " Năm " + DateTime.Now.Year.ToString();
 
                 worksheet.PrinterSettings.FitToPage = true;

@@ -89,13 +89,13 @@ namespace PMS.Controllers
             boardEnrollment.Board = board;
             boardEnrollment.Lecturer = lecturer;
 
+            boardEnrollmentRepository.UpdateGrades(boardEnrollment, boardEnrollmentResource);
+            // boardEnrollmentRepository.UpdateRecommendations(boardEnrollment, boardEnrollmentResource);
 
             if (boardEnrollment.Score != null)
             {
                 boardEnrollment.isMarked = true;
             }
-
-            // boardEnrollmentRepository.UpdateRecommendations(boardEnrollment, boardEnrollmentResource);
 
             await unitOfWork.Complete();
 
