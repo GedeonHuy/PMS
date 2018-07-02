@@ -25,7 +25,7 @@ namespace PMS.Persistence.Repository
                 return await context.Grades.FindAsync(id);
             }
             return await context.Grades
-                .Include(g => g.Enrollment)
+                .Include(g => g.BoardEnrollment)
                 .SingleOrDefaultAsync(g => g.GradeId == id);
         }
 
@@ -44,7 +44,7 @@ namespace PMS.Persistence.Repository
         {
             return await context.Grades
                     .Where(c => c.IsDeleted == false)
-                    .Include(g => g.Enrollment)
+                    .Include(g => g.BoardEnrollment)
                     .ToListAsync();
         }
     }

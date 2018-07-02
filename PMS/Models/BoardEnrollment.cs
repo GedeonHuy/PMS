@@ -15,6 +15,7 @@ namespace PMS.Models
         public bool isMarked { get; set; }
         public string Comment { get; set; }
         public ICollection<Recommendation> Recommendations { get; set; }
+        public ICollection<Grade> Grades { get; set; }
         public Lecturer Lecturer { get; set; }
         public Board Board { get; set; }
         public BoardRole BoardRole { get; set; }
@@ -23,6 +24,7 @@ namespace PMS.Models
             IsDeleted = false;
             isMarked = false;
             Recommendations = new Collection<Recommendation>();
+            Grades = new Collection<Grade>();
         }
     }
 }
