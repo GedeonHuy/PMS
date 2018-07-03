@@ -470,7 +470,7 @@ export class GroupDetailsComponent implements OnInit {
   //Mark method
   mark(id: any) {
     this.modalMark.show();
-
+    console.log(this.group);
     Observable.forkJoin(
       this._dataService.get(
         "/api/boardenrollments/getboardenrollmentsbylectureremail/" +
@@ -537,7 +537,7 @@ export class GroupDetailsComponent implements OnInit {
       parseInt(this.boardEnrollments.reviewer.lecturerId)
     ];
 
-    console.log(this.temp);
+    // console.log(this.temp);
 
     this.boardEnrollments.chair.lecturerId        = this.temp[0];
     this.boardEnrollments.secretary.lecturerId    = this.temp[1];

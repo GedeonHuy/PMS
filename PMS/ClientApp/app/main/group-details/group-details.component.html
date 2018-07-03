@@ -166,12 +166,18 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="background: #7FFFD4">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Grade This Group</h4>
+        <!-- <h4 class="modal-title pull-left">Grade This Group</h4> -->
         <span *ngIf="!isLoadMark" class="fa fa-refresh fa-spin"></span>
         <button type="button" class="close pull-right" (click)="hidemodalMark()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+        <h4 align="center">TRƯỜNG ĐH QUỐC TẾ MIỀN ĐÔNG</h4>
+        <h4 align="center">KHOA KỸ THUẬT</h4>
+        <br/>
+        <h4 align="center">PHIẾU CHẤM ĐỒ ÁN CHUYÊN NGÀNH</h4>
+        <h4 align="center">NGÀNH {{ this.group.major.majorName.toUpperCase( ) }}</h4>
+        
       <div class="modal-body">
         <form class="form-horizontal form-label-left" novalidate #markForm="ngForm" (ngSubmit)="saveMark(markForm)" *ngIf="boardEnrollment && isLoadMark">
 
@@ -181,6 +187,114 @@
           <input type="hidden" [(ngModel)]="boardEnrollment.boardID" name="boardEnrollment.boardID" />
 
           <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">TÊN ĐỀ TÀI</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <span class="form-control">{{ this.group.project.title }}</span>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Họ và tên sinh viên:</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <span class="form-control" *ngFor="let stu of group.studentInformations">{{ stu.name }}</span>
+              </div>
+          </div>
+          
+          <div class="form-group">
+              <label class="control-label col-md-4 col-sm-4 col-xs-12">Họ và tên giảng viên chấm điểm:</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <span class="form-control">{{ 'Huỳnh Tấn Phước' }}</span>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label class="control-label col-md-4 col-sm-4 col-xs-12">Thời gian bắt đầu báo cáo:</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <span class="form-control">{{ ' ' }}</span>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label class="control-label col-md-4 col-sm-4 col-xs-12">Thời gian kết thúc báo cáo:</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <span class="form-control">{{ ' ' }}</span>
+              </div>
+          </div>
+
+          <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div>
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Nội dung chấm điểm</th>
+                        <th>Điểm tối đa</th>
+                        <th>Điểm</th>
+                        <th>Ghi chú</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style="font-weight: bold;">PHẦN BÁO CÁO</td>
+                        <td style="font-weight: bold;">80</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                          <td>Trình bày tốt (chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)</td>
+                          <td>20</td>
+                          <td><input class="form-control" type="number" value="20"></td>
+                          <td><textarea class="form-control" rows="2">Slide sinh động, trình bày tốt</textarea></td>
+                      </tr>
+                      <tr>
+                          <td>Nội dung đề tài đạt yêu cầu đặt ra, có tính khoa học</td>
+                          <td>20</td>
+                          <td><input class="form-control" type="number" value="15"></td>
+                          <td><textarea class="form-control" rows="2">Rất tốt nhưng cần nghiên cứu sâu hơn</textarea></td>
+                      </tr>
+                      <tr>
+                          <td>Phương pháp thực hiện tốt</td>
+                          <td>20</td>
+                          <td><input class="form-control" type="number" value="17"></td>
+                          <td><textarea class="form-control" rows="2">Nên sử dụng những công nghệ mới hơn</textarea></td>
+                      </tr>
+                      <tr>
+                          <td>Kết quả đề tài có áp dụng thực tế</td>
+                          <td>10</td>
+                          <td><input class="form-control" type="number" value="8"></td>
+                          <td><textarea class="form-control" rows="2">Áp dụng được nhiều lĩnh vực</textarea></td>
+                      </tr>
+                      <tr>
+                          <td>Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo</td>
+                          <td>10</td>
+                          <td><input class="form-control" type="number" value="8"></td>
+                          <td><textarea class="form-control" rows="2">Đề tài có độ thực tiễn cao</textarea></td>
+                      </tr>
+                      <tr>
+                          <td style="font-weight: bold;">PHẦN TRẢ LỜI</td>
+                          <td style="font-weight: bold;">20</td>
+                          <td></td>
+                          <td></td>
+                      </tr>
+                      <tr>
+                          <td>Trả lời tập trung vào đề tài, trả lời tốt câu hỏi</td>
+                          <td>20</td>
+                          <td><input class="form-control" type="number" value="15"></td>
+                          <td><textarea class="form-control" rows="2">Trả lời hợp lí dứt khoát</textarea></td>
+                      </tr>
+                      <tr>
+                          <td style="font-weight: bold;">TỔNG CỘNG</td>
+                          <td style="font-weight: bold;">100</td>
+                          <td style="font-weight: bold;">{{ 83 }}</td>
+                          <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          <!-- <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Mark</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <input type="number" class="form-control" [(ngModel)]="boardEnrollment.score" name="boardEnrollment.score" required #mark="ngModel" />
@@ -197,10 +311,10 @@
               <small [hidden]="comment.valid || (comment.pristine && !comment.submitted)" class="text-danger">
                 Please specify the comment </small>
             </div>
-          </div>
+          </div> -->
 
           <!--Recommendation-START-->
-          <label class="control-label col-md-3 col-sm-3 col-xs-12">Recommendations</label>
+          <!-- <label class="control-label col-md-3 col-sm-3 col-xs-12">Recommendations</label>
           <div class="form-group">
               <form class="col-md-9 col-sm-9 col-xs-12" #recommendationForm="ngForm">
                   <input class="form-control" style="padding-right: 4.13em;" type="text" [(ngModel)]="recommendationDescription" name="Recommendation" />
@@ -212,9 +326,9 @@
                   <button class="btn btn-danger" style="float: right; margin-right: 0.13em;" (click)="removeRecommendation(i)" title="Remove this recommendation"><i class="fa fa-minus"></i></button>
               </ul>
               
-          </div>
+          </div> -->
           <!--Recommendation-END-->
-
+          <br/>
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
               <button type="button" (click)="hidemodalMark()" class="btn btn-primary">Cancel</button>
