@@ -28,6 +28,8 @@ export class GroupDetailsComponent implements OnInit {
   @ViewChild("modalMark") public modalMark: ModalDirective;
   @ViewChild("modalBoard") public modalBoard: ModalDirective;
 
+  sum: any;
+  boardEnrollmentToUpdate = {};
   thisRecommendation: any;
   recommendationDescription: any;
   recommendations: any[];
@@ -443,12 +445,25 @@ export class GroupDetailsComponent implements OnInit {
     if (form.valid) {
       this.isSaved = true;
 
+      this.boardEnrollmentToUpdate = {
+        isDeleted: false,
+        lecturerID: this.boardEnrollment.lecturerID,
+        boardID: this.boardEnrollment.boardID,
+        percentage: this.boardEnrollment.percentage,
+        isMarked: false,
+        comment: this.boardEnrollment.comment,
+        gradeInformation: this.boardEnrollment.gradeInformation,
+    };
+
+    // console.log(this.boardEnrollment);
+    // console.log(this.boardEnrollmentToUpdate);
+
       if (this.boardEnrollment.score != null) {
         this._dataService
           .put(
             "/api/boardenrollments/update/" +
               this.boardEnrollment.boardEnrollmentId,
-            JSON.stringify(this.boardEnrollment)
+            JSON.stringify(this.boardEnrollmentToUpdate)
           )
           .subscribe(
             (response: any) => {
@@ -470,7 +485,6 @@ export class GroupDetailsComponent implements OnInit {
   //Mark method
   mark(id: any) {
     this.modalMark.show();
-    console.log(this.group);
     Observable.forkJoin(
       this._dataService.get(
         "/api/boardenrollments/getboardenrollmentsbylectureremail/" +
@@ -478,6 +492,9 @@ export class GroupDetailsComponent implements OnInit {
       ),
       this._dataService.get(
         "/api/recommendations/getrecommendationsbygroupid/" + this.groupId
+      ),
+      this._dataService.get(
+        "/api/lecturers/getlecturerbyemail/" + this.thisLecturerEmail
       )
     ).subscribe(data => {
       this.boardEnrollmentsOfLecturer = data[0].items;
@@ -491,6 +508,16 @@ export class GroupDetailsComponent implements OnInit {
         r => r.boardEnrollmentId == this.boardEnrollment.boardEnrollmentId
       );
 
+      this.thisLecturer = data[2];
+
+      this.sum = this.boardEnrollment.gradeInformation[0].score +
+        this.boardEnrollment.gradeInformation[1].score +
+        this.boardEnrollment.gradeInformation[2].score +
+        this.boardEnrollment.gradeInformation[3].score +
+        this.boardEnrollment.gradeInformation[4].score +
+        this.boardEnrollment.gradeInformation[5].score;
+      
+      console.log(this.sum);
     });
   }
 

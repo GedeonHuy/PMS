@@ -203,11 +203,11 @@
           <div class="form-group">
               <label class="control-label col-md-4 col-sm-4 col-xs-12">Họ và tên giảng viên chấm điểm:</label>
               <div class="col-md-9 col-sm-9 col-xs-12">
-                <span class="form-control">{{ 'Huỳnh Tấn Phước' }}</span>
+                <span class="form-control">{{ this.thisLecturer.name }}</span>
               </div>
           </div>
 
-          <div class="form-group">
+          <!-- <div class="form-group">
               <label class="control-label col-md-4 col-sm-4 col-xs-12">Thời gian bắt đầu báo cáo:</label>
               <div class="col-md-9 col-sm-9 col-xs-12">
                 <span class="form-control">{{ ' ' }}</span>
@@ -219,7 +219,7 @@
               <div class="col-md-9 col-sm-9 col-xs-12">
                 <span class="form-control">{{ ' ' }}</span>
               </div>
-          </div>
+          </div> -->
 
           <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
@@ -241,35 +241,81 @@
                         <td></td>
                       </tr>
                       <tr>
-                          <td>Trình bày tốt (chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)</td>
-                          <td>20</td>
-                          <td><input class="form-control" type="number" value="20"></td>
-                          <td><textarea class="form-control" rows="2">Slide sinh động, trình bày tốt</textarea></td>
+                          <td>{{ this.boardEnrollment.gradeInformation[0].gradeDescription }}</td>
+                          <td>{{ this.boardEnrollment.gradeInformation[0].gradeMaxScore }}</td>
+                          <td>
+                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[0].score" name="boardEnrollment.gradeInformation[0].score" required #gradeSc0="ngModel"/>
+                            <small [hidden]="gradeSc0.valid || (gradeSc0.pristine && !markForm.submitted)" class="text-danger">
+                                Please specify the grade score number </small>
+                          </td>
+                          <td>
+                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[0].comment" name="boardEnrollment.gradeInformation[0].comment" required
+                              #gradeDes0="ngModel"></textarea>
+                            <small [hidden]="gradeDes0.valid || (gradeDes0.pristine && !markForm.submitted)" class="text-danger">
+                              Please specify the grade note </small>
+                          </td>
                       </tr>
                       <tr>
-                          <td>Nội dung đề tài đạt yêu cầu đặt ra, có tính khoa học</td>
-                          <td>20</td>
-                          <td><input class="form-control" type="number" value="15"></td>
-                          <td><textarea class="form-control" rows="2">Rất tốt nhưng cần nghiên cứu sâu hơn</textarea></td>
+                          <td>{{ this.boardEnrollment.gradeInformation[1].gradeDescription }}</td>
+                          <td>{{ this.boardEnrollment.gradeInformation[1].gradeMaxScore }}</td>
+                          <td>
+                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[1].score" name="boardEnrollment.gradeInformation[1].score" required #gradeSc1="ngModel"/>
+                            <small [hidden]="gradeSc1.valid || (gradeSc1.pristine && !markForm.submitted)" class="text-danger">
+                                Please specify the grade score number </small>
+                          </td>
+                          <td>
+                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[1].comment" name="boardEnrollment.gradeInformation[1].comment" required
+                              #gradeDes1="ngModel"></textarea>
+                            <small [hidden]="gradeDes1.valid || (gradeDes1.pristine && !markForm.submitted)" class="text-danger">
+                              Please specify the grade note </small>
+                          </td>
                       </tr>
                       <tr>
-                          <td>Phương pháp thực hiện tốt</td>
-                          <td>20</td>
-                          <td><input class="form-control" type="number" value="17"></td>
-                          <td><textarea class="form-control" rows="2">Nên sử dụng những công nghệ mới hơn</textarea></td>
+                          <td>{{ this.boardEnrollment.gradeInformation[2].gradeDescription }}</td>
+                          <td>{{ this.boardEnrollment.gradeInformation[2].gradeMaxScore }}</td>
+                          <td>
+                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[2].score" name="boardEnrollment.gradeInformation[2].score" required #gradeSc2="ngModel"/>
+                            <small [hidden]="gradeSc2.valid || (gradeSc2.pristine && !markForm.submitted)" class="text-danger">
+                                Please specify the grade score number </small>
+                          </td>
+                          <td>
+                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[2].comment" name="boardEnrollment.gradeInformation[2].comment" required
+                              #gradeDes2="ngModel"></textarea>
+                            <small [hidden]="gradeDes2.valid || (gradeDes2.pristine && !markForm.submitted)" class="text-danger">
+                              Please specify the grade note </small>
+                          </td>
                       </tr>
                       <tr>
-                          <td>Kết quả đề tài có áp dụng thực tế</td>
-                          <td>10</td>
-                          <td><input class="form-control" type="number" value="8"></td>
-                          <td><textarea class="form-control" rows="2">Áp dụng được nhiều lĩnh vực</textarea></td>
+                          <td>{{ this.boardEnrollment.gradeInformation[3].gradeDescription }}</td>
+                          <td>{{ this.boardEnrollment.gradeInformation[3].gradeMaxScore }}</td>
+                          <td>
+                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[3].score" name="boardEnrollment.gradeInformation[3].score" required #gradeSc3="ngModel"/>
+                            <small [hidden]="gradeSc3.valid || (gradeSc3.pristine && !markForm.submitted)" class="text-danger">
+                                Please specify the grade score number </small>
+                          </td>
+                          <td>
+                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[3].comment" name="boardEnrollment.gradeInformation[3].comment" required
+                              #gradeDes3="ngModel"></textarea>
+                            <small [hidden]="gradeDes3.valid || (gradeDes3.pristine && !markForm.submitted)" class="text-danger">
+                              Please specify the grade note </small>
+                          </td>
                       </tr>
                       <tr>
-                          <td>Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo</td>
-                          <td>10</td>
-                          <td><input class="form-control" type="number" value="8"></td>
-                          <td><textarea class="form-control" rows="2">Đề tài có độ thực tiễn cao</textarea></td>
+                          <td>{{ this.boardEnrollment.gradeInformation[4].gradeDescription }}</td>
+                          <td>{{ this.boardEnrollment.gradeInformation[4].gradeMaxScore }}</td>
+                          <td>
+                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[4].score" name="boardEnrollment.gradeInformation[4].score" required #gradeSc4="ngModel"/>
+                            <small [hidden]="gradeSc4.valid || (gradeSc4.pristine && !markForm.submitted)" class="text-danger">
+                                Please specify the grade score number </small>
+                          </td>
+                          <td>
+                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[4].comment" name="boardEnrollment.gradeInformation[4].comment" required
+                              #gradeDes4="ngModel"></textarea>
+                            <small [hidden]="gradeDes4.valid || (gradeDes4.pristine && !markForm.submitted)" class="text-danger">
+                              Please specify the grade note </small>
+                          </td>
                       </tr>
+
                       <tr>
                           <td style="font-weight: bold;">PHẦN TRẢ LỜI</td>
                           <td style="font-weight: bold;">20</td>
@@ -277,15 +323,24 @@
                           <td></td>
                       </tr>
                       <tr>
-                          <td>Trả lời tập trung vào đề tài, trả lời tốt câu hỏi</td>
-                          <td>20</td>
-                          <td><input class="form-control" type="number" value="15"></td>
-                          <td><textarea class="form-control" rows="2">Trả lời hợp lí dứt khoát</textarea></td>
+                          <td>{{ this.boardEnrollment.gradeInformation[5].gradeDescription }}</td>
+                          <td>{{ this.boardEnrollment.gradeInformation[5].gradeMaxScore }}</td>
+                          <td>
+                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[5].score" name="boardEnrollment.gradeInformation[5].score" required #gradeSc5="ngModel"/>
+                            <small [hidden]="gradeSc5.valid || (gradeSc5.pristine && !markForm.submitted)" class="text-danger">
+                                Please specify the grade score number </small>
+                          </td>
+                          <td>
+                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[5].comment" name="boardEnrollment.gradeInformation[5].comment" required
+                              #gradeDes5="ngModel"></textarea>
+                            <small [hidden]="gradeDes5.valid || (gradeDes5.pristine && !markForm.submitted)" class="text-danger">
+                              Please specify the grade note </small>
+                          </td>
                       </tr>
                       <tr>
                           <td style="font-weight: bold;">TỔNG CỘNG</td>
                           <td style="font-weight: bold;">100</td>
-                          <td style="font-weight: bold;">{{ 83 }}</td>
+                          <td style="font-weight: bold;">{{ this.sum }}</td>
                           <td></td>
                       </tr>
                     </tbody>
@@ -302,6 +357,7 @@
                 Please specify the score </small>
             </div>
           </div>
+          -->
 
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Comment</label>
@@ -311,7 +367,7 @@
               <small [hidden]="comment.valid || (comment.pristine && !comment.submitted)" class="text-danger">
                 Please specify the comment </small>
             </div>
-          </div> -->
+          </div>
 
           <!--Recommendation-START-->
           <!-- <label class="control-label col-md-3 col-sm-3 col-xs-12">Recommendations</label>
