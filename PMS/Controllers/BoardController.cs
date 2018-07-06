@@ -409,89 +409,197 @@ namespace PMS.Controllers
                 System.IO.Directory.CreateDirectory(formFolderPath);
             }
 
-            var formFilePath = Path.Combine(formFolderPath, @"lecturer_form.xlsx");
-            // FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
-
-            var uploadFolderPath = Path.Combine(host.ContentRootPath, "exports/excel");
-            if (!System.IO.Directory.Exists(uploadFolderPath))
+            if (!board.Group.Project.Type.Equals("Final Project"))
             {
-                System.IO.Directory.CreateDirectory(uploadFolderPath);
-            }
+                var formFilePath = Path.Combine(formFolderPath, @"lecturer_form.xlsx");
+                // FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
 
-            var filePath = Path.Combine(uploadFolderPath, fileName);
-
-            //copy file from formfolder to export folder
-            System.IO.File.Copy(formFilePath, filePath, true);
-            FileInfo file = new FileInfo(Path.Combine(uploadFolderPath, fileName));
-
-            using (ExcelPackage package = new ExcelPackage(file))
-            {
-
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
-                int studentRows = board.Group.Enrollments.Count();
-                worksheet.Cells[8, 3].Value = board.Group.Project.Title;
-
-                int row = 12;
-                var studentNames = board.Group.Enrollments.Select(e => e.Student.Name).ToList();
-                foreach (var studentName in studentNames)
+                var uploadFolderPath = Path.Combine(host.ContentRootPath, "exports/excel");
+                if (!System.IO.Directory.Exists(uploadFolderPath))
                 {
-                    worksheet.Cells[row, 3].Value = studentName;
-                    row++;
+                    System.IO.Directory.CreateDirectory(uploadFolderPath);
                 }
 
-                worksheet.Cells[16, 3].Value = boardEnrollment.Lecturer.Name;
+                var filePath = Path.Combine(uploadFolderPath, fileName);
 
-                //add grade 
-                var firstGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)"));
-                worksheet.Cells[23, 4].Value = firstGrade.Score;
-                worksheet.Cells[23, 5].Value = firstGrade.Comment;
+                //copy file from formfolder to export folder
+                System.IO.File.Copy(formFilePath, filePath, true);
+                FileInfo file = new FileInfo(Path.Combine(uploadFolderPath, fileName));
 
-                var secondGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học"));
-                worksheet.Cells[24, 4].Value = secondGrade.Score;
-                worksheet.Cells[24, 5].Value = secondGrade.Comment;
+                using (ExcelPackage package = new ExcelPackage(file))
+                {
 
-                var thirdGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Phương pháp thực hiện tốt"));
-                worksheet.Cells[25, 4].Value = thirdGrade.Score;
-                worksheet.Cells[25, 5].Value = thirdGrade.Comment;
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                    int studentRows = board.Group.Enrollments.Count();
+                    worksheet.Cells[8, 3].Value = board.Group.Project.Title;
 
-                var fourthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Kết quả đề tài có áp dụng thực tế"));
-                worksheet.Cells[26, 4].Value = fourthGrade.Score;
-                worksheet.Cells[26, 5].Value = fourthGrade.Comment;
+                    int row = 12;
+                    var studentNames = board.Group.Enrollments.Select(e => e.Student.Name).ToList();
+                    foreach (var studentName in studentNames)
+                    {
+                        worksheet.Cells[row, 3].Value = studentName;
+                        row++;
+                    }
 
-                var fifthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo"));
-                worksheet.Cells[27, 4].Value = fifthGrade.Score;
-                worksheet.Cells[27, 5].Value = fifthGrade.Comment;
+                    worksheet.Cells[16, 3].Value = boardEnrollment.Lecturer.Name;
 
-                var sixthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Trả lời tập trung vào đề tài, trả lời tốt câu hỏi"));
-                worksheet.Cells[29, 4].Value = sixthGrade.Score;
-                worksheet.Cells[29, 5].Value = sixthGrade.Comment;
+                    //add grade 
+                    var firstGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)"));
+                    worksheet.Cells[23, 4].Value = firstGrade.Score;
+                    worksheet.Cells[23, 5].Value = firstGrade.Comment;
 
-                worksheet.Cells[30, 4].Value =firstGrade.Score.Value + secondGrade.Score.Value + thirdGrade.Score.Value +fourthGrade.Score.Value
-                +fifthGrade.Score.Value + sixthGrade.Score.Value;
-                // worksheet.Cells[22, 2].Value = boardEnrollment.Score;
-                // worksheet.Cells[22, 3].Value = boardEnrollment.Comment;
-                // row = 22;
-                // foreach (var recommendation in boardEnrollment.Recommendations)
-                // {
-                //     worksheet.Cells[row, 5].Value = recommendation.Description;
-                //     row++;
-                // }
+                    var secondGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học"));
+                    worksheet.Cells[24, 4].Value = secondGrade.Score;
+                    worksheet.Cells[24, 5].Value = secondGrade.Comment;
 
-                worksheet.Cells[32, 5].Value = "Ngày " + DateTime.Now.Day.ToString()
-                + " Tháng " + DateTime.Now.Month.ToString() + " Năm " + DateTime.Now.Year.ToString();
+                    var thirdGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Phương pháp thực hiện tốt"));
+                    worksheet.Cells[25, 4].Value = thirdGrade.Score;
+                    worksheet.Cells[25, 5].Value = thirdGrade.Comment;
 
-                worksheet.PrinterSettings.FitToPage = true;
-                worksheet.PrinterSettings.FitToWidth = 1;
-                worksheet.PrinterSettings.FitToHeight = 0;
-                package.Save();
+                    var fourthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Kết quả đề tài có áp dụng thực tế"));
+                    worksheet.Cells[26, 4].Value = fourthGrade.Score;
+                    worksheet.Cells[26, 5].Value = fourthGrade.Comment;
 
-                //add to db
-                var excel = new Excel { FileName = fileName };
-                excelRepository.AddExcel(excel);
+                    var fifthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo"));
+                    worksheet.Cells[27, 4].Value = fifthGrade.Score;
+                    worksheet.Cells[27, 5].Value = fifthGrade.Comment;
 
-                //send mail
-                //SendMail(board, filePath);
-                return filePath;
+                    var sixthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Trả lời tập trung vào đề tài, trả lời tốt câu hỏi"));
+                    worksheet.Cells[29, 4].Value = sixthGrade.Score;
+                    worksheet.Cells[29, 5].Value = sixthGrade.Comment;
+
+                    worksheet.Cells[30, 4].Value = firstGrade.Score.Value + secondGrade.Score.Value + thirdGrade.Score.Value + fourthGrade.Score.Value
+                    + fifthGrade.Score.Value + sixthGrade.Score.Value;
+                    // worksheet.Cells[22, 2].Value = boardEnrollment.Score;
+                    // worksheet.Cells[22, 3].Value = boardEnrollment.Comment;
+                    // row = 22;
+                    // foreach (var recommendation in boardEnrollment.Recommendations)
+                    // {
+                    //     worksheet.Cells[row, 5].Value = recommendation.Description;
+                    //     row++;
+                    // }
+
+                    worksheet.Cells[32, 5].Value = "Ngày " + DateTime.Now.Day.ToString()
+                    + " Tháng " + DateTime.Now.Month.ToString() + " Năm " + DateTime.Now.Year.ToString();
+
+                    worksheet.PrinterSettings.FitToPage = true;
+                    worksheet.PrinterSettings.FitToWidth = 1;
+                    worksheet.PrinterSettings.FitToHeight = 0;
+                    package.Save();
+
+                    //add to db
+                    var excel = new Excel { FileName = fileName };
+                    excelRepository.AddExcel(excel);
+
+                    //send mail
+                    //SendMail(board, filePath);
+                    return filePath;
+                }
+            }
+            else
+            {
+                var formFilePath = Path.Combine(formFolderPath, @"lecturer_final_form.xlsx");
+                // FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
+
+                var uploadFolderPath = Path.Combine(host.ContentRootPath, "exports/excel");
+                if (!System.IO.Directory.Exists(uploadFolderPath))
+                {
+                    System.IO.Directory.CreateDirectory(uploadFolderPath);
+                }
+
+                var filePath = Path.Combine(uploadFolderPath, fileName);
+
+                //copy file from formfolder to export folder
+                System.IO.File.Copy(formFilePath, filePath, true);
+                FileInfo file = new FileInfo(Path.Combine(uploadFolderPath, fileName));
+
+                using (ExcelPackage package = new ExcelPackage(file))
+                {
+
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                    int studentRows = board.Group.Enrollments.Count();
+                    worksheet.Cells[8, 3].Value = board.Group.Project.Title;
+
+                    int row = 12;
+                    var studentNames = board.Group.Enrollments.Select(e => e.Student.Name).ToList();
+                    foreach (var studentName in studentNames)
+                    {
+                        worksheet.Cells[row, 3].Value = studentName;
+                        row++;
+                    }
+
+                    worksheet.Cells[16, 3].Value = boardEnrollment.Lecturer.Name;
+
+                    //add grade 
+                    var firstGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Introduction"));
+                    worksheet.Cells[23, FindNumberOfCell(firstGrade.Score.Value)].Value = "X";
+                    var a = FindNumberOfCell(firstGrade.Score.Value);
+                    worksheet.Cells[23, 15].Value = firstGrade.Comment;
+
+                    var secondGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Content (methods)"));
+                    worksheet.Cells[24, FindNumberOfCell(secondGrade.Score.Value)].Value = "X";
+                    worksheet.Cells[24, 15].Value = secondGrade.Comment;
+
+                    var thirdGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Content (analysis)"));
+                    worksheet.Cells[25, FindNumberOfCell(thirdGrade.Score.Value)].Value = "X";
+                    worksheet.Cells[25, 15].Value = thirdGrade.Comment;
+
+                    var fourthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Media and Visual aids"));
+                    worksheet.Cells[26, FindNumberOfCell(fourthGrade.Score.Value)].Value = "X";
+                    worksheet.Cells[26, 15].Value = fourthGrade.Comment;
+
+                    var fifthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Presentation style (delivery)"));
+                    worksheet.Cells[27, FindNumberOfCell(fifthGrade.Score.Value)].Value = "X";
+                    worksheet.Cells[27, 15].Value = fifthGrade.Comment;
+
+                    var sixthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Presentation style (preparation)"));
+                    worksheet.Cells[28, FindNumberOfCell(sixthGrade.Score.Value)].Value = "X";
+                    worksheet.Cells[28, 15].Value = sixthGrade.Comment;
+
+                    var seventhGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Presentation style (style)"));
+                    worksheet.Cells[29, FindNumberOfCell(seventhGrade.Score.Value)].Value = "X";
+                    worksheet.Cells[29, 15].Value = sixthGrade.Comment;
+
+                    var eighthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Audience connection"));
+                    worksheet.Cells[30, FindNumberOfCell(eighthGrade.Score.Value)].Value = "X";
+                    worksheet.Cells[30, 15].Value = sixthGrade.Comment;
+
+                    var ninethGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Content (conclusion)"));
+                    worksheet.Cells[31, FindNumberOfCell(ninethGrade.Score.Value)].Value = "X";
+                    worksheet.Cells[31, 15].Value = sixthGrade.Comment;
+
+                    var tenthGrade = boardEnrollment.Grades.FirstOrDefault(g => g.GradeDescription.Equals("Questions and Answers"));
+                    worksheet.Cells[32, FindNumberOfCell(tenthGrade.Score.Value)].Value = "X";
+                    worksheet.Cells[32, 15].Value = sixthGrade.Comment;
+
+                    worksheet.Cells[34, 4].Value = firstGrade.Score.Value + secondGrade.Score.Value + thirdGrade.Score.Value + fourthGrade.Score.Value
+                    + fifthGrade.Score.Value + sixthGrade.Score.Value + seventhGrade.Score.Value + eighthGrade.Score.Value
+                    + ninethGrade.Score.Value + tenthGrade.Score.Value;
+                    // worksheet.Cells[22, 2].Value = boardEnrollment.Score;
+                    // worksheet.Cells[22, 3].Value = boardEnrollment.Comment;
+                    // row = 22;
+                    // foreach (var recommendation in boardEnrollment.Recommendations)
+                    // {
+                    //     worksheet.Cells[row, 5].Value = recommendation.Description;
+                    //     row++;
+                    // }
+
+                    worksheet.Cells[36, 12].Value = "Ngày " + DateTime.Now.Day.ToString()
+                    + " Tháng " + DateTime.Now.Month.ToString() + " Năm " + DateTime.Now.Year.ToString();
+
+                    worksheet.PrinterSettings.FitToPage = true;
+                    worksheet.PrinterSettings.FitToWidth = 1;
+                    worksheet.PrinterSettings.FitToHeight = 0;
+                    package.Save();
+
+                    //add to db
+                    var excel = new Excel { FileName = fileName };
+                    excelRepository.AddExcel(excel);
+
+                    //send mail
+                    //SendMail(board, filePath);
+                    return filePath;
+                }
             }
         }
 
@@ -597,6 +705,24 @@ namespace PMS.Controllers
                 throw ex;
             }
 
+        }
+
+        public int FindNumberOfCell(double? score)
+        {
+            switch (score)
+            {
+                case 1: return 13;
+                case 2: return 12;
+                case 3: return 11;
+                case 4: return 10;
+                case 5: return 9;
+                case 6: return 8;
+                case 7: return 7;
+                case 8: return 6;
+                case 9: return 5;
+                case 10: return 4;
+                default: return -1;
+            }
         }
     }
 }

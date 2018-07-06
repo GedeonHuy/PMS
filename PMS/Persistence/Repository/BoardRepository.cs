@@ -108,15 +108,112 @@ namespace PMS.Persistence.Repository
 
         public async Task AddLecturers(Board board, LecturerInformationResource lecturerInformations)
         {
-            var presidentBoardEnrollment = new BoardEnrollment
+            if (board.Group.Project.Type.Equals("Final Project"))
             {
-                Board = board,
-                IsDeleted = false,
-                isMarked = false,
-                Percentage = lecturerInformations.Chair.ScorePercent,
-                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Chair"),
-                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Chair.LecturerId),
-                Grades = new Grade[]{
+                var presidentBoardEnrollment = new BoardEnrollment
+                {
+                    Board = board,
+                    IsDeleted = false,
+                    isMarked = false,
+                    Percentage = lecturerInformations.Chair.ScorePercent,
+                    BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Chair"),
+                    Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Chair.LecturerId),
+                    Grades = new Grade[]{
+                    new Grade{IsDeleted=false,GradeDescription="Introduction",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (methods)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (analysis)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Media and Visual aids",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (delivery)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (preparation)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (style)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Audience connection",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (conclusion)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Questions and Answers",GradeMaxScore=10}
+                }
+                };
+
+                var secretaryBoardEnrollment = new BoardEnrollment
+                {
+                    Board = board,
+                    IsDeleted = false,
+                    isMarked = false,
+                    Percentage = lecturerInformations.Secretary.ScorePercent,
+                    BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Secretary"),
+                    Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Secretary.LecturerId),
+                    Grades = new Grade[]{
+                    new Grade{IsDeleted=false,GradeDescription="Introduction",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (methods)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (analysis)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Media and Visual aids",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (delivery)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (preparation)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (style)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Audience connection",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (conclusion)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Questions and Answers",GradeMaxScore=10}
+                }
+                };
+
+                var reviewerBoardEnrollment = new BoardEnrollment
+                {
+                    Board = board,
+                    IsDeleted = false,
+                    isMarked = false,
+                    Percentage = lecturerInformations.Reviewer.ScorePercent,
+                    BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Reviewer"),
+                    Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Reviewer.LecturerId),
+                    Grades = new Grade[]{
+                    new Grade{IsDeleted=false,GradeDescription="Introduction",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (methods)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (analysis)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Media and Visual aids",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (delivery)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (preparation)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (style)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Audience connection",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (conclusion)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Questions and Answers",GradeMaxScore=10}
+                }
+                };
+
+                var supervisorBoardEnrollment = new BoardEnrollment
+                {
+                    Board = board,
+                    IsDeleted = false,
+                    isMarked = false,
+                    Percentage = lecturerInformations.Supervisor.ScorePercent,
+                    BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Supervisor"),
+                    Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Supervisor.LecturerId),
+                    Grades = new Grade[]{
+                    new Grade{IsDeleted=false,GradeDescription="Introduction",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (methods)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (analysis)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Media and Visual aids",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (delivery)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (preparation)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Presentation style (style)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Audience connection",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Content (conclusion)",GradeMaxScore=10},
+                    new Grade{IsDeleted=false,GradeDescription="Questions and Answers",GradeMaxScore=10}
+                }
+                };
+
+                context.BoardEnrollments.Add(presidentBoardEnrollment);
+                context.BoardEnrollments.Add(secretaryBoardEnrollment);
+                context.BoardEnrollments.Add(reviewerBoardEnrollment);
+                context.BoardEnrollments.Add(supervisorBoardEnrollment);
+            }
+            else
+            {
+                var presidentBoardEnrollment = new BoardEnrollment
+                {
+                    Board = board,
+                    IsDeleted = false,
+                    isMarked = false,
+                    Percentage = lecturerInformations.Chair.ScorePercent,
+                    BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Chair"),
+                    Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Chair.LecturerId),
+                    Grades = new Grade[]{
                     new Grade{IsDeleted=false,GradeDescription="Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)",GradeMaxScore=20},
                     new Grade{IsDeleted=false,GradeDescription="Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học",GradeMaxScore=20},
                     new Grade{IsDeleted=false,GradeDescription="Phương pháp thực hiện tốt",GradeMaxScore=20},
@@ -124,17 +221,17 @@ namespace PMS.Persistence.Repository
                     new Grade{IsDeleted=false,GradeDescription="Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo",GradeMaxScore=10},
                     new Grade{IsDeleted=false,GradeDescription="Trả lời tập trung vào đề tài, trả lời tốt câu hỏi",GradeMaxScore=20},
                 }
-            };
+                };
 
-            var secretaryBoardEnrollment = new BoardEnrollment
-            {
-                Board = board,
-                IsDeleted = false,
-                isMarked = false,
-                Percentage = lecturerInformations.Secretary.ScorePercent,
-                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Secretary"),
-                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Secretary.LecturerId),
-                Grades = new Grade[]{
+                var secretaryBoardEnrollment = new BoardEnrollment
+                {
+                    Board = board,
+                    IsDeleted = false,
+                    isMarked = false,
+                    Percentage = lecturerInformations.Secretary.ScorePercent,
+                    BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Secretary"),
+                    Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Secretary.LecturerId),
+                    Grades = new Grade[]{
                     new Grade{IsDeleted=false,GradeDescription="Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)",GradeMaxScore=20},
                     new Grade{IsDeleted=false,GradeDescription="Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học",GradeMaxScore=20},
                     new Grade{IsDeleted=false,GradeDescription="Phương pháp thực hiện tốt",GradeMaxScore=20},
@@ -142,17 +239,17 @@ namespace PMS.Persistence.Repository
                     new Grade{IsDeleted=false,GradeDescription="Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo",GradeMaxScore=10},
                     new Grade{IsDeleted=false,GradeDescription="Trả lời tập trung vào đề tài, trả lời tốt câu hỏi",GradeMaxScore=20},
                 }
-            };
+                };
 
-            var reviewerBoardEnrollment = new BoardEnrollment
-            {
-                Board = board,
-                IsDeleted = false,
-                isMarked = false,
-                Percentage = lecturerInformations.Reviewer.ScorePercent,
-                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Reviewer"),
-                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Reviewer.LecturerId),
-                Grades = new Grade[]{
+                var reviewerBoardEnrollment = new BoardEnrollment
+                {
+                    Board = board,
+                    IsDeleted = false,
+                    isMarked = false,
+                    Percentage = lecturerInformations.Reviewer.ScorePercent,
+                    BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Reviewer"),
+                    Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Reviewer.LecturerId),
+                    Grades = new Grade[]{
                     new Grade{IsDeleted=false,GradeDescription="Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)",GradeMaxScore=20},
                     new Grade{IsDeleted=false,GradeDescription="Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học",GradeMaxScore=20},
                     new Grade{IsDeleted=false,GradeDescription="Phương pháp thực hiện tốt",GradeMaxScore=20},
@@ -160,17 +257,17 @@ namespace PMS.Persistence.Repository
                     new Grade{IsDeleted=false,GradeDescription="Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo",GradeMaxScore=10},
                     new Grade{IsDeleted=false,GradeDescription="Trả lời tập trung vào đề tài, trả lời tốt câu hỏi",GradeMaxScore=20},
                 }
-            };
+                };
 
-            var supervisorBoardEnrollment = new BoardEnrollment
-            {
-                Board = board,
-                IsDeleted = false,
-                isMarked = false,
-                Percentage = lecturerInformations.Supervisor.ScorePercent,
-                BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Supervisor"),
-                Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Supervisor.LecturerId),
-                Grades = new Grade[]{
+                var supervisorBoardEnrollment = new BoardEnrollment
+                {
+                    Board = board,
+                    IsDeleted = false,
+                    isMarked = false,
+                    Percentage = lecturerInformations.Supervisor.ScorePercent,
+                    BoardRole = await context.BoardRoles.FirstOrDefaultAsync(c => c.BoardRoleName == "Supervisor"),
+                    Lecturer = await context.Lecturers.FindAsync(lecturerInformations.Supervisor.LecturerId),
+                    Grades = new Grade[]{
                     new Grade{IsDeleted=false,GradeDescription="Trình bày tốt (Chuẩn bị slide tốt, trình bày rõ ràng đúng thời hạn)",GradeMaxScore=20},
                     new Grade{IsDeleted=false,GradeDescription="Nội dung đề tai đạt yêu cầu đặt ra, có tính khoa học",GradeMaxScore=20},
                     new Grade{IsDeleted=false,GradeDescription="Phương pháp thực hiện tốt",GradeMaxScore=20},
@@ -178,12 +275,13 @@ namespace PMS.Persistence.Repository
                     new Grade{IsDeleted=false,GradeDescription="Đề tài mới hoặc phương pháp thực hiện có tính sáng tạo",GradeMaxScore=10},
                     new Grade{IsDeleted=false,GradeDescription="Trả lời tập trung vào đề tài, trả lời tốt câu hỏi",GradeMaxScore=20},
                 }
-            };
+                };
 
-            context.BoardEnrollments.Add(presidentBoardEnrollment);
-            context.BoardEnrollments.Add(secretaryBoardEnrollment);
-            context.BoardEnrollments.Add(reviewerBoardEnrollment);
-            context.BoardEnrollments.Add(supervisorBoardEnrollment);
+                context.BoardEnrollments.Add(presidentBoardEnrollment);
+                context.BoardEnrollments.Add(secretaryBoardEnrollment);
+                context.BoardEnrollments.Add(reviewerBoardEnrollment);
+                context.BoardEnrollments.Add(supervisorBoardEnrollment);
+            }
         }
 
         public void RemoveOldLecturer(Board board)
