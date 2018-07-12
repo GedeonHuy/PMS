@@ -20,7 +20,6 @@ import { forEach } from "@angular/router/src/utils/collection";
   templateUrl: "./group-details.component.html",
   styleUrls: ["./group-details.component.scss"]
 })
-
 export class GroupDetailsComponent implements OnInit {
   @ViewChild("modalUpload") public modalUpload: ModalDirective;
   @ViewChild("modalDownload") public modalDownload: ModalDirective;
@@ -54,7 +53,7 @@ export class GroupDetailsComponent implements OnInit {
   isOneHundred: boolean;
   isLoadGrade: boolean;
   isSendForm: boolean;
-  
+
   temp: any[];
   groupRecommendations: any[];
   lecturers: any[];
@@ -63,7 +62,7 @@ export class GroupDetailsComponent implements OnInit {
   thisLecturerId: any;
   thisLecturer: any;
   lecturerIds: any[];
-  
+
   isConflict: boolean;
   hasRecommendations: boolean;
   hasBoard: boolean;
@@ -71,6 +70,7 @@ export class GroupDetailsComponent implements OnInit {
   isLecturer: boolean;
   isStudent: boolean;
   isReviewer: boolean;
+  isFinalProject: boolean;
 
   PAGE_SIZE = 5;
 
@@ -101,6 +101,30 @@ export class GroupDetailsComponent implements OnInit {
     95,
     100
   ];
+  public scorePercents10: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  public scorePercents20: number[] = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ];
   public board: any = {};
   public chair: any;
   public secretary: any;
@@ -127,6 +151,7 @@ export class GroupDetailsComponent implements OnInit {
     this.isLoadRecommendation = false;
     this.isLoadMark = true;
     this.isSaved = false;
+    this.isFinalProject = false;
 
     this.isLoadData = false;
     this.isLoadGit = false;
@@ -234,6 +259,13 @@ export class GroupDetailsComponent implements OnInit {
       }
 
       //Check isReviewer-END
+
+      //check isFinalProject START
+      console.log(this.group.project.type);
+      if (this.group.project.type == "Final Project") {
+        this.isFinalProject = true;
+      }
+      //check isFinalProject END
 
       //flag up the form sending process
       this.isSendForm = true;
@@ -357,16 +389,19 @@ export class GroupDetailsComponent implements OnInit {
 
   saveBoard(form: NgForm) {
     if (form.valid) {
-
       //start transform string values into int numbers
-      this.board.lecturerInformations.chair.scorePercent
-        = parseInt(this.board.lecturerInformations.chair.scorePercent);
-      this.board.lecturerInformations.secretary.scorePercent
-        = parseInt(this.board.lecturerInformations.secretary.scorePercent);
-      this.board.lecturerInformations.supervisor.scorePercent
-        = parseInt(this.board.lecturerInformations.supervisor.scorePercent);
-      this.board.lecturerInformations.reviewer.scorePercent
-        = parseInt(this.board.lecturerInformations.reviewer.scorePercent);
+      this.board.lecturerInformations.chair.scorePercent = parseInt(
+        this.board.lecturerInformations.chair.scorePercent
+      );
+      this.board.lecturerInformations.secretary.scorePercent = parseInt(
+        this.board.lecturerInformations.secretary.scorePercent
+      );
+      this.board.lecturerInformations.supervisor.scorePercent = parseInt(
+        this.board.lecturerInformations.supervisor.scorePercent
+      );
+      this.board.lecturerInformations.reviewer.scorePercent = parseInt(
+        this.board.lecturerInformations.reviewer.scorePercent
+      );
       //end transform string values into int numbers
 
       //start check if sum all score percents equals 100
@@ -378,9 +413,10 @@ export class GroupDetailsComponent implements OnInit {
       ];
       this.isOneHundred =
         this.board.lecturerInformations.chair.scorePercent +
-        this.board.lecturerInformations.secretary.scorePercent +
-        this.board.lecturerInformations.supervisor.scorePercent +
-        this.board.lecturerInformations.reviewer.scorePercent == 100;
+          this.board.lecturerInformations.secretary.scorePercent +
+          this.board.lecturerInformations.supervisor.scorePercent +
+          this.board.lecturerInformations.reviewer.scorePercent ==
+        100;
       //end check if sum all score percents equals 100
 
       if (this.isOneHundred == true) {
@@ -435,8 +471,7 @@ export class GroupDetailsComponent implements OnInit {
         this.isConflict = true;
         setTimeout(() => {
           this.isConflict = false;
-        },
-        3000);
+        }, 3000);
       }
     }
   }
@@ -452,13 +487,13 @@ export class GroupDetailsComponent implements OnInit {
         percentage: this.boardEnrollment.percentage,
         isMarked: false,
         comment: this.boardEnrollment.comment,
-        gradeInformation: this.boardEnrollment.gradeInformation,
-    };
+        gradeInformation: this.boardEnrollment.gradeInformation
+      };
 
-    // console.log(this.boardEnrollment);
-    // console.log(this.boardEnrollmentToUpdate);
+      // console.log(this.boardEnrollment);
+      // console.log(this.boardEnrollmentToUpdate);
 
-      if (this.boardEnrollment.score != null) {
+      if (this.sum <= 100) {
         this._dataService
           .put(
             "/api/boardenrollments/update/" +
@@ -478,6 +513,16 @@ export class GroupDetailsComponent implements OnInit {
             },
             error => this._dataService.handleError(error)
           );
+      } else {
+        this.mark(this.group.board.boardId);
+
+        this._notificationService.printErrorMessage(
+          "Total score must be 100\nPlease try again."
+        );
+        this.isConflict = true;
+        setTimeout(() => {
+          this.isConflict = false;
+        }, 3000);
       }
     }
   }
@@ -509,14 +554,28 @@ export class GroupDetailsComponent implements OnInit {
       );
 
       this.thisLecturer = data[2];
+      if (this.group.project.type != "Final Project") {
+        this.sum =
+          this.boardEnrollment.gradeInformation[0].score +
+          this.boardEnrollment.gradeInformation[1].score +
+          this.boardEnrollment.gradeInformation[2].score +
+          this.boardEnrollment.gradeInformation[3].score +
+          this.boardEnrollment.gradeInformation[4].score +
+          this.boardEnrollment.gradeInformation[5].score;
+      } else {
+        this.sum =
+          this.boardEnrollment.gradeInformation[0].score +
+          this.boardEnrollment.gradeInformation[1].score +
+          this.boardEnrollment.gradeInformation[2].score +
+          this.boardEnrollment.gradeInformation[3].score +
+          this.boardEnrollment.gradeInformation[4].score +
+          this.boardEnrollment.gradeInformation[5].score +
+          this.boardEnrollment.gradeInformation[6].score +
+          this.boardEnrollment.gradeInformation[7].score +
+          this.boardEnrollment.gradeInformation[8].score +
+          this.boardEnrollment.gradeInformation[9].score;
+      }
 
-      this.sum = this.boardEnrollment.gradeInformation[0].score +
-        this.boardEnrollment.gradeInformation[1].score +
-        this.boardEnrollment.gradeInformation[2].score +
-        this.boardEnrollment.gradeInformation[3].score +
-        this.boardEnrollment.gradeInformation[4].score +
-        this.boardEnrollment.gradeInformation[5].score;
-      
       console.log(this.sum);
     });
   }
@@ -525,38 +584,74 @@ export class GroupDetailsComponent implements OnInit {
     this.isConflict = false;
   }
 
+  onSetScore(value: any) {
+    console.log(value);
+    if (this.group.project.type != "Final Project") {
+      this.sum =
+        parseInt(this.boardEnrollment.gradeInformation[0].score) +
+        parseInt(this.boardEnrollment.gradeInformation[1].score) +
+        parseInt(this.boardEnrollment.gradeInformation[2].score) +
+        parseInt(this.boardEnrollment.gradeInformation[3].score) +
+        parseInt(this.boardEnrollment.gradeInformation[4].score) +
+        parseInt(this.boardEnrollment.gradeInformation[5].score);
+    } else {
+      this.sum =
+        parseInt(this.boardEnrollment.gradeInformation[0].score) +
+        parseInt(this.boardEnrollment.gradeInformation[1].score) +
+        parseInt(this.boardEnrollment.gradeInformation[2].score) +
+        parseInt(this.boardEnrollment.gradeInformation[3].score) +
+        parseInt(this.boardEnrollment.gradeInformation[4].score) +
+        parseInt(this.boardEnrollment.gradeInformation[5].score) +
+        parseInt(this.boardEnrollment.gradeInformation[6].score) +
+        parseInt(this.boardEnrollment.gradeInformation[7].score) +
+        parseInt(this.boardEnrollment.gradeInformation[8].score) +
+        parseInt(this.boardEnrollment.gradeInformation[9].score);
+    }
+    console.log(this.sum);
+  }
+
   onLecturerChange(selected: any, seat: any) {
     this.isConflict = false;
-    
-    if ((selected == this.boardEnrollments.chair.lecturerId) && !(seat === 'chair')) {
+
+    if (
+      selected == this.boardEnrollments.chair.lecturerId &&
+      !(seat === "chair")
+    ) {
       this.isConflict = true;
       this._notificationService.printErrorMessage(
         "This lecturer is already the chair!"
       );
-
-    } else if ((selected == this.boardEnrollments.secretary.lecturerId) && !(seat === 'secretary')) {
+    } else if (
+      selected == this.boardEnrollments.secretary.lecturerId &&
+      !(seat === "secretary")
+    ) {
       this.isConflict = true;
       this._notificationService.printErrorMessage(
         "This lecturer is already the secretary!"
       );
-
-    } else if ((selected == this.boardEnrollments.reviewer.lecturerId) && !(seat === 'reviewer')) {
+    } else if (
+      selected == this.boardEnrollments.reviewer.lecturerId &&
+      !(seat === "reviewer")
+    ) {
       this.isConflict = true;
       this._notificationService.printErrorMessage(
         "This lecturer is already the reviewer!"
       );
-
-    } else if ((selected == this.boardEnrollments.supervisor.lecturerId) && !(seat === 'supervisor')) {
-      if (seat === 'chair') this.boardEnrollments.chair.lecturerId = null;
-      if (seat === 'secretary') this.boardEnrollments.secretary.lecturerId = null;
-      if (seat === 'reviewer') this.boardEnrollments.reviewer.lecturerId = null;
+    } else if (
+      selected == this.boardEnrollments.supervisor.lecturerId &&
+      !(seat === "supervisor")
+    ) {
+      if (seat === "chair") this.boardEnrollments.chair.lecturerId = null;
+      if (seat === "secretary")
+        this.boardEnrollments.secretary.lecturerId = null;
+      if (seat === "reviewer") this.boardEnrollments.reviewer.lecturerId = null;
 
       this._notificationService.printErrorMessage(
         "Cannot select this lecturer because this is the supervisor!"
       );
       this.isConflict = true;
     }
-    
+
     this.temp = [
       parseInt(this.boardEnrollments.chair.lecturerId),
       parseInt(this.boardEnrollments.secretary.lecturerId),
@@ -566,17 +661,17 @@ export class GroupDetailsComponent implements OnInit {
 
     // console.log(this.temp);
 
-    this.boardEnrollments.chair.lecturerId        = this.temp[0];
-    this.boardEnrollments.secretary.lecturerId    = this.temp[1];
-    this.boardEnrollments.supervisor.lecturerId   = this.temp[2];
-    this.boardEnrollments.reviewer.lecturerId     = this.temp[3];
+    this.boardEnrollments.chair.lecturerId = this.temp[0];
+    this.boardEnrollments.secretary.lecturerId = this.temp[1];
+    this.boardEnrollments.supervisor.lecturerId = this.temp[2];
+    this.boardEnrollments.reviewer.lecturerId = this.temp[3];
   }
 
   //Create method
   assignBoard(id: any) {
     this.modalBoard.show();
     this.isConflict = false;
-    
+
     Observable.forkJoin(
       this._dataService.get("/api/groups/getgroup/" + id)
     ).subscribe(data => {
@@ -787,11 +882,9 @@ export class GroupDetailsComponent implements OnInit {
         "/api/recommendations/delete/" +
           this.recommendations[i].recommendationId
       )
-      .subscribe(
-        (response: any) => {
-          this._notificationService.printSuccessMessage("Delete Success");
-        }
-      );
+      .subscribe((response: any) => {
+        this._notificationService.printSuccessMessage("Delete Success");
+      });
 
     this.recommendations.splice(i, 1);
   }

@@ -306,7 +306,7 @@ namespace PMS.Controllers
         {
             Aspose.Cells.License cellsLicense = new Aspose.Cells.License();
 
-            cellsLicense.SetLicense("Aspose.Cells.lic");
+            //cellsLicense.SetLicense("Aspose.Cells.lic");
             //open excel file
             Workbook workBook = new Workbook(excelFilePath);
 

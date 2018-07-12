@@ -7,14 +7,16 @@
       <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;"> Send Form</button>
       <button *ngIf="isAdmin" class="btn btn-primary" style="float: right;" (click)="calculateScore(group.boardId)"> Finalize</button>
       <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;"> Finalize</button>
-      <button *ngIf="isLecturer && hasBoard" class="btn btn-mark" style="float: right;" (click)="mark(group.boardId)" translate> Grade this group</button>
+      <button *ngIf="isLecturer && hasBoard" class="btn btn-mark" style="float: right;" (click)="mark(group.boardId)" translate>
+        Grade this group</button>
       <button *ngIf="!isLecturer && hasBoard" disabled class="btn btn-disabled" style="float: right;" translate> Grade this group</button>
       <button *ngIf="isAdmin" class="btn btn-assign" style="float: right;" (click)="assignBoard(group.groupId)" translate> Assign board</button>
       <button *ngIf="!isAdmin" disabled class="btn btn-disabled" style="float: right;" translate> Assign board</button>
     </div>
     <div *ngIf="!isSendForm" class="col-lg-12 col-md-12">
       <span style="float: right;">
-        <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+        />
       </span>
       <span style="float: right;">
         <h4 class="green">Sending form to lecturers...</h4>
@@ -80,19 +82,21 @@
             <p class="message">{{ item.description }}</p>
           </div>
           <div class="xs-6 col-md-4">
-            <button *ngIf="!isReviewer" disabled [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)" title="Mark this recommendation as done (as check symbol) or not (no check symbol)">
+            <button *ngIf="!isReviewer" disabled [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)"
+              title="Mark this recommendation as done (as check symbol) or not (no check symbol)">
               <i *ngIf="!item.isDone" class="fa fa-circle"></i>
               <i *ngIf="item.isDone" class="fa fa-check-circle"></i>
             </button>
-            <button *ngIf="isReviewer" [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)" title="Mark this recommendation as done (as check symbol) or not (no check symbol)">
-                <i *ngIf="!item.isDone" class="fa fa-circle"></i>
-                <i *ngIf="item.isDone" class="fa fa-check-circle"></i>
+            <button *ngIf="isReviewer" [ngClass]="item.isDone == true ? 'btn btn-assign': 'btn btn-danger'" (click)="markRecommendation(i)"
+              title="Mark this recommendation as done (as check symbol) or not (no check symbol)">
+              <i *ngIf="!item.isDone" class="fa fa-circle"></i>
+              <i *ngIf="item.isDone" class="fa fa-check-circle"></i>
             </button>
           </div>
 
         </div>
       </div>
-    <!--All Recommendations-END-->
+      <!--All Recommendations-END-->
     </div>
 
     <div class="col-6 col-md-4">
@@ -137,7 +141,7 @@
         </div>
 
         <br />
-        
+
         <div *ngIf="isLoadGrade" class="panel-body">
           <h2>
             Rank:
@@ -172,12 +176,12 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <h4 align="center">TRƯỜNG ĐH QUỐC TẾ MIỀN ĐÔNG</h4>
-        <h4 align="center">KHOA KỸ THUẬT</h4>
-        <br/>
-        <h4 align="center">PHIẾU CHẤM ĐỒ ÁN CHUYÊN NGÀNH</h4>
-        <h4 align="center">NGÀNH {{ this.group.major.majorName.toUpperCase( ) }}</h4>
-        
+      <h4 align="center">TRƯỜNG ĐH QUỐC TẾ MIỀN ĐÔNG</h4>
+      <h4 align="center">KHOA KỸ THUẬT</h4>
+      <br/>
+      <h4 align="center">PHIẾU CHẤM ĐỒ ÁN CHUYÊN NGÀNH</h4>
+      <h4 align="center">NGÀNH {{ this.group.major.majorName.toUpperCase( ) }}</h4>
+
       <div class="modal-body">
         <form class="form-horizontal form-label-left" novalidate #markForm="ngForm" (ngSubmit)="saveMark(markForm)" *ngIf="boardEnrollment && isLoadMark">
 
@@ -187,24 +191,24 @@
           <input type="hidden" [(ngModel)]="boardEnrollment.boardID" name="boardEnrollment.boardID" />
 
           <div class="form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12">TÊN ĐỀ TÀI</label>
-              <div class="col-md-9 col-sm-9 col-xs-12">
-                <span class="form-control">{{ this.group.project.title }}</span>
-              </div>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">TÊN ĐỀ TÀI</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <span class="form-control">{{ this.group.project.title }}</span>
+            </div>
           </div>
 
           <div class="form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12">Họ và tên sinh viên:</label>
-              <div class="col-md-9 col-sm-9 col-xs-12">
-                <span class="form-control" *ngFor="let stu of group.studentInformations">{{ stu.name }}</span>
-              </div>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Họ và tên sinh viên:</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <span class="form-control" *ngFor="let stu of group.studentInformations">{{ stu.name }}</span>
+            </div>
           </div>
-          
+
           <div class="form-group">
-              <label class="control-label col-md-4 col-sm-4 col-xs-12">Họ và tên giảng viên chấm điểm:</label>
-              <div class="col-md-9 col-sm-9 col-xs-12">
-                <span class="form-control">{{ this.thisLecturer.name }}</span>
-              </div>
+            <label class="control-label col-md-4 col-sm-4 col-xs-12">Họ và tên giảng viên chấm điểm:</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <span class="form-control">{{ this.thisLecturer.name }}</span>
+            </div>
           </div>
 
           <!-- <div class="form-group">
@@ -221,133 +225,396 @@
               </div>
           </div> -->
 
-          <div class="row">
-              <div class="col-md-12 col-sm-12 col-xs-12">
-                <div>
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th>Nội dung chấm điểm</th>
-                        <th>Điểm tối đa</th>
-                        <th>Điểm</th>
-                        <th>Ghi chú</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td style="font-weight: bold;">PHẦN BÁO CÁO</td>
-                        <td style="font-weight: bold;">80</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                          <td>{{ this.boardEnrollment.gradeInformation[0].gradeDescription }}</td>
-                          <td>{{ this.boardEnrollment.gradeInformation[0].gradeMaxScore }}</td>
-                          <td>
-                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[0].score" name="boardEnrollment.gradeInformation[0].score" required #gradeSc0="ngModel"/>
-                            <small [hidden]="gradeSc0.valid || (gradeSc0.pristine && !markForm.submitted)" class="text-danger">
-                                Please specify the grade score number </small>
-                          </td>
-                          <td>
-                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[0].comment" name="boardEnrollment.gradeInformation[0].comment" required
-                              #gradeDes0="ngModel"></textarea>
-                            <small [hidden]="gradeDes0.valid || (gradeDes0.pristine && !markForm.submitted)" class="text-danger">
-                              Please specify the grade note </small>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>{{ this.boardEnrollment.gradeInformation[1].gradeDescription }}</td>
-                          <td>{{ this.boardEnrollment.gradeInformation[1].gradeMaxScore }}</td>
-                          <td>
-                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[1].score" name="boardEnrollment.gradeInformation[1].score" required #gradeSc1="ngModel"/>
-                            <small [hidden]="gradeSc1.valid || (gradeSc1.pristine && !markForm.submitted)" class="text-danger">
-                                Please specify the grade score number </small>
-                          </td>
-                          <td>
-                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[1].comment" name="boardEnrollment.gradeInformation[1].comment" required
-                              #gradeDes1="ngModel"></textarea>
-                            <small [hidden]="gradeDes1.valid || (gradeDes1.pristine && !markForm.submitted)" class="text-danger">
-                              Please specify the grade note </small>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>{{ this.boardEnrollment.gradeInformation[2].gradeDescription }}</td>
-                          <td>{{ this.boardEnrollment.gradeInformation[2].gradeMaxScore }}</td>
-                          <td>
-                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[2].score" name="boardEnrollment.gradeInformation[2].score" required #gradeSc2="ngModel"/>
-                            <small [hidden]="gradeSc2.valid || (gradeSc2.pristine && !markForm.submitted)" class="text-danger">
-                                Please specify the grade score number </small>
-                          </td>
-                          <td>
-                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[2].comment" name="boardEnrollment.gradeInformation[2].comment" required
-                              #gradeDes2="ngModel"></textarea>
-                            <small [hidden]="gradeDes2.valid || (gradeDes2.pristine && !markForm.submitted)" class="text-danger">
-                              Please specify the grade note </small>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>{{ this.boardEnrollment.gradeInformation[3].gradeDescription }}</td>
-                          <td>{{ this.boardEnrollment.gradeInformation[3].gradeMaxScore }}</td>
-                          <td>
-                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[3].score" name="boardEnrollment.gradeInformation[3].score" required #gradeSc3="ngModel"/>
-                            <small [hidden]="gradeSc3.valid || (gradeSc3.pristine && !markForm.submitted)" class="text-danger">
-                                Please specify the grade score number </small>
-                          </td>
-                          <td>
-                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[3].comment" name="boardEnrollment.gradeInformation[3].comment" required
-                              #gradeDes3="ngModel"></textarea>
-                            <small [hidden]="gradeDes3.valid || (gradeDes3.pristine && !markForm.submitted)" class="text-danger">
-                              Please specify the grade note </small>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>{{ this.boardEnrollment.gradeInformation[4].gradeDescription }}</td>
-                          <td>{{ this.boardEnrollment.gradeInformation[4].gradeMaxScore }}</td>
-                          <td>
-                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[4].score" name="boardEnrollment.gradeInformation[4].score" required #gradeSc4="ngModel"/>
-                            <small [hidden]="gradeSc4.valid || (gradeSc4.pristine && !markForm.submitted)" class="text-danger">
-                                Please specify the grade score number </small>
-                          </td>
-                          <td>
-                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[4].comment" name="boardEnrollment.gradeInformation[4].comment" required
-                              #gradeDes4="ngModel"></textarea>
-                            <small [hidden]="gradeDes4.valid || (gradeDes4.pristine && !markForm.submitted)" class="text-danger">
-                              Please specify the grade note </small>
-                          </td>
-                      </tr>
+          <div *ngIf="!isFinalProject" class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Nội dung chấm điểm</th>
+                      <th>Điểm tối đa</th>
+                      <th>Điểm</th>
+                      <th>Ghi chú</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="font-weight: bold;">PHẦN BÁO CÁO</td>
+                      <td style="font-weight: bold;">80</td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[0].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[0].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[0].score" name="boardEnrollment.gradeInformation[0].score"
+                          required #gradeSc0="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[0].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[0].score" required #gradeSc0="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc0.valid || (gradeSc0.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[0].comment" name="boardEnrollment.gradeInformation[0].comment"
+                          required #gradeDes0="ngModel"></textarea>
+                        <small [hidden]="gradeDes0.valid || (gradeDes0.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[1].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[1].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[1].score" name="boardEnrollment.gradeInformation[1].score"
+                          required #gradeSc1="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[1].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[1].score" required #gradeSc1="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents20" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc1.valid || (gradeSc1.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[1].comment" name="boardEnrollment.gradeInformation[1].comment"
+                          required #gradeDes1="ngModel"></textarea>
+                        <small [hidden]="gradeDes1.valid || (gradeDes1.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[2].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[2].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[2].score" name="boardEnrollment.gradeInformation[2].score"
+                          required #gradeSc2="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[2].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[2].score" required #gradeSc2="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents20" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc2.valid || (gradeSc2.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[2].comment" name="boardEnrollment.gradeInformation[2].comment"
+                          required #gradeDes2="ngModel"></textarea>
+                        <small [hidden]="gradeDes2.valid || (gradeDes2.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[3].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[3].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[3].score" name="boardEnrollment.gradeInformation[3].score"
+                          required #gradeSc3="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[3].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[3].score" required #gradeSc3="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents20" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc3.valid || (gradeSc3.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[3].comment" name="boardEnrollment.gradeInformation[3].comment"
+                          required #gradeDes3="ngModel"></textarea>
+                        <small [hidden]="gradeDes3.valid || (gradeDes3.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[4].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[4].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[4].score" name="boardEnrollment.gradeInformation[4].score"
+                          required #gradeSc4="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[4].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[4].score" required #gradeSc4="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc4.valid || (gradeSc4.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[4].comment" name="boardEnrollment.gradeInformation[4].comment"
+                          required #gradeDes4="ngModel"></textarea>
+                        <small [hidden]="gradeDes4.valid || (gradeDes4.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
 
-                      <tr>
-                          <td style="font-weight: bold;">PHẦN TRẢ LỜI</td>
-                          <td style="font-weight: bold;">20</td>
-                          <td></td>
-                          <td></td>
-                      </tr>
-                      <tr>
-                          <td>{{ this.boardEnrollment.gradeInformation[5].gradeDescription }}</td>
-                          <td>{{ this.boardEnrollment.gradeInformation[5].gradeMaxScore }}</td>
-                          <td>
-                            <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[5].score" name="boardEnrollment.gradeInformation[5].score" required #gradeSc5="ngModel"/>
-                            <small [hidden]="gradeSc5.valid || (gradeSc5.pristine && !markForm.submitted)" class="text-danger">
-                                Please specify the grade score number </small>
-                          </td>
-                          <td>
-                            <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[5].comment" name="boardEnrollment.gradeInformation[5].comment" required
-                              #gradeDes5="ngModel"></textarea>
-                            <small [hidden]="gradeDes5.valid || (gradeDes5.pristine && !markForm.submitted)" class="text-danger">
-                              Please specify the grade note </small>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td style="font-weight: bold;">TỔNG CỘNG</td>
-                          <td style="font-weight: bold;">100</td>
-                          <td style="font-weight: bold;">{{ this.sum }}</td>
-                          <td></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                    <tr>
+                      <td style="font-weight: bold;">PHẦN TRẢ LỜI</td>
+                      <td style="font-weight: bold;">20</td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[5].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[5].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[5].score" name="boardEnrollment.gradeInformation[5].score"
+                          required #gradeSc5="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[5].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[5].score" required #gradeSc5="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents20" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc5.valid || (gradeSc5.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[5].comment" name="boardEnrollment.gradeInformation[5].comment"
+                          required #gradeDes5="ngModel"></textarea>
+                        <small [hidden]="gradeDes5.valid || (gradeDes5.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: bold;">TỔNG CỘNG</td>
+                      <td style="font-weight: bold;">100</td>
+                      <td style="font-weight: bold;">{{this.sum}}
+                      </td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
+          </div>
+          <!-- ////////////////////////////////////////////////////////////////////////////////////////-->
+
+          <div *ngIf="isFinalProject" class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Nội dung chấm điểm</th>
+                      <th>Điểm tối đa</th>
+                      <th>Điểm</th>
+                      <th>Ghi chú</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <!-- <td style="font-weight: bold;">PHẦN BÁO CÁO</td>
+                      <td style="font-weight: bold;">80</td> -->
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[0].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[0].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[0].score" name="boardEnrollment.gradeInformation[0].score"
+                          required #gradeSc0="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[0].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[0].score" required #gradeSc0="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc0.valid || (gradeSc0.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[0].comment" name="boardEnrollment.gradeInformation[0].comment"
+                          required #gradeDes0="ngModel"></textarea>
+                        <small [hidden]="gradeDes0.valid || (gradeDes0.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[1].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[1].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[1].score" name="boardEnrollment.gradeInformation[1].score"
+                          required #gradeSc1="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[1].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[1].score" required #gradeSc1="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc1.valid || (gradeSc1.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[1].comment" name="boardEnrollment.gradeInformation[1].comment"
+                          required #gradeDes1="ngModel"></textarea>
+                        <small [hidden]="gradeDes1.valid || (gradeDes1.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[2].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[2].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[2].score" name="boardEnrollment.gradeInformation[2].score"
+                          required #gradeSc2="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[2].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[2].score" required #gradeSc2="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc2.valid || (gradeSc2.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[2].comment" name="boardEnrollment.gradeInformation[2].comment"
+                          required #gradeDes2="ngModel"></textarea>
+                        <small [hidden]="gradeDes2.valid || (gradeDes2.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[3].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[3].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[3].score" name="boardEnrollment.gradeInformation[3].score"
+                          required #gradeSc3="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[3].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[3].score" required #gradeSc3="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc3.valid || (gradeSc3.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[3].comment" name="boardEnrollment.gradeInformation[3].comment"
+                          required #gradeDes3="ngModel"></textarea>
+                        <small [hidden]="gradeDes3.valid || (gradeDes3.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[4].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[4].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[4].score" name="boardEnrollment.gradeInformation[4].score"
+                          required #gradeSc4="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[4].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[4].score" required #gradeSc4="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc4.valid || (gradeSc4.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[4].comment" name="boardEnrollment.gradeInformation[4].comment"
+                          required #gradeDes4="ngModel"></textarea>
+                        <small [hidden]="gradeDes4.valid || (gradeDes4.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[5].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[5].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[5].score" name="boardEnrollment.gradeInformation[5].score"
+                          required #gradeSc5="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[5].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[5].score" required #gradeSc5="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc5.valid || (gradeSc5.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[5].comment" name="boardEnrollment.gradeInformation[5].comment"
+                          required #gradeDes5="ngModel"></textarea>
+                        <small [hidden]="gradeDes5.valid || (gradeDes5.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[6].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[6].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[6].score" name="boardEnrollment.gradeInformation[6].score"
+                          required #gradeSc6="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[6].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[6].score" required #gradeSc6="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc6.valid || (gradeSc5.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[6].comment" name="boardEnrollment.gradeInformation[6].comment"
+                          required #gradeDes6="ngModel"></textarea>
+                        <small [hidden]="gradeDes6.valid || (gradeDes6.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[7].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[7].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[7].score" name="boardEnrollment.gradeInformation[7].score"
+                          required #gradeSc7="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[7].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[7].score" required #gradeSc7="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc7.valid || (gradeSc7.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[7].comment" name="boardEnrollment.gradeInformation[7].comment"
+                          required #gradeDes7="ngModel"></textarea>
+                        <small [hidden]="gradeDes5.valid || (gradeDes7.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[8].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[8].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[8].score" name="boardEnrollment.gradeInformation[8].score"
+                          required #gradeSc8="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[8].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[8].score" required #gradeSc8="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc8.valid || (gradeSc8.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[8].comment" name="boardEnrollment.gradeInformation[8].comment"
+                          required #gradeDes8="ngModel"></textarea>
+                        <small [hidden]="gradeDes8.valid || (gradeDes8.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ this.boardEnrollment.gradeInformation[9].gradeDescription }}</td>
+                      <td>{{ this.boardEnrollment.gradeInformation[9].gradeMaxScore }}</td>
+                      <td>
+                        <!-- <input class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[9].score" name="boardEnrollment.gradeInformation[9].score"
+                          required #gradeSc9="ngModel" /> -->
+                        <select class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[9].score" (ngModelChange)="onSetScore($event)"
+                          name="boardEnrollment.gradeInformation[9].score" required #gradeSc9="ngModel">
+                          <option type="number" *ngFor="let s of scorePercents10" value="{{s}}">{{ s }}</option>
+                        </select>
+                        <small [hidden]="gradeSc9.valid || (gradeSc9.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade score number </small>
+                      </td>
+                      <td>
+                        <textarea class="form-control" [(ngModel)]="this.boardEnrollment.gradeInformation[9].comment" name="boardEnrollment.gradeInformation[9].comment"
+                          required #gradeDes9="ngModel"></textarea>
+                        <small [hidden]="gradeDes9.valid || (gradeDes9.pristine && !markForm.submitted)" class="text-danger">
+                          Please specify the grade note </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: bold;">TỔNG CỘNG</td>
+                      <td style="font-weight: bold;">100</td>
+                      <td style="font-weight: bold;">{{ this.sum }}</td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
 
           <!-- <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Mark</label>
@@ -418,8 +685,8 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Chair</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
               <input type="hidden" [(ngModel)]="board.boardId" name="boardId" />
-              <select class="form-control" [(ngModel)]="boardEnrollments.chair.lecturerId" (change)="onLecturerChange($event.target.value, 'chair')" name="boardEnrollments.chair.name" required
-                #chair="ngModel">
+              <select class="form-control" [(ngModel)]="boardEnrollments.chair.lecturerId" (change)="onLecturerChange($event.target.value, 'chair')"
+                name="boardEnrollments.chair.name" required #chair="ngModel">
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="chair.valid || (chair.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the chair </small>
@@ -442,8 +709,8 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Secretary</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.lecturerId" (change)="onLecturerChange($event.target.value, 'secretary')" name="boardEnrollments.secretary.name" required
-                #secretary="ngModel">
+              <select class="form-control" [(ngModel)]="boardEnrollments.secretary.lecturerId" (change)="onLecturerChange($event.target.value, 'secretary')"
+                name="boardEnrollments.secretary.name" required #secretary="ngModel">
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="secretary.valid || (secretary.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the secretary </small>
@@ -485,8 +752,8 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Reviewer</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.lecturerId" (change)="onLecturerChange($event.target.value, 'reviewer')" name="boardEnrollments.reviewer.name" required
-                #reviewer="ngModel">
+              <select class="form-control" [(ngModel)]="boardEnrollments.reviewer.lecturerId" (change)="onLecturerChange($event.target.value, 'reviewer')"
+                name="boardEnrollments.reviewer.name" required #reviewer="ngModel">
                 <option *ngFor="let l of lecturers" value="{{l.lecturerId}}">{{ l.name }}</option>
               </select>
               <small [hidden]="reviewer.valid || (reviewer.pristine && !addEditForm.submitted)" class="text-danger"> Please specify the reviewer </small>
